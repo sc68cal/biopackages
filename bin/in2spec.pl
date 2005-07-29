@@ -1,10 +1,11 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.1 2005/07/29 07:57:13 allenday Exp $
+#$Id: in2spec.pl,v 1.2 2005/07/29 08:08:59 allenday Exp $
 use strict;
 
+my $rcstag = '#\$'.'Id:';
 my $revision = undef;
 while(<>){
-  if ( /#\$Id: in2spec.pl,v 1.1 2005/07/29 07:57:13 allenday Exp $/ ) {
+  if ( /^$rcstag.+?,v (\S+)/ ) {
     $revision = $1;
     next;
   }
