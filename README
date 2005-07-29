@@ -1,0 +1,40 @@
+1. SETTING UP THE ENVIRONMENT
+
+Run 'make prep'.  This will overwrite ~/.rpmmacros with a version
+that will make the biopackages checkout top-level directory your
+default rpm build directory.  If you're not happy with this,
+create a new user just for doing builds -- this setup is unlikely
+to change.
+
+2. CREATING SPEC FILES
+
+A few rules for creating new specfiles.  The purpose of these is
+to ensure the RPM package release numbers stay in sync with the
+CVS version.  Technically, what's happening is the RCS tag '$Id: README,v 1.1 2005/07/29 09:00:36 allenday Exp $'
+is being sniffed to produce the RPM release number.
+
+  A. DO NOT CREATE .spec FILES.  Create .spec.in files instead.
+  The reason for this is that we need to do some token
+  replacement on the file to do the CVS version linking.
+
+  B. At the top of every .spec.in, add a line like this:
+
+       #$Id: README,v 1.1 2005/07/29 09:00:36 allenday Exp $
+
+  C. Set the RPM 'Release' key to '%{revision}-%{distro}'.  E.g.,
+
+       Release: %{revision}-%{distro}
+
+     If your CVS version is 1.1, the .spec file generated from
+     the .spec.in file will be 1.1-%{distro}.
+
+     The %{distro} tag is a biopackages-specific RPM macro that
+     appends the architcture, date, OS abbreviation, and 'bp'
+     biopackages identifier to the end of the RPM file resulting
+     from the build.  While this isn't absolutely necessary, it
+     is recommended because it allows all biopackages packages a
+     consistent naming style.
+
+When you have finished your .spec.in file, run "make specs".
+This target iterates over all .spec.in files and generates their
+corresponding .spec files.
