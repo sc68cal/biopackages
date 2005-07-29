@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.3 2005/07/29 09:00:36 allenday Exp $
+#$Id: Makefile,v 1.4 2005/07/29 09:03:03 allenday Exp $
 PERL=/usr/bin/perl
 RPMBUILD=/usr/bin/rpmbuild
 #RPMRC=/usr/lib/rpm/rpmrc:/usr/lib/rpm/redhat/rpmrc:./rpmrc
@@ -13,6 +13,10 @@ buildall :: specs
 
 buildclean ::
 	rm SPECS/*.built
+
+sources ::
+	@echo "This target should http or ftp rsync to a FAST repository of a SOURCES/"
+	@echo "directory.  Right now this target just prints a message."
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
