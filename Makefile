@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.5 2005/07/29 09:24:14 allenday Exp $
+#$Id: Makefile,v 1.6 2005/07/29 09:28:09 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -57,9 +57,6 @@ specs ::
 
 ####################################
 #stuff for initial environment setup
-prep : rpmmacros
+prep ::
 	$(RM_I) ~/.rpmmacros
-	$(LN_S) ./rpmmacros ~/.rpmmacros
-
-rpmmacros ::
-	$(PERL) bin/rpmmacros.pl > ./rpmmacros
+	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
