@@ -1,8 +1,9 @@
-#$Id: Makefile,v 1.4 2005/07/29 09:03:03 allenday Exp $
+#$Id: Makefile,v 1.5 2005/07/29 09:24:14 allenday Exp $
+LN_S=ln -s
 PERL=/usr/bin/perl
+RM_RF=rm -rf
+RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
-#RPMRC=/usr/lib/rpm/rpmrc:/usr/lib/rpm/redhat/rpmrc:./rpmrc
-#RPMRC=/usr/lib/rpm/redhat/rpmrc:./rpmrc
 
 ####################################
 #main build targets
@@ -12,7 +13,7 @@ buildall :: specs
 	echo 'for i in SPECS/*.spec; do $(MAKE) $${i/.spec/.built}; done' | /bin/bash
 
 buildclean ::
-	rm SPECS/*.built
+	$(RM_RF) SPECS/*.built
 
 sources ::
 	@echo "This target should http or ftp rsync to a FAST repository of a SOURCES/"
@@ -24,8 +25,32 @@ specs ::
 ####################################
 #extension rules
 %.built : %.spec
-#	$(RPMBUILD) --rcfile $(RPMRC) -ba $< 2>&1 > $@ || rm $@
-	$(RPMBUILD) -ba $< 2>&1 > $@ || rm $@
+	$(RPMBUILD) -ba $< 2>&1 > $@ || $(RM_RF) $@
+
+%.clean :
+	find . -name "$(@:.clean=)*" -exec $(RM_RF) {} \;
+
+%.pm :
+	# bail out if locked, or if special and needs manual build
+	`echo 'if [ -f $(@:.pm=.pmlock) ]; then exit 1 ; else exit 0 ; fi' | /bin/bash`;
+	`echo 'if [ -f SPECS/$(@:.pm=.spec) ]; then exit 1 ; else exit 0 ; fi' | /bin/bash`;
+
+	# lock
+	touch $(@:.made=.lock);
+	$(PERL) bin/pmfetch.pl $@ 2>$(@:.pm=.pmlog);
+
+	#this could be brittle on make -jN where N > 1
+	$(PERL) bin/pmbuild.pl SPECS/`ls -rt1 SPECS/ | tail -1` $(@:.pm=);
+
+	# cleanup and unlock
+	$(RM) *debuginfo*;
+	$(RM) $(@:.pm=.pmlock);
+
+	#check dependencies and recurse
+	/bin/bash bin/pmcheckdeps.sh `ls -rt1 SPECS/ | tail -1` $(TARGETARCH);
+
+	#mark it done
+	touch $@;
 
 %.spec : %.spec.in
 	cat $< | $(PERL) bin/in2spec.pl > $@
@@ -33,8 +58,8 @@ specs ::
 ####################################
 #stuff for initial environment setup
 prep : rpmmacros
-	rm -i ~/.rpmmacros
-	ln -s ./rpmmacros ~/.rpmmacros
+	$(RM_I) ~/.rpmmacros
+	$(LN_S) ./rpmmacros ~/.rpmmacros
 
 rpmmacros ::
 	$(PERL) bin/rpmmacros.pl > ./rpmmacros

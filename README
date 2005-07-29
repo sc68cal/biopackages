@@ -1,3 +1,4 @@
+#$Id: README,v 1.2 2005/07/29 09:24:14 allenday Exp $
 1. SETTING UP THE ENVIRONMENT
 
 Run 'make prep'.  This will overwrite ~/.rpmmacros with a version
@@ -6,11 +7,16 @@ default rpm build directory.  If you're not happy with this,
 create a new user just for doing builds -- this setup is unlikely
 to change.
 
-2. CREATING SPEC FILES
+2. AUTOMATICALLY CREATING SPEC FILES
+
+  A. For Perl modules from CPAN.
+  Not documented yet.  It can be done.  Read the Makefile for hints
+
+3. MANUALLY CREATING SPEC FILES
 
 A few rules for creating new specfiles.  The purpose of these is
 to ensure the RPM package release numbers stay in sync with the
-CVS version.  Technically, what's happening is the RCS tag '$Id: README,v 1.1 2005/07/29 09:00:36 allenday Exp $'
+CVS version.  Technically, what's happening is the RCS tag '$Id: README,v 1.2 2005/07/29 09:24:14 allenday Exp $'
 is being sniffed to produce the RPM release number.
 
   A. DO NOT CREATE .spec FILES.  Create .spec.in files instead.
@@ -19,7 +25,7 @@ is being sniffed to produce the RPM release number.
 
   B. At the top of every .spec.in, add a line like this:
 
-       #$Id: README,v 1.1 2005/07/29 09:00:36 allenday Exp $
+       #$Id: README,v 1.2 2005/07/29 09:24:14 allenday Exp $
 
   C. Set the RPM 'Release' key to '%{revision}-%{distro}'.  E.g.,
 
