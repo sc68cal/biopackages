@@ -1,11 +1,11 @@
-#$Id: cygwin-base.spec.in,v 1.1 2005/08/01 22:39:47 allenday Exp $
+#$Id: cygwin-base.spec.in,v 1.2 2005/08/01 22:41:18 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
 Name: cygwin-base
 Epoch: 1
 Version: 1.0 
-Release: %{revision}.%{distro}
+Release: %{revision}
 Packager: allenday@sumo.genetics.ucla.edu
 License: GPL
 Group: Development/Libraries
@@ -32,5 +32,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 %changelog
-* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-%{revision}
+* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.2
+- fixup of %{distro} tag
+* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.1
 - New specfile 
