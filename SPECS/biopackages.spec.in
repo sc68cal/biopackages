@@ -1,0 +1,132 @@
+#$Id: biopackages.spec.in,v 1.1 2005/08/03 21:46:33 allenday Exp $
+Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
+Name: biopackages
+Version: 1.0.0
+Release: %{revision}
+Epoch: 1
+License: GPL
+Group: Applications/Bioinformatics
+URL: http://www.biopackages.net
+Source0: %{name}.tar.gz
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Requires: bash
+
+#%package server
+#Summary: Files for running a biopackages apt and yum server
+#Group: Applications/Bioinformatics
+#Requires: httpd
+##BuildRequires: apt
+
+%description
+Files and utilities needed for building RPMs from the bioRPM vendor, as well as yum
+
+#%description server
+#Provides skeleton directories for APT and Yum repositories for your RPMs
+
+%prep
+rm -rf %{buildroot}
+%setup -n %{name}
+
+%build
+rm -rf %{buildroot}
+
+%install
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_bindir}
+install -m 755 bp-distro %{buildroot}%{_bindir}
+#install -m 755 bp-update %{buildroot}%{_bindir}
+#install -m 755 bp-inject-binary %{buildroot}%{_bindir}
+#install -m 755 bp-inject-source %{buildroot}%{_bindir}
+
+#mkdir -p %{buildroot}/var/www/html/apt/{rh8,rh9,fc1,fc2,fc3,fc4}/{noarch,i386,x86_64}/{base,RPMS.stable,RPMS.testing,SRPMS.stable,SRPMS.testing} ;
+
+##initialize redhat repositories
+#for release in 8 9 ; do
+#  for arch in noarch i386 ; do
+#    for tag in base stable testing ; do
+#      mkdir -p %{buildroot}/var/www/html/apt/rh$release/$arch/$tag
+#    done ;
+#  done ;
+#done ;
+#
+##initialize fedora repositories
+#for release in 1 2 3 4 ; do
+#  for arch in noarch i386 ; do
+#    for tag in base stable testing ; do
+#      mkdir -p %{buildroot}/var/www/html/apt/fc$release/$arch/$tag
+#    done ;
+#  done ;
+#done ;
+#
+#find %{buildroot}/var/www -type d | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-server
+
+#%post server
+
+##initialize redhat repositories
+#for release in 8 9 ; do
+#  for arch in noarch i386 ; do
+#    genbasedir --flat --bloat --bz2only --partial --progress \
+#      /var/www/html/apt/rh$release/$arch stable testing 2&>1 > /dev/null
+#  done ;
+#done ;
+#
+##initialize fedora repositories
+#for release in 1 2 3 4 ; do
+#  for arch in noarch i386 ; do
+#    genbasedir --flat --bloat --bz2only --partial --progress \
+#      /var/www/html/apt/fc$release/$arch stable testing 2&>1 > /dev/null
+#  done ;
+#done ;
+
+%post
+cp -prv /usr/lib/rpm/macros /usr/lib/rpm/macros.bak
+echo "%%distro %%(eval %{_bindir}/bp-distro -d)" >> /usr/lib/rpm/macros
+
+#cp -prv /etc/apt/sources.list /etc/apt.sources.list.bak
+#MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'`
+#TAG=`bp-distro -t`
+#echo "# biopackages for $TAG / $MACHTYPE"                         >> /etc/apt/sources.list
+#echo "rpm     http://www.biopackages.net apt/$TAG/$MACHTYPE stable"   >> /etc/apt/sources.list
+#echo "rpm     http://www.biopackages.net apt/$TAG/$MACHTYPE testing"  >> /etc/apt/sources.list
+#echo "#rpm-src http://www.biopackages.net apt/$TAG/$MACHTYPE stable"  >> /etc/apt/sources.list
+#echo "#rpm-src http://www.biopackages.net apt/$TAG/$MACHTYPE testing" >> /etc/apt/sources.list
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/bp-distro
+#%{_bindir}/bp-inject-binary
+#%{_bindir}/bp-inject-source
+
+#%files server -f %{name}-%{version}-%{release}-server
+#%defattr(-,root,root,-)
+#/usr/bin/bp-update
+
+%changelog
+* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.0-%{revision}
+- moved to spec.in file
+* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.0-7
+- Removed bp-upload-* scripts for now
+- Added CentOS arches to bp-distro
+* Tue Apr 12 2005 Allen Day <allenday@ucla.edu> - 1.0.0-6
+- Removing apt dependency from specfile.  bp-* scripts still
+  assume apt is present -- will clean these up in next revision 
+* Fri Mar 11 2005 Allen Day <allenday@ucla.edu> - 1.0.0-5
+- hardcoded in /usr/lib, as %{_libdir} on x86_64 is lib64,
+  even though rpm is under /usr/lib
+* Tue Mar 8 2005 Allen Day <allenday@ucla.edu> - 1.0.0-4
+- repaired macro line added to do "bp-distro -d"
+* Mon Mar 7 2005 Allen Day <allenday@ucla.edu> - 1.0.0-3
+- Derived from (now deprecated) bioRPM package
+- Added server package
+- Added /etc/apt/sources.list to base package
+- renames distro to bp-distro in base package
+- added -t (tag only) and -d (with date) options to bp-distro
+- added bp-update script to server package
+* Tue Mar 1 2005 Allen Day <allenday@ucla.edu> -
+- Added ROCKS 3.3.0 recognition
+* Mon Feb 28 2005 Allen Day <allenday@ucla.edu> - 
+- Initial build.
