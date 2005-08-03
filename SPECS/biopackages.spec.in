@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.2 2005/08/03 22:01:43 allenday Exp $
+#$Id: biopackages.spec.in,v 1.3 2005/08/03 22:10:52 allenday Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.0
@@ -80,7 +80,7 @@ install -m 755 bp-distro %{buildroot}%{_bindir}
 #done ;
 
 %post
-cp -prv /usr/lib/rpm/macros %{_libdir}/rpm/macros.bak
+cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
 echo "%%distro %%(eval %{_bindir}/bp-distro -d)" >> %{_libdir}/rpm/macros
 
 #cp -prv /etc/apt/sources.list /etc/apt.sources.list.bak
