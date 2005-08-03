@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.4 2005/08/03 22:46:59 allenday Exp $
+#$Id: biopackages.spec.in,v 1.5 2005/08/03 23:13:02 allenday Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.1
@@ -81,7 +81,7 @@ install -m 755 bp-distro %{buildroot}%{_bindir}
 
 %post
 cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
-echo "%%distro %%(eval %{_bindir}/bp-distro -d)" >> %{_libdir}/rpm/macros
+echo "%%distro %%(eval %{_bindir}/bp-distro)" >> %{_libdir}/rpm/macros
 
 #cp -prv /etc/apt/sources.list /etc/apt.sources.list.bak
 #MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'`
@@ -106,8 +106,9 @@ rm -rf %{buildroot}
 #/usr/bin/bp-update
 
 %changelog
-* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.0-%{revision}
+* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.1-1.5
 - moved to spec.in file
+- removed date from generated version strings
 * Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.0-7
 - Removed bp-upload-* scripts for now
 - Added CentOS arches to bp-distro
