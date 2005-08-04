@@ -1,0 +1,43 @@
+#$Id: darwin-base.spec.in,v 1.1 2005/08/04 01:13:50 allenday Exp $
+Distribution: Custom
+Vendor: Custom
+Summary: Unknown
+Name: darwin-base
+Epoch: 1
+Version: 1.0 
+Release: %{revision}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL
+Group: Development/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+Source0: dummyfile
+Provides: /bin/sh 
+Provides: bash 
+Provides: gettext 
+Provides: perl
+Provides: python
+
+%description
+
+%prep
+%setup -qc %{name}-%{version} 
+if [ "%{_os}" != "darwin" ] ; then exit 1 ; fi
+
+%build
+
+%install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files 
+%defattr(-,root,root,-)
+
+%changelog
+* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.3
+- missing provides
+* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.2
+- fixup of %{distro} tag
+* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.1
+- New specfile 
