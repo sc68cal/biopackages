@@ -1,0 +1,670 @@
+#$Id: rpm.spec.in,v 1.1 2005/08/04 01:30:49 allenday Exp $
+%ifnos darwin
+%define __soext so
+%define __defattr__ %defattr(-,root,root)
+%define	with_python_subpackage	1%{nil}
+%define	with_python_version	2.2%{nil}
+%define	with_bzip2		1%{nil}
+%define	with_apidocs		1%{nil}
+%else
+%define __soext dylib
+%define __defattr__ %defattr(-,root,wheel)
+%define	with_python_subpackage	1%{nil}
+# %{_build_os} >= darwin7 (Mac OS X 10.3)
+%define	with_python_version	2.3%{nil}
+%define	with_bzip2		1%{nil}
+%define	with_apidocs		0%{nil}
+%endif
+
+# XXX legacy requires './' payload prefix to be omitted from rpm packages.
+%define	_noPayloadPrefix	1
+
+%ifnos darwin
+%define	__prefix	/usr
+%define __etcdir        /etc
+%define __vardir        /var
+%define __rpmbindir     /bin
+%define __mandir	%{__prefix}%{__share}/man
+%else
+%define	__prefix	/usr/local
+%define __etcdir        /private/etc
+%define __vardir        /private/var/local
+%define __rpmbindir     %{__prefix}/bin
+%define __mandir	%{__prefix}/man
+%endif
+
+%{?!_lib: %define _lib lib}
+%{expand: %%define __share %(if [ -d %{__prefix}/share/man ]; then echo /share ; else echo %%{nil} ; fi)}
+
+%define __bindir	%{__prefix}/bin
+%define __includedir	%{__prefix}/include
+%define __libdir	%{__prefix}/%{_lib}
+
+Summary: The RPM package management system.
+Name: rpm
+%define version 4.2.1
+Version: %{version}
+%{expand: %%define rpm_version %{version}}
+Release: %{revision}.bp
+Group: System Environment/Base
+Source: ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.0.x/rpm-%{rpm_version}.tar.gz
+Patch0: rpm-%{version}-macosx.patch
+Patch1: rpm-%{version}-mergesort.patch
+Patch2: rpm-%{version}-python.patch
+Patch3: rpm-%{version}-rpmts-py.patch
+Copyright: GPL
+Conflicts: patch < 2.5
+%ifos linux
+Prereq: fileutils shadow-utils
+%endif
+Requires: popt = 1.8.1
+Obsoletes: rpm-perl < %{version}
+
+# XXX necessary only to drag in /usr/lib/libelf.a, otherwise internal elfutils.
+%ifnos darwin
+BuildRequires: elfutils-libelf
+
+BuildRequires: zlib-devel
+
+BuildRequires: beecrypt-devel >= 0:3.0.0-2
+Requires: beecrypt >= 0:3.0.0-2
+%endif
+
+# XXX Red Hat 5.2 has not bzip2 or python
+%if %{with_bzip2}
+%ifnos darwin
+BuildRequires: bzip2 >= 0.9.0c-2
+%endif
+%endif
+%if %{with_python_subpackage}
+%ifnos darwin
+BuildRequires: python-devel >= %{with_python_version}
+%endif
+%endif
+
+BuildRoot: %{_tmppath}/%{name}-root
+
+%description
+The RPM Package Manager (RPM) is a powerful command line driven
+package management system capable of installing, uninstalling,
+verifying, querying, and updating software packages. Each software
+package consists of an archive of files along with information about
+the package like its version, a description, etc.
+
+%package devel
+Summary:  Development files for manipulating RPM packages.
+Group: Development/Libraries
+Requires: rpm = %{rpm_version}
+
+%description devel
+This package contains the RPM C library and header files. These
+development files will simplify the process of writing programs that
+manipulate RPM packages and databases. These files are intended to
+simplify the process of creating graphical package managers or any
+other tools that need an intimate knowledge of RPM packages in order
+to function.
+
+This package should be installed if you want to develop programs that
+will manipulate RPM packages and databases.
+
+%package build
+Summary: Scripts and executable programs used to build packages.
+Group: Development/Tools
+%ifnos darwin
+Requires: rpm = %{rpm_version}, patch >= 2.5, file
+%else
+Requires: rpm = %{rpm_version}
+%endif
+Provides: rpmbuild(VendorConfig) = 4.1-1
+
+%description build
+The rpm-build package contains the scripts and executable programs
+that are used to build packages using the RPM Package Manager.
+
+%if %{with_python_subpackage}
+%package python
+Summary: Python bindings for apps which will manipulate RPM packages.
+Group: Development/Libraries
+Requires: rpm = %{rpm_version}
+Requires: python >= %{with_python_version}
+%ifnos darwin
+Requires: elfutils >= 0.55
+%endif
+
+%description python
+The rpm-python package contains a module that permits applications
+written in the Python programming language to use the interface
+supplied by RPM Package Manager libraries.
+
+This package should be installed if you want to develop Python
+programs that will manipulate RPM packages and databases.
+%endif
+
+%package -n popt
+Summary: A C library for parsing command line parameters.
+Group: Development/Libraries
+Version: 1.8.1
+
+%description -n popt
+Popt is a C library for parsing command line parameters. Popt was
+heavily influenced by the getopt() and getopt_long() functions, but it
+improves on them by allowing more powerful argument expansion. Popt
+can parse arbitrary argv[] style arrays and automatically set
+variables based on command line arguments. Popt allows command line
+arguments to be aliased via configuration files and includes utility
+functions for parsing arbitrary strings into argv[] arrays using
+shell-like rules.
+
+%prep
+%setup -q
+%ifos darwin
+%patch0 -p1 -b .macosx
+%patch1 -p1 -b .macosx
+%if %{with_python_subpackage}
+%patch2 -p1 -b .macosx
+%endif
+%patch3 -p0
+%else
+exit 1
+%endif
+
+%build
+
+# XXX rpm needs functioning nptl for configure tests
+unset LD_ASSUME_KERNEL || :
+
+%if %{with_python_subpackage}
+WITH_PYTHON="--with-python=%{with_python_version}"
+%else
+WITH_PYTHON="--without-python"
+%endif
+
+%ifos linux
+%ifarch x86_64 s390 s390x 
+CFLAGS="$RPM_OPT_FLAGS -fPIC"; export CFLAGS
+%else
+CFLAGS="$RPM_OPT_FLAGS"; export CFLAGS
+%endif
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{__prefix} --sysconfdir=%{__etcdir} \
+	--localstatedir=%{__vardir} --infodir='${prefix}%{__share}/info' \
+	--mandir='${prefix}%{__share}/man' \
+	$WITH_PYTHON --without-javaglue
+%else
+%ifnos darwin
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{__prefix} $WITH_PYTHON \
+	--without-javaglue
+%else
+CFLAGS="$RPM_OPT_FLAGS -fno-common" RANLIB='ranlib -s' ./configure --prefix=%{__prefix} \
+	$WITH_PYTHON --without-javaglue --enable-broken-chown --disable-rpath
+%endif
+%endif
+
+# XXX hack out O_DIRECT support in db4 for now.
+perl -pi -e 's/#define HAVE_O_DIRECT 1/#undef HAVE_O_DIRECT/' db3/db_config.h
+
+make
+
+
+%install
+# XXX rpm needs functioning nptl for configure tests
+unset LD_ASSUME_KERNEL || :
+
+rm -rf $RPM_BUILD_ROOT
+
+%ifos darwin
+mkdir -p $RPM_BUILD_ROOT%{__vardir}/tmp
+mkdir -p $RPM_BUILD_ROOT%{__etcdir}
+ln -s private/var $RPM_BUILD_ROOT/var
+ln -s private/etc $RPM_BUILD_ROOT/etc
+%endif
+
+make DESTDIR="$RPM_BUILD_ROOT" install
+
+%ifos darwin
+install misc/glob.h ${RPM_BUILD_ROOT}%{__includedir}/rpm
+%endif
+
+%ifos linux
+
+# Save list of packages through cron
+mkdir -p ${RPM_BUILD_ROOT}%{__etcdir}/cron.daily
+install -m 755 scripts/rpm.daily ${RPM_BUILD_ROOT}%{__etcdir}/cron.daily/rpm
+
+mkdir -p ${RPM_BUILD_ROOT}%{__etcdir}/logrotate.d
+install -m 644 scripts/rpm.log ${RPM_BUILD_ROOT}%{__etcdir}/logrotate.d/rpm
+
+mkdir -p $RPM_BUILD_ROOT%{__etcdir}/rpm
+
+mkdir -p $RPM_BUILD_ROOT%{__vardir}/spool/repackage
+mkdir -p $RPM_BUILD_ROOT%{__vardir}/lib/rpm
+for dbi in \
+	Basenames Conflictname Dirnames Group Installtid Name Packages \
+	Providename Provideversion Requirename Requireversion Triggername \
+	Filemd5s Pubkeys Sha1header Sigmd5 \
+	__db.001 __db.002 __db.003 __db.004 __db.005 __db.006 __db.007 \
+	__db.008 __db.009
+do
+    touch $RPM_BUILD_ROOT%{__vardir}/lib/rpm/$dbi
+done
+
+%endif
+
+%if %{with_apidocs}
+gzip -9n apidocs/man/man*/* || :
+%endif
+
+# Get rid of unpackaged files
+{ cd $RPM_BUILD_ROOT
+  rm -rf .%{__includedir}/beecrypt
+  rm -f .%{__libdir}/libbeecrypt.{a,la,so.2.2.0}
+  rm -f .%{__prefix}/lib/rpm/{Specfile.pm,cpanflute,cpanflute2,rpmdiff,rpmdiff.cgi,sql.prov,sql.req,tcl.req}
+  rm -rf .%{__mandir}/{fr,ko}
+}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%pre
+%ifos linux
+if [ -f /var/lib/rpm/packages.rpm ]; then
+    echo "
+You have (unsupported)
+	/var/lib/rpm/packages.rpm	db1 format installed package headers
+Please install rpm-4.0.4 first, and do
+	rpm --rebuilddb
+to convert your database from db1 to db3 format.
+"
+    exit 1
+fi
+/usr/sbin/groupadd -g 37 rpm				> /dev/null 2>&1
+/usr/sbin/useradd  -r -d /var/lib/rpm -u 37 -g 37 rpm -s /sbin/nologin	> /dev/null 2>&1
+%endif
+exit 0
+
+%post
+%ifos linux
+/sbin/ldconfig
+/bin/chown rpm.rpm /var/lib/rpm/[A-Z]*
+%endif
+exit 0
+
+%ifos linux
+%postun
+/sbin/ldconfig
+if [ $1 = 0 ]; then
+    /usr/sbin/userdel rpm
+    /usr/sbin/groupdel rpm
+fi
+exit 0
+
+%post devel -p /sbin/ldconfig
+%postun devel -p /sbin/ldconfig
+
+%post -n popt -p /sbin/ldconfig
+%postun -n popt -p /sbin/ldconfig
+%endif
+
+%if %{with_python_subpackage}
+%post python -p /sbin/ldconfig
+%postun python -p /sbin/ldconfig
+%endif
+
+%ifnos darwin
+%define	rpmbattr		%attr(0755, rpm, rpm)
+%define	rpmdattr	%attr(0644, rpm, rpm)
+%else
+%define	rpmbattr		%attr(0755, root, wheel)
+%define	rpmdattr	%attr(0644, root, wheel)
+%endif
+
+%files
+%{__defattr__}
+%doc RPM-PGP-KEY RPM-GPG-KEY BETA-GPG-KEY CHANGES GROUPS doc/manual/[a-z]*
+# XXX comment these lines out if building with rpm that knows not %pubkey attr
+%ifnos darwin
+%pubkey RPM-PGP-KEY
+%pubkey RPM-GPG-KEY
+%pubkey BETA-GPG-KEY
+%endif
+%ifnos darwin
+%rpmbattr	/bin/rpm
+%else
+%rpmbattr	%{__bindir}/rpm
+%endif
+
+%ifos linux
+%config(noreplace,missingok)	%{__etcdir}/cron.daily/rpm
+%config(noreplace,missingok)	%{__etcdir}/logrotate.d/rpm
+%dir				%{__etcdir}/rpm
+#%config(noreplace,missingok)	%{__etcdir}/rpm/macros.*
+%rpmbattr	%dir %{__vardir}/lib/rpm
+%rpmbattr	%dir %{__vardir}/spool/repackage
+
+%define	rpmdbattr %attr(0644, rpm, rpm) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
+%rpmdbattr	%{__vardir}/lib/rpm/*
+%endif
+
+%rpmbattr	%{__bindir}/rpm2cpio
+%rpmbattr	%{__bindir}/gendiff
+%rpmbattr	%{__bindir}/rpmdb
+#%rpmbattr	%{__bindir}/rpm[eiu]
+%rpmbattr	%{__bindir}/rpmsign
+%rpmbattr	%{__bindir}/rpmquery
+%rpmbattr	%{__bindir}/rpmverify
+
+%{__libdir}/librpm-4.2.%{__soext}
+%{__libdir}/librpmdb-4.2.%{__soext}
+%{__libdir}/librpmio-4.2.%{__soext}
+%{__libdir}/librpmbuild-4.2.%{__soext}
+
+%rpmbattr	%dir %{__prefix}/lib/rpm
+%rpmbattr	%{__prefix}/lib/rpm/config.guess
+%rpmbattr	%{__prefix}/lib/rpm/config.sub
+%rpmbattr	%{__prefix}/lib/rpm/convertrpmrc.sh
+%rpmdattr	%{__prefix}/lib/rpm/macros
+%rpmbattr	%{__prefix}/lib/rpm/mkinstalldirs
+%rpmbattr	%{__prefix}/lib/rpm/rpm.*
+%rpmbattr	%{__prefix}/lib/rpm/rpm2cpio.sh
+%rpmbattr	%{__prefix}/lib/rpm/rpm[deiukqv]
+%rpmbattr	%{__prefix}/lib/rpm/tgpg
+%rpmdattr	%{__prefix}/lib/rpm/rpmpopt*
+%rpmdattr	%{__prefix}/lib/rpm/rpmrc
+
+%ifarch i386 i486 i586 i686 athlon
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/i[3456]86*
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/athlon*
+%endif
+%ifarch alpha alphaev5 alphaev56 alphapca56 alphaev6 alphaev67
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/alpha*
+%endif
+%ifarch sparc sparcv9 sparc64
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/sparc*
+%endif
+%ifarch ia64
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/ia64*
+%endif
+%ifarch powerpc ppc ppciseries ppcpseries ppcmac ppc64
+%ifnos darwin
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/ppc*
+%endif
+%endif
+%ifarch s390 s390x
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/s390*
+%endif
+%ifarch armv3l armv4l
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/armv[34][lb]*
+%endif
+%ifarch mips mipsel
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/mips*
+%endif
+%ifarch x86_64
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/x86_64*
+%endif
+%ifnos darwin
+%attr(-, rpm, rpm)		%{__prefix}/lib/rpm/noarch*
+%endif
+
+%lang(cs)	%{__prefix}/*/locale/cs/LC_MESSAGES/rpm.mo
+%lang(da)	%{__prefix}/*/locale/da/LC_MESSAGES/rpm.mo
+%lang(de)	%{__prefix}/*/locale/de/LC_MESSAGES/rpm.mo
+%lang(fi)	%{__prefix}/*/locale/fi/LC_MESSAGES/rpm.mo
+%lang(fr)	%{__prefix}/*/locale/fr/LC_MESSAGES/rpm.mo
+%lang(gl)	%{__prefix}/*/locale/gl/LC_MESSAGES/rpm.mo
+%lang(is)	%{__prefix}/*/locale/is/LC_MESSAGES/rpm.mo
+%lang(ja)	%{__prefix}/*/locale/ja/LC_MESSAGES/rpm.mo
+%lang(ko)	%{__prefix}/*/locale/ko/LC_MESSAGES/rpm.mo
+%lang(no)	%{__prefix}/*/locale/no/LC_MESSAGES/rpm.mo
+%lang(pl)	%{__prefix}/*/locale/pl/LC_MESSAGES/rpm.mo
+%lang(pt)	%{__prefix}/*/locale/pt/LC_MESSAGES/rpm.mo
+%lang(pt_BR)	%{__prefix}/*/locale/pt_BR/LC_MESSAGES/rpm.mo
+%lang(ro)	%{__prefix}/*/locale/ro/LC_MESSAGES/rpm.mo
+%lang(ru)	%{__prefix}/*/locale/ru/LC_MESSAGES/rpm.mo
+%lang(sk)	%{__prefix}/*/locale/sk/LC_MESSAGES/rpm.mo
+%lang(sl)	%{__prefix}/*/locale/sl/LC_MESSAGES/rpm.mo
+%lang(sr)	%{__prefix}/*/locale/sr/LC_MESSAGES/rpm.mo
+%lang(sv)	%{__prefix}/*/locale/sv/LC_MESSAGES/rpm.mo
+%lang(tr)	%{__prefix}/*/locale/tr/LC_MESSAGES/rpm.mo
+
+%{__mandir}/man1/gendiff.1*
+%{__mandir}/man8/rpm.8*
+%{__mandir}/man8/rpm2cpio.8*
+%lang(ja)	%{__mandir}/ja/man[18]/*.[18]*
+%lang(pl)	%{__mandir}/pl/man[18]/*.[18]*
+%lang(ru)	%{__mandir}/ru/man[18]/*.[18]*
+%lang(sk)	%{__mandir}/sk/man[18]/*.[18]*
+
+%files build
+%{__defattr__}
+%ifnos darwin
+%dir %{__prefix}/src/redhat
+%dir %{__prefix}/src/redhat/BUILD
+%dir %{__prefix}/src/redhat/SPECS
+%dir %{__prefix}/src/redhat/SOURCES
+%dir %{__prefix}/src/redhat/SRPMS
+%dir %{__prefix}/src/redhat/RPMS
+%{__prefix}/src/redhat/RPMS/*
+%else
+%dir %{__prefix}/src/apple
+%dir %{__prefix}/src/apple/BUILD
+%dir %{__prefix}/src/apple/SPECS
+%dir %{__prefix}/src/apple/SOURCES
+%dir %{__prefix}/src/apple/SRPMS
+%dir %{__prefix}/src/apple/RPMS
+%{__prefix}/src/apple/RPMS/*
+%endif
+%rpmbattr	%{__bindir}/rpmbuild
+%rpmbattr	%{__prefix}/lib/rpm/brp-*
+%rpmbattr	%{__prefix}/lib/rpm/check-files
+%rpmbattr	%{__prefix}/lib/rpm/check-prereqs
+%rpmbattr	%{__prefix}/lib/rpm/config.site
+%rpmbattr	%{__prefix}/lib/rpm/cross-build
+%ifnos darwin
+%rpmbattr	%{__prefix}/lib/rpm/debugedit
+%endif
+%rpmbattr	%{__prefix}/lib/rpm/find-debuginfo.sh
+%rpmbattr	%{__prefix}/lib/rpm/find-lang.sh
+%rpmbattr	%{__prefix}/lib/rpm/find-prov.pl
+%rpmbattr	%{__prefix}/lib/rpm/find-provides
+%rpmbattr	%{__prefix}/lib/rpm/find-provides.perl
+%rpmbattr	%{__prefix}/lib/rpm/find-req.pl
+%rpmbattr	%{__prefix}/lib/rpm/find-requires
+%rpmbattr	%{__prefix}/lib/rpm/find-requires.perl
+%rpmbattr	%{__prefix}/lib/rpm/get_magic.pl
+%rpmbattr	%{__prefix}/lib/rpm/getpo.sh
+%rpmbattr	%{__prefix}/lib/rpm/http.req
+%rpmbattr	%{__prefix}/lib/rpm/javadeps
+%rpmbattr	%{__prefix}/lib/rpm/magic
+%rpmbattr	%{__prefix}/lib/rpm/magic.mgc
+%rpmbattr	%{__prefix}/lib/rpm/magic.mime
+%rpmbattr	%{__prefix}/lib/rpm/magic.mime.mgc
+%rpmbattr	%{__prefix}/lib/rpm/magic.prov
+%rpmbattr	%{__prefix}/lib/rpm/magic.req
+%ifnos darwin
+%rpmbattr	%{__prefix}/lib/rpm/perldeps.pl
+%endif
+%rpmbattr	%{__prefix}/lib/rpm/perl.prov
+%rpmbattr	%{__prefix}/lib/rpm/perl.req
+
+%rpmbattr	%{__prefix}/lib/rpm/rpm[bt]
+%rpmbattr	%{__prefix}/lib/rpm/rpmdeps
+%rpmbattr	%{__prefix}/lib/rpm/trpm
+%rpmbattr	%{__prefix}/lib/rpm/u_pkg.sh
+%rpmbattr	%{__prefix}/lib/rpm/vpkg-provides.sh
+%rpmbattr	%{__prefix}/lib/rpm/vpkg-provides2.sh
+
+%{__mandir}/man8/rpmbuild.8*
+%{__mandir}/man8/rpmdeps.8*
+
+%if %{with_python_subpackage}
+%files python
+%{__defattr__}
+%{__libdir}/python%{with_python_version}/site-packages/rpmmodule.*
+%{__libdir}/python%{with_python_version}/site-packages/rpmdb
+%endif
+
+%files devel
+%{__defattr__}
+%if %{with_apidocs}
+%doc apidocs
+%endif
+%{__includedir}/rpm
+%{__libdir}/librpm.a
+%{__libdir}/librpm.la
+%{__libdir}/librpm.%{__soext}
+%{__libdir}/librpmdb.a
+%{__libdir}/librpmdb.la
+%{__libdir}/librpmdb.%{__soext}
+%{__libdir}/librpmio.a
+%{__libdir}/librpmio.la
+%{__libdir}/librpmio.%{__soext}
+%{__libdir}/librpmbuild.a
+%{__libdir}/librpmbuild.la
+%{__libdir}/librpmbuild.%{__soext}
+%{__mandir}/man8/rpmcache.8*
+%{__mandir}/man8/rpmgraph.8*
+%rpmbattr	%{__prefix}/lib/rpm/rpmcache
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_deadlock
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_dump
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_load
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_loadcvt
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_svc
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_stat
+%rpmbattr	%{__prefix}/lib/rpm/rpmdb_verify
+%rpmbattr	%{__prefix}/lib/rpm/rpmfile
+%rpmbattr	%{__bindir}/rpmgraph
+
+%files -n popt
+%{__defattr__}
+%ifnos darwin
+%{__libdir}/libpopt.%{__soext}.*
+%else
+%{__libdir}/libpopt.*.%{__soext}
+%endif
+%{__mandir}/man3/popt.3*
+%lang(cs)	%{__prefix}/*/locale/cs/LC_MESSAGES/popt.mo
+%lang(da)	%{__prefix}/*/locale/da/LC_MESSAGES/popt.mo
+%lang(de)	%{__prefix}/*/locale/de/LC_MESSAGES/popt.mo
+%lang(es)	%{__prefix}/*/locale/es/LC_MESSAGES/popt.mo
+%lang(eu_ES)	%{__prefix}/*/locale/eu_ES/LC_MESSAGES/popt.mo
+%lang(fi)	%{__prefix}/*/locale/fi/LC_MESSAGES/popt.mo
+%lang(fr)	%{__prefix}/*/locale/fr/LC_MESSAGES/popt.mo
+%lang(gl)	%{__prefix}/*/locale/gl/LC_MESSAGES/popt.mo
+%lang(hu)	%{__prefix}/*/locale/hu/LC_MESSAGES/popt.mo
+%lang(id)	%{__prefix}/*/locale/id/LC_MESSAGES/popt.mo
+%lang(is)	%{__prefix}/*/locale/is/LC_MESSAGES/popt.mo
+%lang(it)	%{__prefix}/*/locale/it/LC_MESSAGES/popt.mo
+%lang(ja)	%{__prefix}/*/locale/ja/LC_MESSAGES/popt.mo
+%lang(ko)	%{__prefix}/*/locale/ko/LC_MESSAGES/popt.mo
+%lang(no)	%{__prefix}/*/locale/no/LC_MESSAGES/popt.mo
+%lang(pl)	%{__prefix}/*/locale/pl/LC_MESSAGES/popt.mo
+%lang(pt)	%{__prefix}/*/locale/pt/LC_MESSAGES/popt.mo
+%lang(pt_BR)	%{__prefix}/*/locale/pt_BR/LC_MESSAGES/popt.mo
+%lang(ro)	%{__prefix}/*/locale/ro/LC_MESSAGES/popt.mo
+%lang(ru)	%{__prefix}/*/locale/ru/LC_MESSAGES/popt.mo
+%lang(sk)	%{__prefix}/*/locale/sk/LC_MESSAGES/popt.mo
+%lang(sl)	%{__prefix}/*/locale/sl/LC_MESSAGES/popt.mo
+%lang(sr)	%{__prefix}/*/locale/sr/LC_MESSAGES/popt.mo
+%lang(sv)	%{__prefix}/*/locale/sv/LC_MESSAGES/popt.mo
+%lang(tr)	%{__prefix}/*/locale/tr/LC_MESSAGES/popt.mo
+%lang(uk)	%{__prefix}/*/locale/uk/LC_MESSAGES/popt.mo
+%lang(wa)	%{__prefix}/*/locale/wa/LC_MESSAGES/popt.mo
+%lang(zh)	%{__prefix}/*/locale/zh/LC_MESSAGES/popt.mo
+%lang(zh_CN)	%{__prefix}/*/locale/zh_CN.GB2312/LC_MESSAGES/popt.mo
+
+# XXX These may end up in popt-devel but it hardly seems worth the effort.
+%{__libdir}/libpopt.a
+%{__libdir}/libpopt.la
+%{__libdir}/libpopt.%{__soext}
+%{__includedir}/popt.h
+
+%changelog
+* Wed Aug  3 Allen Day <allenday@ucla.edu> 4.2.1-1.1
+- Derived from 0.31c from rpm4darwin.
+- Added a patch to fix conflict between int and static int
+  declarations for the same variable.
+* Sun Feb 15 2004 Anders F Bjorklund <afb@algonet.se> 4.2.1-0.31c
+- removed mergesort from header/lib, on darwin
+- set environ to *_NSGetEnviron, darwin quirk
+
+* Fri Feb 13 2004 Anders F Bjorklund <afb@algonet.se> 4.2.1-0.31b
+- set tar and make to GNU versions, for compatibility
+- added Python 2.3 support, for Mac OS X 10.3
+
+* Wed Jan 28 2004 Anders F Bjorklund <afb@algonet.se> 4.2.1-0.31a
+- 2nd release on Mac OS X 10.3
+- updated to later version 0.31, from Red Hat
+- added missing glob.h header file, for rpmio.h
+
+* Sat Dec 27 2003 Keisuke Fujii <keisuke.fujii@kek.jp> 4.2.1-0.30a
+- 1st release on MacOSX 10.3
+
+* Tue Jul 22 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.31
+- fix: packages w/o file colors segfault.
+- add amd64 as alias for x86_64 (#99553).
+
+* Wed Jul 16 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.30
+- repair find-debuginfo.sh to avoid recursing in /usr/lib/debug.
+- fix: ia64: don't attempt autorelocate on .src.rpm's.
+- fix: debuginfo: -not -path /usr/lib/debug needed -prune too.
+
+* Thu Jul 10 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.26
+- apply debugedit patch necessary to produce kernel -debuginfo files.
+- zap zlib files so that apidocs gets included.
+
+* Wed Jul  9 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.21
+- resolve elf32/elf64 file conflicts to prefer elf64.
+
+* Tue Jul  8 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.20
+- resurrect manifests, RPMRC_NOTFOUND returned by readLead().
+- python: missed tuple refcount in IDTXload/IDTXglob.
+- fix: IDTXglob should return REMOVETID sorted headers (#89857).
+
+* Wed Jul  2 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.19
+- autorelocate ix86 package file paths on ia64.
+
+* Tue Jul  1 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.18
+- don't attempt to remove dbenv on --rebuilddb.
+- rebuild.
+
+* Tue Jun 24 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.17
+- update for fr.po (#97829).
+
+* Fri Jun 20 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.16
+- brp-python-bytecompile to automagically bytecode compile python.
+
+* Thu Jun 19 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.15
+- 2nd test release.
+
+* Thu Jun 12 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.13
+- fdCLose typo (#97257).
+- test release.
+
+* Mon Jun  9 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.12
+- gratuitous bump/rebuild to exclude ppc64 for the moment.
+
+* Thu Jun  5 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.11
+- update ja man pages (#92261).
+- backport rpmsw stopwatch, insturment rpmts operations.
+- toy method to enable --stats through bindings.
+
+* Wed Jun  4 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.8
+- pass structure pointer, not args, through headerSprintf call chain.
+- add ":xml" header format modifier.
+- --queryformat '[%%{*:xml}\n]' to dump header content in XML.
+- add ".arch" suffix to erase colored packages with identical NEVR.
+
+* Tue Jun  3 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.6
+- rebuild against fixes in beecrypt-3.0.0-0.20030603.
+- treat missing epoch's exactly the same as Epoch: 0.
+
+* Mon Jun  2 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.4
+- rebuild against fixes in beecrypt-3.0.0-0.20030602.
+
+* Thu May 29 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.3
+- build with external beecrypt-3.0.0.
+- blueprint beecrypt-3.0.0 changes against rpm-4.3.
+- x86_64 -> athlon, ppc64[ip]series -> ppc64 arch compatibility.
+
+* Thu Mar 27 2003 Jeff Johnson <jbj@redhat.com> 4.2.1-0.1
+- start rpm-4.2.1.
+- hack out O_DIRECT support in db4 for now.
