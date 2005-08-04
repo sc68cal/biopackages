@@ -1,4 +1,4 @@
-#$Id: rpm.spec.in,v 1.2 2005/08/04 01:31:38 allenday Exp $
+#$Id: rpm.spec.in,v 1.3 2005/08/04 02:43:25 allenday Exp $
 %ifnos darwin
 %define __soext so
 %define __defattr__ %defattr(-,root,root)
@@ -45,7 +45,7 @@ Name: rpm
 %define version 4.2.1
 Version: %{version}
 %{expand: %%define rpm_version %{version}}
-Release: %{revision}.bp
+Release: %{revision}.bp.darwin
 Group: System Environment/Base
 Source: ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.0.x/rpm-%{rpm_version}.tar.gz
 Patch0: rpm-%{version}-macosx.patch
