@@ -1,0 +1,53 @@
+#$Id: yum.spec.in,v 1.1 2005/08/04 02:41:42 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: yum
+Epoch: 1
+Version: 2.0.8
+Release: %{revision}.bp.darwin
+Packager: allenday@ucla.edu
+License: GPL
+Group: Development/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+#this really needs beencrypt and libxml2, but i have bootstrapped
+#my build system with source installs.  will clean this up later
+BuildRequires: darwin-base, biopackages
+#BuildRequires: gettext, python, libxml2
+#Requires: gettext, libxml2, rpm, rpm-python
+Source0: %{name}-%{version}.tar.gz
+Patch0: yum-%{version}-Makefile.in.patch
+Patch1: yum-%{version}-yum.conf.patch
+
+%description
+
+%prep
+%setup -q %{name}-%{version} 
+if [ "%{_os}" != "darwin" ] ; then exit 1 ; fi
+%patch0 -p0
+%patch1 -p0
+mkdir -p $RPM_BUILD_ROOT/var/cache/yum
+mkdir -p $RPM_BUILD_ROOT/etc
+
+%build
+./configure --prefix=$RPM_BUILD_ROOT/usr
+make
+
+%install
+make install
+mv $RPM_BUILD_ROOT/usr/etc/yum.conf $RPM_BUILD_ROOT/etc/
+find $RPM_BUILD_ROOT -type f | perl -ne "s!$RPM_BUILD_ROOT!!;print" > %{name}.filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}.filelist
+%defattr(-,root,root,-)
+%dir /var/cache/yum
+
+%changelog
+* Wed Aug  3 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.1
+- New specfile derived from rpm4darwin (i think)
+- No longer install 'po' target.  seems to be some intl stuff
+- Modified yum.conf to point to biopackages server by default
