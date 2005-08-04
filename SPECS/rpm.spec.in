@@ -1,4 +1,4 @@
-#$Id: rpm.spec.in,v 1.1 2005/08/04 01:30:49 allenday Exp $
+#$Id: rpm.spec.in,v 1.2 2005/08/04 01:31:38 allenday Exp $
 %ifnos darwin
 %define __soext so
 %define __defattr__ %defattr(-,root,root)
@@ -578,7 +578,7 @@ exit 0
 %{__includedir}/popt.h
 
 %changelog
-* Wed Aug  3 Allen Day <allenday@ucla.edu> 4.2.1-1.1
+* Wed Aug  3 2005 Allen Day <allenday@ucla.edu> 4.2.1-1.2
 - Derived from 0.31c from rpm4darwin.
 - Added a patch to fix conflict between int and static int
   declarations for the same variable.
