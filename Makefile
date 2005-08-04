@@ -1,9 +1,9 @@
-#$Id: Makefile,v 1.6 2005/07/29 09:28:09 allenday Exp $
+#$Id: Makefile,v 1.7 2005/08/04 00:18:56 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
-RPMBUILD=/usr/bin/rpmbuild
+RPMBUILD=/usr/local/bin/rpmbuild
 
 ####################################
 #main build targets
