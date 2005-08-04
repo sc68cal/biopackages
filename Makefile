@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.8 2005/08/04 01:24:33 allenday Exp $
+#$Id: Makefile,v 1.9 2005/08/04 22:30:57 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -21,6 +21,12 @@ sources ::
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
+
+up ::
+	echo TODO
+
+publish ::
+	echo TODO
 
 ####################################
 #extension rules
