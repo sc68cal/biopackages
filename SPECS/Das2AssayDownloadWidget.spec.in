@@ -1,4 +1,4 @@
-#$Id: Das2AssayDownloadWidget.spec.in,v 1.1 2005/08/03 23:09:17 mcarlson Exp $
+#$Id: Das2AssayDownloadWidget.spec.in,v 1.2 2005/08/05 01:55:14 mcarlson Exp $
 Summary: Installs a Java Web Start application to allow simple download of normalized data from a Das 2 server.
 Name: Das2AssayDownloadWidget
 Version: 0.01
@@ -23,12 +23,12 @@ mkdir -p $RPM_BUILD_ROOT/var/www/html/
  
 
 %build
-perl -p -i -e 's!@@JAVADIR@@!%{_javadir}/%{name}!g' das2-assay-download-widget.jnlp.php
+perl -p -i -e 's!\@\@JAVADIR\@\@!%{_javadir}/%{name}!g' das2-assay-download-widget.jnlp.php
 
 %install
 install -m 444 Das2Widget.jar $RPM_BUILD_ROOT%{_javadir}/%{name}
 install -m 444 netcdf.jar $RPM_BUILD_ROOT%{_javadir}/%{name}
-install -m 755 das2-assay-download-widget.jnlp.php $RPM_BUILD_ROOT/var/www/html 
+install -m 755 das2-assay-download-widget.jnlp.php $RPM_BUILD_ROOT/var/www/html/%{name}.jnlp.php 
 
 %post
 
