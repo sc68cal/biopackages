@@ -1,4 +1,4 @@
-#$Id: perl-Net-Jabber.spec.in,v 1.1 2005/08/15 23:32:56 allenday Exp $
+#$Id: perl-Net-Jabber.spec.in,v 1.2 2005/08/15 23:44:36 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,7 +10,7 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Net-Jabber/
-BuildArch: 1
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: Net-Jabber-2.0.tar.gz
