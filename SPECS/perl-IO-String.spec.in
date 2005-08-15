@@ -1,10 +1,11 @@
-#$Id: perl-IO-String.spec.in,v 1.1 2005/08/15 22:40:18 allenday Exp $
+#$Id: perl-IO-String.spec.in,v 1.2 2005/08/15 23:07:55 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-IO-String
 Version: 1.06
 Release: %{revision}.%{distro}
+Epoch: 1
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries

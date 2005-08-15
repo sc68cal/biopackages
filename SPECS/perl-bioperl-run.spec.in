@@ -1,10 +1,11 @@
-#$Id: perl-bioperl-run.spec.in,v 1.1 2005/08/15 22:54:33 allenday Exp $
+#$Id: perl-bioperl-run.spec.in,v 1.2 2005/08/15 23:07:55 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Bioperl wrapper toolkit
 Name: perl-bioperl-run
 Version: 1.4
 Release: %{revision}.cvs%{distro}
+Epoch: 1
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -15,7 +16,7 @@ BuildRequires: perl, biopackages
 Source0: bioperl-run-1.4.tar.gz
 
 %description
-$Id: perl-bioperl-run.spec.in,v 1.1 2005/08/15 22:54:33 allenday Exp $
+$Id: perl-bioperl-run.spec.in,v 1.2 2005/08/15 23:07:55 allenday Exp $
 
 
 o Version
