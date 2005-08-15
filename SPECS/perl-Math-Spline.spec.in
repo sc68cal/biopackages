@@ -1,4 +1,4 @@
-#$Id: perl-Math-Spline.spec.in,v 1.1 2005/08/15 23:13:47 allenday Exp $
+#$Id: perl-Math-Spline.spec.in,v 1.2 2005/08/15 23:53:38 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
@@ -10,6 +10,7 @@ Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Math-Spline/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: Math-Spline-0.01.tar.gz
