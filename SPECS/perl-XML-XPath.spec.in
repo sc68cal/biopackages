@@ -1,4 +1,4 @@
-#$Id: perl-XML-XPath.spec.in,v 1.1 2005/08/15 23:26:31 allenday Exp $
+#$Id: perl-XML-XPath.spec.in,v 1.2 2005/08/15 23:29:59 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: a set of modules for parsing and evaluating XPath statements
@@ -10,7 +10,7 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-XPath/
-BuildArch: 1
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: XML-XPath-1.13.tar.gz

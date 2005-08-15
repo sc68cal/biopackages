@@ -1,0 +1,194 @@
+#$Id: perl-bioperl.spec.in,v 1.1 2005/08/15 23:35:43 allenday Exp $
+Summary: bioperl Perl module
+Name: perl-bioperl
+Version: 1.5
+Release: %{revision}.cvs%{distro}
+Epoch: 1
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/bioperl/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: bioperl-1.5.tar.gz
+#remove AcePerl references
+Patch0: bioperl-1.5-ace.patch
+Patch1: bioperl-1.5-manifest.patch
+
+%description
+o About Bioperl
+
+ Bioperl is a package of public domain Perl tools for computational 
+ molecular biology.
+
+ Our website, http://bioperl.org, provides an online resource of
+ modules, scripts, and web links for developers of Perl-based software
+ for life science research.
+
+o Contact info
+
+ Bioperl developers: bioperl-l@bioperl.org
+
+ There's quite a variety of tools available in Bioperl, and more are
+ added all the time. If the tool you're looking for isn't described in
+ the documentation please write us, it could be undocumented or in process.
+
+ Project website   : http://bioperl.org
+ Project FTP server: bioperl.org (anonymous FTP ok)
+
+ Bug reports       : http://bugzilla.bioperl.org/
+                     bioperl-bugs@bioperl.org
+
+ Please send us bugs, in particular about documentation which you
+ think is unclear or problems in installation. We are also very
+ interested in functions which don't work the way you think they do!
+
+ Please see the AUTHORS file for the complete list of bioperl
+ developers and contributors.
+
+o A simple module summary
+
+ Here is a quick summary of many of the useful modules and how the
+ toolkit is laid out:
+
+ All modules are in the Bio/ namespace, 
+  - Perl is for newbies and gives a functional interface to the main
+    parts of the package
+  - Seq is for Sequences (protein and DNA).
+    o Bio::PrimarySeq is a plain sequence (sequence data + identifiers)
+    o Bio::Seq is a PrimarySeq plus it has a Bio::Annotation::Collection 
+      and a Bio::SeqFeatureI objects attached.
+    o Bio::Seq::RichSeq is all of the above plus it has slots for
+      extra information specific to GenBank/EMBL/SwissProt files.
+    o Bio::Seq::LargeSeq is for sequences which are too big for
+      fitting into memory.
+ - SeqIO is for reading and writing Sequences, it is a front end
+   module for separate driver modules supporting the different
+   sequence formats
+ - SeqFeature - start/stop/strand annotations of sequences
+   o Bio::SeqFeature::Generic is basic catchall
+   o Bio::SeqFeature::Similarity a similarity sequence feature
+   o Bio::SeqFeature::FeaturePair a sequence feature which is pairwise
+     such as query/hit pairs
+ - SearchIO is for reading and writing pairwise alignment reports
+   like BLAST or FASTA
+ - Search is where the alignment objects are defined
+   o Bio::Search::Result::GenericResult is the result object (a blast query
+     is a Result object)
+   o Bio::Search::Hit::GenericHit is the Hit object (a query will have
+     0-> many hits in a database)
+   o Bio::Search::HSP::GenericHSP is the High-scoring Segment Pair
+     object defining the alignment(s) of the query and hit.  
+ - SimpleAlign is for multiple sequence alignments
+ - AlignIO is for reading and writing multiple sequence alignment
+   formats
+ - Assembly provides the start of an infrastructure for assemblies
+   and Assembly::IO IO converters for them
+ - DB is the namespace for all the database query objects
+   o Bio::DB::GenBank/GenPept are two modules which query NCBI entrez
+     for sequences
+   o Bio::DB::SwissProt/EMBL query various EMBL and SwissProt
+     repositories for a sequences
+   o Bio::DB::GFF is Lincoln Stein's fast, lightweight feature and
+     sequence database which is the backend to his GBrowse system 
+     (see www.gmod.org)
+   o Bio::DB::Flat is a fast implementation of the OBDA flat-file
+     indexing system (cross-language and cross-platform supported by
+     O|B|F projects see http://obda.open-bio.org).
+   o Bio::DB::BioFetch/DBFetch for OBDA, Web (HTTP) access to remote
+     databases.
+   o Bio::DB::InMemoryCache/FileCache (fast local caching of sequences
+     from remote dbs to speed up your access). 
+   o Bio::DB::Registry interface to the OBDA specification for remote 
+     data sources
+   o Bio::DB::XEMBL SOAP access to sequence databases
+   o Bio::DB::Biblio for access to remote bibliographic databases.
+ - Annotation collection of annotation objects (comments,
+   DBlinks, References, and misc key/value pairs)
+ - Coordinate is a system for mapping between different coordinate
+   systems such as DNA to protein or between assemblies.
+ - Index is for locally indexed flatfiles with BerkeleyDB
+ - Tools contains many miscellaneous parsers and function for different
+   bioinformatics needs
+   o Gene prediction parser (Genscan, MZEF, Grail, Genemark)
+   o Annotation format (GFF)
+   o simulate restriction enzyme cutting with RestrictionEnzyme
+   o Enumerate codon tables and valid sequences symbols (CodonTable, IUPAC)
+   o Phylogenetic program parsing (PAML, Molphy, Phylip)
+ - Map genetic and physical map representations
+ - Graphics render a sequence with its features or a sequence analysis
+   result.
+ - Structure - parse and represent protein structure data
+ - TreeIO is for reading and writing Tree formats
+ - Tree is the namespace for all the associated Tree objects
+   o Bio::Tree::Tree is the basic tree object
+   o Bio::Tree::Node are the nodes which make up the tree
+   o Bio::Tree::Statistics is for computing statistics for a tree
+   o Bio::Tree::TreeFunctionsI is where specific tree functions are
+     implemented (like is_monophyletic and lca)
+ - Bio::Biblio is where bibliographic data and database access objects
+   are kept
+ - Variation represent sequences with mutations and variations applied
+   so one can compare and represent wild-type and mutation versions of
+   a sequence.
+ - Root, basic objects for the internals of Bioperl
+
+
+
+%prep
+%setup -q -n bioperl-%{version}
+%patch0 -p1
+%patch1 -p0
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Tue Mar 1 2005 Allen Day <allenday@ucla.edu> - 1.5-1.1.cvs
+- Added biopackages dep, new snapshot from CVS
+- Commented AcePerl patch -- this has been fixed in CVS
+* Tue Feb 15 2005 Allen Day <allenday@ucla.edu>
+- Removed modules referencing AcePerl
+* Fri Feb 11 2005 allenday@sumo.genetics.ucla.edu
+- Created specfile
+

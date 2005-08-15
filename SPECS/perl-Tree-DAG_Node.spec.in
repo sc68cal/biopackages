@@ -1,0 +1,191 @@
+#$Id: perl-Tree-DAG_Node.spec.in,v 1.1 2005/08/15 23:31:36 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Tree-DAG_Node
+Version: 1.05
+Release: %{revision}.%{distro}
+Epoch: 1
+Packager: allenday@
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Tree-DAG_Node/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: Tree-DAG_Node-1.05.tar.gz
+
+%description
+README for Tree::DAG_Node
+                                        Time-stamp: "2001-02-23 11:37:30 MST"
+
+			    Tree::DAG_Node
+
+[Partially excerpted from the POD.]
+
+Tree::DAG_Node is a (super)class for representing nodes in a tree.
+
+This class encapsulates/makes/manipulates objects that represent nodes
+in a tree structure.  The tree structure is not an object itself, but
+is emergent from the linkages you create between nodes.  This class
+provides the methods for making linkages that can be used to build up
+a tree, while preventing you from ever making any kinds of linkages
+which are not allowed in a tree (such as having a node be its own
+mother or ancestor, or having a node have two mothers).
+
+This is what I mean by a "tree structure", a bit redundantly stated:
+
+    * A tree is a special case of an acyclic directed graph.
+
+    * A tree is a network of nodes where there's exactly one root node
+    (i.e., 'the top'), and the only primary relationship between nodes
+    is the mother-daugher relationship.
+
+    * No node can be its own mother, or its mother's mother, etc.
+
+    * Each node in the tree has exactly one "parent" (node in the "up"
+    direction) -- except the root, which is parentless.
+
+    * Each node can have any number (0 to any finite number) of
+    daughter nodes. A given node's daughter nodes constitute an
+    *ordered* list.  (However, you are free to consider this ordering
+    irrelevant. Some applications do need daughters to be ordered, so
+    I chose to consider this the general case.)
+
+    * A node can appear in only one tree, and only once in that tree.
+    Notably (notable because it doesn't follow from the two above
+    points), a node cannot appear twice in its mother's daughter list.
+
+    * In other words, there's an idea of up (toward the root) versus
+    down (away from the root), and left (i.e., toward the start (index
+    0) of a given node's daughter list) versus right (toward the end
+    of a given node's daughter list).
+
+Trees as described above have various applications, among them:
+representing syntactic constituency, in formal linguistics;
+representing contingencies in a game tree; representing abstract
+syntax in the parsing of any computer language -- whether in
+expression trees for programming languages, or constituency in the
+parse of a markup language document.  (Some of these might not use the
+fact that daughters are ordered.)
+
+Note: B-Trees are a very special case of the above kinds of trees, and
+are best treated with their own class.  Check CPAN for modules
+encapsulating B-Trees; or if you actually want a database, and for
+some reason ended up looking here, go look at the AnyDBM_File
+manpage.)
+
+Many base classes are not usable except as such -- but Tree::DAG_Node
+can be used as a normal class.
+
+
+PREREQUISITES
+
+This suite requires Perl 5; I've only used it under Perl 5.004, so for
+anything lower, you're on your own.
+
+Tree::DAG_Node doesn't use any nonstandard modules.
+
+
+INSTALLATION
+
+You install Tree::DAG_Node, as you would install any perl module
+library, by running these commands:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+If you want to install a private copy of Tree::DAG_Node in your home
+directory, then you should try to produce the initial Makefile with
+something like this command:
+
+  perl Makefile.PL LIB=~/perl
+
+Then you may need something like
+  setenv PERLLIB "$HOME/perl"
+in your shell initialization file (e.g., ~/.cshrc).
+
+See perldoc perlmodinstall for more information on installing modules.
+
+
+DOCUMENTATION
+
+POD-format documentation is included in DAG_Node.pm.  POD is readable
+with the 'perldoc' utility.  See ChangeLog for recent changes.
+
+
+MACPERL INSTALLATION NOTES
+
+Don't bother with the makefiles.  Just make a Tree directory in your
+MacPerl site_lib or lib directory, and move DAG_Node.pm into there.
+
+
+SUPPORT
+
+Questions, bug reports, useful code bits, and suggestions for
+Tree::DAG_Node should just be sent to me at sburke@cpan.org
+
+
+AVAILABILITY
+
+The latest version of Tree::DAG_Node is available from the
+Comprehensive Perl Archive Network (CPAN).  Visit
+<http://www.perl.com/CPAN/> to find a CPAN site near you.
+
+
+COPYRIGHT
+
+Copyright 1998- by Sean M. Burke <sburke@cpan.org>, all
+rights reserved.
+
+
+%prep
+%setup -q -n Tree-DAG_Node-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Fri Feb 11 2005 allenday@ - 1.05-1.1
+- Specfile autogenerated.
