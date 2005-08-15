@@ -1,4 +1,4 @@
-#$Id: perl-Error.spec.in,v 1.1 2005/08/15 22:58:58 allenday Exp $
+#$Id: perl-Error.spec.in,v 1.2 2005/08/15 22:59:35 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Error/exception handling in an OO-ish way
@@ -10,7 +10,7 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Error/
-BuildArch: noarch;
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: Error-0.15.tar.gz
