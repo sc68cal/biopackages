@@ -1,0 +1,201 @@
+#$Id: perl-Cache-Cache.spec.in,v 1.1 2005/08/15 22:36:46 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Cache-Cache
+Version: 1.03
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Cache-Cache/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Cache-Cache-1.03.tar.gz
+
+%description
+Copyright (C) 2001-2003 DeWitt Clinton  All Rights Reserved
+
+   You may distribute under the terms of either the GNU General Public
+   License or the Artistic License, as specified in the Perl README file.
+
+
+NAME
+
+  Cache::Cache
+
+
+DESCRIPTION
+
+  The Cache modules are designed to assist a developer in persisting
+  data for a specified period of time.  Often these modules are used
+  in web applications to store data locally to save repeated and
+  redundant expensive calls to remote machines or databases.  People
+  have also been known to use Cache::Cache for its straightforward
+  interface in sharing data between runs of an application or
+  invocations of a CGI-style script or simply as an easy to use
+  abstraction of the filesystem or shared memory.
+
+  The Cache package provides Cache::Cache, a generic interface
+  for creating persistent data stores.  This interface is implemented
+  by the Cache::MemoryCache, Cache::SharedMemoryCache, Cache::FileCache, 
+  Cache::SizeAwareFileCache, Cache::SizeAwareMemoryCache, and 
+  Cache::SizeAwareSharedMemoryCache classes. 
+
+  This work aggregates and extends the obsolete File::Cache and
+  IPC::Cache projects.
+
+
+REQUIREMENTS
+
+  Digest::SHA1
+  Error
+  File::Spec
+  File::Path
+  IPC::ShareLite
+  Storable
+
+
+INSTALLATION
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+
+USAGE
+
+  First, choose the best type of cache implementation for your needs.
+  The simplest cache is the MemoryCache, which is suitable for
+  applications that are serving multiple sequential requests, and
+  wish to avoid making redundant expensive queries, such as an
+  Apache/mod_perl application talking to a database.  If you wish to
+  share that data between processes, then perhaps the
+  SharedMemoryCache is appropriate, although its behavior is tightly
+  bound to the underlying IPC mechanism, which varies from system to
+  system, and is unsuitable for large objects or large numbers of
+  objects.  When the SharedMemoryCache is not acceptable, then
+  FileCache offers all of the same functionality with similar
+  performance metrics, and it is not limited in terms of the number of
+  objects or their size.  If you wish to maintain a strict limit on
+  the size of a file system based cache, then the SizeAwareFileCache
+  is the way to go.  Similarly, the SizeAwareMemoryCache and the
+  SizeAwareSharedMemoryCache add size management functionality
+  to the MemoryCache and SharedMemoryCache classes respectively.
+
+  Using a cache is simple.  Here is some sample code for instantiating
+  and using a file system based cache.
+
+    use Cache::FileCache;
+
+    my $cache = new Cache::FileCache( );
+
+    my $customer = $cache->get( $name );
+
+    if ( not defined $customer )
+    {
+      $customer = get_customer_from_db( $name );
+      $cache->set( $name, $customer, "10 minutes" );
+    }
+
+    return $customer;
+
+  Please refer to the perldoc for Cache::Cache and the related
+  implementations for complete documentation.
+
+INCOMPATIBLE CHANGES
+
+  Cache::Cache 0.99 contains the following incompatible changes:
+
+    * Error::Simple is thrown on exceptions
+
+    * the get_identifiers method has been deprecated in favor of the
+      get_keys method
+
+    * the internal format of object in a FileCache has been modified,
+      necessitating a clearing of the cache while upgrading (make test 
+      does this for the standard cache root)
+
+  Also note that Storable is not forward compatible between all 
+  releases.  That is, older versions of the Cache will not always
+  be able to read objects written by newer versions.  This is
+  unlikely to ever be an issue in production scenarios.
+
+
+ON LOCKING:
+
+  The FileCache backend uses an temp file and an atomic rename to
+  avoid requiring a lock during the write.  This has been demonstrated
+  to be safe across all platforms to date.
+
+  The MemoryCache backend relies on Perl's atomic write to a hash to
+  ensure that a lock is not required.
+
+  The SharedMemoryCache backend uses ShareLite's locking mechanism
+  for safety during the write.
+
+
+SEE ALSO
+
+  The project homepage at http://perl-cache.sourceforge.net
+
+
+AUTHOR
+
+  Original author: DeWitt Clinton <dewitt@unto.net>
+
+  Copyright (C) 2001-2003 DeWitt Clinton
+
+
+
+%prep
+%setup -q -n Cache-Cache-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Fri Feb 11 2005 allenday@ - 1.03-1.1
+- Specfile autogenerated.
