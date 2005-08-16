@@ -1,4 +1,4 @@
-#$Id: perl-XML-Filter-BufferText.spec.in,v 1.1 2005/08/15 23:41:24 allenday Exp $
+#$Id: perl-XML-Filter-BufferText.spec.in,v 1.2 2005/08/16 01:32:31 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: SAX Filter to guarantee characters in one event
@@ -10,7 +10,7 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-Filter-BufferText/
-BuildArch: 1
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: XML-Filter-BufferText-1.01.tar.gz

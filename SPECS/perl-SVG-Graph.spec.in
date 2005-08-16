@@ -1,4 +1,4 @@
-#$Id: perl-SVG-Graph.spec.in,v 1.1 2005/08/15 23:39:58 allenday Exp $
+#$Id: perl-SVG-Graph.spec.in,v 1.2 2005/08/16 01:32:31 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
@@ -10,7 +10,7 @@ Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/SVG-Graph/
-BuildArch: 1
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-Math-Derivative, perl-Math-Spline, perl-SVG, perl-Tree-DAG_Node, perl-Statistics-Descriptive
