@@ -1,4 +1,4 @@
-#$Id: perl-Clone.spec.in,v 1.1 2005/08/15 23:15:03 allenday Exp $
+#$Id: perl-Clone.spec.in,v 1.2 2005/08/16 00:03:29 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,7 +10,6 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Clone/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: Clone-0.15.tar.gz
