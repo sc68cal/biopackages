@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.1 2005/08/18 05:36:50 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.2 2005/08/18 08:00:41 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 0.4.9pre1
@@ -12,7 +12,7 @@ URL: http://www.ffmpeg.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
 Requires: lame, libogg, libvorbis, faac faad2, a52dec, imlib2
-BuildRequires: bioRPM, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
+BuildRequires: biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
 Provides: libavcodec.so, libavformat.so
 
 %description
