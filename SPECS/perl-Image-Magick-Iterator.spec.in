@@ -1,4 +1,4 @@
-#$Id: perl-Image-Magick-Iterator.spec.in,v 1.1 2005/08/18 08:51:56 allenday Exp $
+#$Id: perl-Image-Magick-Iterator.spec.in,v 1.2 2005/08/18 08:55:29 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: sequentially read Image::Magick object from
@@ -9,6 +9,7 @@ Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Image-Magick-Iterator/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: ImageMagick-perl
