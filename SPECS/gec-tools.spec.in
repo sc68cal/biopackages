@@ -1,0 +1,57 @@
+#$Id: gec-tools.spec.in,v 1.1 2005/08/20 01:47:26 allenday Exp $
+Summary: tools for loading data from GEC
+Name: gec-tools
+Version: 1.0
+Epoch: 1
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.tar.gz
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: j2sdk
+Requires: perl-libwww-perl, perl-Term-ProgressBar, perl-XML-LibXML
+Requires: perl-Class-DBI, perl-Class-DBI-Pg, perl-Ima-DBI
+BuildRequires: perl, biopackages, j2sdk
+
+%description
+tools for loading data from GEC
+
+%prep
+%setup -q
+mkdir -p $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
+
+%build
+/usr/java/j2sdk1.4.2_08/bin/javac -classpath .:./GEC_MAGE-2003-02-23.jar:./GEC_MAGEMLExporter_Bundle.zip ./GECExporter.java
+
+cat > GEC-Exporter <<EOF
+#!/bin/sh
+/usr/java/j2sdk1.4.2_08/bin/java -classpath %{_javadir}/%{name}-%{version}:%{_javadir}/%{name}-%{version}/GEC_MAGE-2003-02-23.jar:%{_javadir}/%{name}-%{version}/GEC_MAGEMLExporter_Bundle.zip GECExporter \$1 \$2
+EOF
+
+%install
+install -m 444 *.jar           $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}/;
+install -m 444 *.zip           $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}/;
+install -m 444 *.class         $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}/;
+install -m 755 GEC-Exporter    $RPM_BUILD_ROOT%{_bindir}/;
+install -m 755 GEC-Loader      $RPM_BUILD_ROOT%{_bindir}/;
+install -m 755 GEC-Mirror.cron $RPM_BUILD_ROOT/etc/cron.daily/;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+%preun
+
+%changelog
+* Mon Jul 18 2005 Allen Day <allenday@ucla.edu> 1.0-1
+- New specfile
