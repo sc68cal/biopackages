@@ -1,4 +1,4 @@
-#$Id: perl-DBIx-DBStag.spec.in,v 1.1 2005/08/23 01:44:33 allenday Exp $
+#$Id: perl-DBIx-DBStag.spec.in,v 1.2 2005/08/23 01:49:16 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -14,7 +14,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, postgresql-server, postgresql,
 BuildRequires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent
-Requires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent
+Requires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent, perl-Data-Stag
 
 Source0: DBIx-DBStag-0.07.tar.gz
 
@@ -26,10 +26,10 @@ DBIx::DBStag
 
 %build
 chmod -R a+rwx ../DBIx-DBStag-%{version}
-su postgres -c "createdb test.DBIx.DBStag" ;
+#su postgres -c "createdb test.DBIx.DBStag" ;
 su postgres -c 'CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null' ;
 su postgres -c 'make OPTIMIZE="$RPM_OPT_FLAGS"' ;
-su postgres -c 'dropdb test.DBIx.DBStag' ;
+#su postgres -c 'dropdb test.DBIx.DBStag' ;
 
 %install
 rm -rf $RPM_BUILD_ROOT
