@@ -1,0 +1,155 @@
+#$Id: AmiGO.spec.in,v 1.1 2005/08/23 01:41:17 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: AmiGO - Browse OBO ontologies stored in Chado
+Name: AmiGO
+Version: 2.0
+Release: %{revision}.cvs%{distro}
+Epoch: 1
+Packager: allenday@ucla.edu
+License: Custom
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/go-perl/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-go-perl, perl-go-db-perl, perl-Template-Toolkit, perl-GraphViz
+Requires: httpd, chado
+
+#necessary to claim these are provided until someone changes 'use' to 'require' in CVS.
+#could simple patch these out, but... whatever.
+Provides: perl(WebReports::BlastMarkup)
+Provides: perl(WebReports::BlastRunner)
+
+Source0: amigo.tar.gz
+#this patch allows browsing of a db that stores multiple ontologies
+Patch0: Session.pm.patch
+
+%description
+AmiGO - Browse OBO ontologies stored in Chado
+
+%prep
+%setup -qc %{name}-%{version}
+%patch0 -p1
+
+%build
+#find . -type d -name CVS -exec rm -rf {} \;
+
+#mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/lib
+#mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/sessions
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/templates/includes
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/templates/pages
+mkdir -p $RPM_BUILD_ROOT/var/www/html/amigo/css
+mkdir -p $RPM_BUILD_ROOT/var/www/html/amigo/images
+#mkdir -p $RPM_BUILD_ROOT/var/www/html/amigo/tmp_images
+
+#chmod 777 $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/sessions
+
+cp -r amigo/perl/* $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/
+
+cd amigo/amigo;
+
+cp -r images/* $RPM_BUILD_ROOT/var/www/html/amigo/images/
+cp -r templates/includes/*.tmpl $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/templates/includes/
+cp -r templates/pages/*.tmpl $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/templates/pages/
+cp -r css/* $RPM_BUILD_ROOT/var/www/html/amigo/css/
+cp -r cgi-bin/go.cgi $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/
+cp -r cgi-bin/spec_keys.pl $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/
+
+perl -p -i -e 's!/usr/local/bin/perl5.8.0!/usr/bin/perl!' $RPM_BUILD_ROOT/var/www/cgi-bin/amigo/go.cgi
+
+cat<<EOF>$RPM_BUILD_ROOT/var/www/cgi-bin/amigo/config.pl
+##########################################
+# general                                #
+##########################################
+\$ENV{DBMS}="Pg";
+\$ENV{GO_DBUSER}="postgres";
+#\$ENV{GO_DBPASS}="";
+
+## go-dev location
+\$ENV{GO_GO_ROOT}="/raid5a/allenday/tars/amigo";
+
+## The name of your local GO database.
+\$ENV{GO_DBNAME}="chado";
+## The name of the GO_db server.
+\$ENV{GO_DBHOST}="localhost";
+
+##########################################
+# Locations of images/sessions/etc       #
+##########################################
+
+# Docroot
+\$ENV{GO_HTML_DIR}="/var/www/html/amigo/";
+# Docroot URL
+\$ENV{GO_HTML_URL}="http://localhost/amigo";
+
+# Absolute location of your cgi-bin
+\$ENV{GO_CGI_ROOT}="/var/www/cgi-bin/amigo/";
+
+## Directories where templates live.  Must
+## be a relative file path to cgi-bin.
+\$ENV{GO_TEMPLATE_PATHS}="templates/pages:templates/includes";
+
+## Directory where sessions live.  Must
+## be a relative file path to cgi-bin.
+## Default is 'sessions'
+\$ENV{GO_SESSION_DIR}="sessions";
+
+## URL to link to GOst, if you want to.
+\$ENV {GO_GOST_URL}="";
+
+#######################################################
+# Look and Feel                                       #
+#######################################################
+
+## Your AmiGO HTML title.
+\$ENV{GO_TITLE}="AmiGO - Browse OBO Ontologies stored in Chado.";
+
+\$ENV{GO_MAX_SESSIONS}=200;
+\$ENV{GO_SESSION_TIMEOUT}=7200;
+1;
+EOF
+
+%install
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+#eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+#for d in $installsitelib $installvendorlib $installprivlib; do
+#  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+#  find $RPM_BUILD_ROOT$d/* -type d \
+#  | grep -v "/$archname\(/auto\)\?$" \
+#  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+#  >> %{name}-%{version}-%{release}-filelist
+#done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%post
+mkdir /var/www/cgi-bin/amigo/sessions
+mkdir /var/www/html/amigo/tmp_images
+chmod 777 /var/www/cgi-bin/amigo/sessions
+chmod 777 /var/www/html/amigo/tmp_images
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-2
+- patch allows browsing of a db that stores multiple ontologies
+* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-1
+- New specfile
