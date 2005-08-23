@@ -1,4 +1,4 @@
-#$Id: perl-DBIx-DBStag.spec.in,v 1.2 2005/08/23 01:49:16 allenday Exp $
+#$Id: perl-DBIx-DBStag.spec.in,v 1.3 2005/08/23 01:52:35 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -27,8 +27,10 @@ DBIx::DBStag
 %build
 chmod -R a+rwx ../DBIx-DBStag-%{version}
 #su postgres -c "createdb test.DBIx.DBStag" ;
-su postgres -c 'CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null' ;
-su postgres -c 'make OPTIMIZE="$RPM_OPT_FLAGS"' ;
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null ;
+make OPTIMIZE="$RPM_OPT_FLAGS" ;
+#su postgres -c 'CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null' ;
+#su postgres -c 'make OPTIMIZE="$RPM_OPT_FLAGS"' ;
 #su postgres -c 'dropdb test.DBIx.DBStag' ;
 
 %install
