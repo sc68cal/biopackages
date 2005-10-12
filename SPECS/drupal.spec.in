@@ -1,4 +1,4 @@
-#$Id: drupal.spec.in,v 1.3 2005/10/12 06:53:39 allenday Exp $
+#$Id: drupal.spec.in,v 1.4 2005/10/12 07:18:47 allenday Exp $
 %define httpdroot  /var/www
 
 Summary:	Drupal is an open-source platform and content management system. 
@@ -11,8 +11,8 @@ License:	GPL
 Group:		Networking/WWW
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 Requires:	perl, biopackages
-Requires:	php-domxml, php-pgsql, php-xmlrpc
-Requires:	httpd, postgresql-devel, postgresql-server
+Requires:	php-domxml, php-mysql, php-xmlrpc
+Requires:	httpd, mysql-devel, mysql-server
 BuildArch: noarch
 Epoch: 1
 
@@ -47,17 +47,17 @@ rm -rf *.txt
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/etc/init.d/postgresql start
-su postgres -c "createuser -A -D drupal";
-su postgres -c "createdb drupal";
-su postgres -c "createlang plpgsql drupal";
-su postgres -c 'psql drupal -c "UPDATE pg_database SET datdba = (SELECT usesysid FROM pg_user WHERE usename = '\''drupal'\'') WHERE datname = '\''drupal'\''"';
-su postgres -c 'cat %{httpdroot}/html/drupal/database/database.pgsql | psql -U drupal drupal';
+export LD_LIBRARY_PATH=/usr/lib/mysql;
+/etc/init.d/mysqld start;
+mysqladmin -u root create drupal;
+echo "GRANT ALL PRIVILEGES ON drupal.* TO nobody@localhost IDENTIFIED BY 'drupal'; FLUSH PRIVILEGES;" | mysql -u root;
+cat %{httpdroot}/html/drupal/database/database.mysql | mysql -u root drupal;
 
 %postun
-/etc/init.d/postgresql start
-su postgres -c "dropdb drupal";
-su postgres -c "dropuser drupal";
+export LD_LIBRARY_PATH=/usr/lib/mysql;
+/etc/init.d/mysqld start
+echo 'drop database drupal' | LD_LIBRARY_PATH=/usr/lib/mysql mysql -u root
+#su postgres -c "dropuser drupal";
 
 %files
 %defattr(-,root,root)
