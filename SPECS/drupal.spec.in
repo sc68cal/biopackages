@@ -1,0 +1,71 @@
+#$Id: drupal.spec.in,v 1.1 2005/10/12 06:47:51 allenday Exp $
+%define httpdroot  /var/www
+
+Summary:	Drupal is an open-source platform and content management system. 
+Name:		drupal
+Version:	4.6.2
+Release:	%{revision}.%{distro}
+Source0:	http://drupal.org/files/projects/drupal-4.6.2.tar.gz
+URL:		http://www.drupal.org/
+License:	GPL
+Group:		Networking/WWW
+BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
+Requires:	perl, biopackages
+Requires:	php-domxml, php-pgsql, php-xmlrpc
+Requires:	httpd, postgresql-devel, postgresql-server
+BuildArchitectures: noarch
+
+%description
+Drupal is an open-source platform and content management system for
+building dynamic web sites offering a broad range of features and
+services including user administration, publishing workflow,
+discussion capabilities, news aggregation, metadata functionalities
+using controlled vocabularies and XML publishing for content sharing
+purposes. Equipped with a powerful blend of features and
+configurability, Drupal can support a diverse range of web projects
+ranging from personal weblogs to large community-driven sites.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+
+%setup -q 
+
+%build
+# Set doc files are regular files
+chmod 0644 *.txt
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{httpdroot}/html/drupal
+cp -aRf * $RPM_BUILD_ROOT%{httpdroot}/html/drupal
+
+cd $RPM_BUILD_ROOT%{httpdroot}/html/drupal
+rm -rf *.txt
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/etc/init.d/postgresql start
+su postgres -c "createuser -A -D drupal";
+su postgres -c "createdb drupal";
+su postgres -c "createlang plpgsql drupal";
+su postgres -c 'psql drupal -c "UPDATE pg_database SET datdba = (SELECT usesysid FROM pg_user WHERE usename = '\''drupal'\'') WHERE datname = '\''drupal'\''"';
+su postgres -c 'cat %{httpdroot}/html/drupal/database/database.pgsql | psql -U drupal drupal';
+
+%postun
+/etc/init.d/postgresql start
+su postgres -c "dropdb drupal";
+su postgres -c "dropuser drupal";
+
+%files
+%defattr(-,root,root)
+%dir %{httpdroot}/html/drupal
+%doc *.txt
+%defattr(-,root,root)
+%{httpdroot}/html/drupal
+
+%changelog
+* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
+* Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.2-1
+- New specfile
