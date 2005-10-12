@@ -1,4 +1,4 @@
-#$Id: drupal.spec.in,v 1.1 2005/10/12 06:47:51 allenday Exp $
+#$Id: drupal.spec.in,v 1.2 2005/10/12 06:52:21 allenday Exp $
 %define httpdroot  /var/www
 
 Summary:	Drupal is an open-source platform and content management system. 
@@ -14,6 +14,7 @@ Requires:	perl, biopackages
 Requires:	php-domxml, php-pgsql, php-xmlrpc
 Requires:	httpd, postgresql-devel, postgresql-server
 BuildArchitectures: noarch
+Epoch: 1
 
 %description
 Drupal is an open-source platform and content management system for

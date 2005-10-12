@@ -1,0 +1,53 @@
+%define httpdroot  /var/www
+%define module event
+
+Summary:	%{module} module for drupal
+Name:		drupal-%{module}
+Version:	4.6.0
+Release:	%{revision}.%{distro}
+Source0:	drupal-%{module}.tar.gz
+URL:		http://www.drupal.org/
+License:	GPL
+Group:		Networking/WWW
+BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
+Requires:	perl, biopackages
+Requires:	drupal
+BuildArch: noarch
+Epoch: 1
+
+%description
+This is a simple module to keep track of events and show them to users.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+%setup -qn %{module}
+find . -type d -name CVS | xargs rm -rf
+
+%build
+mkdir -p $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}
+
+%install
+#rm -rf $RPM_BUILD_ROOT
+cp -pr * $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/etc/init.d/postgresql start
+su postgres -c 'cat %{httpdroot}/html/drupal/modules/%{module}/%{module}.pgsql | psql -U drupal drupal';
+
+%postun
+/etc/init.d/postgresql start
+su postgres -c 'psql -U drupal drupal -c "DROP TABLE event"';
+
+%files
+%defattr(-,root,root)
+%dir %{httpdroot}/html/drupal/modules/%{module}
+%{httpdroot}/html/drupal/modules/%{module}/*
+%{httpdroot}/html/drupal/modules/%{module}/*/*
+
+%changelog
+* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
+* Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.2-1
+- New specfile
