@@ -1,0 +1,79 @@
+#$Id: perl-PDL-NetCDF.spec.in,v 1.1 2005/10/12 22:43:45 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Object-oriented interface between NetCDF files and PDL objects
+Name: perl-PDL-NetCDF
+Version: 0.89
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/PDL-NetCDF
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, gcc, gcc-g77
+BuildRequires: perl-PDL, gcc, netcdf, netcdf-devel
+Requires: perl-PDL >= 2.4.2-4, netcdf, netcdf-devel
+Source0: PDL-NetCDF-%{version}.tar.gz
+Epoch: 1
+
+%description
+This is the PDL interface to the Unidata NetCDF library. It uses the netCDF version 3 library to make a subset of netCDF functionality available to PDL users in a clean, object-oriented interface.
+
+Another NetCDF perl interface, which allows access to the entire range of netCDF functionality (but in a non-object-oriented style which uses perl arrays instead of PDLs) is available through Unidata at http://www.unidata.ucar.edu/packages/netcdf/index.html).
+
+The NetCDF standard allows N-dimensional binary data to be efficiently stored, annotated and exchanged between many platforms.
+
+When one creates a new netCDF object, this object is associated with one netCDF file.
+
+%prep
+%setup -q -n PDL-NetCDF-%{version}
+
+%build
+NETCDF_LIBDIR=%{_libdir} CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Mon Jun 6 2005 allenday@ucla.edu - 0.89-%{revision}
+- Updated to rely on taint-fixed PDL package
+* Mon Jun 6 2005 allenday@ucla.edu - 0.89-2
+- Added NETCDF_LIBDIR to Makefile.PL call for x86_64
+* Fri Apr 8 2005 allenday@ucla.edu - 0.89-1
+- New specfile
