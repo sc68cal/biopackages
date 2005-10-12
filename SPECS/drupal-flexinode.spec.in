@@ -1,0 +1,68 @@
+#$Id: drupal-flexinode.spec.in,v 1.1 2005/10/12 06:52:21 allenday Exp $
+%define httpdroot  /var/www
+%define module flexinode
+
+Summary:	%{module} module for drupal
+Name:		drupal-%{module}
+Version:	4.6.0
+Release:	%{revision}.%{distro}
+Source0:	%{module}-%{version}.tar.gz
+Source1:	%{module}.pgsql
+URL:		http://www.drupal.org/
+License:	GPL
+Group:		Networking/WWW
+BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
+Requires:	perl, biopackages
+Requires:	drupal
+BuildArch: noarch
+Epoch: 1
+
+%description
+Flexinode is a module that allows non-programmers to create new node
+types (flexible content types) in Drupal when their needs are modest.
+Users can define the fields in the node edit form for their content type,
+and can either view the nodes as presented by the module or modify the
+presentation in their theme.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+%setup -qn %{module}
+cp %{SOURCE1} ./
+find . -type d -name CVS | xargs rm -rf
+
+%build
+mkdir -p $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}
+cp *.inc $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}/
+cp *.module $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}/
+cp *.pgsql $RPM_BUILD_ROOT%{httpdroot}/html/drupal/modules/%{module}/
+
+%install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/etc/init.d/postgresql start
+su postgres -c 'cat %{httpdroot}/html/drupal/modules/%{module}/%{module}.pgsql | psql -U drupal drupal';
+
+%postun
+/etc/init.d/postgresql start
+su postgres -c 'psql -U drupal drupal -c "DROP TABLE flexinode_field"';
+su postgres -c 'psql -U drupal drupal -c "DROP TABLE flexinode_type"';
+su postgres -c 'psql -U drupal drupal -c "DROP TABLE flexinode_data"';
+
+%files
+%defattr(-,root,root)
+%{httpdroot}/html/drupal/modules/%{module}/*
+#%dir %{httpdroot}/html/drupal
+#%doc *.txt
+#%defattr(-,root,root)
+#%{httpdroot}/html/drupal
+
+%changelog
+* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.0-%{revision}
+- Update
+* Mon Jul  4 2005 Allen Day <allenday@ucla.edu> 4.6.0-2
+- Added sequence needed by pgsql file
+* Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.0-1
+- New specfile

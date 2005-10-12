@@ -1,6 +1,6 @@
-#$Id: drupal-event.spec.in,v 1.2 2005/10/12 06:52:21 allenday Exp $
+#$Id: drupal-image.spec.in,v 1.1 2005/10/12 06:52:21 allenday Exp $
 %define httpdroot  /var/www
-%define module event
+%define module image
 
 Summary:	%{module} module for drupal
 Name:		drupal-%{module}
@@ -17,7 +17,9 @@ BuildArch: noarch
 Epoch: 1
 
 %description
-This is a simple module to keep track of events and show them to users.
+This module allow users with proper permissions to upload images into drupal. Thumbnails are created automaticaly.
+
+Images could be posted individualy to the front page, included in stories or grouped in galleries.
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -39,8 +41,6 @@ rm -rf $RPM_BUILD_ROOT
 su postgres -c 'cat %{httpdroot}/html/drupal/modules/%{module}/%{module}.pgsql | psql -U drupal drupal';
 
 %postun
-/etc/init.d/postgresql start
-su postgres -c 'psql -U drupal drupal -c "DROP TABLE event"';
 
 %files
 %defattr(-,root,root)
@@ -50,5 +50,6 @@ su postgres -c 'psql -U drupal drupal -c "DROP TABLE event"';
 
 %changelog
 * Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
+- Updated
 * Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.2-1
 - New specfile
