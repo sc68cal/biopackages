@@ -1,4 +1,4 @@
-#$Id: perl-Bio-MAGE.spec.in,v 1.1 2005/10/12 23:09:51 allenday Exp $
+#$Id: perl-Bio-MAGE.spec.in,v 1.2 2005/10/12 23:15:02 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: These classes belong to the MAGE package of the MAGE-OM object model.
@@ -12,7 +12,7 @@ URL: http://www.mged.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Tie-IxHash
 Requires: perl-Tie-IxHash, perl-XML-Xerces
-
+BuildArch: noarch
 Source0: Bio-MAGE-%{version}.tar.gz
 Patch0: Bio-MAGE-Carp.patch
 #this was put into cvs by allenday 06/24/05
