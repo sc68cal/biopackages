@@ -1,4 +1,4 @@
-#$Id: drupal.spec.in,v 1.4 2005/10/12 07:18:47 allenday Exp $
+#$Id: drupal.spec.in,v 1.5 2005/10/18 06:33:50 allenday Exp $
 %define httpdroot  /var/www
 
 Summary:	Drupal is an open-source platform and content management system. 
@@ -13,6 +13,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 Requires:	perl, biopackages
 Requires:	php-domxml, php-mysql, php-xmlrpc
 Requires:	httpd, mysql-devel, mysql-server
+Patch0:         drupal-host.patch
 BuildArch: noarch
 Epoch: 1
 
@@ -30,6 +31,7 @@ ranging from personal weblogs to large community-driven sites.
 rm -rf $RPM_BUILD_ROOT
 
 %setup -q 
+%patch0 -p1
 
 %build
 # Set doc files are regular files
@@ -37,9 +39,9 @@ chmod 0644 *.txt
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{httpdroot}/html/drupal
+mkdir -p $RPM_BUILD_ROOT%{httpdroot}/html/drupal/files
+chmod 777 $RPM_BUILD_ROOT%{httpdroot}/html/drupal/files
 cp -aRf * $RPM_BUILD_ROOT%{httpdroot}/html/drupal
-
 cd $RPM_BUILD_ROOT%{httpdroot}/html/drupal
 rm -rf *.txt
 
@@ -62,11 +64,15 @@ echo 'drop database drupal' | LD_LIBRARY_PATH=/usr/lib/mysql mysql -u root
 %files
 %defattr(-,root,root)
 %dir %{httpdroot}/html/drupal
+%dir %{httpdroot}/html/drupal/files
 %doc *.txt
 %defattr(-,root,root)
 %{httpdroot}/html/drupal
 
 %changelog
 * Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
+- Patch in support for file upload and preconfig of settings for host and db connections
+* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
+- Move to biopackages cvs
 * Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.2-1
 - New specfile
