@@ -1,4 +1,4 @@
-#$Id: README,v 1.3 2005/08/04 02:52:03 allenday Exp $
+#$Id: README,v 1.4 2005/12/16 08:46:20 boconnor Exp $
 1. SETTING UP THE ENVIRONMENT
 
 Run 'make prep'.  This will overwrite ~/.rpmmacros with a version
@@ -25,7 +25,7 @@ is being sniffed to produce the RPM release number.
 
   B. At the top of every .spec.in, add a line like this:
 
-       #$ Id $
+       #$Id: README,v 1.4 2005/12/16 08:46:20 boconnor Exp $
 
   C. Set the RPM 'Release' key to '%{revision}-%{distro}'.  E.g.,
 
