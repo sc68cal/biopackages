@@ -1,4 +1,4 @@
-#$Id: perl-XML-RSS-Parser.spec.in,v 1.1 2005/12/21 05:35:28 allenday Exp $
+#$Id: perl-XML-RSS-Parser.spec.in,v 1.2 2005/12/21 05:36:22 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/XML-RSS-Parser/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-XML-Element, perl-Class-XPath, perl-Class-ErrorHandler
-Requires: perl-XML-Element, perl-Class-XPath, perl-Class-ErrorHandler
+BuildRequires: perl, biopackages, perl-XML-Elemental, perl-Class-XPath, perl-Class-ErrorHandler
+Requires: perl-XML-Elemental, perl-Class-XPath, perl-Class-ErrorHandler
 
 Source0: XML-RSS-Parser-4.0.tar.gz
 
