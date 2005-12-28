@@ -1,4 +1,4 @@
-#$Id: perl-Image-PBMlib.spec.in,v 1.2 2005/08/18 08:55:29 allenday Exp $
+#$Id: perl-Image-PBMlib.spec.in,v 1.3 2005/12/28 09:27:52 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Library for reading PBM, PGM, PPM images
@@ -12,6 +12,7 @@ URL: http://search.cpan.org/dist/Image-PBMlib/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl
 
 Source0: Image-PBMlib-1.05.tar.gz
 

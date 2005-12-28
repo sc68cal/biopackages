@@ -1,4 +1,4 @@
-#$Id: perl-Class-XPath.spec.in,v 1.1 2005/12/21 05:21:00 allenday Exp $
+#$Id: perl-Class-XPath.spec.in,v 1.2 2005/12/28 09:27:52 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -14,6 +14,7 @@ URL: http://search.cpan.org/dist/Class-XPath/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl
 
 Source0: Class-XPath-1.4.tar.gz
 
