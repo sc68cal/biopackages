@@ -1,4 +1,4 @@
-#$Id: perl-Bit-Vector.spec.in,v 1.1 2005/12/30 00:58:50 allenday Exp $
+#$Id: perl-Bit-Vector.spec.in,v 1.2 2005/12/30 01:01:48 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Efficient base class implementing bit vectors
@@ -12,8 +12,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Bit-Vector/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
-Requires: perl
+BuildRequires: perl, biopackages, perl-Carp-Clan
+Requires: perl-Carp-Clan
 Source0: Bit-Vector-6.4.tar.gz
 
 %description
