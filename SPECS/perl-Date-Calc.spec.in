@@ -1,4 +1,4 @@
-#$Id: perl-Date-Calc.spec.in,v 1.1 2005/12/30 00:55:04 allenday Exp $
+#$Id: perl-Date-Calc.spec.in,v 1.2 2005/12/30 00:56:25 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Date-Calc/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
-Requires: perl
+BuildRequires: perl, biopackages, perl-Bit-Vector, perl-Carp-Clan
+Requires: perl-Bit-Vector, perl-Carp-Clan
 
 Source0: Date-Calc-5.4.tar.gz
 
