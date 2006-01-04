@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.1 2006/01/04 21:30:38 allenday Exp $
+#$Id: affyfile.spec.in,v 1.2 2006/01/04 21:33:52 allenday Exp $
 Name: affyfile
 Version: 2
 Release: %{revision}.%{distro}
@@ -11,6 +11,7 @@ Source1: FileParsersSampleCode.zip
 Source2: FileParsersSource.zip
 Source3: affyfile-Makefile
 Source4: cel-convert.cpp
+Source5: celsniff.cpp
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gcc-c++, make, biopackages, unzip
 
@@ -29,6 +30,7 @@ cp %{SOURCE1} .
 cp %{SOURCE2} .
 cp %{SOURCE3} ./Makefile
 cp %{SOURCE4} .
+cp %{SOURCE5} .
 for i in *.zip; do unzip -o $i; done
 
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
@@ -42,6 +44,7 @@ make
 install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
 install -m 444 *.h $RPM_BUILD_ROOT/%{_includedir}/
 install -m 555 cel-convert $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 celsniff $RPM_BUILD_ROOT/%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,3 +59,8 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Jul 19 2005 Allen Day <allenday@ucla.edu> 2-1
 - New specfile
+
+$Log: affyfile.spec.in,v $
+Revision 1.2  2006/01/04 21:33:52  allenday
+add cellsniff util.  testing syncing of cvs log with rpm changelog
+
