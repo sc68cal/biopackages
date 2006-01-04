@@ -1,4 +1,4 @@
-#$Id: perl-PDL-NetCDF.spec.in,v 1.1 2005/10/12 22:43:45 allenday Exp $
+#$Id: perl-PDL-NetCDF.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Object-oriented interface between NetCDF files and PDL objects
@@ -70,10 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-%changelog
-* Mon Jun 6 2005 allenday@ucla.edu - 0.89-%{revision}
-- Updated to rely on taint-fixed PDL package
-* Mon Jun 6 2005 allenday@ucla.edu - 0.89-2
-- Added NETCDF_LIBDIR to Makefile.PL call for x86_64
-* Fri Apr 8 2005 allenday@ucla.edu - 0.89-1
-- New specfile
+$Log: perl-PDL-NetCDF.spec.in,v $
+Revision 1.2  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

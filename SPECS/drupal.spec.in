@@ -1,4 +1,4 @@
-#$Id: drupal.spec.in,v 1.5 2005/10/18 06:33:50 allenday Exp $
+#$Id: drupal.spec.in,v 1.6 2006/01/04 22:26:11 allenday Exp $
 %define httpdroot  /var/www
 
 Summary:	Drupal is an open-source platform and content management system. 
@@ -69,10 +69,7 @@ echo 'drop database drupal' | LD_LIBRARY_PATH=/usr/lib/mysql mysql -u root
 %defattr(-,root,root)
 %{httpdroot}/html/drupal
 
-%changelog
-* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
-- Patch in support for file upload and preconfig of settings for host and db connections
-* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.2-%{revision}
-- Move to biopackages cvs
-* Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.2-1
-- New specfile
+$Log: drupal.spec.in,v $
+Revision 1.6  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

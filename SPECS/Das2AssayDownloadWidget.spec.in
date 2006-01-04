@@ -1,4 +1,4 @@
-#$Id: Das2AssayDownloadWidget.spec.in,v 1.6 2005/08/05 02:33:06 mcarlson Exp $
+#$Id: Das2AssayDownloadWidget.spec.in,v 1.7 2006/01/04 22:26:11 allenday Exp $
 Summary: Installs a Java Web Start application to allow simple download of normalized data from a Das 2 server.
 Name: Das2AssayDownloadWidget
 Version: 0.01
@@ -49,7 +49,7 @@ perl -p -i -e "s!\@\@HOSTNAME\@\@!$HOSTNAME!g" /var/www/html/%{name}/%{name}.jnl
 %doc README_Das2Widget.txt
 /var/www/html/%{name}/*
 
-%changelog
-* Tue Aug 02 2005 Marc Carlson <mrjcarlson@mednet.ucla.edu> 0.01-%{revision}
-- Installs the jar files, the README and the php script to enable the Das2DownloadWidget to function on a server.
+$Log: Das2AssayDownloadWidget.spec.in,v $
+Revision 1.7  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
 

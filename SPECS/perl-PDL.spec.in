@@ -1,4 +1,4 @@
-#$Id: perl-PDL.spec.in,v 1.1 2005/10/14 01:38:36 allenday Exp $
+#$Id: perl-PDL.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl Data Language 
@@ -104,15 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-%changelog
-* Wed Oct 13 2005 allenday@ucla.edu - 2.4.2-%{revision}
-- Patch to address taint from $PATH
-* Mon May 6 2005 allenday@ucla.edu - 2.4.2-3
-- Added xorg-x11-Mesa-libGLU prereq
-- Added Provides for perl(PDL::Graphics::OpenGL), perl(PDL::Graphics::OpenGLQ),
-  these are not being built on x86_64 for some reason...
-* Mon May 6 2005 allenday@ucla.edu - 2.4.2-2
-- Added -fPIC to CFLAGS
-- Added -fPIC to Lib/Slatec/Makefile
-* Fri Apr 8 2005 allenday@ucla.edu - 2.4.2-1
-- New specfile
+$Log: perl-PDL.spec.in,v $
+Revision 1.2  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

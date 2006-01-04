@@ -1,4 +1,4 @@
-#$Id: darwin-base.spec.in,v 1.1 2005/08/04 01:13:50 allenday Exp $
+#$Id: darwin-base.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
@@ -34,10 +34,7 @@ rm -rf $RPM_BUILD_ROOT
 %files 
 %defattr(-,root,root,-)
 
-%changelog
-* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.3
-- missing provides
-* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.2
-- fixup of %{distro} tag
-* Mon Aug  1 2005 allenday@sumo.genetics.ucla.edu - 1.0-1.1
-- New specfile 
+$Log: darwin-base.spec.in,v $
+Revision 1.2  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

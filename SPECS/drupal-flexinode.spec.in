@@ -1,4 +1,4 @@
-#$Id: drupal-flexinode.spec.in,v 1.1 2005/10/12 06:52:21 allenday Exp $
+#$Id: drupal-flexinode.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
 %define httpdroot  /var/www
 %define module flexinode
 
@@ -59,10 +59,7 @@ su postgres -c 'psql -U drupal drupal -c "DROP TABLE flexinode_data"';
 #%defattr(-,root,root)
 #%{httpdroot}/html/drupal
 
-%changelog
-* Tue Oct 11 2005 Allen Day <allenday@ucla.edu> 4.6.0-%{revision}
-- Update
-* Mon Jul  4 2005 Allen Day <allenday@ucla.edu> 4.6.0-2
-- Added sequence needed by pgsql file
-* Sat Jul  2 2005 Allen Day <allenday@ucla.edu> 4.6.0-1
-- New specfile
+$Log: drupal-flexinode.spec.in,v $
+Revision 1.2  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

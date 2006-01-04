@@ -1,4 +1,4 @@
-#$Id: gec-tools.spec.in,v 1.1 2005/08/20 01:47:26 allenday Exp $
+#$Id: gec-tools.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
 Summary: tools for loading data from GEC
 Name: gec-tools
 Version: 1.0
@@ -52,6 +52,7 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 %post
 %preun
 
-%changelog
-* Mon Jul 18 2005 Allen Day <allenday@ucla.edu> 1.0-1
-- New specfile
+$Log: gec-tools.spec.in,v $
+Revision 1.2  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+

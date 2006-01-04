@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.5 2005/08/03 23:13:02 allenday Exp $
+#$Id: biopackages.spec.in,v 1.6 2006/01/04 22:26:11 allenday Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.1
@@ -105,29 +105,7 @@ rm -rf %{buildroot}
 #%defattr(-,root,root,-)
 #/usr/bin/bp-update
 
-%changelog
-* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.1-1.5
-- moved to spec.in file
-- removed date from generated version strings
-* Sun Jun  5 2005 Allen Day <allenday@ucla.edu> - 1.0.0-7
-- Removed bp-upload-* scripts for now
-- Added CentOS arches to bp-distro
-* Tue Apr 12 2005 Allen Day <allenday@ucla.edu> - 1.0.0-6
-- Removing apt dependency from specfile.  bp-* scripts still
-  assume apt is present -- will clean these up in next revision 
-* Fri Mar 11 2005 Allen Day <allenday@ucla.edu> - 1.0.0-5
-- hardcoded in /usr/lib, as %{_libdir} on x86_64 is lib64,
-  even though rpm is under /usr/lib
-* Tue Mar 8 2005 Allen Day <allenday@ucla.edu> - 1.0.0-4
-- repaired macro line added to do "bp-distro -d"
-* Mon Mar 7 2005 Allen Day <allenday@ucla.edu> - 1.0.0-3
-- Derived from (now deprecated) bioRPM package
-- Added server package
-- Added /etc/apt/sources.list to base package
-- renames distro to bp-distro in base package
-- added -t (tag only) and -d (with date) options to bp-distro
-- added bp-update script to server package
-* Tue Mar 1 2005 Allen Day <allenday@ucla.edu> -
-- Added ROCKS 3.3.0 recognition
-* Mon Feb 28 2005 Allen Day <allenday@ucla.edu> - 
-- Initial build.
+$Log: biopackages.spec.in,v $
+Revision 1.6  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+
