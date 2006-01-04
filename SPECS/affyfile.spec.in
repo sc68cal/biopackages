@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.4 2006/01/04 22:12:44 allenday Exp $
+#$Id: affyfile.spec.in,v 1.5 2006/01/04 22:34:03 allenday Exp $
 Name: affyfile
 Version: 2
 Release: %{revision}.%{distro}
@@ -21,7 +21,7 @@ Affymetrix CEL, CHP, CDF, BAR and BPMAP files. These files store results for
 expression, genotyping and tiling array analysis and information about the
 layout of an array. The C++ code in this SDK are written without MS Windows
 dependencies so as to be compatible with a variety of machines and operating
-systems.
+systems. 
 
 %prep
 %setup -c %{name}
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 $Log: affyfile.spec.in,v $
+Revision 1.5  2006/01/04 22:34:03  allenday
+-fPIC for 64b compile
+
 Revision 1.4  2006/01/04 22:12:44  allenday
 changelog autofilled from cvslog
 
