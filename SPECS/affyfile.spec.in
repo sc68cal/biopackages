@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.3 2006/01/04 21:35:04 allenday Exp $
+#$Id: affyfile.spec.in,v 1.4 2006/01/04 22:12:44 allenday Exp $
 Name: affyfile
 Version: 2
 Release: %{revision}.%{distro}
@@ -57,11 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %{_libdir}/*.so
 
-%changelog
-* Tue Jul 19 2005 Allen Day <allenday@ucla.edu> 2-1
-- New specfile
-
 $Log: affyfile.spec.in,v $
+Revision 1.4  2006/01/04 22:12:44  allenday
+changelog autofilled from cvslog
+
 Revision 1.3  2006/01/04 21:35:04  allenday
 make sure celsniff is installed
 
