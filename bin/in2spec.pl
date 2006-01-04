@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.3 2006/01/04 22:12:19 allenday Exp $
+#$Id: in2spec.pl,v 1.4 2006/01/04 22:16:09 allenday Exp $
 use strict;
 use Date::Manip;
 use Text::Wrap;
@@ -34,10 +34,7 @@ my $i_tab = '- ';
 my $s_tab = '  ';
 
 my $rcstag = '#\$'.'Id:';
-my $logtag = '\$Log: in2spec.pl,v $
-my $logtag = '\Revision 1.3  2006/01/04 22:12:19  allenday
-my $logtag = '\transform cvs log to rpm changelog
-my $logtag = '\';
+my $logtag = '\$'.'Log: .+? \$';
 my $revision = undef;
 
 my $spec = join '', <>;
@@ -79,6 +76,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.4  2006/01/04 22:16:09  allenday
+transform cvs log to rpm changelog
+
 Revision 1.3  2006/01/04 22:12:19  allenday
 transform cvs log to rpm changelog
 
