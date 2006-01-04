@@ -1,0 +1,58 @@
+#$Id: affyfile.spec.in,v 1.1 2006/01/04 21:30:38 allenday Exp $
+Name: affyfile
+Version: 2
+Release: %{revision}.%{distro}
+Summary: Headers, libraries, and utilities for working with Affymetrix files.
+License: BSD
+Group: System Environment/Libraries
+URL: http://my.unidata.ucar.edu/content/software/udunits/index.html
+Source0: FileParsersDocs.zip
+Source1: FileParsersSampleCode.zip
+Source2: FileParsersSource.zip
+Source3: affyfile-Makefile
+Source4: cel-convert.cpp
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc-c++, make, biopackages, unzip
+
+%description
+The File Parsers SDK is a toolkit for providing parsing capabilities with the
+Affymetrix CEL, CHP, CDF, BAR and BPMAP files. These files store results for
+expression, genotyping and tiling array analysis and information about the
+layout of an array. The C++ code in this SDK are written without MS Windows
+dependencies so as to be compatible with a variety of machines and operating
+systems.
+
+%prep
+%setup -c %{name}
+cp %{SOURCE0} .
+cp %{SOURCE1} .
+cp %{SOURCE2} .
+cp %{SOURCE3} ./Makefile
+cp %{SOURCE4} .
+for i in *.zip; do unzip -o $i; done
+
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}
+
+%build
+make
+
+%install
+install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
+install -m 444 *.h $RPM_BUILD_ROOT/%{_includedir}/
+install -m 555 cel-convert $RPM_BUILD_ROOT/%{_bindir}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc *.html *.gif *.css
+%{_bindir}/cel-convert
+%{_includedir}/*
+%{_libdir}/*.so
+
+%changelog
+* Tue Jul 19 2005 Allen Day <allenday@ucla.edu> 2-1
+- New specfile
