@@ -1,4 +1,4 @@
-#$Id: a52dec.spec.in,v 1.1 2005/08/18 07:56:21 allenday Exp $
+#$Id: a52dec.spec.in,v 1.2 2006/01/04 22:18:10 allenday Exp $
 Summary: Library for decoding ATSC A/52 (aka AC-3) audio streams
 Name: a52dec
 Version: 0.7.4
@@ -80,57 +80,7 @@ to build programs that use it.
 %exclude %{_libdir}/*.la
 %{_libdir}/*.so
 
-
-%changelog
-* Tue Mar 8 2005 Allen Day <allenday@ucla.edu> 0.7.4-7.2
-- bioRPM -> biopackages
-* Tue Mar 1 2005 Allen Day <allenday@ucla.edu> 0.7.4-7.2
-- Derived specfile, added bioRPM dep
-* Thu Nov  4 2004 Matthias Saou <http://freshrpms.net/> 0.7.4-7
-- Enable -fPIC on all architectures.
-
-* Sat May 29 2004 Dag Wieers <dag@wieers.com> - 0.7.4-7
-- Added -fPIC patch for non ix86 architectures.
-
-* Tue May 18 2004 Matthias Saou <http://freshrpms.net/> 0.7.4-7
-- Rebuilt for Fedora Core 2.
-
-* Thu Mar  4 2004 Matthias Saou <http://freshrpms.net/> 0.7.4-6
-- Rebuilt.
-
-* Thu Feb 26 2004 Matthias Saou <http://freshrpms.net/> 0.7.4-5
-- Added the building of the shared library.
-
-* Sun Nov  2 2003 Matthias Saou <http://freshrpms.net/> 0.7.4-4
-- Rebuild for Fedora Core 1.
-
-* Mon Mar 31 2003 Matthias Saou <http://freshrpms.net/>
-- Rebuilt for Red Hat Linux 9.
-- Exclude .la file.
-
-* Thu Sep 26 2002 Matthias Saou <http://freshrpms.net/>
-- Rebuilt for Red Hat Linux 8.0.
-- Added SMP build macro.
-
-* Mon Jul 29 2002 Matthias Saou <http://freshrpms.net/>
-- Update to 0.7.4.
-
-* Sun Mar 24 2002 Matthias Saou <http://freshrpms.net/>
-- Fixed the devel file ownership error.
-
-* Tue Mar 19 2002 Matthias Saou <http://freshrpms.net/>
-- Update to 0.7.3.
-
-* Mon Dec 17 2001 Matthias Saou <http://freshrpms.net/>
-- Update to 0.7.2.
-
-* Mon Oct 29 2001 Matthias Saou <http://freshrpms.net/>
-- Spec file cleanup and fixes.
-
-* Thu Sep 20 2001 Martin Norbäck <d95mback@dtek.chalmers.se>
-- Added missing .la files
-- Building statically
-
-* Thu Sep 20 2001 Martin Norbäck <d95mback@dtek.chalmers.se>
-- Initial version
+$Log: a52dec.spec.in,v $
+Revision 1.2  2006/01/04 22:18:10  allenday
+changelog to cvslog
 
