@@ -1,0 +1,125 @@
+#$Id: R.spec.in,v 1.1 2006/01/05 09:43:33 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 2.0.1
+Release: %{revision}.%{distro}
+Summary: A language for data analysis and graphics
+Name: R
+Source0: ftp://cran.r-project.org/pub/R/src/base/R-%{version}.tar.gz
+Patch0: R-LANG.patch
+License: GPL
+URL: http://www.r-project.org
+BuildRoot: %{_tmppath}/%{name}-root
+Icon: logosm-trans.gif
+Provides: R-base, R-recommended
+Obsoletes: R-base, R-recommended
+Requires: %__perl 
+BuildRequires: tk-devel tetex-latex readline-devel pcre-devel libjpeg-devel
+BuildRequires: zlib-devel bzip2-devel blas libglade-devel
+BuildRequires: biopackages
+BuildRequires: xpdf, gcc-g77, gcc-c++, gcc
+
+Requires: xpdf, gcc-g77, gcc-c++, gcc
+
+%description
+`GNU S' - A language and environment for statistical computing and
+graphics. R is similar to the award-winning S system, which was
+developed at Bell Laboratories by John Chambers et al. It provides a
+wide variety of statistical and graphical techniques (linear and
+nonlinear modelling, statistical tests, time series analysis,
+classification, clustering, ...).
+
+R is designed as a true computer language with control-flow
+constructions for iteration and alternation, and it allows users to
+add additional functionality by defining new functions. For
+computationally intensive tasks, C, C++ and Fortran code can be linked
+and called at run time.
+
+%prep
+%setup -q 
+%patch0 -p1
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+export R_BROWSER="/usr/bin/mozilla" 
+export R_PAPERSIZE="A4"
+
+( %configure \
+    --enable-R-shlib --with-blas --with-gnome --with-readline --with-tcltk \
+    --with-jpeglib --with-zlib --with-bzlib --with-pcre --with-x \
+    --with-recommended-packages --enable-R-shlib \
+    --with-tcl-config=%{_libdir}/tclConfig.sh \
+    --with-tk-config=%{_libdir}/tkConfig.sh ) \
+ | egrep '^R is now|^ |^$' - > CAPABILITIES
+make -j5
+make -j5 check-all
+make -j5 pdf
+make -j5 info
+
+%install
+%makeinstall rhome=%{?buildroot:%{buildroot}}%{_libdir}/R install-info
+rm -f %{?buildroot:%{buildroot}}%{_infodir}/dir
+rm -f %{?buildroot:%{buildroot}}%{_infodir}/dir.old
+
+#Fix location of R_HOME_DIR in shell wrapper.
+#
+sed -e "s@R_HOME_DIR=.*@R_HOME_DIR=%{_libdir}/R@" < bin/R \
+  > %{?buildroot:%{buildroot}}%{_libdir}/R/bin/R
+sed -e "s@R_HOME_DIR=.*@R_HOME_DIR=%{_libdir}/R@" < bin/R \
+   > %{?buildroot:%{buildroot}}%{_bindir}/R
+chmod 755 %{?buildroot:%{buildroot}}%{_libdir}/R/bin/R 
+chmod 755 %{?buildroot:%{buildroot}}%{_bindir}/R
+
+# Remove package indices. They are rebuilt by the postinstall script.
+#
+rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/function.html
+rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/packages.html
+rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/search/index.txt
+
+%files 
+%defattr(-, root, root)
+%{_bindir}/R
+%{_libdir}/R
+%doc AUTHORS CAPABILITIES ChangeLog COPYING COPYING.LIB COPYRIGHTS FAQ INSTALL NEWS
+%doc ONEWS README RESOURCES THANKS VERSION Y2K
+%doc doc/manual/R-*.pdf
+%{_infodir}/R-*.info*
+%{_mandir}/man1/*
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+# Create directory entries for info files
+# (optional doc files, so we must check that they are installed)
+for doc in admin exts FAQ intro lang; do
+   file=%{_infodir}/R-${doc}.info.gz
+   if [ -e $file ]; then
+      /sbin/install-info ${file} %{_infodir}/dir
+   fi
+done
+# Update package indices
+%{_bindir}/R CMD perl %{_libdir}/R/share/perl/build-help.pl --htmllists
+%__cat %{_libdir}/R/library/*/CONTENTS > %{_libdir}/R/doc/html/search/index.txt
+
+%preun 
+if [ $1 = 0 ]; then
+   # Delete directory entries for info files (if they were installed)
+   for doc in admin exts FAQ intro lang; do
+      file=%{_infodir}/R-${doc}.info.gz
+      if [ -e ${file} ]; then
+         /sbin/install-info --delete R-${doc} %{_infodir}/dir
+      fi
+   done
+   # Remove package indices
+   %__rm -f %{_libdir}/R/doc/html/function.html
+   %__rm -f %{_libdir}/R/doc/html/packages.html
+   %__rm -f %{_libdir}/R/doc/html/search/index.txt
+fi
+
+$Log: R.spec.in,v $
+Revision 1.1  2006/01/05 09:43:33  allenday
+import
+
