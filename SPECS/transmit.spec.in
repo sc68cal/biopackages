@@ -1,4 +1,4 @@
-#$Id: transmit.spec.in,v 1.2 2006/01/06 22:11:51 allenday Exp $
+#$Id: transmit.spec.in,v 1.3 2006/01/06 22:13:56 allenday Exp $
 Name: transmit
 Version: 2.5.4
 Release: %{revision}.%{distro}
@@ -16,7 +16,7 @@ examining the transmission of markers from parents to affected offspring.
 The main features which differ from other similar programs are:
 
 %prep
-%setup -c %{name}
+%setup -q
 
 %build
 make
@@ -33,6 +33,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/transmit
 
 $Log: transmit.spec.in,v $
+Revision 1.3  2006/01/06 22:13:56  allenday
+setup -qn
+
 Revision 1.2  2006/01/06 22:11:51  allenday
 removed missing url tag
 
