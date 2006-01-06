@@ -1,0 +1,38 @@
+#$Id: transmit.spec.in,v 1.1 2006/01/06 22:10:25 allenday Exp $
+Name: transmit
+Version: 2.5.4
+Release: %{revision}.%{distro}
+Summary: TRANSMIT tests for association between genetic marker and disease.
+License: Custom
+Group: Applications/Bioinformatics
+URL: 
+Source0: transmit-%{version}.tar
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc, make, biopackages
+
+%description
+TRANSMIT tests for association between genetic marker and disease by 
+examining the transmission of markers from parents to affected offspring. 
+The main features which differ from other similar programs are:
+
+%prep
+%setup -c %{name}
+
+%build
+make
+
+%install
+install -m 555 transmit $RPM_BUILD_ROOT/%{_bindir}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+#%defattr(-,root,root)
+%doc transmit.doc
+%{_bindir}/transmit
+
+$Log: transmit.spec.in,v $
+Revision 1.1  2006/01/06 22:10:25  allenday
+import
+
