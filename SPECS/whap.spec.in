@@ -1,4 +1,4 @@
-#$Id: whap.spec.in,v 1.1 2006/01/06 22:31:19 allenday Exp $
+#$Id: whap.spec.in,v 1.2 2006/01/06 22:36:08 allenday Exp $
 Name: whap
 Version: 2.08
 Release: %{revision}.%{distro}
@@ -18,12 +18,12 @@ SNP haplotype analysis package
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
 
 %build
-for i in shaunlib snphap-1.0 usat whap2 do;
-  pushd $i ; make ; popd ;
-done;
+for i in shaunlib snphap-1.0 usat whap2; do cd $i ; make ; cd .. ; done;
 
 %install
 install -m 555 whap2/whap $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 usat/usat $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 snphap-1.0/snphap $RPM_BUILD_ROOT/%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -32,8 +32,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 #%doc 
 %{_bindir}/whap
+%{_bindir}/usat
+%{_bindir}/snphap
 
 $Log: whap.spec.in,v $
+Revision 1.2  2006/01/06 22:36:08  allenday
+builds now
+
 Revision 1.1  2006/01/06 22:31:19  allenday
 import
 
