@@ -1,0 +1,39 @@
+#$Id: whap.spec.in,v 1.1 2006/01/06 22:31:19 allenday Exp $
+Name: whap
+Version: 2.08
+Release: %{revision}.%{distro}
+Summary: SNP haplotype analysis package
+License: Custom
+Group: Applications/Bioinformatics
+#URL: 
+Source0: %{name}-src.tar
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc-c++, make, biopackages
+
+%description
+SNP haplotype analysis package
+
+%prep
+%setup -c %{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
+
+%build
+for i in shaunlib snphap-1.0 usat whap2 do;
+  pushd $i ; make ; popd ;
+done;
+
+%install
+install -m 555 whap2/whap $RPM_BUILD_ROOT/%{_bindir}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+#%doc 
+%{_bindir}/whap
+
+$Log: whap.spec.in,v $
+Revision 1.1  2006/01/06 22:31:19  allenday
+import
+
