@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool.spec.in,v 1.1 2006/01/05 05:14:14 allenday Exp $
+#$Id: microarray-normalization-pool.spec.in,v 1.2 2006/01/07 06:06:44 allenday Exp $
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool
 Version: 1.1
@@ -23,42 +23,42 @@ Microarrays to be used for quantification/normalization with Bioconductor
 %build
 
 %install
-install -m 444 ATH1-121501 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Barley1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Celegans $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 CentHindAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 CentXbaAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 DrosGenome1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 ENCODE_CHIP01_ANTI_SENSE $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 gnGNF1Ba $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 gnGNF1Musa $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG-Focus $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG-U133A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG-U133A_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG-U133B $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG-U133_Plus_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG_U95A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 HG_U95Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Hu6800 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Maize $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Mapping10K_Xba131 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Mapping10K_Xba142 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MG_U74A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MG_U74Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MG_U74Bv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MG_U74Cv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MOE430A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 MOE430B $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Mouse430_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 RAE230A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Rat230_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 RG_U34A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 RML-chipa510998 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 RN_U34 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 uwyRhodo1a $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 Xba142_EA $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -m 444 YG_S98 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 ATH1-121501 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Barley1 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Celegans $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 CentHindAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 CentXbaAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 DrosGenome1 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 ENCODE_CHIP01_ANTI_SENSE $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 gnGNF1Ba $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 gnGNF1Musa $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG-Focus $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG-U133A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG-U133A_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG-U133B $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG-U133_Plus_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG_U95A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 HG_U95Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Hu6800 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Maize $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Mapping10K_Xba131 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Mapping10K_Xba142 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MG_U74A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MG_U74Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MG_U74Bv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MG_U74Cv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MOE430A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 MOE430B $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Mouse430_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 RAE230A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Rat230_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 RG_U34A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 RML-chipa510998 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 RN_U34 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 uwyRhodo1a $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 Xba142_EA $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 444 YG_S98 $RPM_BUILD_ROOT%{_datadir}/microarray/
 
 find $RPM_BUILD_ROOT -type d -exec chmod 555 {} \;
 find $RPM_BUILD_ROOT -type f -exec chmod 444 {} \;
@@ -75,6 +75,9 @@ find $RPM_BUILD_ROOT -type f -name '*.CEL'     | sed "s@^$RPM_BUILD_ROOT@%dir @g
 %preun 
 
 $Log: microarray-normalization-pool.spec.in,v $
+Revision 1.2  2006/01/07 06:06:44  allenday
+install with -d for directories
+
 Revision 1.1  2006/01/05 05:14:14  allenday
 import
 
