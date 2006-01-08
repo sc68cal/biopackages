@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool.spec.in,v 1.3 2006/01/08 05:44:52 allenday Exp $
+#$Id: microarray-normalization-pool.spec.in,v 1.4 2006/01/08 09:15:43 allenday Exp $
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool
 Version: 1.1
@@ -16,6 +16,46 @@ BuildRequires: biopackages
 %description
 Microarrays to be used for quantification/normalization with Bioconductor
 
+%package -n %{name}-Human
+Summary: Human microarrays to be used for quantification/normalization with Bioconductor
+Group: Bioinformatics/Data
+Requires: %{name} = %{version}
+
+%description -n %{name}-Human
+Human microarrays to be used for quantification/normalization with Bioconductor
+
+%package -n %{name}-Rat
+Summary: Rat microarrays to be used for quantification/normalization with Bioconductor
+Group: Bioinformatics/Data
+Requires: %{name} = %{version}
+
+%description -n %{name}-Rat
+Mmu microarrays to be used for quantification/normalization with Bioconductor
+
+%package -n %{name}-Mouse
+Summary: Mouse microarrays to be used for quantification/normalization with Bioconductor
+Group: Bioinformatics/Data
+Requires: %{name} = %{version}
+
+%description -n %{name}-Mouse
+Mouse microarrays to be used for quantification/normalization with Bioconductor
+
+%package -n %{name}-Plant
+Summary: Plant microarrays to be used for quantification/normalization with Bioconductor
+Group: Bioinformatics/Data
+Requires: %{name} = %{version}
+
+%description -n %{name}-Plant
+Plant microarrays to be used for quantification/normalization with Bioconductor
+
+%package -n %{name}-Other
+Summary: Other microarrays to be used for quantification/normalization with Bioconductor
+Group: Bioinformatics/Data
+Requires: %{name} = %{version}
+
+%description -n %{name}-Other
+Other microarrays to be used for quantification/normalization with Bioconductor
+
 %prep
 
 %setup
@@ -23,16 +63,8 @@ Microarrays to be used for quantification/normalization with Bioconductor
 %build
 
 %install
-install -d -m 755 ATH1-121501 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Barley1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Celegans $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 CentHindAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 CentXbaAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 DrosGenome1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 ENCODE_CHIP01_ANTI_SENSE $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 gnGNF1Ba $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 gnGNF1Musa $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 HG-Focus $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 HG-U133A $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 HG-U133A_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
@@ -41,9 +73,17 @@ install -d -m 755 HG-U133_Plus_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 HG_U95A $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 HG_U95Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 Hu6800 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Maize $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 Mapping10K_Xba131 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 Mapping10K_Xba142 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 ENCODE_CHIP01_ANTI_SENSE $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 Xba142_EA $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 RAE230A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 Rat230_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 RG_U34A $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 RML-chipa510998 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 RN_U34 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 gnGNF1Ba $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 gnGNF1Musa $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 MG_U74A $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 MG_U74Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 MG_U74Bv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
@@ -51,14 +91,14 @@ install -d -m 755 MG_U74Cv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 MOE430A $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 MOE430B $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 Mouse430_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RAE230A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Rat230_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RG_U34A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RML-chipa510998 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RN_U34 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 ATH1-121501 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 Barley1 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 Maize $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 uwyRhodo1a $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Xba142_EA $RPM_BUILD_ROOT%{_datadir}/microarray/
 install -d -m 755 YG_S98 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 Celegans $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 DrosGenome1 $RPM_BUILD_ROOT%{_datadir}/microarray/
+install -d -m 755 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
 
 find $RPM_BUILD_ROOT -type d -exec chmod 755 {} \;
 find $RPM_BUILD_ROOT -type f -exec chmod 444 {} \;
@@ -66,6 +106,56 @@ find $RPM_BUILD_ROOT -type f -name '*.CEL'     | sed "s@^$RPM_BUILD_ROOT@%dir @g
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
+
+%files -n %{name}-Human
+%defattr(-, root, root, 0755)
+%{_datadir}/microarray/CentHindAv2/*.CEL
+%{_datadir}/microarray/CentXbaAv2/*.CEL
+%{_datadir}/microarray/ENCODE_CHIP01_ANTI_SENSE/*.CEL
+%{_datadir}/microarray/HG-Focus/*.CEL
+%{_datadir}/microarray/HG-U133A/*.CEL
+%{_datadir}/microarray/HG-U133A_2/*.CEL
+%{_datadir}/microarray/HG-U133B/*.CEL
+%{_datadir}/microarray/HG-U133_Plus_2/*.CEL
+%{_datadir}/microarray/HG_U95A/*.CEL
+%{_datadir}/microarray/HG_U95Av2/*.CEL
+%{_datadir}/microarray/Hu6800/*.CEL
+%{_datadir}/microarray/Mapping10K_Xba131/*.CEL
+%{_datadir}/microarray/Mapping10K_Xba142/*.CEL
+%{_datadir}/microarray/Xba142_EA/*.CEL
+%{_datadir}/microarray/gnGNF1Ba/*.CEL
+
+%files -n %{name}-Rat
+%defattr(-, root, root, 0755)
+%{_datadir}/microarray/RAE230A/*.CEL
+%{_datadir}/microarray/RAE230_2/*.CEL
+%{_datadir}/microarray/RG_U34A/*.CEL
+%{_datadir}/microarray/RML-chipa510998/*.CEL
+%{_datadir}/microarray/RN_U34/*.CEL
+
+%files -n %{name}-Mouse
+%defattr(-, root, root, 0755)
+%{_datadir}/microarray/gnGNF1Musa/*.CEL
+%{_datadir}/microarray/MG_U74A/*.CEL
+%{_datadir}/microarray/MG_U74Av2/*.CEL
+%{_datadir}/microarray/MG_U74Bv2/*.CEL
+%{_datadir}/microarray/MG_U74Cv2/*.CEL
+%{_datadir}/microarray/MOE430A/*.CEL
+%{_datadir}/microarray/MOE430B/*.CEL
+%{_datadir}/microarray/Mouse430_2/*.CEL
+
+%files -n %{name}-Plant
+%defattr(-, root, root, 0755)
+%{_datadir}/microarray/ATH-121501/*.CEL
+%{_datadir}/microarray/Barley1/*.CEL
+%{_datadir}/microarray/Maize/*.CEL
+
+%files -n %{name}-Other
+%defattr(-, root, root, 0755)
+%{_datadir}/microarray/uwyRhodo1a/*.CEL
+%{_datadir}/microarray/Celegans/*.CEL
+%{_datadir}/microarray/DrosGenome1/*.CEL
+%{_datadir}/microarray/ax13339/*.CEL
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
@@ -75,6 +165,9 @@ find $RPM_BUILD_ROOT -type f -name '*.CEL'     | sed "s@^$RPM_BUILD_ROOT@%dir @g
 %preun 
 
 $Log: microarray-normalization-pool.spec.in,v $
+Revision 1.4  2006/01/08 09:15:43  allenday
+split to organism subpackages
+
 Revision 1.3  2006/01/08 05:44:52  allenday
 permissions
 
