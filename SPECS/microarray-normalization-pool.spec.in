@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool.spec.in,v 1.4 2006/01/08 09:15:43 allenday Exp $
+#$Id: microarray-normalization-pool.spec.in,v 1.5 2006/01/08 09:19:24 allenday Exp $
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool
 Version: 1.1
@@ -102,7 +102,7 @@ install -d -m 755 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
 
 find $RPM_BUILD_ROOT -type d -exec chmod 755 {} \;
 find $RPM_BUILD_ROOT -type f -exec chmod 444 {} \;
-find $RPM_BUILD_ROOT -type f -name '*.CEL'     | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT/%{_datadir} -type d | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
@@ -165,6 +165,9 @@ find $RPM_BUILD_ROOT -type f -name '*.CEL'     | sed "s@^$RPM_BUILD_ROOT@%dir @g
 %preun 
 
 $Log: microarray-normalization-pool.spec.in,v $
+Revision 1.5  2006/01/08 09:19:24  allenday
+top package cannot be empty
+
 Revision 1.4  2006/01/08 09:15:43  allenday
 split to organism subpackages
 
