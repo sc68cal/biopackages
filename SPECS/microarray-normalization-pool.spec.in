@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool.spec.in,v 1.7 2006/01/08 09:52:56 allenday Exp $
+#$Id: microarray-normalization-pool.spec.in,v 1.8 2006/01/08 09:54:17 allenday Exp $
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool
 Version: 1.1
@@ -145,22 +145,22 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/Celegans    -type f | sed "s@^$RPM_B
 find $RPM_BUILD_ROOT/%{_datadir}/microarray/DrosGenome1 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
 find $RPM_BUILD_ROOT/%{_datadir}/microarray/ax13339     -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
 
-%files %{name}-base -f %{name}-%{version}-%{release}-base
+%files -f %{name}-%{version}-%{release}-base
 %defattr(-,root,root)
 
-%files %{name}-Human -f %{name}-%{version}-%{release}-Human
+%files -n %{name}-Human -f %{name}-%{version}-%{release}-Human
 %defattr(-, root, root, 0755)
 
-%files %{name}-Rat -f %{name}-%{version}-%{release}-Rat
+%files -n %{name}-Rat -f %{name}-%{version}-%{release}-Rat
 %defattr(-, root, root, 0755)
 
-%files %{name}-Mouse -f %{name}-%{version}-%{release}-Mouse
+%files -n %{name}-Mouse -f %{name}-%{version}-%{release}-Mouse
 %defattr(-, root, root, 0755)
 
-%files %{name}-Plant -f %{name}-%{version}-%{release}-Plant
+%files -n %{name}-Plant -f %{name}-%{version}-%{release}-Plant
 %defattr(-, root, root, 0755)
 
-%files %{name}-Other -f %{name}-%{version}-%{release}-Other
+%files -n %{name}-Other -f %{name}-%{version}-%{release}-Other
 %defattr(-, root, root, 0755)
 
 %clean
@@ -171,6 +171,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/ax13339     -type f | sed "s@^$RPM_B
 %preun 
 
 $Log: microarray-normalization-pool.spec.in,v $
+Revision 1.8  2006/01/08 09:54:17  allenday
+syntax fix
+
 Revision 1.7  2006/01/08 09:52:56  allenday
 syntax fix
 
