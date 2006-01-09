@@ -1,0 +1,52 @@
+#$Id: microarray-normalization-pool-HG-Focus.spec.in,v 1.1 2006/01/09 20:06:48 allenday Exp $
+%define platform HG-Focus
+Summary: Microarrays to be used for quantification/normalization with Bioconductor
+Name: microarray-normalization-pool-%{platform}
+Version: 1.1
+Epoch: 0
+Release: %{revision}.%{distro} 
+Source0: %{platform}.tar.gz
+License: Custom
+Group: Bioinformatics/Data
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.genome.ucsc.edu
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+BuildRequires: biopackages
+
+%description
+%{platform} Microarrays to be used for quantification/normalization with Bioconductor
+
+%prep
+#rm -rf %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#mkdir -p $RPM_BUILD_ROOT%{_datadir}/microarray
+
+%setup -n %{platform}
+
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/microarray/%{platform};
+install -m 444 *.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/%{platform}/;
+find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-%{platform};
+
+#find $RPM_BUILD_ROOT -type d -exec chmod 755 {} \;
+#find $RPM_BUILD_ROOT/%{_datadir} -type d | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-base
+
+%files -f %{name}-%{version}-%{release}-%{platform}
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: microarray-normalization-pool-HG-Focus.spec.in,v $
+Revision 1.1  2006/01/09 20:06:48  allenday
+microarray-normalization-pool-ATH1-121501.spec.in
+
+Revision 1.1  2006/01/09 19:54:54  allenday
+import
+

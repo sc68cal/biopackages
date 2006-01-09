@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool.spec.in,v 1.8 2006/01/08 09:54:17 allenday Exp $
+#$Id: microarray-normalization-pool.spec.in,v 1.9 2006/01/09 20:06:48 allenday Exp $
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool
 Version: 1.1
@@ -57,93 +57,25 @@ Requires: %{name} = %{version}
 Other microarrays to be used for quantification/normalization with Bioconductor
 
 %prep
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/microarray
 
 %setup
 
 %build
 
 %install
-install -d -m 755 CentHindAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 CentXbaAv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG-Focus $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG-U133A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG-U133A_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG-U133B $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG-U133_Plus_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG_U95A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 HG_U95Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Hu6800 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Mapping10K_Xba131 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Mapping10K_Xba142 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 ENCODE_CHIP01_ANTI_SENSE $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Xba142_EA $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RAE230A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Rat230_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RG_U34A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RML-chipa510998 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 RN_U34 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 gnGNF1Ba $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 gnGNF1Musa $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MG_U74A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MG_U74Av2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MG_U74Bv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MG_U74Cv2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MOE430A $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 MOE430B $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Mouse430_2 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 ATH1-121501 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Barley1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Maize $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 uwyRhodo1a $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 YG_S98 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 Celegans $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 DrosGenome1 $RPM_BUILD_ROOT%{_datadir}/microarray/
-install -d -m 755 ax13339 $RPM_BUILD_ROOT%{_datadir}/microarray/
+for i in gnGNF1Ba CentHindAv2 CentXbaAv2 HG-Focus HG-U133A HG-U133A_2 HG-U133B HG-U133_Plus_2 HG_U95A HG_U95Av2 Hu6800 Mapping10K_Xba131 Mapping10K_Xba142 ENCODE_CHIP01_ANTI_SENSE Xba142_EA ; do mkdir $RPM_BUILD_ROOT%{_datadir}/microarray/$i ; install -m 444 $i/*.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/$i/ ; find $RPM_BUILD_ROOT/%{_datadir}/microarray/$i -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-Human ; done
+
+for i in RAE230A Rat230_2 RG_U34A RML-chipa510998 RN_U34 ; do mkdir $RPM_BUILD_ROOT%{_datadir}/microarray/$i ; install -m 444 $i/*.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/$i/ ; find $RPM_BUILD_ROOT/%{_datadir}/microarray/$i -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat ; done
+
+for i in gnGNF1Musa MG_U74A MG_U74Av2 MG_U74Bv2 MG_U74Cv2 MOE430A MOE430B Mouse430_2 ; do mkdir $RPM_BUILD_ROOT%{_datadir}/microarray/$i ; install -m 444 $i/*.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/$i/ ; find $RPM_BUILD_ROOT/%{_datadir}/microarray/$i -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-Mouse ; done
+
+for i in ATH1-121501 Barley1 Maize ; do mkdir $RPM_BUILD_ROOT%{_datadir}/microarray/$i ; install -m 444 $i/*.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/$i/ ; find $RPM_BUILD_ROOT/%{_datadir}/microarray/$i -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-Plant ; done
+
+for i in uwyRhodo1a YG_S98 Celegans DrosGenome1 ax13339 ; do mkdir $RPM_BUILD_ROOT%{_datadir}/microarray/$i ; install -m 444 $i/*.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/$i/ ; find $RPM_BUILD_ROOT/%{_datadir}/microarray/$i -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-Other ; done
 
 find $RPM_BUILD_ROOT -type d -exec chmod 755 {} \;
-find $RPM_BUILD_ROOT -type f -exec chmod 444 {} \;
-
 find $RPM_BUILD_ROOT/%{_datadir} -type d | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-base
-
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/CentHindAv2              -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/CentXbaAv2               -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/ENCODE_CHIP01_ANTI_SENSE -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG-Focus                 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG-U133A                 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG-U133A_2               -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG-U133B                 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG-U133_Plus_2           -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG_U95A                  -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/HG_U95Av2                -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Hu6800                   -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Mapping10K_Xba131        -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Mapping10K_Xba142        -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Xba142_EA                -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/gnGNF1Ba                 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Human
-
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/RAE230A         -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/RAE230_2        -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/RG_U34A         -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/RML-chipa510998 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/RN_U34          -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Rat
-
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/gnGNF1Musa -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MG_U74A    -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MG_U74Av2  -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MG_U74Bv2  -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MG_U74Cv2  -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MOE430A    -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/MOE430B    -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Mouse430_2 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Mouse
-
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/ATH-121501 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Plant
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Barley1    -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Plant
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Maize      -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Plant
-
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/uwyRhodo1a  -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/Celegans    -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/DrosGenome1 -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
-find $RPM_BUILD_ROOT/%{_datadir}/microarray/ax13339     -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-Other
 
 %files -f %{name}-%{version}-%{release}-base
 %defattr(-,root,root)
@@ -171,6 +103,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/ax13339     -type f | sed "s@^$RPM_B
 %preun 
 
 $Log: microarray-normalization-pool.spec.in,v $
+Revision 1.9  2006/01/09 20:06:48  allenday
+microarray-normalization-pool-ATH1-121501.spec.in
+
 Revision 1.8  2006/01/08 09:54:17  allenday
 syntax fix
 
