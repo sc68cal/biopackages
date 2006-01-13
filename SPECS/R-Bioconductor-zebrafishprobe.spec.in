@@ -1,11 +1,11 @@
-#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.1 2006/01/13 23:19:04 allenday Exp $
+#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.2 2006/01/13 23:33:39 allenday Exp $
 %define	base	zebrafishprobe
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Jared Fox <jaredfox@ucla.edu>
 Version: 1.1
-Release: %{revision}.%{distro}
+Release: 1.1.%{distro}
 Name: R-Bioconductor-%{base}
 Summary: A package containing an environment represeting the %{base} probes.
 Group: Applications/Engineering
@@ -13,8 +13,10 @@ License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
 Requires: R >= 2.0.0
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: R >= 2.0.0
+BuildRequires: R, biopackages
 
 %description
 A package containing an environment represeting the %{base} probes.
@@ -41,7 +43,6 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
-$Log: R-Bioconductor-zebrafishprobe.spec.in,v $
-Revision 1.1  2006/01/13 23:19:04  allenday
-import
-
+%changelog
+* Fri Jan 13 2006 allenday allenday 1.1-1.1
+- import

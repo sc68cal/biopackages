@@ -1,0 +1,49 @@
+#$Id: R-Bioconductor-test3cdf.spec.in,v 1.1 2006/01/13 23:33:39 allenday Exp $
+%define	base	test3cdf
+Epoch: 1
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Jared Fox <jaredfox@ucla.edu>
+Version: 1.5.1
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-%{base}
+Summary: A package containing an environment represeting the %{base} cdf file.
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: %{base}_%{version}.tar.gz
+Requires: R >= 2.0.0
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0
+BuildRequires: R, biopackages
+
+%description
+A package containing an environment represeting the %{base} cdf file.
+
+%prep
+%setup -n %{base}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+#cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-Bioconductor-test3cdf.spec.in,v $
+Revision 1.1  2006/01/13 23:33:39  allenday
+buildarch
+

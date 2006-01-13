@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-mgu74av2cdf.spec.in,v 1.1 2006/01/13 02:30:11 allenday Exp $
+#$Id: R-Bioconductor-mgu74av2cdf.spec.in,v 1.2 2006/01/13 23:33:39 allenday Exp $
 %define	base	mgu74av2cdf
 Epoch: 1
 Vendor: biopackages.net
@@ -13,8 +13,10 @@ License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
 Requires: R >= 2.0.0
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: R >= 2.0.0
+BuildRequires: R, biopackages
 
 %description
 A package containing an environment represeting the %{base} cdf file.
@@ -42,6 +44,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-mgu74av2cdf.spec.in,v $
+Revision 1.2  2006/01/13 23:33:39  allenday
+buildarch
+
 Revision 1.1  2006/01/13 02:30:11  allenday
 import!
 
