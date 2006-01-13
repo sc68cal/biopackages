@@ -1,5 +1,6 @@
-#$Id: affyfile.spec.in,v 1.5 2006/01/04 22:34:03 allenday Exp $
+#$Id: affyfile.spec.in,v 1.6 2006/01/13 02:30:11 allenday Exp $
 Name: affyfile
+Epoch: 1
 Version: 2
 Release: %{revision}.%{distro}
 Summary: Headers, libraries, and utilities for working with Affymetrix files.
@@ -58,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 $Log: affyfile.spec.in,v $
+Revision 1.6  2006/01/13 02:30:11  allenday
+import!
+
 Revision 1.5  2006/01/04 22:34:03  allenday
 -fPIC for 64b compile
 
