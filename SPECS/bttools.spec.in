@@ -1,0 +1,79 @@
+#$Id: bttools.spec.in,v 1.1 2006/01/23 22:37:52 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: bttools provides some BitTorrent functions in Perl
+Name: bttools
+Version: 0.4.1
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 1
+URL: http://www.bagley.org/~doug/projects/bttools/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl
+Requires: perl
+
+Source0: %{name}-%{version}.tar.gz
+
+%description
+ bttools can do the following things:
+
+   1. Read, Write, Display BitTorrent MetaInfo (.torrent) files.
+   2. Check integrity of a downloaded file via the SHA-1 hash in the MetaInfo.
+   3. Query the tracker announce URL for number of uploaders/downloaders/finished.
+   4. and more ... 
+
+The major functionality resides in the Perl modules, but command line scripts are also provided so you don't have to write your own ... unless you want to. This is not a BitTorrent client, there are plenty of fine BT clients available elsewhere. A lot of the functionality is similar to what is already available in Python scripts included in the original BitTorrent client distribution. This is just a Perl version, with a few extra goodies thrown in. bttools can do things kind of like Torrentspy, or torrentsniff, if you have seen those.
+
+%prep
+%setup -q
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: bttools.spec.in,v $
+Revision 1.1  2006/01/23 22:37:52  allenday
+import
+
