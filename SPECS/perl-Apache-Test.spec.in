@@ -1,4 +1,4 @@
-#$Id: perl-Apache-Test.spec.in,v 1.1 2006/01/27 09:03:27 allenday Exp $
+#$Id: perl-Apache-Test.spec.in,v 1.2 2006/01/27 09:05:39 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,8 +11,8 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Apache-Test/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, httpd, httpd-devel, mod_perl
-Requires: httpd, httpd-devel, mod_perl
+BuildRequires: perl, biopackages, httpd, httpd-devel, mod_perl, perl-Module-Build
+Requires: httpd, httpd-devel, mod_perl, perl-Module-Build
 
 Provides: perl(Apache::TestConfigParse), perl(Apache::TestConfigPerl)
 
@@ -293,6 +293,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache-Test.spec.in,v $
+Revision 1.2  2006/01/27 09:05:39  allenday
+depcheck
+
 Revision 1.1  2006/01/27 09:03:27  allenday
 import
 
