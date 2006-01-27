@@ -1,0 +1,93 @@
+#$Id: perl-MP3-Info.spec.in,v 1.1 2006/01/27 08:54:18 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-MP3-Info
+Version: 1.13
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/MP3-Info/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: MP3-Info-%{version}.tar.gz
+
+%description
+This is MP3::Info, for getting info out of and into MP3 files.
+
+A wrapper module is included so scripts calling MPEG::MP3Info (the
+old name) will still work.
+
+This archive can always be obtained from:
+
+    http://sf.net/projects/pudge/
+    http://www.cpan.org/authors/id/CNANDOR/
+    http://www.cpan.org/modules/by-module/MP3/
+
+The project homepage is:
+
+    http://projects.pudge.net/
+
+Please let me know how well it does(n't) work, and any changes you'd 
+like to see.   Thanks to all of the people who have sent me feedback
+and ideas.
+
+Copyright (c) 1998-2005 Chris Nandor.  All rights reserved.  This program
+is free software; you can redistribute it and/or modify it under the same
+terms as Perl itself.
+
+
+%prep
+%setup -q -n MP3-Info-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-MP3-Info.spec.in,v $
+Revision 1.1  2006/01/27 08:54:18  allenday
+import
+

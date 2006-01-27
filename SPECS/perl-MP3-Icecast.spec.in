@@ -1,0 +1,174 @@
+#$Id: perl-MP3-Icecast.spec.in,v 1.1 2006/01/27 08:52:08 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Generate Icecast streams, as well as M3U and PLSv2 playlists.
+Name: perl-MP3-Icecast
+Version: 0.02
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/MP3-Icecast/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: MP3-Icecast-%{version}.tar.gz
+
+%description
+MP3/Icecast version 0.01
+========================
+
+NAME
+       MP3::Icecast - Generate Icecast streams, as well as M3U and PLSv2
+       playlists.
+
+SYNOPSIS
+         use MP3::Icecast;
+         use MP3::Info;
+         use IO::Socket;
+
+         my $listen_socket = IO::Socket::INET->new(
+           LocalPort => 8000, #standard Icecast port
+           Listen    => 20,
+           Proto     => 'tcp',
+           Reuse     => 1,
+           Timeout   => 3600);
+
+         #create an instance to find all files below /usr/local/mp3
+         my $finder = MP3::Icecast->new();
+         $finder->recursive(1);
+         $finder->add_directory('/usr/local/mp3');
+         my @files = $finder->files;
+
+         #accept TCP 8000 connections
+         while(1){
+           next unless my $connection = $listen_socket->accept;
+
+           defined(my $child = fork()) or die "Can't fork: $!";
+           if($child == 0){
+             $listen_socket->close;
+
+             my $icy = MP3::Icecast->new;
+
+             #stream files that have an ID3 genre tag of "jazz"
+             while(@files){
+               my $file = shift @files;
+               my $info = new MP3::Info $file;
+               next unless $info;
+               next unless $info->genre =~ /jazz/i;
+               $icy->stream($file,0,$connection);
+             }
+             exit 0;
+           }
+
+           #a contrived example to demonstrate that MP3::Icecast
+           #can generate M3U and PLSv2 media playlists.
+           print STDERR $icy->m3u, "\n";
+           print STDERR $icy->pls, "\n";
+
+           $connection->close;
+         }
+
+ABSTRACT
+       MP3::Icecast supports streaming Icecast protocol over socket or other
+       filehandle (including STDIN).  This is useful for writing a streaming
+       media server.
+
+       MP3::Icecast also includes support for generating M3U and PLSv2
+       playlist files.  These are common formats supported by most modern
+       media players, including XMMS, Windows Media Player 9, and Winamp.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+  MP3::Info      => 1.02
+  File::Spec     => 0.86
+  File::Basename => 2.71
+  File::MimeInfo => 0.8
+  URI::Escape    => 0
+  IO::File       => 1.09
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2003 Allen Day
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+SEE ALSO
+
+The Icecast project
+http://www.icecast.org
+
+Namp! (Apache::MP3)
+http://namp.sourceforge.net
+
+Unofficial M3U and PLS specifications
+http://forums.winamp.com/showthread.php?threadid=65772
+
+
+
+
+%prep
+%setup -q -n MP3-Icecast-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-MP3-Icecast.spec.in,v $
+Revision 1.1  2006/01/27 08:52:08  allenday
+import
+
