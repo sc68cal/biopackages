@@ -1,4 +1,4 @@
-#$Id: perl-MP3-Icecast.spec.in,v 1.1 2006/01/27 08:52:08 allenday Exp $
+#$Id: perl-MP3-Icecast.spec.in,v 1.2 2006/01/27 08:56:01 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/MP3-Icecast/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-MP3-Info
+Requires: perl-MP3-Info
 
 Source0: MP3-Icecast-%{version}.tar.gz
 
@@ -169,6 +170,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-MP3-Icecast.spec.in,v $
+Revision 1.2  2006/01/27 08:56:01  allenday
+depcheck
+
 Revision 1.1  2006/01/27 08:52:08  allenday
 import
 
