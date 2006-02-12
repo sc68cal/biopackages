@@ -1,4 +1,4 @@
-#$Id: Distributed-Annotation-System.spec.in,v 1.1 2006/02/12 10:19:59 boconnor Exp $
+#$Id: Distributed-Annotation-System.spec.in,v 1.2 2006/02/12 11:15:50 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Distributed Annotation System
@@ -12,7 +12,9 @@ URL: http://www.biodas.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: httpd, httpd-devel, perl, mod_perl, perl-Apache-ParseFormData, perl-DBI, perl-DBD-Pg, perl-libwww-perl, perl-PDL, perl-Template-Toolkit, perl-URI, perl-bioperl, perl-Log-Log4perl, perl-PDL-NetCDF, perl-Package-Tools, perl-Crypt-SSLeay, perl-Devel-Symdump, perl-HTML-Tagset, perl-HTML-Parser, gbrowse, perl-Bio-MAGE, perl-Devel-CoreStack, perl-IPC-Run3
-Requires: chado = 0.003-11.20051004
+# FIXME: this doesn't work, it isn't more specific than the major revision number
+#Requires: chado = 0.003-11.20051004
+Requires: chado = 0.003
 
 Source0: Distributed-Annotation-System-%{version}.tar.gz
 
@@ -49,7 +51,8 @@ These variables should be in all caps.
 %package Sce
 Summary: A DAS/2 server configured to work with the Sce Chado database.
 Group: Development/Web
-Requires: chado-Sce = S228C.0.003-4.cvs20051011
+#Requires: chado-Sce = S228C.0.003-4.cvs20051011
+Requires: chado-Sce = S228C.0.003
 
 %description Sce
 A DAS/2 server configured to work with the Sce Chado database.
@@ -57,7 +60,8 @@ A DAS/2 server configured to work with the Sce Chado database.
 %package Hsa
 Summary: A DAS/2 server configured to work with the Hsa Chado database.
 Group: Development/Web
-Requires: chado-Hsa = 17.0.003-10.20050716
+#Requires: chado-Hsa = 17.0.003-10.20050716
+Requires: chado-Hsa = 17.0.003
 
 %description Hsa
 A DAS/2 server configured to work with the Hsa Chado database.
@@ -65,7 +69,8 @@ A DAS/2 server configured to work with the Hsa Chado database.
 %package Mmu
 Summary: A DAS/2 server configured to work with the Mmu Chado database.
 Group: Development/Web
-Requires: chado-Mmu = 6.0.003-10.20050718
+#Requires: chado-Mmu = 6.0.003-10.20050718
+Requires: chado-Mmu = 6.0.003
 
 %description Mmu
 A DAS/2 server configured to work with the Mmu Chado database.
@@ -79,6 +84,8 @@ make OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+# these settings don't seem to work!!
 
 eval `perl '-V:installarchlib'`
 mkdir -p $RPM_BUILD_ROOT$installarchlib
@@ -165,7 +172,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-%doc etc/featuregraph.plpgsql etc/frange.plpgsql
+%doc README INSTALL etc/featuregraph.plpgsql etc/frange.plpgsql
 
 %files Hsa
 /var/www/das/conf/httpd_Hsa.conf
@@ -176,32 +183,40 @@ rm -rf $RPM_BUILD_ROOT
 %files Mmu
 /var/www/das/conf/httpd_Mmu.conf
 
+# FIXME: I don't know the var for the doc directory
 %post
-sudo su postgres -c 
+sudo su postgres -c 'psql chado < /usr/share/doc/%{name}-%{version}/featuregraph.plpgsql'
+sudo su postgres -c 'psql chado < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_core.conf' >> /etc/httpd/conf/httpd.conf
 /etc/init.d/httpd restart
 
 %post Hsa
-sudo su postgres -c 
+sudo su postgres -c 'psql chado-Hsa-17 < /usr/share/doc/%{name}-%{version}/featuregraph.plpgsql'
+sudo su postgres -c 'psql chado-Hsa-17 < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_Sce.conf' >> /etc/httpd/conf/httpd.conf
 /etc/init.d/httpd restart
 
 %post Sce
-sudo su postgres -c 
+sudo su postgres -c 'psql chado-Sce-S228C < /usr/share/doc/%{name}-%{version}/featuregraph.plpgsql'
+sudo su postgres -c 'psql chado-Sce-S228C < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_Sce.conf' >> /etc/httpd/conf/httpd.conf
 /etc/init.d/httpd restart
 
 %post Mmu
-sudo su postgres -c 
+sudo su postgres -c 'psql chado-Mmu-6 < /usr/share/doc/%{name}-%{version}/featuregraph.plpgsql'
+sudo su postgres -c 'psql chado-Mmu-6 < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_Mmu.conf' >> /etc/httpd/conf/httpd.conf
 /etc/init.d/httpd restart
 
 
 $Log: Distributed-Annotation-System.spec.in,v $
+Revision 1.2  2006/02/12 11:15:50  boconnor
+Added in some DB loading calls. The install process seems to have a hardcoded species (human) somewhere in it.  The output httpd setting for the chado base database is incorrect
+
 Revision 1.1  2006/02/12 10:19:59  boconnor
 Renamed the DAS/2 spec.in file
 
