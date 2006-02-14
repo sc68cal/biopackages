@@ -1,0 +1,57 @@
+#$Id: R-GDD.spec.in,v 1.1 2006/02/14 20:49:57 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.1.8
+Release: %{revision}.%{distro}
+Name: R-GDD
+Summary: GDD is a graphics device for R which uses libgd for creating bitmap output. Supported output formats are png8, png24, gif and jpeg.
+Group: Applications/Engineering
+License: GPL
+URL: http://www.rosuda.org/R/GDD/
+Source0: GDD_0.1-8.tar.gz
+Requires: R >= 2.0.0, gd >= 2.0.28
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gd-devel >= 2.0.28, gcc, biopackages
+
+%description
+GDD is a graphics device for R which uses libgd for creating bitmap output. Supported output formats are png8, png24, gif and jpeg.
+
+See RoSuDa package repository for the latest release.
+
+The main purpose of this package is to replace png/jpeg and similar native devices in R which either rely on X11 or use GhostScript are thus are very slow and not suitable in server applications. GDD also supports advanced features such as anti-aliasing of both lines and text.
+
+The GDD package is very fresh so there is not much documentation available at the moment. For full-featured operation it requires gd-2.0.28 or higher with freetype support. Since GDD 0.1-4 gdlib-conf is used to detect GD for more reliable flag detection. See the README file inside the package for details on requirements and font handling.
+
+As an alternative, if you want a stand-alone GDD with statically linked png/jpeg/freetype and gd libraries, consider unpacking the GDD package to /tmp and specify /tmp/GDD/ext as the prefix for all the above libraries and using --disable-shared. After compiling and installing all the libraries, use R CMD INSTALL /tmp/GDD to compile and install the GDD package. Again, this is only necessary if there is no shared version of libgd on your system and you can't easily get one.
+
+This package is released unter GPL (see DESCRIPTION file inside the package for details).
+
+Created by Simon Urbanek, 2004 
+
+%prep
+%setup -n GDD
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-GDD.spec.in,v $
+Revision 1.1  2006/02/14 20:49:57  allenday
+import
+
