@@ -1,0 +1,45 @@
+#$Id: R-RdbiPgSQL.spec.in,v 1.1 2006/02/14 00:25:32 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.5.1
+Release: %{revision}.%{distro}
+Name: R-RdbiPgSQL
+Summary:  Provides methods for accessing data stored in PostgreSQL tables. Code written by Timothy H. Keitt and modified by Jianhua Zhang
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: RdbiPgSQL_%{version}.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc, biopackages, R-Bioconductor, postgresql-devel
+
+%description
+Provides methods for accessing data stored in PostgreSQL tables. Code written by Timothy H. Keitt and modified by Jianhua Zhang 
+
+%prep
+%setup -n RdbiPgSQL
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library RdbiPgSQL_%{version}.tar.gz
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-RdbiPgSQL.spec.in,v $
+Revision 1.1  2006/02/14 00:25:32  allenday
+import
+
