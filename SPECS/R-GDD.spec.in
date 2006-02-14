@@ -1,4 +1,4 @@
-#$Id: R-GDD.spec.in,v 1.2 2006/02/14 20:53:25 allenday Exp $
+#$Id: R-GDD.spec.in,v 1.3 2006/02/14 21:16:33 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -10,9 +10,9 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.rosuda.org/R/GDD/
 Source0: GDD_0.1-8.tar.gz
-Requires: R >= 2.0.0, gd >= 2.0.28, gd-progs >= 2.0.28
+Requires: R >= 2.0.0, gd >= 2.0.33, gd-progs >= 2.0.33
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, gd-devel >= 2.0.28, gd-progs >= 2.0.28, gcc, biopackages
+BuildRequires: R >= 2.0.0, gd-devel >= 2.0.33, gd-progs >= 2.0.33, gcc, biopackages
 
 %description
 GDD is a graphics device for R which uses libgd for creating bitmap output. Supported output formats are png8, png24, gif and jpeg.
@@ -44,7 +44,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
-find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
 
 %files -f %{name}-%{version}-%{release}-filelist
 
@@ -52,6 +53,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-GDD.spec.in,v $
+Revision 1.3  2006/02/14 21:16:33  allenday
+depcheck
+
 Revision 1.2  2006/02/14 20:53:25  allenday
 depcheck
 
