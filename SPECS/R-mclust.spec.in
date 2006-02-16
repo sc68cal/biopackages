@@ -1,0 +1,48 @@
+#$Id: R-mclust.spec.in,v 1.1 2006/02/16 02:41:48 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 2.1.11
+Release: %{revision}.%{distro}
+Name: R-mclust
+Summary: Model-based cluster analysis: the 2002 version of MCLUST
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: mclust_2.1-11.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc, biopackages
+
+%description
+Model-based clustering, discriminant analysis, and density estimation including hierarchical clustering and EM for parameterized Gaussian mixtures + Poisson noise.
+Written in Fortran and interfaced to the S-PLUS commercial software package and the R language.
+
+http://www.stat.washington.edu/fraley/mclust/license.txt
+
+%prep
+%setup -n mclust
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library mclust_2.1-11.tar.gz
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-mclust.spec.in,v $
+Revision 1.1  2006/02/16 02:41:48  allenday
+import
+
