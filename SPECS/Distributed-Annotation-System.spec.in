@@ -1,4 +1,4 @@
-#$Id: Distributed-Annotation-System.spec.in,v 1.3 2006/02/13 18:07:55 boconnor Exp $
+#$Id: Distributed-Annotation-System.spec.in,v 1.4 2006/03/01 09:57:59 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Distributed Annotation System
@@ -44,8 +44,8 @@ These variables should be in all caps.
 > export species_version=17
 > export species_abbr=Hsa
 > export db_name=chado-Hsa-17
-> export db_user=readonly
-> export db_pass=readonly
+> export db_user=postgres
+> export db_pass=postgres
 > export db_host=localhost
 
 %package Sce
@@ -94,11 +94,11 @@ export TARGET_WEB_DIR=$RPM_BUILD_ROOT/var/www/das
 export HTTPD_CONF_OUTPUT=1
 export BUILD_ONLY_HTTPD_CONF=0
 export SPECIES=core
-export SPECIES_VERSION=core
+export SPECIES_VERSION=1
 export SPECIES_ABBR=core
 export DB_NAME=chado
-export DB_USER=readonly
-export DB_PASS=readonly
+export DB_USER=postgres
+export DB_PASS=postgres
 export DB_HOST=localhost
 %makeinstall
 
@@ -135,8 +135,8 @@ export SPECIES=human
 export SPECIES_VERSION=17
 export SPECIES_ABBR=Hsa
 export DB_NAME=chado-Hsa-17
-export DB_USER=readonly
-export DB_PASS=readonly
+export DB_USER=postgres
+export DB_PASS=postgres
 export DB_HOST=localhost
 make install_htdocs
 
@@ -148,8 +148,8 @@ export SPECIES=yeast
 export SPECIES_VERSION=S228C
 export SPECIES_ABBR=Sce
 export DB_NAME=chado-Sce-S228C
-export DB_USER=readonly
-export DB_PASS=readonly
+export DB_USER=postgres
+export DB_PASS=postgres
 export DB_HOST=localhost
 make install_htdocs
 
@@ -161,8 +161,8 @@ export SPECIES=mouse
 export SPECIES_VERSION=6
 export SPECIES_ABBR=Mmu
 export DB_NAME=chado-Mmu-6
-export DB_USER=readonly
-export DB_PASS=readonly
+export DB_USER=postgres
+export DB_PASS=postgres
 export DB_HOST=localhost
 make install_htdocs
 
@@ -195,7 +195,8 @@ echo 'Include /var/www/das/conf/httpd_core.conf' >> /etc/httpd/conf/httpd.conf
 sudo su postgres -c 'psql chado-Hsa-17 < /usr/share/doc/%{name}-%{version}/featuregraph.plpgsql'
 sudo su postgres -c 'psql chado-Hsa-17 < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
-echo 'Include /var/www/das/conf/httpd_Sce.conf' >> /etc/httpd/conf/httpd.conf
+echo 'Include /var/www/das/conf/httpd_Hsa.conf' >> /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!# PerlAddVar  source                'human'!  PerlAddVar  source                'human'!g" /var/www/das/conf/httpd_core.conf
 /etc/init.d/httpd restart
 
 %post Sce
@@ -203,6 +204,7 @@ sudo su postgres -c 'psql chado-Sce-S228C < /usr/share/doc/%{name}-%{version}/fe
 sudo su postgres -c 'psql chado-Sce-S228C < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_Sce.conf' >> /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!# PerlAddVar  source                'yeast'!  PerlAddVar  source                'yeast'!g" /var/www/das/conf/httpd_core.conf
 /etc/init.d/httpd restart
 
 %post Mmu
@@ -210,10 +212,33 @@ sudo su postgres -c 'psql chado-Mmu-6 < /usr/share/doc/%{name}-%{version}/featur
 sudo su postgres -c 'psql chado-Mmu-6 < /usr/share/doc/%{name}-%{version}/frange.plpgsql'
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/das/conf/httpd_Mmu.conf' >> /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!# PerlAddVar  source                'mouse'!  PerlAddVar  source                'mouse'!g" /var/www/das/conf/httpd_core.conf
+/etc/init.d/httpd restart
+
+%postun
+perl -p -i -e 's!Include /var/www/das/conf/httpd_core.conf!!' /etc/httpd/conf/httpd.conf
+/etc/init.d/httpd restart
+
+%postun Hsa
+perl -p -i -e 's!Include /var/www/das/conf/httpd_Hsa.conf!!' /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!  PerlAddVar  source                'human'!# PerlAddVar  source                'human'!g" /var/www/das/conf/httpd_core.conf
+/etc/init.d/httpd restart
+
+%postun Sce
+perl -p -i -e 's!Include /var/www/das/conf/httpd_Sce.conf!!' /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!  PerlAddVar  source                'yeast'!# PerlAddVar  source                'yeast'!g" /var/www/das/conf/httpd_core.conf
+/etc/init.d/httpd restart
+
+%postun Mmu
+perl -p -i -e 's!Include /var/www/das/conf/httpd_Mmu.conf!!' /etc/httpd/conf/httpd.conf
+perl -p -i -e "s!  PerlAddVar  source                'mouse'!# PerlAddVar  source                'mouse'!g" /var/www/das/conf/httpd_core.conf
 /etc/init.d/httpd restart
 
 
 $Log: Distributed-Annotation-System.spec.in,v $
+Revision 1.4  2006/03/01 09:57:59  boconnor
+Updated the spec for DAS2
+
 Revision 1.3  2006/02/13 18:07:55  boconnor
 added deps for DAS/2
 
