@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-matchprobes.spec.in,v 1.7 2006/03/02 07:54:50 allenday Exp $
+#$Id: R-Bioconductor-matchprobes.spec.in,v 1.8 2006/03/02 07:56:24 allenday Exp $
 %define	base	matchprobes
 Epoch: 1
 Vendor: biopackages.net
@@ -13,7 +13,6 @@ License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
 Requires: R-Bioconductor-Biobase >= 1.6.0, R-Bioconductor-affy, R >= 2.1.0
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R-Bioconductor-Biobase >= 1.6.0, R >= 2.1.0, biopackages
 
@@ -42,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-matchprobes.spec.in,v $
+Revision 1.8  2006/03/02 07:56:24  allenday
+arched
+
 Revision 1.7  2006/03/02 07:54:50  allenday
 bioconductor package refactor
 
