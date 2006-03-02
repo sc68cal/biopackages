@@ -1,10 +1,10 @@
-#$Id: R-Bioconductor-Biobase.spec.in,v 1.1 2006/03/02 01:20:21 allenday Exp $
+#$Id: R-Bioconductor-Biobase.spec.in,v 1.2 2006/03/02 01:23:13 allenday Exp $
 %define	base	Biobase
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.9.8
+Version: 1.8.0
 Release: %{revision}.%{distro}
 Name: R-Bioconductor-%{base}
 Summary: Tools for sequence matching of probes on arrays
@@ -42,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-Biobase.spec.in,v $
+Revision 1.2  2006/03/02 01:23:13  allenday
+depcheck
+
 Revision 1.1  2006/03/02 01:20:21  allenday
 import
 
