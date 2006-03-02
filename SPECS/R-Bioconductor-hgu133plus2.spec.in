@@ -1,5 +1,5 @@
-#$Id: R-Bioconductor-hgu133plus2.spec.in,v 1.1 2006/03/02 08:16:17 allenday Exp $
-%define	base	hgu133plus2cdf
+#$Id: R-Bioconductor-hgu133plus2.spec.in,v 1.2 2006/03/02 08:16:52 allenday Exp $
+%define	base	hgu133plus2
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
@@ -44,6 +44,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-hgu133plus2.spec.in,v $
+Revision 1.2  2006/03/02 08:16:52  allenday
+import
+
 Revision 1.1  2006/03/02 08:16:17  allenday
 import
 
