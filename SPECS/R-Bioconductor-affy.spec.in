@@ -1,10 +1,10 @@
-#$Id: R-Bioconductor-affy.spec.in,v 1.1 2006/03/02 07:28:05 allenday Exp $
+#$Id: R-Bioconductor-affy.spec.in,v 1.2 2006/03/02 07:28:50 allenday Exp $
 %define	base	affy
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 2.2.1
+Version: 1.8.1
 Release: %{revision}.%{distro}
 Name: R-Bioconductor-%{base}
 Summary: The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-affy.spec.in,v $
+Revision 1.2  2006/03/02 07:28:50  allenday
+import
+
 Revision 1.1  2006/03/02 07:28:05  allenday
 import
 
