@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-matchprobes.spec.in,v 1.5 2006/03/02 01:17:56 allenday Exp $
+#$Id: R-Bioconductor-matchprobes.spec.in,v 1.6 2006/03/02 07:53:48 allenday Exp $
 %define	base	matchprobes
 Epoch: 1
 Vendor: biopackages.net
@@ -12,10 +12,10 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
-Requires: R-Bioconductor >= 1.6, R >= 2.1.0
+Requires: R-Bioconductor-Biobase >= 1.6.0, R >= 2.1.0
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R-Bioconductor >= 1.6, R >= 2.1.0, biopackages
+BuildRequires: R-Bioconductor-Biobase >= 1.6.0, R >= 2.1.0, biopackages
 
 %description
 Tools for sequence matching of probes on arrays
@@ -42,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-matchprobes.spec.in,v $
+Revision 1.6  2006/03/02 07:53:48  allenday
+bioconductor package refactor
+
 Revision 1.5  2006/03/02 01:17:56  allenday
 depcheck
 
