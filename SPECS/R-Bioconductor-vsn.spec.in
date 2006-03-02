@@ -1,0 +1,46 @@
+#$Id: R-Bioconductor-vsn.spec.in,v 1.1 2006/03/02 08:07:37 allenday Exp $
+%define	base	vsn
+Epoch: 1
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.8.0
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-%{base}
+Summary: The package implements a robust variant of the maximum-likelihood estimator for the stochastic model of microarray data described in the references.
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: %{base}_%{version}.tar.gz
+Requires: R >= 2.2.0, R-Bioconductor-Biobase >= 1.4.14
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.2.0, biopackages
+
+%description
+The package implements a robust variant of the maximum-likelihood estimator for the stochastic model of microarray data described in the references. The model incorporates data calibration (aka normalization), a model for the dependence of the variance on the mean intensity, and a variance stabilizing data transformation. Differences between transformed intensities are analogous to "normalized log-ratios". However, in contrast to the latter, their variance is independent of the mean, and they are usually more sensitive and specific in detecting differential transcription.
+
+%prep
+%setup -n %{base}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-Bioconductor-vsn.spec.in,v $
+Revision 1.1  2006/03/02 08:07:37  allenday
+import
+
