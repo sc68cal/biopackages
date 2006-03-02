@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-Biobase.spec.in,v 1.4 2006/03/02 07:18:35 allenday Exp $
+#$Id: R-Bioconductor-Biobase.spec.in,v 1.5 2006/03/02 07:21:06 allenday Exp $
 %define	base	Biobase
 Epoch: 1
 Vendor: biopackages.net
@@ -13,7 +13,6 @@ License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
 Requires: R >= 2.2.0
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.2.0, biopackages
 
@@ -42,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-Biobase.spec.in,v $
+Revision 1.5  2006/03/02 07:21:06  allenday
+arched package
+
 Revision 1.4  2006/03/02 07:18:35  allenday
 restructuring bioconductor package federation
 
