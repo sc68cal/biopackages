@@ -1,8 +1,8 @@
-#$Id: R.spec.in,v 1.1 2006/01/05 09:43:33 allenday Exp $
+#$Id: R.spec.in,v 1.2 2006/03/02 00:13:18 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 2.0.1
+Version: 2.1.0
 Release: %{revision}.%{distro}
 Summary: A language for data analysis and graphics
 Name: R
@@ -120,6 +120,6 @@ if [ $1 = 0 ]; then
 fi
 
 $Log: R.spec.in,v $
-Revision 1.1  2006/01/05 09:43:33  allenday
-import
+Revision 1.2  2006/03/02 00:13:18  allenday
+update to 2.1
 
