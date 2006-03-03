@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-RdbiPgSQL.spec.in,v 1.1 2006/03/03 01:16:46 allenday Exp $
+#$Id: R-Bioconductor-RdbiPgSQL.spec.in,v 1.2 2006/03/03 01:18:14 allenday Exp $
 %define	base	RdbiPgSQL
 Epoch: 1
 Vendor: biopackages.net
@@ -15,6 +15,7 @@ Source0: %{base}_%{version}.tar.gz
 Requires: R >= 2.1.0, R-Bioconductor-Rdbi, postgresql-libs, postgresql
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.1.0, R-Bioconductor-Rdbi, postgresql-libs, postgresql-devel, biopackages
+Obsoletes: R-RdbiPgSQL
 
 %description
 Provides methods for accessing data stored in PostgreSQL tables
@@ -41,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-RdbiPgSQL.spec.in,v $
+Revision 1.2  2006/03/03 01:18:14  allenday
+import
+
 Revision 1.1  2006/03/03 01:16:46  allenday
 import
 

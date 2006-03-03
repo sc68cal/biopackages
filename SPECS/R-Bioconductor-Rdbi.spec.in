@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-Rdbi.spec.in,v 1.1 2006/03/03 01:13:20 allenday Exp $
+#$Id: R-Bioconductor-Rdbi.spec.in,v 1.2 2006/03/03 01:13:52 allenday Exp $
 %define	base	Rdbi
 Epoch: 1
 Vendor: biopackages.net
@@ -12,9 +12,9 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
-Requires: R-Bioconductor-Biobase >= 1.6.0, R-Bioconductor-affy, R >= 2.1.0
+Requires: R >= 2.1.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R-Bioconductor-Biobase >= 1.6.0, R >= 2.1.0, biopackages
+BuildRequires: R >= 2.1.0, biopackages
 
 %description
 Generic framework for database access in R
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-Rdbi.spec.in,v $
+Revision 1.2  2006/03/03 01:13:52  allenday
+import
+
 Revision 1.1  2006/03/03 01:13:20  allenday
 import
 
