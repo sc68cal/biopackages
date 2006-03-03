@@ -1,0 +1,46 @@
+#$Id: R-Bioconductor-RdbiPgSQL.spec.in,v 1.1 2006/03/03 01:16:46 allenday Exp $
+%define	base	RdbiPgSQL
+Epoch: 1
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.4.0
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-%{base}
+Summary: Provides methods for accessing data stored in PostgreSQL tables
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: %{base}_%{version}.tar.gz
+Requires: R >= 2.1.0, R-Bioconductor-Rdbi, postgresql-libs, postgresql
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.1.0, R-Bioconductor-Rdbi, postgresql-libs, postgresql-devel, biopackages
+
+%description
+Provides methods for accessing data stored in PostgreSQL tables
+
+%prep
+%setup -n %{base}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-Bioconductor-RdbiPgSQL.spec.in,v $
+Revision 1.1  2006/03/03 01:16:46  allenday
+import
+
