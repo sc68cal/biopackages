@@ -1,0 +1,76 @@
+#$Id: turnkey.spec.in,v 1.1 2006/03/10 23:35:51 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Turnkey generates a mod_perl website from a database schema file.
+Name: turnkey
+Version: 0.03
+Epoch: 1
+Release: %{revision}.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Web
+URL: http://turnkey.sf.net
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires: perl, biopackages
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
+Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI)
+
+Source0: Turnkey-%{version}.tar.gz
+
+%description
+The Turnkey project makes it easy to quickly convert a database schema file into a mod_perl database.
+
+%prep
+%setup -q -n Turnkey-%{version}
+
+#substitute in "hard coded" $TURNKEY_ROOT path for rpm
+perl -p -i -e 's!(\$ENV{TURNKEY_ROOT})!$1 or my \$working_dir = "%{_datadir}/doc/%{name}-%{version}/"!' scripts/turnkey_generate;
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+%doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
+
+$Log: turnkey.spec.in,v $
+Revision 1.1  2006/03/10 23:35:51  boconnor
+Added spec.in files for Turnkey and GMOD-Web RPMs. I will add spec.in files for all the dependencies before the next release.
+
