@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool-HG-U133B.spec.in,v 1.1 2006/01/09 20:06:48 allenday Exp $
+#$Id: microarray-normalization-pool-HG-U133B.spec.in,v 1.2 2006/03/11 10:10:24 allenday Exp $
 %define platform HG-U133B
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool-%{platform}
@@ -15,7 +15,7 @@ BuildArch: noarch
 BuildRequires: biopackages
 
 %description
-%{platform} Microarrays to be used for quantification/normalization with Bioconductor
+%{platform} Microarrays to be used for quantification/normalization with Bioconductor.
 
 %prep
 #rm -rf %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_B
 %preun 
 
 $Log: microarray-normalization-pool-HG-U133B.spec.in,v $
+Revision 1.2  2006/03/11 10:10:24  allenday
+remove corrupted files from src
+
 Revision 1.1  2006/01/09 20:06:48  allenday
 microarray-normalization-pool-ATH1-121501.spec.in
 
