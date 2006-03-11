@@ -1,10 +1,10 @@
-#$Id: gmod-web.spec.in,v 1.1 2006/03/10 23:35:51 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.2 2006/03/11 02:54:24 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
-Version: 0.03
+Version: 0.2
 Epoch: 1
 Release: %{revision}.%{distro}
 Source0: Turnkey-%{version}.tar.gz
@@ -54,7 +54,7 @@ Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
 Requires: chado-Hsa, gbrowse, textpresso
 BuildRequires: turnkey, perl, biopackages, chado
-Provides: perl(TurnkeyHsa17::Atom::AutoAtom), perl(TurnkeyHsa17::Model::AutoDBI)
+Provides: perl(TurnkeyHsa17NormalTissue::Atom::AutoAtom), perl(TurnkeyHsa17NormalTissue::Model::AutoDBI)
 
 %description Hsa-normal-tissue
 The Wiki web application demo for turnkey.
@@ -65,56 +65,56 @@ The Wiki web application demo for turnkey.
 %build
 
 %install
-%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado --output_path=%{buildroot}/var/www/html/gmod-web-demo --install_path=/var/www/html/gmod-web-demo --dbport=5432 --concat=GmodWeb --uri_prefix=GmodWeb --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
-%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Sce-%{Sce_version} --output_path=%{buildroot}/var/www/html/Sce/%{Sce_version} --install_path=/var/www/html/Sce/%{Sce_version} --dbport=5432 --concat=Sce%{Sce_version} --uri_prefix=Sce/%{Sce_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
-%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/html/Hsa/%{Hsa_version} --install_path=/var/www/html/Hsa/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version} --uri_prefix=Hsa/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
-%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/html/Hsa-Normal-Tissue/%{Hsa_version} --install_path=/var/www/html/Hsa-Normal-Tissue/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version}NormalTissue --uri_prefix=HsaNormalTissue/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=normal-tissue 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado --output_path=%{buildroot}/var/www/gmod-web-demo --install_path=/var/www/gmod-web-demo --dbport=5432 --concat=GmodWeb --uri_prefix=GmodWeb --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Sce-%{Sce_version} --output_path=%{buildroot}/var/www/Sce/%{Sce_version} --install_path=/var/www/Sce/%{Sce_version} --dbport=5432 --concat=Sce%{Sce_version} --uri_prefix=Sce/%{Sce_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/Hsa/%{Hsa_version} --install_path=/var/www/Hsa/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version} --uri_prefix=Hsa/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/Hsa-Normal-Tissue/%{Hsa_version} --install_path=/var/www/Hsa-Normal-Tissue/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version}NormalTissue --uri_prefix=HsaNormalTissue/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=normal-tissue 2>&1 >/dev/null;
 
 %post
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
-echo 'Include /var/www/html/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+echo 'Include /var/www/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 /etc/init.d/httpd restart
 
 %post Sce
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
-echo 'Include /var/www/html/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+echo 'Include /var/www/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformatics/gbrowse.conf/chado-Sce-S228C.conf
 /etc/init.d/httpd restart
 
 %post Hsa
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
-echo 'Include /var/www/html/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+echo 'Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 /etc/init.d/httpd restart
 
 %post Hsa-normal-tissue
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
-echo 'Include /var/www/html/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+echo 'Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 /etc/init.d/httpd restart
 
 %postun
 /etc/init.d/httpd stop
-perl -p -i -e 's!Include /var/www/html/gmod-web-demo/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
-rm -rf /var/www/html/gmod-web-demo
+perl -p -i -e 's!Include /var/www/gmod-web-demo/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/gmod-web-demo
 /etc/init.d/httpd start
 
 %postun Sce
 /etc/init.d/httpd stop
-perl -p -i -e 's!Include /var/www/html/Sce/%{Sce_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
-rm -rf /var/www/html/Sce/%{Sce_version}
+perl -p -i -e 's!Include /var/www/Sce/%{Sce_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/Sce/%{Sce_version}
 /etc/init.d/httpd start
 
 %postun Hsa
 /etc/init.d/httpd stop
-perl -p -i -e 's!Include /var/www/html/Hsa/%{Hsa_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
-rm -rf /var/www/html/Hsa/%{Hsa_version}
+perl -p -i -e 's!Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/Hsa/%{Hsa_version}
 /etc/init.d/httpd start
 
 %postun Hsa-normal-tissue
 /etc/init.d/httpd stop
-perl -p -i -e 's!Include /var/www/html/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
-rm -rf /var/www/html/Hsa-Normal-Tissue/%{Hsa_version}
+perl -p -i -e 's!Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /etc/init.d/httpd start
 
 %clean
@@ -122,21 +122,24 @@ rm -rf /var/www/html/Hsa-Normal-Tissue/%{Hsa_version}
 
 %files
 %doc README INSTALL LICENSE
-/var/www/html/gmod-web-demo/*
+/var/www/gmod-web-demo/*
 
 %files Sce
 %doc README INSTALL LICENSE
-/var/www/html/Sce/%{Sce_version}/*
+/var/www/Sce/%{Sce_version}/*
 
 %files Hsa
 %doc README INSTALL LICENSE
-/var/www/html/Hsa/%{Hsa_version}/*
+/var/www/Hsa/%{Hsa_version}/*
 
 %files Hsa-normal-tissue
 %doc README INSTALL LICENSE
-/var/www/html/Hsa-Normal-Tissue/%{Hsa_version}/*
+/var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.2  2006/03/11 02:54:24  boconnor
+Updates to the gmod-web spec
+
 Revision 1.1  2006/03/10 23:35:51  boconnor
 Added spec.in files for Turnkey and GMOD-Web RPMs. I will add spec.in files for all the dependencies before the next release.
 

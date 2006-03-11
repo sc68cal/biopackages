@@ -1,9 +1,9 @@
-#$Id: turnkey.spec.in,v 1.1 2006/03/10 23:35:51 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.2 2006/03/11 02:54:24 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
-Version: 0.03
+Version: 0.2
 Epoch: 1
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
@@ -14,7 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 BuildRequires: perl, biopackages
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
-Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI)
+Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
 
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.2  2006/03/11 02:54:24  boconnor
+Updates to the gmod-web spec
+
 Revision 1.1  2006/03/10 23:35:51  boconnor
 Added spec.in files for Turnkey and GMOD-Web RPMs. I will add spec.in files for all the dependencies before the next release.
 
