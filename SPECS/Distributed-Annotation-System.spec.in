@@ -1,4 +1,4 @@
-#$Id: Distributed-Annotation-System.spec.in,v 1.4 2006/03/01 09:57:59 boconnor Exp $
+#$Id: Distributed-Annotation-System.spec.in,v 1.5 2006/03/13 23:41:40 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Distributed Annotation System
@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://www.biodas.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: httpd, httpd-devel, perl, mod_perl, perl-Apache-ParseFormData, perl-DBI, perl-DBD-Pg, perl-libwww-perl, perl-PDL, perl-Template-Toolkit, perl-URI, perl-bioperl, perl-Log-Log4perl, perl-PDL-NetCDF, perl-Package-Tools, perl-Crypt-SSLeay, perl-Devel-Symdump, perl-HTML-Tagset, perl-HTML-Parser, gbrowse, perl-Bio-MAGE, perl-Devel-CoreStack, perl-IPC-Run3
+Requires: httpd, httpd-devel, perl, mod_perl, perl-Apache-Test, perl-Apache-ParseFormData, perl-DBI, perl-DBD-Pg, perl-libwww-perl, perl-PDL, perl-Template-Toolkit, perl-URI, perl-bioperl, perl-Log-Log4perl, perl-PDL-NetCDF, perl-Package-Tools, perl-Crypt-SSLeay, perl-Devel-Symdump, perl-HTML-Tagset, perl-HTML-Parser, gbrowse, perl-Bio-MAGE, perl-Devel-CoreStack, perl-IPC-Run3
 # FIXME: this doesn't work, it isn't more specific than the major revision number
 #Requires: chado = 0.003-11.20051004
 Requires: chado = 0.003
@@ -236,6 +236,9 @@ perl -p -i -e "s!  PerlAddVar  source                'mouse'!# PerlAddVar  sourc
 
 
 $Log: Distributed-Annotation-System.spec.in,v $
+Revision 1.5  2006/03/13 23:41:40  boconnor
+Added depend for perl-Apache-Test
+
 Revision 1.4  2006/03/01 09:57:59  boconnor
 Updated the spec for DAS2
 
