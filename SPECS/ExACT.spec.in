@@ -1,0 +1,69 @@
+#$Id: ExACT.spec.in,v 1.1 2006/03/19 04:21:22 allenday Exp $
+Name: ExACT
+Epoch: 1
+Version: 1.2.1
+Release: %{revision}.%{distro}
+Summary: probe level analysis of Affymetrix exon arrays
+License: BSD
+Group: System Environment/Libraries
+URL: http://www.affymetrix.com
+Source0: exact-1.2.1-20060130-src.zip
+Patch0:
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc-c++, swig, make, biopackages, unzip
+
+%description
+The Affymetrix Exon Array Computational Tool (ExACT) software package 
+enables probe level analysis of Affymetrix exon arrays such as the 
+GeneChip Human Exon 1.0 ST Array. With the ExACT package researchers can:
+ * normalize exon array data
+ * compute exon level signal estimates and detection p-values
+ * compute gene level signal estimates and detection p-values
+ * merge array results with textual annotations from NetAffx
+ * generate expression graph files for visualization of exon 
+   array results within the Affymetrix Integrated Genome
+   Browser (IGB)
+
+%prep
+%setup -n exact-1.2.1-20060130-src
+
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}
+
+%build
+make
+
+%install
+install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
+install -m 444 *.h $RPM_BUILD_ROOT/%{_includedir}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc doc/*
+%{_bindir}/*
+%{_libdir}/*
+%{_includedir}/*
+
+$Log: ExACT.spec.in,v $
+Revision 1.1  2006/03/19 04:21:22  allenday
+import
+
+Revision 1.6  2006/01/13 02:30:11  allenday
+import!
+
+Revision 1.5  2006/01/04 22:34:03  allenday
+-fPIC for 64b compile
+
+Revision 1.4  2006/01/04 22:12:44  allenday
+changelog autofilled from cvslog
+
+Revision 1.3  2006/01/04 21:35:04  allenday
+make sure celsniff is installed
+
+Revision 1.2  2006/01/04 21:33:52  allenday
+add cellsniff util.  testing syncing of cvs log with rpm changelog
+
