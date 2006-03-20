@@ -1,0 +1,42 @@
+#$Id: gmod-web-Hsa-normal-tissue-probeset-barcharts.spec.in,v 1.1 2006/03/20 22:10:36 boconnor Exp $
+Summary: Barcharts of normal tissue expression in U133A assayed samples.
+Name: gmod-web-Hsa-normal-tissue-probeset-barcharts
+Version: 1.1
+Epoch: 0
+Release: %{revision}.%{distro} 
+Source0: gmod-web-Hsa-normal-tissue-probeset-barcharts.tar.gz
+License: Custom
+Group: Bioinformatics/Data
+Packager: Brian O'Connor <boconnor@ucla.edu>
+URL: http://radius.genomics.ctrl.ucla.edu
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+BuildRequires: biopackages
+
+%description
+Barcharts of normal tissue expression in U133A assayed samples.
+
+%prep
+%setup -n gmod-web-Hsa-normal-tissue-probeset-barcharts
+
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT/var/www/Hsa-Normal-Tissue/17/html/probe_svg;
+install -m 444 *.svg $RPM_BUILD_ROOT/var/www/Hsa-Normal-Tissue/17/html/probe_svg;
+find $RPM_BUILD_ROOT/var/www/Hsa-Normal-Tissue/17/html/probe_svg -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release};
+
+%files -f %{name}-%{version}-%{release}
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: gmod-web-Hsa-normal-tissue-probeset-barcharts.spec.in,v $
+Revision 1.1  2006/03/20 22:10:36  boconnor
+Added spec file for probeset SVGs for normal tissue website.  I don't know if the shell used in the RRM build process is going to barf with this many files.
+
