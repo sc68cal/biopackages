@@ -1,4 +1,5 @@
-#$Id: turnkey.spec.in,v 1.2 2006/03/11 02:54:24 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.3 2006/03/20 21:05:13 boconnor Exp $
+
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
@@ -71,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.3  2006/03/20 21:05:13  boconnor
+Updated the source gzip.
+
 Revision 1.2  2006/03/11 02:54:24  boconnor
 Updates to the gmod-web spec
 
