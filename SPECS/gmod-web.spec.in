@@ -1,6 +1,7 @@
-#$Id: gmod-web.spec.in,v 1.2 2006/03/11 02:54:24 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.3 2006/03/20 21:02:27 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
+
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
@@ -137,6 +138,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.3  2006/03/20 21:02:27  boconnor
+Updated the turnkey source
+
 Revision 1.2  2006/03/11 02:54:24  boconnor
 Updates to the gmod-web spec
 
