@@ -1,5 +1,4 @@
-#$Id: turnkey.spec.in,v 1.4 2006/03/21 19:09:57 boconnor Exp $
-
+#$Id: turnkey.spec.in,v 1.5 2006/03/21 19:48:02 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -73,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.5  2006/03/21 19:48:02  boconnor
+Updated the gzip
+
 Revision 1.4  2006/03/21 19:09:57  boconnor
 Updated source gzip
 
