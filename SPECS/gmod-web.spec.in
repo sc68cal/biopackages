@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.4 2006/03/20 22:10:36 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.5 2006/03/21 19:46:49 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -53,7 +53,8 @@ Summary: A gmod-web demo application based on Turnkey. It requires the chado-Hsa
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
-Requires: chado-Hsa, gbrowse, textpresso, gmod-web-Hsa-normal-tissue-probeset-barcharts
+Requires: chado-Hsa, gbrowse, textpresso
+#Requires: gmod-web-Hsa-normal-tissue-probeset-barcharts
 BuildRequires: turnkey, perl, biopackages, chado
 Provides: perl(TurnkeyHsa17NormalTissue::Atom::AutoAtom), perl(TurnkeyHsa17NormalTissue::Model::AutoDBI)
 
@@ -138,6 +139,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.5  2006/03/21 19:46:49  boconnor
+Got rid of the probeset_svg requirement for gmod-web-Hsa-Normal-Tissue. I will add it back in when this RPM is finished.
+
 Revision 1.4  2006/03/20 22:10:36  boconnor
 Added spec file for probeset SVGs for normal tissue website.  I don't know if the shell used in the RRM build process is going to barf with this many files.
 
