@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.5 2006/03/21 19:46:49 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.6 2006/03/21 23:50:40 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -44,6 +44,7 @@ Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-
 Requires: chado-Hsa, gbrowse, textpresso
 BuildRequires: turnkey, perl, biopackages, chado
 Provides: perl(TurnkeyHsa17::Atom::AutoAtom), perl(TurnkeyHsa17::Model::AutoDBI)
+
 
 %description Hsa
 The Wiki web application demo for turnkey.
@@ -139,6 +140,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.6  2006/03/21 23:50:40  boconnor
+Updated the Turnkey these rpms are built with
+
 Revision 1.5  2006/03/21 19:46:49  boconnor
 Got rid of the probeset_svg requirement for gmod-web-Hsa-Normal-Tissue. I will add it back in when this RPM is finished.
 
