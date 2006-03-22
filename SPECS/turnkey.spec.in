@@ -1,11 +1,11 @@
-#$Id: turnkey.spec.in,v 1.5 2006/03/21 19:48:02 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.6 2006/03/22 00:55:22 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
 Version: 0.2
-Epoch: 1
+Epoch: 2
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.6  2006/03/22 00:55:22  boconnor
+Tried upping the epoc on turnkey
+
 Revision 1.5  2006/03/21 19:48:02  boconnor
 Updated the gzip
 
