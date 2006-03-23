@@ -1,4 +1,4 @@
-#$Id: gmod-web-Hsa-normal-tissue-probeset-barcharts.spec.in,v 1.1 2006/03/20 22:10:36 boconnor Exp $
+#$Id: gmod-web-Hsa-normal-tissue-probeset-barcharts.spec.in,v 1.2 2006/03/23 00:22:31 boconnor Exp $
 Summary: Barcharts of normal tissue expression in U133A assayed samples.
 Name: gmod-web-Hsa-normal-tissue-probeset-barcharts
 Version: 1.1
@@ -12,6 +12,10 @@ URL: http://radius.genomics.ctrl.ucla.edu
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: biopackages
+
+# TO DO:
+# - update the svg docs, Hsa-Normal-Tissue should actually be HsaNormalTissue
+# - get this spec doc working!
 
 %description
 Barcharts of normal tissue expression in U133A assayed samples.
@@ -37,6 +41,9 @@ find $RPM_BUILD_ROOT/var/www/Hsa-Normal-Tissue/17/html/probe_svg -type f | sed "
 %preun 
 
 $Log: gmod-web-Hsa-normal-tissue-probeset-barcharts.spec.in,v $
+Revision 1.2  2006/03/23 00:22:31  boconnor
+Updated notes
+
 Revision 1.1  2006/03/20 22:10:36  boconnor
 Added spec file for probeset SVGs for normal tissue website.  I don't know if the shell used in the RRM build process is going to barf with this many files.
 
