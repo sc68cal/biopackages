@@ -1,0 +1,45 @@
+#$Id: R-locfdr.spec.in,v 1.1 2006/03/23 06:55:45 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 2.1.11
+Release: %{revision}.%{distro}
+Name: R-locfdr
+Summary: Computation of local false discovery rates
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: locfdr_1.0-3.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc, biopackages
+
+%description
+Computation of local false discovery rates
+
+%prep
+%setup -n locfdr
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library locfdr_1.0-3.tar.gz
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-locfdr.spec.in,v $
+Revision 1.1  2006/03/23 06:55:45  allenday
+import
+
