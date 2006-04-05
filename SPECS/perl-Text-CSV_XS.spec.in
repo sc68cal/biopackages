@@ -1,4 +1,4 @@
-#$Id: perl-Text-CSV_XS.spec.in,v 1.1 2006/04/05 01:16:59 allenday Exp $
+#$Id: perl-Text-CSV_XS.spec.in,v 1.2 2006/04/05 01:17:30 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -11,7 +11,6 @@ License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/Text-CSV_XS/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: Text-CSV_XS-0.23.tar.gz
@@ -94,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-CSV_XS.spec.in,v $
+Revision 1.2  2006/04/05 01:17:30  allenday
+arch
+
 Revision 1.1  2006/04/05 01:16:59  allenday
 import
 
