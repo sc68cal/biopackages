@@ -1,0 +1,112 @@
+#$Id: perl-File-Slurp.spec.in,v 1.1 2006/04/05 01:16:59 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Efficient Reading/Writing of Complete Files
+Name: perl-File-Slurp
+Version: 9999.09
+Release: 1.1.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/File-Slurp/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: File-Slurp-9999.09.tar.gz
+
+%description
+File::Slurp.pm version 0.04
+===========================
+
+This module provides subroutines to read or write entire files with a
+simple call.  It also has a subroutine for reading the list of filenames
+in a directory.
+
+In the extras/ directory you can read an article (slurp_article.pod)
+about file slurping and also run a benchmark (slurp_bench.pl) that
+compares many ways of slurping/spewing files.
+
+This module was first written and owned by David Muir Sharnoff (MUIR on
+CPAN).  I checked out his module and decided to write a new version
+which would be faster, and with many more features.  To that end, David
+graciously transfered the namespace to me.
+
+Since then, I discovered and fixed a bug in the original module's test
+script (which had only 7 tests), which is included now as t/original.t.
+This module now has 164 tests in 7 test scripts, and passes on Windows,
+Linux, Solaris and Mac OS X.
+
+There have been some comments about the somewhat unusual version number.
+The problem was that David used a future date (2004.0904) in his version
+number, and the only way I could get CPAN to index my new module was to
+make it have a version number higher than the old one, so I chose the
+9999 prefix and appended the real revision number to it.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2003 Uri Guttman <uri@stemsystems.com>
+
+Licensed the same as Perl.
+
+
+%prep
+%setup -q -n File-Slurp-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-File-Slurp.spec.in,v $
+Revision 1.1  2006/04/05 01:16:59  allenday
+import
+
