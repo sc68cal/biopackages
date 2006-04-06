@@ -1,4 +1,4 @@
-#$Id: perl-Text-CSV-Simple.spec.in,v 1.1 2006/04/05 01:16:59 allenday Exp $
+#$Id: perl-Text-CSV-Simple.spec.in,v 1.2 2006/04/06 08:10:10 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Text-CSV-Simple/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Text-CSV_XS, perl-File-Slurp
-Requires: perl-Text-CSV_XS, perl-File-Slurp
+BuildRequires: perl, biopackages, perl-Text-CSV_XS, perl-File-Slurp, perl-Class-Trigger
+Requires: perl-Text-CSV_XS, perl-File-Slurp, perl-Class-Trigger
 Source0: Text-CSV-Simple-1.00.tar.gz
 
 %description
@@ -196,6 +196,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-CSV-Simple.spec.in,v $
+Revision 1.2  2006/04/06 08:10:10  allenday
+depcheck
+
 Revision 1.1  2006/04/05 01:16:59  allenday
 import
 
