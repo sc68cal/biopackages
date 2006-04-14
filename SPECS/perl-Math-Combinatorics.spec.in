@@ -1,4 +1,4 @@
-#$Id: perl-Math-Combinatorics.spec.in,v 1.1 2006/04/14 23:48:06 allenday Exp $
+#$Id: perl-Math-Combinatorics.spec.in,v 1.2 2006/04/14 23:48:59 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perform combinations and permutations on lists
@@ -9,7 +9,7 @@ Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Math-Combinatorics/
-BuildArch: noarch;
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl
@@ -170,6 +170,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Math-Combinatorics.spec.in,v $
+Revision 1.2  2006/04/14 23:48:59  allenday
+import
+
 Revision 1.1  2006/04/14 23:48:06  allenday
 import
 
