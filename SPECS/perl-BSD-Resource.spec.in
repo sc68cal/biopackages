@@ -1,4 +1,4 @@
-#$Id: perl-BSD-Resource.spec.in,v 1.1 2006/05/03 10:10:31 allenday Exp $
+#$Id: perl-BSD-Resource.spec.in,v 1.2 2006/05/03 10:11:19 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,7 +10,6 @@ License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/BSD-Resource/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
@@ -119,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-BSD-Resource.spec.in,v $
+Revision 1.2  2006/05/03 10:11:19  allenday
+import
+
 Revision 1.1  2006/05/03 10:10:31  allenday
 import
 
