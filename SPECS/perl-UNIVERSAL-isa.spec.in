@@ -1,0 +1,114 @@
+#$Id: perl-UNIVERSAL-isa.spec.in,v 1.1 2006/05/03 07:24:49 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-UNIVERSAL-isa
+Version: 0.06
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/UNIVERSAL-isa/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: UNIVERSAL-isa-0.06.tar.gz
+
+%description
+UNIVERSAL::isa
+--------------
+
+Version 0.06 - Fri Feb 24 06:57:52 UTC 2006
+
+Attempt to recover from people calling UNIVERSAL::isa as a function
+
+	# from the shell
+	echo 'export PERL5OPT=-MUNIVERSAL::isa' >> /etc/profile
+
+	# within your program
+	use UNIVERSAL::isa;
+
+INSTALLATION
+
+	$ perl Build.PL
+	$ perl ./Build
+	$ perl ./Build test
+	$ sudo perl ./Build install
+
+APOLOGIA
+
+	Whenever you use "isa" in UNIVERSAL as a function, a kitten using
+Test::MockObject dies. Normally, the kittens would be helpless, but if they use
+UNIVERSAL::isa (the module whose docs you are reading), the kittens can live
+long and prosper.
+
+	This module replaces "UNIVERSAL::isa" with a version that makes sure that,
+when called as a function on objects which override "isa", "isa" will call the
+appropriate method on those objects
+
+    In all other cases, the real "UNIVERSAL::isa" gets called directly.
+
+AUTHORS
+    Autrijus Tang <autrijus@autrijus.org>
+
+    chromatic <chromatic@wgz.org>
+
+    Yuval Kogman <nothingmuch@woobling.org>
+
+COPYRIGHT & LICENSE
+    Same as Perl, (c) 2005 - 2006.
+
+
+%prep
+%setup -q -n UNIVERSAL-isa-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-UNIVERSAL-isa.spec.in,v $
+Revision 1.1  2006/05/03 07:24:49  allenday
+import
+
