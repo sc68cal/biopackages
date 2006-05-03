@@ -1,4 +1,4 @@
-#$Id: perl-Scalar-List-Utils.spec.in,v 1.1 2006/05/03 09:02:32 allenday Exp $
+#$Id: perl-Scalar-List-Utils.spec.in,v 1.2 2006/05/03 09:04:29 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -11,7 +11,6 @@ License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/Scalar-List-Utils/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
@@ -73,6 +72,7 @@ eval `perl '-V:installarchlib'`
 mkdir -p $RPM_BUILD_ROOT$installarchlib
 %makeinstall
 
+find $RPM_BUILD_ROOT -type f -name '*.gz' -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Scalar-List-Utils.spec.in,v $
+Revision 1.2  2006/05/03 09:04:29  allenday
+conflict
+
 Revision 1.1  2006/05/03 09:02:32  allenday
 import
 
