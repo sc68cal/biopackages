@@ -1,4 +1,4 @@
-#$Id: perl-Test-MockObject.spec.in,v 1.1 2006/05/03 07:16:22 allenday Exp $
+#$Id: perl-Test-MockObject.spec.in,v 1.2 2006/05/03 07:22:12 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Test-MockObject/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-UNIVERSAL-require, perl-UNIVERSAL-can, perl-UNIVERSAL-isa
+Requires: perl-UNIVERSAL-require, perl-UNIVERSAL-can, perl-UNIVERSAL-isa
 
 Source0: Test-MockObject-1.06.tar.gz
 
@@ -146,6 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-MockObject.spec.in,v $
+Revision 1.2  2006/05/03 07:22:12  allenday
+depcheck
+
 Revision 1.1  2006/05/03 07:16:22  allenday
 import
 
