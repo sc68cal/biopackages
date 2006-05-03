@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst.spec.in,v 1.7 2006/05/03 09:14:54 allenday Exp $
+#$Id: perl-Catalyst.spec.in,v 1.8 2006/05/03 09:19:47 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -14,8 +14,8 @@ URL: http://search.cpan.org/dist/Catalyst/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML, perl-Data-Visitor, perl-Catalyst-Engine-Apache
-Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML, perl-Data-Visitor, perl-Catalyst-Engine-Apache
+BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML, perl-Data-Visitor
+Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML, perl-Data-Visitor
 
 Source0: Catalyst-5.68.tar.gz
 
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst.spec.in,v $
+Revision 1.8  2006/05/03 09:19:47  allenday
+depcheck
+
 Revision 1.7  2006/05/03 09:14:54  allenday
 depcheck
 
