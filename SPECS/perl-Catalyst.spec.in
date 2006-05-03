@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst.spec.in,v 1.11 2006/05/03 09:45:33 allenday Exp $
+#$Id: perl-Catalyst.spec.in,v 1.12 2006/05/03 09:48:33 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -17,7 +17,7 @@ BuildRequires: perl, biopackages
 BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor
 Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor
 
-Source0: Catalyst-5.68.tar.gz
+Source0: Catalyst-%{version}.tar.gz
 
 %description
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst.spec.in,v $
+Revision 1.12  2006/05/03 09:48:33  allenday
+version
+
 Revision 1.11  2006/05/03 09:45:33  allenday
 version
 
