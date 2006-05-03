@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst.spec.in,v 1.10 2006/05/03 09:44:21 allenday Exp $
+#$Id: perl-Catalyst.spec.in,v 1.11 2006/05/03 09:45:33 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -30,7 +30,8 @@ The requested URL /authors/id/M/MR/MRAMBERG/Catalyst-5.68.readme was not found o
 
 
 %prep
-%setup -q -n Catalyst-%{version}
+#%setup -q -n Catalyst-%{version}
+%setup -q -n Catalyst-5.68
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -76,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst.spec.in,v $
+Revision 1.11  2006/05/03 09:45:33  allenday
+version
+
 Revision 1.10  2006/05/03 09:44:21  allenday
 version
 
