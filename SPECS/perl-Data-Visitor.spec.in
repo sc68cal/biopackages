@@ -1,4 +1,4 @@
-#$Id: perl-Data-Visitor.spec.in,v 1.1 2006/05/03 07:12:30 allenday Exp $
+#$Id: perl-Data-Visitor.spec.in,v 1.2 2006/05/03 07:15:00 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Data-Visitor/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Test-MockObject, perl-Test-use-ok
+Requires: perl-Test-MockObject, perl-Test-use-ok
 
 Source0: Data-Visitor-0.05.tar.gz
 
