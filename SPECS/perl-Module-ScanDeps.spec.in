@@ -1,98 +1,53 @@
-#$Id: perl-Module-CoreList.spec.in,v 1.2 2006/05/03 08:27:24 allenday Exp $
+#$Id: perl-Module-ScanDeps.spec.in,v 1.1 2006/05/03 08:25:52 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Unknown
-Name: perl-Module-CoreList
-Version: 2.04
+Summary: Recursively scan Perl programs for dependencies
+Name: perl-Module-ScanDeps
+Version: 0.51
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
-URL: http://search.cpan.org/dist/Module-CoreList/
+URL: http://search.cpan.org/dist/Module-ScanDeps/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: Module-CoreList-2.04.tar.gz
+Source0: Module-ScanDeps-0.51.tar.gz
 
 %description
-README for Module::CoreList 2.04
+This is the README file for Module::ScanDeps, a module to recursively
+scan Perl programs for dependencies.
 
-=head1 NAME
+An application of Module::ScanDeps is to generate executables from scripts
+that contains necessary modules; this module supports two such projects,
+PAR and App::Packer.  Please see their respective documentations on CPAN
+for further information.
 
-Module::CoreList - what modules shipped with versions of perl
+* Installation
 
-=head1 SYNOPSIS
+Module::ScanDeps uses the standard perl module install process:
 
- use Module::CoreList;
+cpansign -v		# optional; see SIGNATURE for details
+perl Makefile.PL
+make                    # or 'nmake' on Win32
+make test
+make install
 
- print $Module::CoreList::version{5.00503}{CPAN}; # prints 1.48
+* Copyright
 
- print Module::CoreList->first_release('File::Spec');       # prints 5.00503
- print Module::CoreList->first_release('File::Spec', 0.82); # prints 5.006001
+Copyright 2002, 2003, 2004, 2005 by Autrijus Tang <autrijus@autrijus.org>.
 
- print join ", ", @{ $Module::CoreList::families{5.005} };
-    # prints "5.005, 5.00503, 5.00504"
+All rights reserved.  You can redistribute and/or modify
+this bundle under the same terms as Perl itself.
 
-
-=head1 DEPENDENCIES
-
-This module has external dependencies on the following modules:
-
- Test::More
-
-=head1 INSTALLATION
-
- perl Makefile.PL
- make
- make test
-
-and if all goes well
-
- make install
-
-=head1 HISTORY
-
-What changed over the last 3 revisions
-
-=over
-
-=item 2.04	Thursday 2nd February, 2006
-
-	Fix patchlevel for 5.8.8 (Gisle Aas)
-	Silence warnings in corelist utility
-
-=item 2.03	Wednesday 1st February, 2006
-
-	Include data for perl 5.9.3 and 5.8.8
-
-=item 2.02	Tuesday 31th May, 2005
-
-	Include data for perl 5.8.7
-
-=back
-
-=head1 AUTHOR
-
-Richard Clamp E<lt>richardc@unixbeard.netE<gt>
-
-=head1 COPYRIGHT
-
-Copyright (C) 2002-2006 Richard Clamp.  All Rights Reserved.
-
-This module is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Module::Info>, L<perl>
-
+See <http://www.perl.com/perl/misc/Artistic.html>.
 
 
 %prep
-%setup -q -n Module-CoreList-%{version}
+%setup -q -n Module-ScanDeps-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -137,7 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-Module-CoreList.spec.in,v $
-Revision 1.2  2006/05/03 08:27:24  allenday
+$Log: perl-Module-ScanDeps.spec.in,v $
+Revision 1.1  2006/05/03 08:25:52  allenday
 import
 

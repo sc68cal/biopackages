@@ -1,98 +1,34 @@
-#$Id: perl-Module-CoreList.spec.in,v 1.2 2006/05/03 08:27:24 allenday Exp $
+#$Id: perl-ExtUtils-CBuilder.spec.in,v 1.1 2006/05/03 08:31:06 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
-Name: perl-Module-CoreList
-Version: 2.04
+Name: perl-ExtUtils-CBuilder
+Version: 0.18
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
-URL: http://search.cpan.org/dist/Module-CoreList/
+URL: http://search.cpan.org/dist/ExtUtils-CBuilder/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: Module-CoreList-2.04.tar.gz
+Source0: ExtUtils-CBuilder-0.18.tar.gz
 
 %description
-README for Module::CoreList 2.04
-
-=head1 NAME
-
-Module::CoreList - what modules shipped with versions of perl
-
-=head1 SYNOPSIS
-
- use Module::CoreList;
-
- print $Module::CoreList::version{5.00503}{CPAN}; # prints 1.48
-
- print Module::CoreList->first_release('File::Spec');       # prints 5.00503
- print Module::CoreList->first_release('File::Spec', 0.82); # prints 5.006001
-
- print join ", ", @{ $Module::CoreList::families{5.005} };
-    # prints "5.005, 5.00503, 5.00504"
-
-
-=head1 DEPENDENCIES
-
-This module has external dependencies on the following modules:
-
- Test::More
-
-=head1 INSTALLATION
-
- perl Makefile.PL
- make
- make test
-
-and if all goes well
-
- make install
-
-=head1 HISTORY
-
-What changed over the last 3 revisions
-
-=over
-
-=item 2.04	Thursday 2nd February, 2006
-
-	Fix patchlevel for 5.8.8 (Gisle Aas)
-	Silence warnings in corelist utility
-
-=item 2.03	Wednesday 1st February, 2006
-
-	Include data for perl 5.9.3 and 5.8.8
-
-=item 2.02	Tuesday 31th May, 2005
-
-	Include data for perl 5.8.7
-
-=back
-
-=head1 AUTHOR
-
-Richard Clamp E<lt>richardc@unixbeard.netE<gt>
-
-=head1 COPYRIGHT
-
-Copyright (C) 2002-2006 Richard Clamp.  All Rights Reserved.
-
-This module is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-=head1 SEE ALSO
-
-L<Module::Info>, L<perl>
-
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>404 Not Found</TITLE>
+</HEAD><BODY>
+<H1>Not Found</H1>
+The requested URL /authors/id/K/KW/KWILLIAMS/ExtUtils-CBuilder-0.18.readme was not found on this server.<P>
+</BODY></HTML>
 
 
 %prep
-%setup -q -n Module-CoreList-%{version}
+%setup -q -n ExtUtils-CBuilder-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -137,7 +73,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-Module-CoreList.spec.in,v $
-Revision 1.2  2006/05/03 08:27:24  allenday
+$Log: perl-ExtUtils-CBuilder.spec.in,v $
+Revision 1.1  2006/05/03 08:31:06  allenday
 import
 
