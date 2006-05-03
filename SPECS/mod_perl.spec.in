@@ -1,4 +1,4 @@
-#$Id: mod_perl.spec.in,v 1.1 2006/05/03 09:57:46 allenday Exp $
+#$Id: mod_perl.spec.in,v 1.2 2006/05/03 10:12:24 allenday Exp $
 %define contentdir /var/www
 
 Name:           mod_perl
@@ -21,6 +21,8 @@ BuildRequires:  httpd-devel >= 2.0.47, httpd, gdbm-devel
 BuildRequires:  apr-devel, apr-util-devel
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
+Requires: perl-BSD-Resource
+Provides: perl(Carp::Heavy)
 
 %define __perl_requires %{SOURCE2}
 
@@ -133,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 $Log: mod_perl.spec.in,v $
+Revision 1.2  2006/05/03 10:12:24  allenday
+depcheck
+
 Revision 1.1  2006/05/03 09:57:46  allenday
 import for Apache2::*
 
