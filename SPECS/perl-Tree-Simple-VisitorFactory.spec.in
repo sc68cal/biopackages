@@ -1,4 +1,4 @@
-#$Id: perl-Tree-Simple-VisitorFactory.spec.in,v 1.1 2006/05/03 08:07:04 allenday Exp $
+#$Id: perl-Tree-Simple-VisitorFactory.spec.in,v 1.2 2006/05/03 08:09:49 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Tree-Simple-VisitorFactory/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Tree-Simple
+Requires: perl-Tree-Simple
 
 Source0: Tree-Simple-VisitorFactory-0.10.tar.gz
 
@@ -97,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tree-Simple-VisitorFactory.spec.in,v $
+Revision 1.2  2006/05/03 08:09:49  allenday
+depcheck
+
 Revision 1.1  2006/05/03 08:07:04  allenday
 import
 
