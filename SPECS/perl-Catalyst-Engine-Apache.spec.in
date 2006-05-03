@@ -1,0 +1,130 @@
+#$Id: perl-Catalyst-Engine-Apache.spec.in,v 1.1 2006/05/03 09:16:47 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Catalyst-Engine-Apache
+Version: 1.07
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Catalyst-Engine-Apache/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Catalyst-Engine-Apache-1.07.tar.gz
+
+%description
+NAME
+    Catalyst::Engine::Apache - Catalyst Apache Engines
+
+SYNOPSIS
+    For example Apache configurations, see the documentation for the engine
+    that corresponds to your Apache version.
+
+    "Catalyst::Engine::Apache::MP13" - mod_perl 1.3x
+
+    "Catalyst::Engine::Apache2::MP19" - mod_perl 1.99x
+
+    "Catalyst::Engine::Apache2::MP20" - mod_perl 2.x
+
+DESCRIPTION
+    These classes provide mod_perl support for Catalyst.
+
+METHODS
+  $c->engine->apache
+    Returns an "Apache", "Apache::RequestRec" or "Apache2::RequestRec"
+    object, depending on your mod_perl version. This method is also
+    available as $c->apache.
+
+  $c->engine->return
+    If you need to return something other than OK from the mod_perl handler,
+    you may set any other Apache constant in this method. You should only
+    use this method if you know what you are doing or bad things may happen!
+    For example, to return DECLINED in mod_perl 2:
+
+        use Apache2::Const -compile => qw(DECLINED);
+        $c->engine->return( Apache2::Const::DECLINED );
+
+OVERLOADED METHODS
+    This class overloads some methods from "Catalyst::Engine".
+
+    $c->engine->prepare_request($r)
+    $c->engine->prepare_connection
+    $c->engine->prepare_query_parameters
+    $c->engine->prepare_headers
+    $c->engine->prepare_path
+    $c->engine->read_chunk
+    $c->engine->finalize_body
+    $c->engine->finalize_headers
+    $c->engine->write
+
+SEE ALSO
+    Catalyst Catalyst::Engine.
+
+AUTHORS
+    Sebastian Riedel, <sri@cpan.org>
+
+    Christian Hansen, <ch@ngmedia.com>
+
+    Andy Grundman, <andy@hybridized.org>
+
+COPYRIGHT
+    This program is free software, you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+
+
+%prep
+%setup -q -n Catalyst-Engine-Apache-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Catalyst-Engine-Apache.spec.in,v $
+Revision 1.1  2006/05/03 09:16:47  allenday
+import
+
