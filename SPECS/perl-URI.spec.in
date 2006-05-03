@@ -1,0 +1,102 @@
+#$Id: perl-URI.spec.in,v 1.1 2006/05/03 09:23:44 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-URI
+Version: 1.35
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/URI/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: URI-1.35.tar.gz
+
+%description
+This package contains the URI.pm module with friends.  The module
+implements the URI class.  Objects of this class represent Uniform
+Resource Identifier references as specified in RFC 2396 and updated by
+RFC 2732.
+
+URI objects can be used to access and manipulate the various
+components that make up these strings.  There are also methods to
+combine URIs in various ways.
+
+Some tests require an Internet connection to work and are skipped if
+one is not active.
+
+You need perl5.004 or better to install this package.  You should also
+have the MIME::Base64 module installed.  Installation is otherwise as
+usual:
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+Questions about how to use this library should be directed to the
+comp.lang.perl.modules USENET Newsgroup.  Bug reports and suggestions
+for improvements can be sent to the <libwww@perl.org> mailing list.
+
+Copyright 1998-2003 Gisle Aas.
+Copyright 1998 Graham Barr.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
+%prep
+%setup -q -n URI-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-URI.spec.in,v $
+Revision 1.1  2006/05/03 09:23:44  allenday
+import
+
