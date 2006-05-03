@@ -1,4 +1,4 @@
-#$Id: perl-libwww-perl.spec.in,v 1.1 2006/05/03 08:56:31 allenday Exp $
+#$Id: perl-libwww-perl.spec.in,v 1.2 2006/05/03 08:57:38 allenday Exp $
 %define _use_internal_dependency_generator 0
 Summary: A Perl interface to the World-Wide Web.
 Name: perl-libwww-perl
@@ -9,6 +9,7 @@ Group: Applications/CPAN
 Source0: libwww-perl-%{version}.tar.gz
 Source10: filter-depends.sh
 Url: http://search.cpan.org/search?query=libwww&mode=all
+BuildArch: noarch
 BuildRoot: %{_tmppath}/perl-libwww-perl-buildroot/
 BuildRequires: perl
 Requires: perl
@@ -58,6 +59,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-libwww-perl.spec.in,v $
+Revision 1.2  2006/05/03 08:57:38  allenday
+import
+
 Revision 1.1  2006/05/03 08:56:31  allenday
 import
 
