@@ -1,0 +1,63 @@
+#$Id: perl-libwww-perl.spec.in,v 1.1 2006/05/03 08:56:31 allenday Exp $
+%define _use_internal_dependency_generator 0
+Summary: A Perl interface to the World-Wide Web.
+Name: perl-libwww-perl
+Version: 5.805
+Release: %{revision}.%{distro} 
+License: distributable
+Group: Applications/CPAN
+Source0: libwww-perl-%{version}.tar.gz
+Source10: filter-depends.sh
+Url: http://search.cpan.org/search?query=libwww&mode=all
+BuildRoot: %{_tmppath}/perl-libwww-perl-buildroot/
+BuildRequires: perl
+Requires: perl
+Requires: perl(URI) perl(Digest::MD5)
+Requires: perl(HTML::Parser)
+Requires: perl(HTML::Entities)
+BuildRequires: perl(MIME::Base64)
+BuildRequires: perl(HTML::Entities)
+Provides: perl(Win32)
+
+%description
+The libwww-perl collection is a set of Perl modules which provides a
+simple and consistent application programming interface to the
+World-Wide Web.  The main focus of the library is to provide classes
+and functions that allow you to write WWW clients. The library also
+contain modules that are of more general use and even classes that
+help you implement simple HTTP servers.
+
+%prep
+%setup -q -n libwww-perl-%{version} 
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL INST_EXE=$RPM_BUILD_ROOT/usr/bin PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor < /dev/null
+make
+
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
+
+find $RPM_BUILD_ROOT/usr -type f -print | 
+	sed "s@^$RPM_BUILD_ROOT@@g" | 
+	grep -v perllocal.pod | 
+	grep -v "\.packlist" > libwww-perl-%{version}-filelist
+if [ "$(cat libwww-perl-%{version}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit -1
+fi
+
+%files -f libwww-perl-%{version}-filelist
+%defattr(-,root,root)
+
+$Log: perl-libwww-perl.spec.in,v $
+Revision 1.1  2006/05/03 08:56:31  allenday
+import
+
