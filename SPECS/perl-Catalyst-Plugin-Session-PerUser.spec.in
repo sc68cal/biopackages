@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Session-PerUser.spec.in,v 1.1 2006/05/04 06:19:12 allenday Exp $
+#$Id: perl-Catalyst-Plugin-Session-PerUser.spec.in,v 1.2 2006/05/04 06:21:47 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -14,7 +14,7 @@ URL: http://search.cpan.org/dist/Catalyst-Plugin-Session-PerUser/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Catalyst-Session
-Requires: perl-Catalyst-Session
+Requires: perl-Catalyst-Plugin-Session
 
 Source0: Catalyst-Plugin-Session-PerUser-0.02.tar.gz
 
