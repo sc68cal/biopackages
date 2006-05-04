@@ -1,0 +1,193 @@
+#$Id: perl-Catalyst-Plugin-Session-PerUser.spec.in,v 1.1 2006/05/04 06:19:12 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Catalyst-Plugin-Session-PerUser
+Version: 0.02
+Release: 1.1.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Catalyst-Plugin-Session-PerUser/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-Catalyst-Session
+Requires: perl-Catalyst-Session
+
+Source0: Catalyst-Plugin-Session-PerUser-0.02.tar.gz
+
+%description
+NAME
+    Catalyst::Plugin::Session::PerUser - Per user sessions (instead of per
+    browser sessions).
+
+SYNOPSIS
+            use Catalyst qw/
+                    Session
+                    Authentication
+                    Authentication::Store::Foo
+                    Session::PerUser
+            /;
+
+            sub action : Local {
+                    my ( $self, $c ) = @_;
+                    $c->user_session->{foo} = "bar";
+            }
+
+DESCRIPTION
+    This plugin allows you to write e.g. shopping cart code which should
+    behave well for guests as well as permanent users.
+
+    The basic idea is both logged in and not logged in users can get the
+    same benefits from sessions where it doesn't matter, but that logged in
+    users can keep their sessions accross logins, and will even get the data
+    they added/changed assimilated to their permanent account if they made
+    the changes as guests and then logged in.
+
+    This is probably most useful for e-commerce sites, where the shopping
+    cart is typically used before login, and should be equally accessible to
+    both guests and logged in users.
+
+STORING SESSION DATA
+    This module can store session data in two ways:
+
+  Within the User
+    If "<$c-"user->supports("session_data")>> then
+    "<$c-"user->session_data>> is used as an accessor to store the per-user
+    session hash reference.
+
+    This is useful for Catalyst::Plugin::Authentication::Store
+    implementations that rely on a database or another fast, extensible
+    format.
+
+  Within the Session Store
+    If the user does not support the "session_data" feature, the
+    Catalyst::Plugin::Session::Store plugin in use will be used to save the
+    session data instead.
+
+    The session ID used to save this data is set by "user_session_sid".
+
+    Note that this method could potentially have security issues if you
+    override the default "user_session_sid" or "validate_session_id" in
+    Catalyst::Plugin::Session. See "CAVEATS" for details.
+
+METHODS
+    user_session
+        If no user is logged in, returns "<$c-"session>>.
+
+        If a user is logged in, and "<$user-"supports("session_data")>> it
+        will return "<$c-"user->session_data>>. Otherwise it will return
+        "<$c-"user_session_from_session_store>>.
+
+INTERNAL METHODS
+    merge_session_to_user
+        Uses Hash::Merge to merge the browser session into the user session,
+        omitting the special keys from the browser session.
+
+        Should be overloaded to e.g. merge shopping cart items more smartly.
+
+    get_user_session_from_session_store
+        Uses the "Catalyst::Plugin::Session::Store" api to get a session
+        data chunk whose session ID is "user_session_sid".
+
+    store_user_session_in_session_store
+        Stores the session data cached by "user_session_from_session_store".
+
+    user_session_sid
+        Returns
+
+                "user:" . $c->user->id
+
+EXTENDED METHODS
+    set_authenticated
+        Calls "merge_session_to_user"
+
+CONFIGURATION
+            $c->config->{user_session} = {
+            ...
+        };
+
+    migrate
+        Whether "$c->session" should be merged over "$c->user_session" on
+        login. On by default.
+
+    merge_type
+        Passed to "set_behavior" in Hash::Merge. Defaults to
+        "RIGHT_PRECEDENT".
+
+    *
+
+    CAVEATS
+    If you override "validate_session_id" in Catalyst::Plugin::Session make
+    sure it's format DOES NOT ALLOW the format returned by
+    "user_session_sid", or malicious users could potentially set their
+    cookies to have sessions formatted like a string returned by
+    "user_session_sid", and steal or destroy another user's session without
+    authenticating. =back
+
+SEE ALSO
+    Catalyst::Plugin::Authentication, Catalyst::Plugin::Session
+
+AUTHORS
+    David Kamholz, "dkamholz@cpan.org"
+
+    Yuval Kogman, "nothingmuch@woobling.org"
+
+COPYRIGHT & LICENSE
+            Copyright (c) 2005 the aforementioned authors. All rights
+            reserved. This program is free software; you can redistribute
+            it and/or modify it under the same terms as Perl itself.
+
+
+
+%prep
+%setup -q -n Catalyst-Plugin-Session-PerUser-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Wed May  3 2006 allenday@jugular.ctrl.ucla.edu - 0.02-%{revision}
+- Specfile autogenerated.
