@@ -1,0 +1,368 @@
+#$Id: perl-Catalyst-View-TT.spec.in,v 1.1 2006/05/04 05:32:27 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Catalyst-View-TT
+Version: 0.22
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Catalyst-View-TT/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-Template-Timer, perl-Path-Class, perl-Catalyst >= 5.5
+Requires: perl-Template-Timer, perl-Path-Class, perl-Catalyst >= 5.5
+
+Source0: Catalyst-View-TT-0.22.tar.gz
+
+%description
+NAME
+    Catalyst::View::TT - Template View Class
+
+SYNOPSIS
+    # use the helper to create View myapp_create.pl view TT TT
+
+    # configure in lib/MyApp.pm
+
+        MyApp->config({
+            name     => 'MyApp',
+            root     => MyApp->path_to('root');,
+            'V::TT' => {
+                # any TT configurations items go here
+                INCLUDE_PATH => [
+                  MyApp->path_to( 'root', 'src' ), 
+                  MyApp->path_to( 'root', 'lib' ), 
+                ],
+                PRE_PROCESS        => 'config/main',
+                WRAPPER            => 'site/wrapper',
+                TEMPLATE_EXTENSION => '.tt',
+
+                # two optional config items
+                CATALYST_VAR => 'Catalyst',
+                TIMER        => 1,
+            },
+        });
+         
+    # render view from lib/MyApp.pm or lib/MyApp::C::SomeController.pm
+
+        sub message : Global {
+            my ( $self, $c ) = @_;
+            $c->stash->{template} = 'message.tt2';
+            $c->stash->{message}  = 'Hello World!';
+            $c->forward('MyApp::V::TT');
+        }
+
+    # access variables from template
+
+        The message is: [% message %].
+    
+        # example when CATALYST_VAR is set to 'Catalyst'
+        Context is [% Catalyst %]          
+        The base is [% Catalyst.req.base %] 
+        The name is [% Catalyst.config.name %] 
+    
+        # example when CATALYST_VAR isn't set
+        Context is [% c %]
+        The base is [% base %]
+        The name is [% name %]
+
+DESCRIPTION
+    This is the Catalyst view class for the Template Toolkit. Your
+    application should defined a view class which is a subclass of this
+    module. The easiest way to achieve this is using the myapp_create.pl
+    script (where myapp should be replaced with whatever your application is
+    called). This script is created as part of the Catalyst setup.
+
+        $ script/myapp_create.pl view TT TT
+
+    This creates a MyApp::V::TT.pm module in the lib directory (again,
+    replacing "MyApp" with the name of your application) which looks
+    something like this:
+
+        package FooBar::V::TT;
+    
+        use strict;
+         use base 'Catalyst::View::TT';
+
+        __PACKAGE__->config->{DEBUG} = 'all';
+
+    Now you can modify your action handlers in the main application and/or
+    controllers to forward to your view class. You might choose to do this
+    in the end() method, for example, to automatically forward all actions
+    to the TT view class.
+
+        # In MyApp or MyApp::Controller::SomeController
+    
+        sub end : Private {
+            my( $self, $c ) = @_;
+            $c->forward('MyApp::V::TT');
+        }
+
+  CONFIGURATION
+    There are a three different ways to configure your view class. The first
+    way is to call the "config()" method in the view subclass. This happens
+    when the module is first loaded.
+
+        package MyApp::V::TT;
+    
+        use strict;
+        use base 'Catalyst::View::TT';
+
+        MyApp::V::TT->config({
+            INCLUDE_PATH => [
+                MyApp->path_to( 'root', 'templates', 'lib' ),
+                MyApp->path_to( 'root', 'templates', 'src' ),
+            ],
+            PRE_PROCESS  => 'config/main',
+            WRAPPER      => 'site/wrapper',
+        });
+
+    The second way is to define a "new()" method in your view subclass. This
+    performs the configuration when the view object is created, shortly
+    after being loaded. Remember to delegate to the base class "new()"
+    method (via "$self->NEXT::new()" in the example below) after performing
+    any configuration.
+
+        sub new {
+            my $self = shift;
+            $self->config({
+                INCLUDE_PATH => [
+                    MyApp->path_to( 'root', 'templates', 'lib' ),
+                    MyApp->path_to( 'root', 'templates', 'src' ),
+                ],
+                PRE_PROCESS  => 'config/main',
+                WRAPPER      => 'site/wrapper',
+            });
+            return $self->NEXT::new(@_);
+        }
+ 
+    The final, and perhaps most direct way, is to define a class item in
+    your main application configuration, again by calling the uniquitous
+    "config()" method. The items in the class hash are added to those
+    already defined by the above two methods. This happens in the base class
+    new() method (which is one reason why you must remember to call it via
+    "NEXT" if you redefine the "new()" method in a subclass).
+
+        package MyApp;
+    
+        use strict;
+        use Catalyst;
+    
+        MyApp->config({
+            name     => 'MyApp',
+            root     => MyApp->path_to('root'),
+            'V::TT' => {
+                INCLUDE_PATH => [
+                    MyApp->path_to( 'root', 'templates', 'lib' ),
+                    MyApp->path_to( 'root', 'templates', 'src' ),
+                ],
+                PRE_PROCESS  => 'config/main',
+                WRAPPER      => 'site/wrapper',
+            },
+        });
+
+    Note that any configuration items defined by one of the earlier methods
+    will be overwritten by items of the same name provided by the latter
+    methods.
+
+  DYNAMIC INCLUDE_PATH
+    It is sometimes needed to dynamically add additional paths to the
+    INCLUDE_PATH variable of the template object. This can be done by
+    setting 'additional_include_paths' on stash to a referrence to an array
+    with additional paths:
+
+        $c->stash->{additional_template_paths} = [$c->config->{root} . '/test_include_path']; 
+
+  RENDERING VIEWS
+    The view plugin renders the template specified in the "template" item in
+    the stash.
+
+        sub message : Global {
+            my ( $self, $c ) = @_;
+            $c->stash->{template} = 'message.tt2';
+            $c->forward('MyApp::V::TT');
+        }
+
+    If a class item isn't defined, then it instead uses the current match,
+    as returned by "$c->match". In the above example, this would be
+    "message".
+
+    The items defined in the stash are passed to the Template Toolkit for
+    use as template variables.
+
+    sub message : Global { sub default : Private { my ( $self, $c ) = @_;
+    $c->stash->{template} = 'message.tt2'; $c->stash->{message} = 'Hello
+    World!'; $c->forward('MyApp::V::TT'); }
+
+    A number of other template variables are also added:
+
+        c      A reference to the context object, $c
+        base   The URL base, from $c->req->base()
+        name   The application name, from $c->config->{ name }
+
+    These can be accessed from the template in the usual way:
+
+    <message.tt2>:
+
+        The message is: [% message %]
+        The base is [% base %]
+        The name is [% name %]
+
+    The output generated by the template is stored in
+    "$c->response->output".
+
+  TEMPLATE PROFILING
+  METHODS
+    new The constructor for the TT view. Sets up the template provider, and
+        reads the application config.
+
+    process
+        Renders the template specified in "$c->stash->{template}" or
+        "$c->request->match". Template variables are set up from the
+        contents of "$c->stash", augmented with "base" set to
+        "$c->req->base", "c" to $c and "name" to "$c->config->{name}".
+        Alternately, the "CATALYST_VAR" configuration item can be defined to
+        specify the name of a template variable through which the context
+        reference ($c) can be accessed. In this case, the "c", "base" and
+        "name" variables are omitted. Output is stored in
+        "$c->response->output".
+
+    config
+        This method allows your view subclass to pass additional settings to
+        the TT configuration hash, or to set the options as below:
+
+        "CATALYST_VAR"
+          Allows you to change the name of the Catalyst context object. If
+          set, it will also remove the base and name aliases, so you will
+          have access them through <context>.
+
+          For example:
+
+              MyApp->config({
+                  name     => 'MyApp',
+                  root     => MyApp->path_to('root'),
+                  'V::TT' => {
+                      CATALYST_VAR => 'Catalyst',
+                  },
+              });
+
+          message.tt2:
+
+              The base is [% Catalyst.req.base %]
+              The name is [% Catalyst.config.name %]
+
+        "TIMER"
+          If you have configured Catalyst for debug output, and turned on
+          the TIMER setting, "Catalyst::View::TT" will enable profiling of
+          template processing (using Template::Timer). This will embed HTML
+          comments in the output from your templates, such as:
+
+              <!-- TIMER START: process mainmenu/mainmenu.ttml -->
+              <!-- TIMER START: include mainmenu/cssindex.tt -->
+              <!-- TIMER START: process mainmenu/cssindex.tt -->
+              <!-- TIMER END: process mainmenu/cssindex.tt (0.017279 seconds) -->
+              <!-- TIMER END: include mainmenu/cssindex.tt (0.017401 seconds) -->
+
+              ....
+
+              <!-- TIMER END: process mainmenu/footer.tt (0.003016 seconds) -->
+
+        "TEMPLATE_EXTENSION"
+          a sufix to add when looking for templates bases on the "match"
+          method in Catalyst::Request.
+
+          For example:
+
+            package MyApp::C::Test;
+            sub test : Local { .. } 
+
+          Would by default look for a template in <root>/test/test. If you
+          set TEMPLATE_EXTENSION to '.tt', it will look for
+          <root>/test/test.tt.
+
+  HELPERS
+    The Catalyst::Helper::View::TT and Catalyst::Helper::View::TTSite helper
+    modules are provided to create your view module. There are invoked by
+    the myapp_create.pl script:
+
+        $ script/myapp_create.pl view TT TT
+
+        $ script/myapp_create.pl view TT TTSite
+
+    The Catalyst::Helper::View::TT module creates a basic TT view module.
+    The Catalyst::Helper::View::TTSite module goes a little further. It also
+    creates a default set of templates to get you started. It also
+    configures the view module to locate the templates automatically.
+
+SEE ALSO
+    Catalyst, Catalyst::Helper::View::TT, Catalyst::Helper::View::TTSite,
+    Template::Manual
+
+AUTHORS
+    Sebastian Riedel, "sri@cpan.org"
+
+    Marcus Ramberg, "mramberg@cpan.org"
+
+    Jesse Sheidlower, "jester@panix.com"
+
+    Andy Wardley, "abw@cpan.org"
+
+COPYRIGHT
+    This program is free software, you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+
+
+%prep
+%setup -q -n Catalyst-View-TT-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Catalyst-View-TT.spec.in,v $
+Revision 1.1  2006/05/04 05:32:27  allenday
+import
+
