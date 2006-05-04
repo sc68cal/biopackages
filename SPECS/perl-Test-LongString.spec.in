@@ -1,40 +1,52 @@
-#$Id: perl-HTTP-Server-Simple.spec.in,v 1.2 2006/05/04 06:51:06 allenday Exp $
+#$Id: perl-Test-LongString.spec.in,v 1.1 2006/05/04 06:51:47 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
-Name: perl-HTTP-Server-Simple
-Version: 0.18
+Name: perl-Test-LongString
+Version: 0.09
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
-URL: http://search.cpan.org/dist/HTTP-Server-Simple/
+URL: http://search.cpan.org/dist/Test-LongString/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: HTTP-Server-Simple-0.18.tar.gz
+Source0: Test-LongString-0.09.tar.gz
 
 %description
-HTTP::Server::Simple is a very simple standalone HTTP daemon with no non-core
-module dependencies.  It's ideal for building a standalone http-based UI to
-your existing tools.  
+Test::LongString v0.09
+======================
 
-This code is a derivative of the "standalone_httpd" tool used by RT.
-(http://bestpractical.com/rt)
+A library to test long strings.
 
-It's desperately short of tests and documentation. It wants your love and help.
+INSTALLATION
 
+To install this module type the following:
 
+    perl Makefile.PL
+    make
+    make test
+    make install
 
-    Jesse Vincent
-    jesse@bestpractical.com. 
+DEPENDENCIES
+
+Needs Test::More, Test::Builder, and, to run the tests, Test::Builder::Tester.
+Test::Pod and Test::Pod::Coverage are optional.
+
+COPYRIGHT AND LICENCE
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+Copyright (c) 2002, 2003, 2004, 2005 Rafael Garcia-Suarez
 
 
 %prep
-%setup -q -n HTTP-Server-Simple-%{version}
+%setup -q -n Test-LongString-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -79,7 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-HTTP-Server-Simple.spec.in,v $
-Revision 1.2  2006/05/04 06:51:06  allenday
+$Log: perl-Test-LongString.spec.in,v $
+Revision 1.1  2006/05/04 06:51:47  allenday
 import
 
