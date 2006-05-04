@@ -1,0 +1,463 @@
+#$Id: perl-Catalyst-Plugin-Authentication.spec.in,v 1.1 2006/05/04 05:51:51 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Catalyst-Plugin-Authentication
+Version: 0.07
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Catalyst-Plugin-Authentication/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Catalyst-Plugin-Authentication-0.07.tar.gz
+
+%description
+NAME
+    Catalyst::Plugin::Authentication - Infrastructure plugin for the
+    Catalyst authentication framework.
+
+SYNOPSIS
+        use Catalyst qw/
+            Authentication
+            Authentication::Store::Foo
+            Authentication::Credential::Password
+        /;
+
+        # later on ...
+        # ->login is provided by the Credential::Password module
+        $c->login('myusername', 'mypassword');
+        my $age = $c->user->age;
+        $c->logout;
+
+DESCRIPTION
+    The authentication plugin provides generic user support. It is the basis
+    for both authentication (checking the user is who they claim to be), and
+    authorization (allowing the user to do what the system authorises them
+    to do).
+
+    Using authentication is split into two parts. A Store is used to
+    actually store the user information, and can store any amount of data
+    related to the user. Multiple stores can be accessed from within one
+    application. Credentials are used to verify users, using the store,
+    given data from the frontend.
+
+    To implement authentication in a Catalyst application you need to add
+    this module, plus at least one store and one credential module.
+
+    Authentication data can also be stored in a session, if the application
+    is using the Catalyst::Plugin::Session module.
+
+INTRODUCTION
+  The Authentication/Authorization Process
+    Web applications typically need to identify a user - to tell the user
+    apart from other users. This is usually done in order to display private
+    information that is only that user's business, or to limit access to the
+    application so that only certain entities can access certain parts.
+
+    This process is split up into several steps. First you ask the user to
+    identify themselves. At this point you can't be sure that the user is
+    really who they claim to be.
+
+    Then the user tells you who they are, and backs this claim with some
+    piece of information that only the real user could give you. For
+    example, a password is a secret that is known to both the user and you.
+    When the user tells you this password you can assume they're in on the
+    secret and can be trusted (ignore identity theft for now). Checking the
+    password, or any other proof is called credential verification.
+
+    By this time you know exactly who the user is - the user's identity is
+    authenticated. This is where this module's job stops, and other plugins
+    step in. The next logical step is authorization, the process of deciding
+    what a user is (or isn't) allowed to do. For example, say your users are
+    split into two main groups - regular users and administrators. You
+    should verify that the currently logged in user is indeed an
+    administrator before performing the actions of an administrative part of
+    your application. One way to do this is with role based access control.
+
+  The Components In This Framework
+   Credential Verifiers
+    When user input is transferred to the Catalyst application (typically
+    via form inputs) this data then enters the authentication framework
+    through these plugins.
+
+    These plugins check the data, and ensure that it really proves the user
+    is who they claim to be.
+
+   Storage Backends
+    The credentials also identify a user, and this family of modules is
+    supposed to take this identification data and return a standardized
+    object oriented representation of users.
+
+    When a user is retrieved from a store it is not necessarily
+    authenticated. Credential verifiers can either accept a user object, or
+    fetch the object themselves from the default store.
+
+   The Core Plugin
+    This plugin on its own is the glue, providing store registration,
+    session integration, and other goodness for the other plugins.
+
+   Other Plugins
+    More layers of plugins can be stacked on top of the authentication code.
+    For example, Catalyst::Plugin::Session::PerUser provides an abstraction
+    of browser sessions that is more persistent per users.
+    Catalyst::Plugin::Authorization::Roles provides an accepted way to
+    separate and group users into categories, and then check which
+    categories the current user belongs to.
+
+EXAMPLE
+    Let's say we were storing users in an Apache style htpasswd file. Users
+    are stored in that file, with a hashed password and some extra comments.
+    Users are verified by supplying a password which is matched with the
+    file.
+
+    This means that our application will begin like this:
+
+        package MyApp;
+
+        use Catalyst qw/
+            Authentication
+            Authentication::Credential::Password
+            Authentication::Store::Htpasswd
+        /;
+
+        __PACKAGE__->config->{authentication}{htpasswd} = "passwdfile";
+
+    This loads the appropriate methods and also sets the htpasswd store as
+    the default store.
+
+    So, now that we have the code loaded we need to get data from the user
+    into the credential verifier.
+
+    Let's create an authentication controller:
+
+        package MyApp::Controller::Auth;
+
+        sub login : Local {
+            my ( $self, $c ) = @_;
+
+            if (    my $user = $c->req->param("user")
+                and my $password = $c->req->param("password") )
+            {
+                if ( $c->login( $user, $password ) ) {
+                    $c->res->body( "hello " . $c->user->name );
+                } else {
+                    # login incorrect
+                }
+            }
+            else {
+                # invalid form input
+            }
+        }
+
+    This code should be very readable. If all the necessary fields are
+    supplied, call the "login" in Authentication::Credential::Password
+    method on the controller. If that succeeds the user is logged in.
+
+    It could be simplified though:
+
+        sub login : Local {
+            my ( $self, $c ) = @_;
+
+            if ( $c->login ) {
+                ...
+            }
+        }
+
+    Since the "login" method knows how to find logically named parameters on
+    it's own.
+
+    The credential verifier will ask the default store to get the user whose
+    ID is the user parameter. In this case the default store is the htpasswd
+    one. Once it fetches the user from the store the password is checked and
+    if it's OK "$c->user" will contain the user object returned from the
+    htpasswd store.
+
+    We can also pass a user object to the credential verifier manually, if
+    we have several stores per app. This is discussed in
+    Catalyst::Plugin::Authentication::Store.
+
+    Now imagine each admin user has a comment set in the htpasswd file
+    saying "admin".
+
+    A restricted action might look like this:
+
+        sub restricted : Local {
+            my ( $self, $c ) = @_;
+
+            $c->detach("unauthorized")
+              unless $c->user_exists
+              and $c->user->extra_info() eq "admin";
+
+            # do something restricted here
+        }
+
+    This is somewhat similar to role based access control.
+    Catalyst::Plugin::Authentication::Store::Htpasswd treats the extra info
+    field as a comma separated list of roles if it's treated that way. Let's
+    leverage this. Add the role authorization plugin:
+
+        use Catalyst qw/
+            ...
+            Authorization::Roles
+        /;
+
+        sub restricted : Local {
+            my ( $self, $c ) = @_;
+
+            $c->detach("unauthorized") unless $c->check_roles("admin");
+
+            # do something restricted here
+        }
+
+    This is somewhat simpler and will work if you change your store, too,
+    since the role interface is consistent.
+
+    Let's say your app grew, and you now have 10000 users. It's no longer
+    efficient to maintain an htpasswd file, so you move this data to a
+    database.
+
+        use Catalyst qw/
+            Authentication
+            Authentication::Credential::Password
+            Authentication::Store::DBIC
+            Authorization::Roles
+        /;
+
+        __PACKAGE__->config->{authentication}{dbic} = ...; # see the DBIC store docs
+
+    The rest of your code should be unchanged. Now let's say you are
+    integrating typekey authentication to your system. For simplicity's sake
+    we'll assume that the user's are still keyed in the same way.
+
+        use Catalyst qw/
+            Authentication
+            Authentication::Credential::Password
+            Authentication::Credential::TypeKey
+            Authentication::Store::DBIC
+            Authorization::Roles
+        /;
+
+    And in your auth controller add a new action:
+
+        sub typekey : Local {
+            my ( $self, $c ) = @_;
+
+            if ( $c->authenticate_typekey) { # uses $c->req and Authen::TypeKey
+                # same stuff as the $c->login method
+                # ...
+            }
+        }
+
+    You've now added a new credential verification mechanizm orthogonally to
+    the other components. All you have to do is make sure that the
+    credential verifiers pass on the same types of parameters to the store
+    in order to retrieve user objects.
+
+METHODS
+    user
+        Returns the currently logged in user or undef if there is none.
+
+    user_exists
+        Whether or not a user is logged in right now.
+
+        The reason this method exists is that "$c->user" may needlessly load
+        the user from the auth store.
+
+        If you're just going to say
+
+                if ( $c->user_exists ) {
+                        # foo
+                } else {
+                        $c->forward("login");
+                }
+
+        it should be more efficient than "$c->user" when a user is marked in
+        the session but "$c->user" hasn't been called yet.
+
+    logout
+        Delete the currently logged in user from "user" and the session.
+
+    get_user $uid
+        Fetch a particular users details, defined by the given ID, via the
+        default store.
+
+CONFIGURATION
+    use_session
+        Whether or not to store the user's logged in state in the session,
+        if the application is also using the Catalyst::Plugin::Session
+        plugin. This value is set to true per default.
+
+    store
+        If multiple stores are being used, set the module you want as
+        default here.
+
+    stores
+        If multiple stores are being used, you need to provide a name for
+        each store here, as a hash, the keys are the names you wish to use,
+        and the values are the the names of the plugins.
+
+         # example
+         __PACKAGE__->config( authentication => {
+                                store => 'Catalyst::Plugin::Authentication::Store::HtPasswd',
+                                stores => { 
+                                   'dbic' => 'Catalyst::Plugin::Authentication::Store::DBIC'
+                                          }
+                                                 });
+
+METHODS FOR STORE MANAGEMENT
+    default_auth_store
+        Return the store whose name is 'default'.
+
+        This is set to "$c->config->{authentication}{store}" if that value
+        exists, or by using a Store plugin:
+
+                use Catalyst qw/Authentication Authentication::Store::Minimal/;
+
+        Sets the default store to
+        Catalyst::Plugin::Authentication::Store::Minimal::Backend.
+
+    get_auth_store $name
+        Return the store whose name is $name.
+
+    get_auth_store_name $store
+        Return the name of the store $store.
+
+    auth_stores
+        A hash keyed by name, with the stores registered in the app.
+
+    auth_store_names
+        A ref-hash keyed by store, which contains the names of the stores.
+
+    register_auth_stores %stores_by_name
+        Register stores into the application.
+
+INTERNAL METHODS
+    set_authenticated $user
+        Marks a user as authenticated. Should be called from a
+        "Catalyst::Plugin::Authentication::Credential" plugin after
+        successful authentication.
+
+        This involves setting "user" and the internal data in "session" if
+        Catalyst::Plugin::Session is loaded.
+
+    auth_restore_user $user
+        Used to restore a user from the session, by "user" only when it's
+        actually needed.
+
+    save_user_in_session $user
+        Used to save the user in a session.
+
+    prepare
+        Revives a user from the session object if there is one.
+
+    setup
+        Sets the default configuration parameters.
+
+
+
+SEE ALSO
+    This list might not be up to date.
+
+  User Storage Backends
+    Catalyst::Plugin::Authentication::Store::Minimal,
+    Catalyst::Plugin::Authentication::Store::Htpasswd,
+    Catalyst::Plugin::Authentication::Store::DBIC (also works with
+    Class::DBI).
+
+  Credential verification
+    Catalyst::Plugin::Authentication::Credential::Password,
+    Catalyst::Plugin::Authentication::Credential::HTTP,
+    Catalyst::Plugin::Authentication::Credential::TypeKey
+
+  Authorization
+    Catalyst::Plugin::Authorization::ACL,
+    Catalyst::Plugin::Authorization::Roles
+
+  Internals Documentation
+    Catalyst::Plugin::Authentication::Store
+
+  Misc
+    Catalyst::Plugin::Session, Catalyst::Plugin::Session::PerUser
+
+DON'T SEE ALSO
+    This module along with its sub plugins deprecate a great number of other
+    modules. These include Catalyst::Plugin::Authentication::Simple,
+    Catalyst::Plugin::Authentication::CDBI.
+
+    At the time of writing these plugins have not yet been replaced or
+    updated, but should be eventually:
+    Catalyst::Plugin::Authentication::OpenID,
+    Catalyst::Plugin::Authentication::LDAP,
+    Catalyst::Plugin::Authentication::CDBI::Basic,
+    Catalyst::Plugin::Authentication::Basic::Remote.
+
+AUTHORS
+    Yuval Kogman, "nothingmuch@woobling.org"
+
+    Jess Robinson
+
+    David Kamholz
+
+COPYRIGHT & LICENSE
+            Copyright (c) 2005 the aforementioned authors. All rights
+            reserved. This program is free software; you can redistribute
+            it and/or modify it under the same terms as Perl itself.
+
+
+
+%prep
+%setup -q -n Catalyst-Plugin-Authentication-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Catalyst-Plugin-Authentication.spec.in,v $
+Revision 1.1  2006/05/04 05:51:51  allenday
+import
+
