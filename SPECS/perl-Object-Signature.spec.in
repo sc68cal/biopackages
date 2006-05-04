@@ -1,4 +1,4 @@
-#$Id: perl-Object-Signature.spec.in,v 1.1 2006/05/04 06:02:15 allenday Exp $
+#$Id: perl-Object-Signature.spec.in,v 1.2 2006/05/04 06:09:53 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Object-Signature/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Digest-MD5, perl-Storable >= 2.15
+Requires: perl-Digest-MD5, perl-Storable >= 2.15
 
 Source0: Object-Signature-1.03.tar.gz
 
