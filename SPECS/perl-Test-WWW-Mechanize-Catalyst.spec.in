@@ -1,0 +1,267 @@
+#$Id: perl-Test-WWW-Mechanize-Catalyst.spec.in,v 1.2 2006/05/04 06:30:27 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Test-WWW-Mechanize-Catalyst
+Version: 0.36
+Release: 1.1.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Test-WWW-Mechanize-Catalyst/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-Test-POD, perl-Test-WWW-Mechanize
+Requires: perl-Test-POD, perl-Test-WWW-Mechanize
+
+Source0: Test-WWW-Mechanize-Catalyst-0.36.tar.gz
+
+%description
+NAME
+    Test::WWW::Mechanize::Catalyst - Test::WWW::Mechanize for Catalyst
+
+SYNOPSIS
+      # We're in a t/*.t test script...
+      # To test a Catalyst application named 'Catty':
+      use Test::WWW::Mechanize::Catalyst 'Catty';
+
+      my $mech = Test::WWW::Mechanize::Catalyst->new;
+      $mech->get_ok("http://localhost/");
+      is($mech->ct, "text/html");
+      $mech->title_is("Root", "On the root page");
+      $mech->content_contains("This is the root page", "Correct content");
+      $mech->follow_link_ok({text => 'Hello'}, "Click on Hello");
+      # ... and all other Test::WWW::Mechanize methods
+
+DESCRIPTION
+    Catalyst is an elegant MVC Web Application Framework.
+    Test::WWW::Mechanize is a subclass of WWW::Mechanize that incorporates
+    features for web application testing. The Test::WWW::Mechanize::Catalyst
+    module meshes the two to allow easy testing of Catalyst applications
+    without starting up a web server.
+
+    Testing web applications has always been a bit tricky, normally starting
+    a web server for your application and making real HTTP requests to it.
+    This module allows you to test Catalyst web applications but does not
+    start a server or issue HTTP requests. Instead, it passes the HTTP
+    request object directly to Catalyst. Thus you do not need to use a real
+    hostname: "http://localhost/" will do.
+
+    This makes testing fast and easy. Test::WWW::Mechanize provides
+    functions for common web testing scenarios. For example:
+
+      $mech->get_ok( $page );
+      $mech->title_is( "Invoice Status", "Make sure we're on the invoice page" );
+      $mech->content_contains( "Andy Lester", "My name somewhere" );
+      $mech->content_like( qr/(cpan|perl)\.org/, "Link to perl.org or CPAN" );
+
+    This module supports cookies automatically.
+
+    To use this module you must pass it the name of the application. See the
+    SYNOPSIS above.
+
+    Note that Catalyst has a special developing feature: the debug screen.
+    By default this module will treat responses which are the debug screen
+    as failures. If you actually want to test debug screens, please use:
+
+      $m->{catalyst_debug} = 1;
+
+CONSTRUCTOR
+  new
+    Behaves like, and calls, WWW::Mechanize's "new" method. Any parms passed
+    in get passed to WWW::Mechanize's constructor. Note that we need to pass
+    the name of the Catalyst application to the "use":
+
+      use Test::WWW::Mechanize::Catalyst 'Catty';
+      my $mech = Test::WWW::Mechanize::Catalyst->new;
+
+METHODS
+  $mech->get_ok($url, [ \%LWP_options ,] $desc)
+    A wrapper around WWW::Mechanize's get(), with similar options, except
+    the second argument needs to be a hash reference, not a hash. Like
+    WWW::Mechanize's get(), it returns an HTTP::Response object.
+
+  $mech->title_is( $str [, $desc ] )
+    Tells if the title of the page is the given string.
+
+        $mech->title_is( "Invoice Summary" );
+
+  $mech->title_like( $regex [, $desc ] )
+    Tells if the title of the page matches the given regex.
+
+        $mech->title_like( qr/Invoices for (.+)/
+
+  $mech->title_unlike( $regex [, $desc ] )
+    Tells if the title of the page matches the given regex.
+
+        $mech->title_unlike( qr/Invoices for (.+)/
+
+  $mech->content_is( $str [, $desc ] )
+    Tells if the content of the page matches the given string
+
+  $mech->content_contains( $str [, $desc ] )
+    Tells if the content of the page contains *$str*.
+
+  $mech->content_lacks( $str [, $desc ] )
+    Tells if the content of the page lacks *$str*.
+
+  $mech->content_like( $regex [, $desc ] )
+    Tells if the content of the page matches *$regex*.
+
+  $mech->content_unlike( $regex [, $desc ] )
+    Tells if the content of the page does NOT match *$regex*.
+
+  $mech->page_links_ok( [ $desc ] )
+    Follow all links on the current page and test for HTTP status 200
+
+        $mech->page_links_ok('Check all links');
+
+  $mech->page_links_content_like( $regex,[ $desc ] )
+    Follow all links on the current page and test their contents for
+    *$regex*.
+
+        $mech->page_links_content_like( qr/foo/,
+          'Check all links contain "foo"' );
+
+  $mech->page_links_content_unlike( $regex,[ $desc ] )
+    Follow all links on the current page and test their contents do not
+    contain the specified regex.
+
+        $mech->page_links_content_unlike(qr/Restricted/,
+          'Check all links do not contain Restricted');
+
+  $mech->links_ok( $links [, $desc ] )
+    Check the current page for specified links and test for HTTP status 200.
+    The links may be specified as a reference to an array containing
+    WWW::Mechanize::Link objects, an array of URLs, or a scalar URL name.
+
+        my @links = $mech->find_all_links( url_regex => qr/cnn\.com$/ );
+        $mech->links_ok( \@links, 'Check all links for cnn.com' );
+
+        my @links = qw( index.html search.html about.html );
+        $mech->links_ok( \@links, 'Check main links' );
+
+        $mech->links_ok( 'index.html', 'Check link to index' );
+
+  $mech->link_status_is( $links, $status [, $desc ] )
+    Check the current page for specified links and test for HTTP status
+    passed. The links may be specified as a reference to an array containing
+    WWW::Mechanize::Link objects, an array of URLs, or a scalar URL name.
+
+        my @links = $mech->links();
+        $mech->link_status_is( \@links, 403,
+          'Check all links are restricted' );
+
+  $mech->link_status_isnt( $links, $status [, $desc ] )
+    Check the current page for specified links and test for HTTP status
+    passed. The links may be specified as a reference to an array containing
+    WWW::Mechanize::Link objects, an array of URLs, or a scalar URL name.
+
+        my @links = $mech->links();
+        $mech->link_status_isnt( \@links, 404,
+          'Check all links are not 404' );
+
+  $mech->link_content_like( $links, $regex [, $desc ] )
+    Check the current page for specified links and test the content of each
+    against *$regex*. The links may be specified as a reference to an array
+    containing WWW::Mechanize::Link objects, an array of URLs, or a scalar
+    URL name.
+
+        my @links = $mech->links();
+        $mech->link_content_like( \@links, qr/Restricted/,
+            'Check all links are restricted' );
+
+  $mech->link_content_unlike( $links, $regex [, $desc ] )
+    Check the current page for specified links and test the content of each
+    does not match *$regex*. The links may be specified as a reference to an
+    array containing WWW::Mechanize::Link objects, an array of URLs, or a
+    scalar URL name.
+
+        my @links = $mech->links();
+        $mech->link_content_like( \@links, qr/Restricted/,
+          'Check all links are restricted' );
+
+  follow_link_ok( \%parms [, $comment] )
+    Makes a "follow_link()" call and executes tests on the results. The link
+    must be found, and then followed successfully. Otherwise, this test
+    fails.
+
+    *%parms* is a hashref containing the parms to pass to "follow_link()".
+    Note that the parms to "follow_link()" are a hash whereas the parms to
+    this function are a hashref. You have to call this function like:
+
+        $agent->follow_like_ok( {n=>3}, "looking for 3rd link" );
+
+    As with other test functions, $comment is optional. If it is supplied
+    then it will display when running the test harness in verbose mode.
+
+    Returns true value if the specified link was found and followed
+    successfully. The HTTP::Response object returned by follow_link() is not
+    available.
+
+SEE ALSO
+    Related modules which may be of interest: Catalyst,
+    Test::WWW::Mechanize, WWW::Mechanize.
+
+AUTHOR
+    Leon Brocard, "<acme@astray.com>"
+
+COPYRIGHT
+    Copyright (C) 2005, Leon Brocard
+
+    This module is free software; you can redistribute it or modify it under
+    the same terms as Perl itself.
+
+
+
+%prep
+%setup -q -n Test-WWW-Mechanize-Catalyst-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Wed May  3 2006 allenday@jugular.ctrl.ucla.edu - 0.36-%{revision}
+- Specfile autogenerated.
