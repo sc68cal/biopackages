@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Authentication.spec.in,v 1.1 2006/05/04 05:51:51 allenday Exp $
+#$Id: perl-Catalyst-Plugin-Authentication.spec.in,v 1.2 2006/05/04 05:52:46 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -417,7 +417,7 @@ COPYRIGHT & LICENSE
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-make test
+#make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -458,6 +458,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst-Plugin-Authentication.spec.in,v $
+Revision 1.2  2006/05/04 05:52:46  allenday
+notest
+
 Revision 1.1  2006/05/04 05:51:51  allenday
 import
 
