@@ -1,0 +1,371 @@
+#$Id: perl-Set-Object.spec.in,v 1.1 2006/05/07 10:39:52 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unordered collections (sets) of Perl Objects
+Name: perl-Set-Object
+Version: 1.14
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Set-Object/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Set-Object-1.14.tar.gz
+
+%description
+NAME
+    Set::Object - set of objects and strings
+
+SYNOPSIS
+      use Set::Object;
+
+      my $set = set();            # or Set::Object->new()
+
+      $set->insert(@thingies);
+      $set->remove(@thingies);
+
+      @items = @$set;             # or $set->members;
+
+      $union = $set1 + $set2;
+      $intersection = $set1 * $set2;
+      $difference = $set1 - $set2;
+      $symmetric_difference = $set1 % $set2;
+
+      print "set1 is a proper subset of set2"
+          if $set1 < $set2;
+
+      print "set1 is a subset of set2"
+          if $set1 <= $set2;
+
+      # common idiom - iterate over any pure Perl structure
+      use Set::Object qw(reftype);
+      my @stack = $root;
+      my $seen = Set::Object->new(@stack);
+      while (my $object = pop @stack) {
+          if (reftype $object eq "HASH") {
+              # do something with hash members
+
+              # add the new nodes to the stack
+              push @stack, grep { ref $_ && $seen->insert($_) }
+                  values %$object;
+          }
+          elsif (reftype $object eq "ARRAY") {
+              # do something with array members
+
+              # add the new nodes to the stack
+              push @stack, grep { ref $_ && $seen->insert($_) }
+                  @$object;
+
+          }
+          elsif (reftype $object =~ /SCALAR|REF/) {
+              push @stack, $$object
+                  if ref $$object && $seen->insert($$object);
+          }
+      }
+
+DESCRIPTION
+    This modules implements a set of objects, that is, an unordered
+    collection of objects without duplication.
+
+    The term *objects* is applied loosely - for the sake of Set::Object,
+    anything that is a reference is considered an object.
+
+    Set::Object 1.09 and later includes support for inserting scalars
+    (including the empty string, but excluding "undef") as well as objects.
+    This can be thought of as (and is currently implemented as) a degenerate
+    hash that only has keys and no values. Unlike objects placed into a
+    Set::Object, scalars that are inserted will be flattened into strings,
+    so will lose any magic (eg, tie) or other special bits that they went in
+    with; only strings come out.
+
+CLASS METHODS
+  new( [*list*] )
+    Return a new "Set::Object" containing the elements passed in *list*.
+
+INSTANCE METHODS
+  insert( [*list*] )
+    Add items to the "Set::Object".
+
+    Adding the same object several times is not an error, but any
+    "Set::Object" will contain at most one occurence of the same object.
+
+    Returns the number of elements that were actually added.
+
+  includes( [*list*] )
+  has( [*list*] )
+  contains( [*list*] )
+    Return "true" if all the objects in *list* are members of the
+    "Set::Object". *list* may be empty, in which case "true" is always
+    returned.
+
+  member( [*item*] )
+  element( [*item*] )
+    Like "includes", but takes a single item to check and returns that item
+    if the value is found, rather than just a true value.
+
+  members
+  elements
+    Return the objects contained in the "Set::Object" in random (hash)
+    order.
+
+  size
+    Return the number of elements in the "Set::Object".
+
+  remove( [*list*] )
+  delete( [*list*] )
+    Remove objects from a "Set::Object".
+
+    Removing the same object more than once, or removing an object absent
+    from the "Set::Object" is not an error.
+
+    Returns the number of elements that were actually removed.
+
+  invert( [*list*] )
+    For each item in *list*, it either removes it or adds it to the set, so
+    that a change is always made.
+
+    Also available as the overloaded operator "/", in which case it expects
+    another set (or a single scalar element), and returns a new set that is
+    the original set with all the second set's items inverted.
+
+  clear
+    Empty this "Set::Object".
+
+  as_string
+    Return a textual Smalltalk-ish representation of the "Set::Object". Also
+    available as overloaded operator "".
+
+  intersection( [*list*] )
+    Return a new "Set::Object" containing the intersection of the
+    "Set::Object"s passed as arguments.
+
+    Also available as overloaded operator "*".
+
+  union( [*list*] )
+    Return a new "Set::Object" containing the union of the "Set::Object"s
+    passed as arguments.
+
+    Also available as overloaded operator "+".
+
+  difference ( *set* )
+    Return a new "Set::Object" containing the members of the first
+    (invocant) set with the passed "Set::Object"s' elements removed.
+
+    Also available as overloaded operator "-".
+
+  unique ( *set* )
+  symmetric_difference ( *set* )
+    Return a new "Set::Object" containing the members of all passed sets
+    (including the invocant), with common elements removed. This will be the
+    opposite (complement) of the *intersection* of the two sets.
+
+    Also available as overloaded operator "%".
+
+  subset( *set* )
+    Return "true" if this "Set::Object" is a subset of *set*.
+
+    Also available as operator "<=".
+
+  proper_subset( *set* )
+    Return "true" if this "Set::Object" is a proper subset of *set* Also
+    available as operator "<".
+
+  superset( *set* )
+    Return "true" if this "Set::Object" is a superset of *set*. Also
+    available as operator ">=".
+
+  proper_superset( *set* )
+    Return "true" if this "Set::Object" is a proper superset of *set* Also
+    available as operator ">".
+
+Set::Scalar compatibility methods
+    By and large, Set::Object is not and probably never will be
+    feature-compatible with Set::Scalar; however the following functions are
+    provided anyway.
+
+  compare( *set* )
+    returns one of:
+
+      "proper intersect"
+      "proper subset"
+      "proper superset"
+      "equal"
+      "disjoint"
+
+  is_disjoint( *set* )
+    Returns a true value if the two sets have no common items.
+
+  as_string_callback( *set* )
+    Allows you to define a custom stringify function. This is only a class
+    method. If you want anything fancier than this, you should sub-class
+    Set::Object.
+
+FUNCTIONS
+    The following functions are defined by the Set::Object XS code for
+    convenience; they are largely identical to the versions in the
+    Scalar::Util module, but there are a couple that provide functions not
+    catered to by that module.
+
+    Please use the versions in Scalar::Util in preference to these
+    functions.
+
+    blessed
+        Returns a true value if the passed reference (RV) is blessed. See
+        also Acme::Holy.
+
+    reftype
+        A bit like the perl built-in "ref" function, but returns the *type*
+        of reference; ie, if the reference is blessed then it returns what
+        "ref" would have if it were not blessed. Useful for "seeing through"
+        blessed references.
+
+    refaddr
+        Returns the memory address of a scalar. Warning: this is *not*
+        guaranteed to be unique for scalars created in a program; memory
+        might get re-used!
+
+    is_int, is_string, is_double
+        A quick way of checking the three bits on scalars - IOK (is_int),
+        NOK (is_double) and POK (is_string). Note that the exact behaviour
+        of when these bits get set is not defined by the perl API.
+
+        This function returns the "p" versions of the macro (SvIOKp, etc);
+        use with caution.
+
+    is_overloaded
+        A quick way to check if an object has overload magic on it.
+
+    ish_int
+        This function returns true, if the value it is passed looks like it
+        *already is* a representation of an *integer*. This is so that you
+        can decide whether the value passed is a hash key or an array index.
+
+    is_key
+        This function returns true, if the value it is passed looks more
+        like an *index* to a collection than a *value* of a collection.
+
+        But wait, you say - Set::Object has no indices, one of the
+        fundamental properties of a Set is that it is an *unordered
+        collection*. Which means *no indices*. Well, if this module were
+        ever to be derived to be a more general multi-purpose collection,
+        then this (and "ish_int") might be a good function to use to
+        distinguish different types of indexes from values.
+
+PERFORMANCE
+    The following benchmark compares "Set::Object" with using a hash to
+    emulate a set-like collection (this is an old benchmark, but still holds
+    true):
+
+       use Set::Object;
+
+       package Obj;
+       sub new { bless { } }
+
+       @els = map { Obj->new() } 1..1000;
+
+       require Benchmark;
+
+       Benchmark::timethese(100, {
+          'Control' => sub { },
+          'H insert' => sub { my %h = (); @h{@els} = @els; },
+          'S insert' => sub { my $s = Set::Object->new(); $s->insert(@els) },
+          } );
+
+       %gh = ();
+       @gh{@els} = @els;
+
+       $gs = Set::Object->new(@els);
+       $el = $els[33];
+
+       Benchmark::timethese(100_000, {
+               'H lookup' => sub { exists $gh{33} },
+               'S lookup' => sub { $gs->includes($el) }
+          } );
+
+    On my computer the results are:
+
+       Benchmark: timing 100 iterations of Control, H insert, S insert...
+          Control:  0 secs ( 0.01 usr  0.00 sys =  0.01 cpu)
+                   (warning: too few iterations for a reliable count)
+         H insert: 68 secs (67.81 usr  0.00 sys = 67.81 cpu)
+         S insert:  9 secs ( 8.81 usr  0.00 sys =  8.81 cpu)
+       Benchmark: timing 100000 iterations of H lookup, S lookup...
+         H lookup:  7 secs ( 7.14 usr  0.00 sys =  7.14 cpu)
+         S lookup:  6 secs ( 5.94 usr  0.00 sys =  5.94 cpu)
+
+AUTHOR
+    Original Set::Object module by Jean-Louis Leroy, <jll@skynet.be>
+
+    Set::Scalar compatibility, XS debugging and other maintainership
+    courtesy of Sam Vilain, <samv@cpan.org>
+
+LICENCE
+    Copyright (c) 1998-1999, Jean-Louis Leroy. All Rights Reserved. This
+    module is free software. It may be used, redistributed and/or modified
+    under the terms of the Perl Artistic License
+
+    Portions Copyright (c) 2003 - 2005, Sam Vilain. Same license.
+
+SEE ALSO
+    perl(1), perltie(1), Set::Scalar, overload.pm
+
+
+
+%prep
+%setup -q -n Set-Object-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+#%changelog
+#* Sun May  7 2006 allenday@jugular.ctrl.ucla.edu - 1.14-%{revision}
+#- Specfile autogenerated.
+$Log: perl-Set-Object.spec.in,v $
+Revision 1.1  2006/05/07 10:39:52  allenday
+import
+
