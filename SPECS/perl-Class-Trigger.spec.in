@@ -1,4 +1,4 @@
-#$Id: perl-Class-Trigger.spec.in,v 1.2 2006/04/06 08:17:31 allenday Exp $
+#$Id: perl-Class-Trigger.spec.in,v 1.3 2006/05/08 10:09:20 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -9,11 +9,9 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Class-Trigger/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Class-Data-Inheritable
-Requires: perl-Class-Data-Inheritable
-Requires: perl
+BuildRequires: perl, biopackages
+
 Source0: Class-Trigger-0.09.tar.gz
 
 %description
@@ -198,9 +196,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-Trigger.spec.in,v $
-Revision 1.2  2006/04/06 08:17:31  allenday
-depcheck
-
-Revision 1.1  2006/04/06 08:14:59  allenday
+Revision 1.3  2006/05/08 10:09:20  allenday
 import
 
