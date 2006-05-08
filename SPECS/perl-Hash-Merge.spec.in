@@ -1,4 +1,4 @@
-#$Id: perl-Hash-Merge.spec.in,v 1.1 2006/05/04 05:50:44 allenday Exp $
+#$Id: perl-Hash-Merge.spec.in,v 1.2 2006/05/08 08:48:28 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,12 +13,13 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Hash-Merge/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Clone
+Requires: perl-Clone
 
 Source0: Hash-Merge-0.07.tar.gz
 
 %description
-Hash/Merge version $Revision: 1.1 $
+Hash/Merge version $Revision: 1.2 $
 =========================================
 
 Hash::Merge merges two arbitrarily deep hashes into a single hash.  That
@@ -105,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Hash-Merge.spec.in,v $
+Revision 1.2  2006/05/08 08:48:28  allenday
+depcheck
+
 Revision 1.1  2006/05/04 05:50:44  allenday
 import
 

@@ -1,4 +1,4 @@
-#$Id: perl-Test-WWW-Mechanize.spec.in,v 1.2 2006/05/04 06:46:03 allenday Exp $
+#$Id: perl-Test-WWW-Mechanize.spec.in,v 1.3 2006/05/08 08:48:28 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Test-WWW-Mechanize/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Carp-Assert-More, perl-HTTP-Server-Simple, perl-Test-LongString
-Requires: perl-Carp-Assert-More, perl-HTTP-Server-Simple, perl-Test-LongString
+BuildRequires: perl, biopackages, perl-Carp-Assert-More, perl-HTTP-Server-Simple, perl-Test-LongString, perl-WWW-Mechanize
+Requires: perl-Carp-Assert-More, perl-HTTP-Server-Simple, perl-Test-LongString, perl-WWW-Mechanize
 
 Source0: Test-WWW-Mechanize-1.08.tar.gz
 
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-WWW-Mechanize.spec.in,v $
+Revision 1.3  2006/05/08 08:48:28  allenday
+depcheck
+
 Revision 1.2  2006/05/04 06:46:03  allenday
 cleanup
 
