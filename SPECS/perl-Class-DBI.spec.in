@@ -1,0 +1,165 @@
+#$Id: perl-Class-DBI.spec.in,v 1.1 2006/05/08 10:01:43 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Class-DBI
+Version: 0.96
+Release: %{revision}.%{distro} 
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Class-DBI/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-Ima-DBI, perl-Class-Accessor
+
+Source0: Class-DBI-0.96.tar.gz
+Patch0: perl-Class-DBI-0.96-modfied-columns.patch
+
+%description
+NAME
+            Class::DBI - Simple Database Abstraction
+
+SYNOPSIS
+            package Music::DBI;
+            use base 'Class::DBI';
+            Music::DBI->set_db('Main', 'dbi:mysql', 'username', 'password');
+
+            package Artist;
+            use base 'Music::DBI';
+            Artist->table('artist');
+            Artist->columns(All => qw/artistid name/);
+            Artist->has_many('cds', 'CD' => artist);
+
+            package CD;
+            use base 'Music::DBI';
+            CD->table('cd');
+            CD->columns(All => qw/cdid artist title year/);
+            CD->has_many('tracks', 'Track' => 'cd', { sort => 'position' });
+            CD->has_a(artist => 'CD::Artist');
+            CD->has_a(reldate => 'Time::Piece',
+                    inflate => sub { Time::Piece->strptime(shift => "%Y-%m-%d") },
+                    deflate => 'ymd',
+            }
+
+            CD->might_have(liner_notes => LinerNotes => qw/notes/);
+
+            package Track;
+            use base 'Music::DBI';
+            Track->table('track');
+            Track->columns(All => qw/trackid cd position title/); 
+
+            #-- Meanwhile, in a nearby piece of code! --#
+
+            my $artist = Artist->create({ artistid => 1, name => 'U2' });
+
+            my $cd = $artist->add_to_cds({ 
+                    cdid   => 1,
+                    title  => 'October',
+                    year   => 1980,
+            });
+
+            # Oops, got it wrong.
+            $cd->year(1981);
+            $cd->commit;
+
+            # etc.
+
+            while (my $track = $cd->tracks) {
+                    print $track->position, $track->title
+            }
+
+            $cd->delete; # also deletes the tracks
+
+            my $cd  = CD->retrieve(1);
+            my @cds = CD->retrieve_all;
+            my @cds = CD->search(year => 1980);
+            my @cds = CD->search_like(title => 'October%');
+
+DESCRIPTION
+    Class::DBI provides a convenient abstraction layer to a database.
+
+    It not only provides a simple database to object mapping layer, but can
+    be used to implement several higher order database functions (triggers,
+    referential integrity, cascading delete etc.), at the application level,
+    rather than at the database.
+
+    This is particularly useful when using a database which doesn't support
+    these (such as MySQL), or when you would like your code to be portable
+    across multiple databases which might implement these things in
+    different ways.
+
+    In short, Class::DBI aims to make it simple to introduce 'best practice'
+    when dealing with data stored in a relational database.
+
+PRE-REQUISITES
+
+	Class::DBI requires on several other modules. Installing via the
+	CPAN shell should take care of all these for you. But if you need to
+	install by hand you need to have the following:
+
+	To run the module:
+
+ 		Class::Accessor          
+		Class::Data::Inheritable
+		Class::Trigger         
+ 		Ima::DBI
+			(which in turn requires DBI itself, and Class::WhiteHole)
+
+    To test the installation:
+       Test::More
+       DBD::SQLite
+       DBD::mysql
+       DBD::Pg
+
+
+%prep 
+%setup -q -n Class-DBI-%{version}
+%patch0 -p1
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Class-DBI.spec.in,v $
+Revision 1.1  2006/05/08 10:01:43  allenday
+import
+
