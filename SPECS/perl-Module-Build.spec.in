@@ -1,4 +1,4 @@
-#$Id: perl-Module-Build.spec.in,v 1.2 2006/05/08 09:09:32 allenday Exp $
+#$Id: perl-Module-Build.spec.in,v 1.1 2006/05/08 09:08:38 allenday Exp $
 %define real_name Module-Build
 Summary: System for building perl modules
 Name: perl-Module-Build
@@ -10,7 +10,6 @@ URL: http://search.cpan.org/dist/Module-Build/
 Packager: Allen Day <allenday@ucla.edu>
 Vendor: biopackages.net
 Source: http://search.cpan.org/CPAN/authors/id/K/KW/KWILLIAMS/Module-Build-%{version}.tar.gz
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, perl-Archive-Tar, biopackages
 Requires: perl-Archive-Tar
@@ -48,9 +47,6 @@ find $RPM_BUILD_ROOT -type f \
 %doc README Changes
 
 $Log: perl-Module-Build.spec.in,v $
-Revision 1.2  2006/05/08 09:09:32  allenday
-import
-
 Revision 1.1  2006/05/08 09:08:38  allenday
 import
 
