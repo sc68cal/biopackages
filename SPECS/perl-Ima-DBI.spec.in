@@ -1,3 +1,4 @@
+#$Id: perl-Ima-DBI.spec.in,v 1.2 2006/05/08 10:08:54 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
@@ -229,6 +230,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Ima-DBI.spec.in,v $
+Revision 1.2  2006/05/08 10:08:54  allenday
+version
+
 Revision 1.1  2006/05/08 10:06:45  allenday
 import
 
