@@ -1,4 +1,4 @@
-#$Id: perl-Class-DBI.spec.in,v 1.1 2006/05/08 10:01:43 allenday Exp $
+#$Id: perl-Class-DBI.spec.in,v 1.2 2006/05/08 10:03:00 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -9,6 +9,7 @@ Packager: boconnor@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Class-DBI/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-Ima-DBI, perl-Class-Accessor
@@ -160,6 +161,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-DBI.spec.in,v $
+Revision 1.2  2006/05/08 10:03:00  allenday
+arch
+
 Revision 1.1  2006/05/08 10:01:43  allenday
 import
 
