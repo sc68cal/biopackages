@@ -1,4 +1,4 @@
-#$Id: perl-libwww-perl.spec.in,v 1.2 2006/05/03 08:57:38 allenday Exp $
+#$Id: perl-libwww-perl.spec.in,v 1.3 2006/05/08 08:50:54 allenday Exp $
 %define _use_internal_dependency_generator 0
 Summary: A Perl interface to the World-Wide Web.
 Name: perl-libwww-perl
@@ -18,7 +18,7 @@ Requires: perl(HTML::Parser)
 Requires: perl(HTML::Entities)
 BuildRequires: perl(MIME::Base64)
 BuildRequires: perl(HTML::Entities)
-Provides: perl(Win32)
+Provides: perl(Win32), perl(Authen::NTLM)
 
 %description
 The libwww-perl collection is a set of Perl modules which provides a
@@ -59,6 +59,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-libwww-perl.spec.in,v $
+Revision 1.3  2006/05/08 08:50:54  allenday
+win provides
+
 Revision 1.2  2006/05/03 08:57:38  allenday
 import
 
