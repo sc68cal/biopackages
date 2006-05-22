@@ -1,4 +1,4 @@
-#$Id: cdf.spec.in,v 1.1 2006/05/22 21:02:35 allenday Exp $
+#$Id: cdf.spec.in,v 1.2 2006/05/22 21:07:10 allenday Exp $
 Summary: CDFs (chip defininition files) for all Affymetrix platforms.
 Name: cdf
 Version: 1.1
@@ -22,7 +22,7 @@ CDFs (chip defininition files) for all Affymetrix platforms.
 
 %install
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name};
-install -m 444 *.CDF $RPM_BUILD_ROOT%{_datadir}/%{name}/;
+install -m 444 *.cdf $RPM_BUILD_ROOT%{_datadir}/%{name}/;
 find $RPM_BUILD_ROOT/%{_datadir}/%{name} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release};
 
 %files -f %{name}-%{version}-%{release}
@@ -35,6 +35,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/%{name} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >
 %preun 
 
 $Log: cdf.spec.in,v $
+Revision 1.2  2006/05/22 21:07:10  allenday
+lowercase filenames
+
 Revision 1.1  2006/05/22 21:02:35  allenday
 import
 
