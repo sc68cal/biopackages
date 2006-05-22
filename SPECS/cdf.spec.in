@@ -1,0 +1,40 @@
+#$Id: cdf.spec.in,v 1.1 2006/05/22 21:02:35 allenday Exp $
+Summary: CDFs (chip defininition files) for all Affymetrix platforms.
+Name: cdf
+Version: 1.1
+Epoch: 0
+Release: %{revision}.%{distro} 
+Source0: %{name}.tar.gz
+License: Custom
+Group: Bioinformatics/Data
+Packager: Allen Day <allenday@ucla.edu>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+BuildRequires: biopackages
+
+%description
+CDFs (chip defininition files) for all Affymetrix platforms.
+
+%prep
+%setup -qn %{name}
+
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name};
+install -m 444 *.CDF $RPM_BUILD_ROOT%{_datadir}/%{name}/;
+find $RPM_BUILD_ROOT/%{_datadir}/%{name} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release};
+
+%files -f %{name}-%{version}-%{release}
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+%preun 
+
+$Log: cdf.spec.in,v $
+Revision 1.1  2006/05/22 21:02:35  allenday
+import
+
