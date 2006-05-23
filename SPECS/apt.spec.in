@@ -1,0 +1,74 @@
+#$Id: apt.spec.in,v 1.1 2006/05/23 20:18:16 boconnor Exp $
+Name: APT
+Epoch: 1
+Version: 1.4.0
+Release: %{revision}.%{distro}
+Summary: Affymetrix Power Tools
+License: gnu-lgpl
+Group: System Environment/Libraries
+URL: http://www.affymetrix.com/support/developer/powertools/index.affx
+Source0: apt-1.4.0-20060426-src.zip
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc-c++, make, biopackages, unzip
+
+%description
+The Affymetrix Power Tools (APT) contains C++ source code for analyzing Affymetrix data and a set of command line tools built on this source code. The command line programs include:
+* apt-probeset-summarize: An application for analyzing expression arrays including exon arrays. The application supports PLIER, RMA, DABG, and IterPLIER among other probe summarization algorithms. The program also allows for on the fly normalization using sketch (quantile-like) normalization.
+* apt-probeset-genotype: An application for making genotype calls off mapping arrays. The application supports the BRLMM genotype calling algorithm.
+
+The APT has its origins in the various stand-alone Affymetrix C++ SDKs (ie C++ File Parser SDK) and the original ExACT SDK.
+
+For more information about the analysis of exon arrays, see the Exon Array Data Analysis Page. For ExACT (pgf/clf files for exon arrays) and GCOS (cdf file for 3'IVT expression arrays) library files and annotations see the support page for the specific array of interest. Meta probeset files are also available on the array support side for doing gene level signal summarization off exon arrays.
+
+Parts of the APT package are used by the ExACT and BRLMM Analysis Tool applications.
+
+%prep
+%setup -n apt-1.4.0-20060426-src
+
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}
+#mkdir -p $RPM_BUILD_ROOT/%{_includedir}
+#mkdir -p $RPM_BUILD_ROOT/%{perl_sitelib}
+
+%build
+cd ./sdk
+# not used, hardcoded in makefile
+#export sdk_output_bin=$RPM_BUILD_ROOT/%{_bindir}
+#export sdk_output=$RPM_BUILD_ROOT
+#export sdk_install_prefix=$RPM_BUILD_ROOT
+./configure --without-cppunit
+make
+
+%install
+cd ./sdk
+#export sdk_install_prefix=$RPM_BUILD_ROOT
+#make install
+cp ./output/i386-intel-linux/bin/* $RPM_BUILD_ROOT/%{_bindir}
+cp ./output/i386-intel-linux/lib/*.a $RPM_BUILD_ROOT/%{_libdir}
+# .a is archive
+# .o is intermediate file
+# really need to install .so, ask Allen how to do this
+# also, need to make devel package that installs .h
+##install -m 444 ./sdk/output/*linux/lib/*.a $RPM_BUILD_ROOT/%{_libdir}/
+##install -m 444 *.h $RPM_BUILD_ROOT/%{_includedir}/
+#install -m 555 cel-convert $RPM_BUILD_ROOT/%{_bindir}/
+#install -m 555 celsniff $RPM_BUILD_ROOT/%{_bindir}/
+find $RPM_BUILD_ROOT -type f -o -type l | grep -v debug | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f sdk/%{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+#%doc *.html
+#*.gif *.css
+#%{_bindir}/cel-convert
+#%{_bindir}/celsniff
+#%{_includedir}/*
+#%{_libdir}/*.so
+#%{_bindir}/*
+
+#$Log: apt.spec.in,v $
+#Revision 1.1  2006/05/23 20:18:16  boconnor
+#Added spec for apt.
+#
