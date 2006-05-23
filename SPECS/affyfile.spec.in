@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.6 2006/01/13 02:30:11 allenday Exp $
+#$Id: affyfile.spec.in,v 1.7 2006/05/23 23:19:47 boconnor Exp $
 Name: affyfile
 Epoch: 1
 Version: 2
@@ -13,6 +13,7 @@ Source2: FileParsersSource.zip
 Source3: affyfile-Makefile
 Source4: cel-convert.cpp
 Source5: celsniff.cpp
+Source6: cel2pqi.cpp
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gcc-c++, make, biopackages, unzip
 
@@ -32,6 +33,7 @@ cp %{SOURCE2} .
 cp %{SOURCE3} ./Makefile
 cp %{SOURCE4} .
 cp %{SOURCE5} .
+cp %{SOURCE6} .
 for i in *.zip; do unzip -o $i; done
 
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
@@ -46,6 +48,7 @@ install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
 install -m 444 *.h $RPM_BUILD_ROOT/%{_includedir}/
 install -m 555 cel-convert $RPM_BUILD_ROOT/%{_bindir}/
 install -m 555 celsniff $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 cel2pqi $RPM_BUILD_ROOT/%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,10 +58,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.html *.gif *.css
 %{_bindir}/cel-convert
 %{_bindir}/celsniff
+%{_bindir}/cel2pqi
 %{_includedir}/*
 %{_libdir}/*.so
 
 $Log: affyfile.spec.in,v $
+Revision 1.7  2006/05/23 23:19:47  boconnor
+Updated affyfile spec
+
 Revision 1.6  2006/01/13 02:30:11  allenday
 import!
 
