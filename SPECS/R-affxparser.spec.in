@@ -1,0 +1,42 @@
+#$Id: R-affxparser.spec.in,v 1.1 2006/05/23 19:04:02 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.4.1
+Release: %{revision}.%{distro}
+Name: R-affxparser
+Summary: Affymetrix File Parsing SDK
+Group: Applications/Engineering
+License: GPL
+Source0: affxparser_%{version}.tar.gz
+Requires: R >= 2.0.0, R-R.utils
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, R-R.utils, biopackages
+
+%description
+ Package for parsing Affymetrix files (CDF, CEL, CHP, BPMAP, BAR). It provides methods for fast and memory efficient parsing of Affymetrix files using the Affymetrix' Fusion SDK. Both ASCII- and binary-based files are supported. Currently, there are methods for reading chip definition file (CDF) and a cell intensity file (CEL). These files can be read either in full or in part. For example, probe signals from a few probesets can be extracted very quickly from a set of CEL files into a convenient list structure.
+
+%prep
+%setup -n affxparser
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-affxparser.spec.in,v $
+Revision 1.1  2006/05/23 19:04:02  allenday
+imports for afy fusion skd
+

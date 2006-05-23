@@ -1,4 +1,4 @@
-#$Id: perl-Test-NoWarnings.spec.in,v 1.1 2006/05/03 07:57:23 allenday Exp $
+#$Id: perl-Test-NoWarnings.spec.in,v 1.2 2006/05/23 19:04:02 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Test-NoWarnings/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Test-Tester
+Requires: perl-Test-Tester
 
 Source0: Test-NoWarnings-0.082.tar.gz
 
@@ -199,6 +200,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-NoWarnings.spec.in,v $
+Revision 1.2  2006/05/23 19:04:02  allenday
+imports for afy fusion skd
+
 Revision 1.1  2006/05/03 07:57:23  allenday
 import
 

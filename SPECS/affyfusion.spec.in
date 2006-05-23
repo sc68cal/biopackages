@@ -1,0 +1,59 @@
+#$Id: affyfusion.spec.in,v 1.1 2006/05/23 19:04:02 allenday Exp $
+Name: affyfusion
+Epoch: 1
+Version: 2
+Release: %{revision}.%{distro}
+Summary: Headers, libraries, and utilities for working with Affymetrix files.
+License: BSD
+Group: System Environment/Libraries
+Source0: affyfusion.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: gcc-c++, make, biopackages
+
+%description
+The File Parsers SDK is a toolkit for providing parsing capabilities with the
+Affymetrix CEL, CHP, CDF, BAR and BPMAP files. These files store results for
+expression, genotyping and tiling array analysis and information about the
+layout of an array. The C++ code in this SDK are written without MS Windows
+dependencies so as to be compatible with a variety of machines and operating
+systems. 
+
+%prep
+%setup -qn %{name}
+#mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/%{_libdir}
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}/%{name}/{file,data,exception,array,parameter,fusion,portability,parsers,template,utils,writers,gcast}
+
+%build
+make
+
+%install
+install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
+install -m 444 file/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/file/
+install -m 444 calvin_files/data/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/data/
+install -m 444 calvin_files/exception/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/exception/
+install -m 444 calvin_files/array/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/array/
+install -m 444 calvin_files/parameter/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/parameter/
+install -m 444 calvin_files/fusion/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/fusion/
+install -m 444 calvin_files/fusion/src/CalvinAdapter/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/fusion/
+install -m 444 calvin_files/fusion/src/GCOSAdapter/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/fusion/
+install -m 444 calvin_files/portability/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/portability/
+install -m 444 calvin_files/parsers/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/parsers/
+install -m 444 calvin_files/template/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/template/
+install -m 444 calvin_files/utils/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/utils/
+install -m 444 calvin_files/writers/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/writers/
+install -m 444 gcast/src/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/gcast/
+install -m 444 portability/*.h $RPM_BUILD_ROOT/%{_includedir}/%{name}/portability/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_includedir}/%{name}/*/*.h
+%{_libdir}/*.so
+
+$Log: affyfusion.spec.in,v $
+Revision 1.1  2006/05/23 19:04:02  allenday
+imports for afy fusion skd
+
