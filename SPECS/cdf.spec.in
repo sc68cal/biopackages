@@ -1,4 +1,4 @@
-#$Id: cdf.spec.in,v 1.2 2006/05/22 21:07:10 allenday Exp $
+#$Id: cdf.spec.in,v 1.3 2006/05/23 19:04:44 allenday Exp $
 Summary: CDFs (chip defininition files) for all Affymetrix platforms.
 Name: cdf
 Version: 1.1
@@ -11,7 +11,7 @@ Packager: Allen Day <allenday@ucla.edu>
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: biopackages
-
+ 
 %description
 CDFs (chip defininition files) for all Affymetrix platforms.
 
@@ -35,6 +35,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/%{name} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >
 %preun 
 
 $Log: cdf.spec.in,v $
+Revision 1.3  2006/05/23 19:04:44  allenday
+add more cdf
+
 Revision 1.2  2006/05/22 21:07:10  allenday
 lowercase filenames
 
