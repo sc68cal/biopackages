@@ -1,4 +1,4 @@
-#$Id: perl-Log-Dispatch.spec.in,v 1.1 2006/06/02 19:49:11 allenday Exp $
+#$Id: perl-Log-Dispatch.spec.in,v 1.2 2006/06/02 19:50:00 allenday Exp $
 Summary: Log-Dispatch Perl module
 Name: perl-Log-Dispatch
 Version: 2.11
@@ -28,6 +28,7 @@ mkdir -p $RPM_BUILD_ROOT$installarchlib
 
 ./Build install
 
+find $RPM_BUILD_ROOT -type f -name 'ApacheLog.pm' | xargs rm;
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
 | grep -v ApacheLog \
@@ -48,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Log-Dispatch.spec.in,v $
+Revision 1.2  2006/06/02 19:50:00  allenday
+import.  drop Apache::Log req
+
 Revision 1.1  2006/06/02 19:49:11  allenday
 import.  drop Apache::Log req
 
