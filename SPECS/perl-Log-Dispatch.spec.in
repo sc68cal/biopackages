@@ -1,0 +1,53 @@
+#$Id: perl-Log-Dispatch.spec.in,v 1.1 2006/06/02 19:49:11 allenday Exp $
+Summary: Log-Dispatch Perl module
+Name: perl-Log-Dispatch
+Version: 2.11
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Bio-Das/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-Module-Build
+Requires: perl-Params-Validate, perl-Mail-Sendmail, perl-Mail-Sender
+Source0: Log-Dispatch-2.11.tar.gz
+
+%description
+%{summary}.
+
+%prep
+%setup -q -n Log-Dispatch-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Build.PL destdir=$RPM_BUILD_ROOT  < /dev/null
+./Build OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+
+./Build install
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+| grep -v ApacheLog \
+> %{name}-%{version}-%{release}-filelist
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+#HACK ALERT! replace .3pm with .3pm.gz 
+perl -p -i -e 's/.3pm/.3pm.gz/' %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Log-Dispatch.spec.in,v $
+Revision 1.1  2006/06/02 19:49:11  allenday
+import.  drop Apache::Log req
+
