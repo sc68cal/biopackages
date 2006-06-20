@@ -1,4 +1,4 @@
-#$Id: perl-Apache-ParseFormData.spec.in,v 1.1 2006/01/27 08:50:15 allenday Exp $
+#$Id: perl-Apache-ParseFormData.spec.in,v 1.2 2006/06/20 17:36:25 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl extension for dealing with client request data
@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 BuildRequires: perl, biopackages
 
+Patch0: Apache-ParseFormData-%{version}.mp2.patch
 Source0: Apache-ParseFormData-%{version}.tar.gz
 
 %description
@@ -55,6 +56,7 @@ it under the same terms as Perl itself.
 
 %prep
 %setup -q -n Apache-ParseFormData-%{version}
+%patch0 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -99,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache-ParseFormData.spec.in,v $
+Revision 1.2  2006/06/20 17:36:25  allenday
+patch for mp2 2.0.0 rc3
+
 Revision 1.1  2006/01/27 08:50:15  allenday
 import
 
