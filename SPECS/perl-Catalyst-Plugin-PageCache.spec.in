@@ -1,0 +1,195 @@
+#$Id: perl-Catalyst-Plugin-PageCache.spec.in,v 1.1 2006/06/21 01:13:44 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Catalyst-Plugin-PageCache
+Version: 0.12
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Catalyst-Plugin-PageCache/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-Module-Build, perl-Catalyst
+Requires: perl-Catalyst
+Source0: Catalyst-Plugin-PageCache-%{version}.tar.gz
+
+%description
+NAME
+    Catalyst::Plugin::PageCache - Cache the output of entire pages
+
+SYNOPSIS
+        use Catalyst;
+        MyApp->setup( qw/Cache::FileCache PageCache/ );
+    
+        MyApp->config->{page_cache} = {
+            expires => 300,
+            set_http_headers => 1,
+            auto_cache => [
+                '/view/.*',
+                '/list',
+            ],
+            debug => 1,
+        };
+
+        # in a controller method
+        $c->cache_page( '3600' );
+    
+        $c->clear_cached_page( '/list' );
+
+DESCRIPTION
+    Many dynamic websites perform heavy processing on most pages, yet this
+    information may rarely change from request to request. Using the
+    PageCache plugin, you can cache the full output of different pages so
+    they are served to your visitors as fast as possible. This method of
+    caching is very useful for withstanding a Slashdotting, for example.
+
+    This plugin requires that you also load a Cache plugin. Please see the
+    Known Issues when choosing a cache backend.
+
+WARNINGS
+    PageCache should be placed at the end of your plugin list.
+
+    You should only use the page cache on pages which have NO user-specific
+    or customized content. Also, be careful if caching a page which may
+    forward to another controller. For example, if you cache a page behind a
+    login screen, the logged-in version may be cached and served to
+    unauthenticated users.
+
+    Note that pages that result from POST requests will never be cached.
+
+PERFORMANCE
+    On my Athlon XP 1800+ Linux server, a cached page is served in 0.008
+    seconds when using the HTTP::Daemon server and any of the Cache plugins.
+
+CONFIGURATION
+    Configuration is optional. You may define the following configuration
+    values:
+
+        expires => $seconds
+    
+    This will set the default expiration time for all page caches. If you do
+    not specify this, expiration defaults to 300 seconds (5 minutes).
+
+        set_http_headers => 1
+    
+    Enabling this value will cause Catalyst to set the correct HTTP headers
+    to allow browsers and proxy servers to cache your page. This will
+    further reduce the load on your server. The headers are set in such a
+    way that the browser/proxy cache will expire at the same time as your
+    cache. The Last-Modified header will be preserved if you have already
+    specified it.
+
+        auto_cache => [
+            $uri,
+        ]
+    
+    To automatically cache certain pages, or all pages, you can specify
+    auto-cache URIs as an array reference. Any controller within your
+    application that matches one of the auto_cache URIs will be cached using
+    the default expiration time. URIs may be specified as absolute: '/list'
+    or as a regex: '/view/.*'
+
+        debug => 1
+    
+    This will print additional debugging information to the Catalyst log.
+    You will need to have -Debug enabled to see these messages.
+
+METHODS
+  cache_page
+    Call cache_page in any controller method you wish to be cached.
+
+        $c->cache_page( $expire );
+
+    The page will be cached for $expire seconds. Every user who visits the
+    URI(s) referenced by that controller will receive the page directly from
+    cache. Your controller will not be processed again until the cache
+    expires. You can set this value to as low as 60 seconds if you have
+    heavy traffic to greatly improve site performance.
+
+  clear_cached_page
+    To clear the cached value for a URI, you may call clear_cached_page.
+
+        $c->clear_cached_page( '/view/userlist' );
+        $c->clear_cached_page( '/view/.*' );
+    
+    This method takes an absolute path or regular expression. For obvious
+    reasons, this must be called from a different controller than the cached
+    controller. You may for example wish to build an admin page that lets
+    you clear page caches.
+
+KNOWN ISSUES
+    It is not currently possible to cache pages served from the Static
+    plugin. If you're concerned enough about performance to use this plugin,
+    you should be serving static files directly from your web server anyway.
+
+    Cache::FastMmap does not have the ability to specify different
+    expiration times for cached data. Therefore, if your
+    MyApp->config->{cache}->{expires} value is set to anything other than 0,
+    you may experience problems with the clear_cached_page method, because
+    the cache index may be removed. For best results, you may wish to use
+    Cache::FileCache or Cache::Memcached as your cache backend.
+
+SEE ALSO
+    Catalyst, Catalyst::Plugin::Cache::FastMmap,
+    Catalyst::Plugin::Cache::FileCache, Catalyst::Plugin::Cache::Memcached
+
+AUTHOR
+    Andy Grundman, "andy@hybridized.org"
+
+COPYRIGHT
+    This program is free software, you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+%prep
+%setup -q -n Catalyst-Plugin-PageCache-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%changelog
+* Wed May  3 2006 allenday@jugular.ctrl.ucla.edu - 0.05-%{revision}
+- Specfile autogenerated.
