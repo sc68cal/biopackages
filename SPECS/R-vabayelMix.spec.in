@@ -1,0 +1,45 @@
+#$Id: R-vabayelMix.spec.in,v 1.1 2006/06/22 19:16:56 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.3
+Release: %{revision}.%{distro}
+Name: R-vabayelMix
+Summary: Variational Bayesian Mixture Modelling
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: vabayelMix_%{version}.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc, biopackages
+
+%description
+Performs inference of a gaussian mixture model within a bayesian framework using an optimal separable approximation to the posterior density. The optimal posterior approximation is obtained using a variational approach.
+
+%prep
+%setup -n vabayelMix
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library vabayelMix_%{version}.tar.gz
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-vabayelMix.spec.in,v $
+Revision 1.1  2006/06/22 19:16:56  allenday
+import
+
