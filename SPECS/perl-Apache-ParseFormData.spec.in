@@ -1,4 +1,5 @@
-#$Id: perl-Apache-ParseFormData.spec.in,v 1.2 2006/06/20 17:36:25 allenday Exp $
+#$Id: perl-Apache-ParseFormData.spec.in,v 1.3 2006/06/27 18:51:17 boconnor Exp $
+Epoch: 2
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl extension for dealing with client request data
@@ -101,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache-ParseFormData.spec.in,v $
+Revision 1.3  2006/06/27 18:51:17  boconnor
+1.0 release of Turnkey
+
 Revision 1.2  2006/06/20 17:36:25  allenday
 patch for mp2 2.0.0 rc3
 

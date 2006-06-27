@@ -1,10 +1,10 @@
-#$Id: turnkey.spec.in,v 1.6 2006/03/22 00:55:22 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.7 2006/06/27 18:51:17 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
-Version: 0.2
+Version: 1
 Epoch: 2
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
@@ -14,7 +14,9 @@ URL: http://turnkey.sf.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 BuildRequires: perl, biopackages
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
+Requires: httpd, mod_perl >= 2.0.1
+Requires: perl-Apache-ParseFormData, perl-Apache-Session
+Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
@@ -72,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.7  2006/06/27 18:51:17  boconnor
+1.0 release of Turnkey
+
 Revision 1.6  2006/03/22 00:55:22  boconnor
 Tried upping the epoc on turnkey
 
