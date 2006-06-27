@@ -1,11 +1,11 @@
-#$Id: gmod-web.spec.in,v 1.7 2006/06/27 18:51:17 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.8 2006/06/27 21:22:19 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
-Version: 0.2
+Version: 1
 Epoch: 1
 Release: %{revision}.%{distro}
 Source0: Turnkey-%{version}.tar.gz
@@ -18,7 +18,7 @@ BuildArch: noarch
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
 Requires: httpd, mod_perl >= 2.0.1
-Requires: gbrowse, textpresso, chado
+Requires: gbrowse, textpresso, chado, AmiGO
 BuildRequires: perl, biopackages, turnkey, chado
 Provides: perl(TurnkeyGmodWeb::Atom::AutoAtom), perl(TurnkeyGmodWeb::Model::AutoDBI)
 
@@ -31,7 +31,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Sce, gbrowse, textpresso
+Requires: chado-Sce, gbrowse, textpresso, AmiGO
 BuildRequires: turnkey, perl, biopackages, chado
 Provides: perl(TurnkeySceS228C::Atom::AutoAtom), perl(TurnkeySceS228C::Model::AutoDBI)
 
@@ -44,7 +44,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, 
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Hsa, gbrowse, textpresso
+Requires: chado-Hsa, gbrowse, textpresso, AmiGO
 BuildRequires: turnkey, perl, biopackages, chado
 Provides: perl(TurnkeyHsa17::Atom::AutoAtom), perl(TurnkeyHsa17::Model::AutoDBI)
 
@@ -58,7 +58,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Hsa, gbrowse, textpresso
+Requires: chado-Hsa, gbrowse, textpresso, AmiGO
 #Requires: gmod-web-Hsa-normal-tissue-probeset-barcharts
 BuildRequires: turnkey, perl, biopackages, chado
 Provides: perl(TurnkeyHsa17NormalTissue::Atom::AutoAtom), perl(TurnkeyHsa17NormalTissue::Model::AutoDBI)
@@ -144,6 +144,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.8  2006/06/27 21:22:19  boconnor
+Updates to gmod-web spec file for turnkey 1.0 release
+
 Revision 1.7  2006/06/27 18:51:17  boconnor
 1.0 release of Turnkey
 
