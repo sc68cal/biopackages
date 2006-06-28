@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.8 2006/06/27 21:22:19 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.9 2006/06/28 06:36:18 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -18,7 +18,7 @@ BuildArch: noarch
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
 Requires: httpd, mod_perl >= 2.0.1
-Requires: gbrowse, textpresso, chado, AmiGO
+Requires: gbrowse, textpresso, AmiGO, chado
 BuildRequires: perl, biopackages, turnkey, chado
 Provides: perl(TurnkeyGmodWeb::Atom::AutoAtom), perl(TurnkeyGmodWeb::Model::AutoDBI)
 
@@ -144,6 +144,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.9  2006/06/28 06:36:18  boconnor
+Updated spec files
+
 Revision 1.8  2006/06/27 21:22:19  boconnor
 Updates to gmod-web spec file for turnkey 1.0 release
 

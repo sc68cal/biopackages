@@ -1,16 +1,17 @@
-#$Id: perl-Apache-Session.spec.in,v 1.1 2006/06/27 21:45:39 boconnor Exp $
+#$Id: perl-Apache-Session.spec.in,v 1.2 2006/06/28 06:36:18 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Apache-Session
 Version: 1.6
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Apache-Session/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 
 Source0: Apache-Session-1.6.tar.gz
 
@@ -173,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache-Session.spec.in,v $
+Revision 1.2  2006/06/28 06:36:18  boconnor
+Updated spec files
+
 Revision 1.1  2006/06/27 21:45:39  boconnor
 Import into biopackages, a requirement for Turnkey
 
