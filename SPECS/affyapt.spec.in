@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.8 2006/06/30 05:08:18 allenday Exp $
+#$Id: affyapt.spec.in,v 1.9 2006/06/30 07:13:48 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -27,6 +27,7 @@ Parts of the APT package are used by the ExACT and BRLMM Analysis Tool applicati
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}
 mkdir -p $RPM_BUILD_ROOT%{_includedir}
 mkdir -p $RPM_BUILD_ROOT%{perl_sitelib}
 
@@ -40,8 +41,10 @@ make
 export sdk_install_prefix=$RPM_BUILD_ROOT%{_prefix}
 cd ./sdk
 make install
+mv $RPM_BUILD_ROOT/doc/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/
+rm $RPM_BUILD_ROOT/*.a
 #better to patch Makefile to produce .so files, but for now whatever...
-install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}/
+install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}
 install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
 #need to make devel package that installs .h
 #install -m 444 *.h $RPM_BUILD_ROOT%{_includedir}/
@@ -50,7 +53,7 @@ install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%doc sdk/dox/html
+#%doc sdk/dox/html
 %defattr(-,root,root)
 %{_bindir}/*
 %{_libdir}/*.a
@@ -58,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_includedir}/*
 
 $Log: affyapt.spec.in,v $
+Revision 1.9  2006/06/30 07:13:48  allenday
+...
+
 Revision 1.8  2006/06/30 05:08:18  allenday
 docs
 
