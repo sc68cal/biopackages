@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.7 2006/06/30 05:06:26 allenday Exp $
+#$Id: affyapt.spec.in,v 1.8 2006/06/30 05:08:18 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -50,6 +50,7 @@ install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%doc sdk/dox/html
 %defattr(-,root,root)
 %{_bindir}/*
 %{_libdir}/*.a
@@ -57,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_includedir}/*
 
 $Log: affyapt.spec.in,v $
+Revision 1.8  2006/06/30 05:08:18  allenday
+docs
+
 Revision 1.7  2006/06/30 05:06:26  allenday
 jmfc
 
