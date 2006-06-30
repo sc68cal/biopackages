@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.9 2006/06/30 07:13:48 allenday Exp $
+#$Id: affyapt.spec.in,v 1.10 2006/06/30 07:21:27 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -41,7 +41,7 @@ make
 export sdk_install_prefix=$RPM_BUILD_ROOT%{_prefix}
 cd ./sdk
 make install
-mv $RPM_BUILD_ROOT/doc/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/
+mv $RPM_BUILD_ROOT%{_prefix}/doc/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/
 rm $RPM_BUILD_ROOT/*.a
 #better to patch Makefile to produce .so files, but for now whatever...
 install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_includedir}/*
 
 $Log: affyapt.spec.in,v $
+Revision 1.10  2006/06/30 07:21:27  allenday
+...
+
 Revision 1.9  2006/06/30 07:13:48  allenday
 ...
 
