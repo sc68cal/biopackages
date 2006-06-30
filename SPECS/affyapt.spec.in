@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.11 2006/06/30 07:29:15 allenday Exp $
+#$Id: affyapt.spec.in,v 1.12 2006/06/30 07:37:21 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -42,7 +42,7 @@ export sdk_install_prefix=$RPM_BUILD_ROOT%{_prefix}
 cd ./sdk
 make install
 mv $RPM_BUILD_ROOT%{_prefix}/doc/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/
-rm $RPM_BUILD_ROOT%{_prefix}/*.a
+rm -f $RPM_BUILD_ROOT%{_prefix}/*.a
 #better to patch Makefile to produce .so files, but for now whatever...
 install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}
 install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
@@ -55,12 +55,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 #%doc sdk/dox/html
 %defattr(-,root,root)
+%{_datadir}/doc/*/*/*
 %{_bindir}/*
 %{_libdir}/*.a
 #need to make devel package that installs .h
 #%{_includedir}/*
 
 $Log: affyapt.spec.in,v $
+Revision 1.12  2006/06/30 07:37:21  allenday
+...
+
 Revision 1.11  2006/06/30 07:29:15  allenday
 ...
 
