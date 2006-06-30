@@ -1,0 +1,79 @@
+#$Id: netcdf.spec.in,v 1.1 2006/06/30 17:17:46 allenday Exp $
+Vendor: biopackages.net
+Packager: Allen Day <allenday@ucla.edu>
+Version: 3.5.1
+Release: %{revision}.%{distro}
+Name: netcdf
+Summary: network Common Data Form
+URL: http://www.unidata.ucar.edu/packages/netcdf/
+Group: Applications/Scientific
+
+Source0: ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
+Patch0: netcdf.macros.make.in.patch
+License: See included COPYRIGHT file
+BuildRoot: %{_tmppath}/%{name}-root
+Provides: %{name}
+Requires: glibc
+BuildRequires: glibc-devel, gcc-g77, gcc, make, automake
+
+%description
+NetCDF (network Common Data Form) is an interface for array-oriented data 
+access and a library that provides an implementation of the interface. The 
+netCDF library also defines a machine-independent format for representing 
+scientific data. Together, the interface, library, and format support the 
+creation, access, and sharing of scientific data. The netCDF software was 
+developed at the Unidata Program Center in Boulder, Colorado. The freely 
+available source can be obtained as a compressed tar file or a zip file 
+from Unidata or from other mirror sites.
+Please note that the Fortran90 interface is missing from this build, as I
+don't have access to a F90 compiler.
+
+%prep
+%setup -q
+cd src
+%patch
+
+%build
+cd src
+CPPFLAGS='-DNDEBUG -Df2cFortran -fPIC' FFLAGS=-Wno-globals CXX=c++ FC=g77 ./configure --quiet --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir}
+make all
+
+%install
+rm -rf $RPM_BUILD_ROOT
+cd src
+./configure --quiet --prefix=$RPM_BUILD_ROOT/%{_prefix} --mandir=$RPM_BUILD_ROOT/%{_mandir} --libdir=$RPM_BUILD_ROOT/%{_libdir}
+install -m755 -d $RPM_BUILD_ROOT/%{_datadir}
+install -m755 -d $RPM_BUILD_ROOT/%{_libdir}
+
+%makeinstall 
+
+
+%files
+%defattr(-, root, root)
+%{_bindir}/ncdump
+%{_bindir}/ncgen
+%{_mandir}/man1/*
+%doc src/COMPATIBILITY src/COPYRIGHT src/INSTALL.html src/MANIFEST src/README src/RELEASE_NOTES src/VERSION
+
+%package devel
+Summary: Development tools for programs which will use the %{name} library.
+Group: Development
+Provides: %{name}-devel
+Requires: %{name} = %{version}
+%description devel
+The %{name}-devel package includes the header files and static libraries
+necessary for developing programs which will use the %{name} library.
+%files devel
+%defattr(-, root, root)
+%{_libdir}/*.a
+%{_includedir}/*
+%{_mandir}/man3/*
+
+%clean
+
+rm -rf $RPM_BUILD_ROOT
+
+$Log: netcdf.spec.in,v $
+Revision 1.1  2006/06/30 17:17:46  allenday
+import
+
