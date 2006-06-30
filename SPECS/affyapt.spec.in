@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.4 2006/06/30 02:27:30 allenday Exp $
+#$Id: affyapt.spec.in,v 1.5 2006/06/30 04:35:55 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -40,28 +40,25 @@ make
 export sdk_install_prefix=$RPM_BUILD_ROOT%{_prefix}
 cd ./sdk
 make install
-# .a is archive
-# .o is intermediate file
-# really need to install .so, ask Allen how to do this
+#better to patch Makefile to produce .so files, but for now whatever...
+install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}/
+install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
 # also, need to make devel package that installs .h
-install -m 444 ./sdk/output/*linux/lib/*.a $RPM_BUILD_ROOT%{_libdir}/
 install -m 444 *.h $RPM_BUILD_ROOT%{_includedir}/
-install -m 555 ./sdk/output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
-#install -m 555 cel-convert $RPM_BUILD_ROOT/%{_bindir}/
-#install -m 555 celsniff $RPM_BUILD_ROOT/%{_bindir}/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc *.html *.gif *.css
-#%{_bindir}/cel-convert
-#%{_bindir}/celsniff
+%{_bindir}/*
 %{_includedir}/*
-%{_libdir}/*.so
+%{_libdir}/*.a
 
 $Log: affyapt.spec.in,v $
+Revision 1.5  2006/06/30 04:35:55  allenday
+remove .h files, make a devel package later
+
 Revision 1.4  2006/06/30 02:27:30  allenday
 config options
 
