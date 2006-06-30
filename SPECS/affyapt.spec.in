@@ -1,4 +1,4 @@
-#$Id: affyapt.spec.in,v 1.6 2006/06/30 04:59:07 allenday Exp $
+#$Id: affyapt.spec.in,v 1.7 2006/06/30 05:06:26 allenday Exp $
 Name: affyapt
 Epoch: 1
 Version: 1.4.0
@@ -43,7 +43,7 @@ make install
 #better to patch Makefile to produce .so files, but for now whatever...
 install -m 444 output/*/lib/*.a $RPM_BUILD_ROOT%{_libdir}/
 install -m 555 output/*/bin/* $RPM_BUILD_ROOT%{_bindir}
-# also, need to make devel package that installs .h
+#need to make devel package that installs .h
 #install -m 444 *.h $RPM_BUILD_ROOT%{_includedir}/
 
 %clean
@@ -52,10 +52,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_bindir}/*
-%{_includedir}/*
 %{_libdir}/*.a
+#need to make devel package that installs .h
+#%{_includedir}/*
 
 $Log: affyapt.spec.in,v $
+Revision 1.7  2006/06/30 05:06:26  allenday
+jmfc
+
 Revision 1.6  2006/06/30 04:59:07  allenday
 grr
 
