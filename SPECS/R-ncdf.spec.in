@@ -1,4 +1,4 @@
-#$Id: R-ncdf.spec.in,v 1.3 2006/06/30 17:15:19 allenday Exp $
+#$Id: R-ncdf.spec.in,v 1.4 2006/06/30 17:16:43 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,7 +12,8 @@ URL: http://www.r-project.org
 Source0: ncdf_%{version}.tar.gz
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, gcc, biopackages
+BuildRequires: R >= 2.0.0, gcc, biopackages, netcdf, netcdf-devel
+Requires: R >= 2.0.0, netcdf
 
 %description
 This package provides a high-level R interface to UnidataÕs netCDF data files, which are 
@@ -48,6 +49,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-ncdf.spec.in,v $
+Revision 1.4  2006/06/30 17:16:43  allenday
+deps
+
 Revision 1.3  2006/06/30 17:15:19  allenday
 import
 
