@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Cache-FileCache.spec.in,v 1.1 2006/06/21 01:38:28 allenday Exp $
+#$Id: perl-Catalyst-Plugin-Cache-FileCache.spec.in,v 1.2 2006/07/05 19:45:16 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -59,7 +59,7 @@ LICENSE
 %setup -q -n Catalyst-Plugin-Cache-FileCache-%{version}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=$RPM_BUILD_ROOT  < /dev/null
 make destdir=$RPM_BUILD_ROOT%{_prefix} OPTIMIZE="$RPM_OPT_FLAGS"
 make test
 
