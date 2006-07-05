@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Engine-Apache.spec.in,v 1.5 2006/07/05 19:43:42 allenday Exp $
+#$Id: perl-Catalyst-Engine-Apache.spec.in,v 1.6 2006/07/05 19:53:57 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Catalyst-Engine-Apache/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, mod_perl >= 2.0.1
-Requires: mod_perl >= 2.0.1
+BuildRequires: perl, biopackages, mod_perl >= 2.0.0
+Requires: mod_perl >= 2.0.0
 Patch0: Catalyst-Engine-Apache-1.07.mp2.patch
 Source0: Catalyst-Engine-Apache-1.07.tar.gz
 
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst-Engine-Apache.spec.in,v $
+Revision 1.6  2006/07/05 19:53:57  allenday
+version
+
 Revision 1.5  2006/07/05 19:43:42  allenday
 path
 
