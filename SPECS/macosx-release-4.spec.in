@@ -1,0 +1,50 @@
+#$Id: macosx-release-4.spec.in,v 1.1 2006/07/09 09:37:14 boconnor Exp $
+Summary: An RPM to provide fake packages already provided by Mac OS X.
+Name: MacOSX-Release
+Version: 4
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.tar.gz
+License: GPL
+Group: Development/Web
+Packager: Brian O'Connor <boconnor@ucla.edu>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+#Requires: 
+#BuildRequires: 
+
+%description
+One problem with the biopackages.net RPM approach is porting to MacOS X.
+Unlike the Linux distros Fedora and CentOS, the core system packages seem to be
+managed with a non-RPM-based system. This means all of the RPM requirements
+(build or install time) that are normally provided via the core distro repo are
+not available.  Yet many of the core software packages (such as perl and bash)
+are actually available.  This package attempts to do two things.  First, create
+a fake RPM that "provides" packages for software components already installed
+and configured in Mac OS X.  Second, this package will create symbolic links in
+the /usr/local directory back to either /sw (for Fink installed packages) or
+the Mac OS X native directories.  This will bridge already installed software
+with what is required by RPM-based packages.
+
+%prep
+%setup -qn %{name}-%{version}
+
+%build
+
+%install
+
+%post
+
+%postun
+
+%clean
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && rm -rf %{buildroot};
+
+%files
+%doc README
+
+$Log: macosx-release-4.spec.in,v $
+Revision 1.1  2006/07/09 09:37:14  boconnor
+I'm building RPMs for MacOS and I'm running into the problem that certain packages aren't being provided by biopackages but rather the OS repo. However in MacOSX the repo system is not based on RPMs so there's no way to resolve these dependencies. So I'm creating this fake packages to provide all the packages normally provided by the core OS and already installed in MacOS X.
+
+
