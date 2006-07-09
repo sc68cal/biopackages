@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.1 2006/07/09 09:37:14 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.2 2006/07/09 10:05:43 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: MacOSX-Release
 Version: 4
@@ -12,6 +12,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 #Requires: 
 #BuildRequires: 
+Provides: perl, mod_perl, glibc, httpd-devel, httpd
+Provides: bash, /bin/sh
 
 %description
 One problem with the biopackages.net RPM approach is porting to MacOS X.
@@ -44,6 +46,9 @@ with what is required by RPM-based packages.
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.2  2006/07/09 10:05:43  boconnor
+updates to the spec.in
+
 Revision 1.1  2006/07/09 09:37:14  boconnor
 I'm building RPMs for MacOS and I'm running into the problem that certain packages aren't being provided by biopackages but rather the OS repo. However in MacOSX the repo system is not based on RPMs so there's no way to resolve these dependencies. So I'm creating this fake packages to provide all the packages normally provided by the core OS and already installed in MacOS X.
 
