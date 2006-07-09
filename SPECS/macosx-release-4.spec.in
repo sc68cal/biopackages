@@ -1,9 +1,9 @@
-#$Id: macosx-release-4.spec.in,v 1.2 2006/07/09 10:05:43 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.3 2006/07/09 22:55:15 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: MacOSX-Release
 Version: 4
 Epoch: 0
-Release: %{revision}.%{distro}
+Release: %{revision}
 Source0: %{name}-%{version}.tar.gz
 License: GPL
 Group: Development/Web
@@ -46,6 +46,9 @@ with what is required by RPM-based packages.
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.3  2006/07/09 22:55:15  boconnor
+Doesn't need distro tag
+
 Revision 1.2  2006/07/09 10:05:43  boconnor
 updates to the spec.in
 
