@@ -1,0 +1,89 @@
+#$Id: libsndfile.spec.in,v 1.1 2006/07/10 05:50:49 allenday Exp $
+Summary:	A library for manipulating sound files	
+Name: 		libsndfile
+Version: 	1.0.10
+Release: 	%{revision}.%{distro}
+Copyright: 	GPL
+Group: 		Multimedia
+Source0: 	%{name}-%{version}.tar.gz
+#Patch0:		
+URL:		http://www.yoper.com
+Distribution:	Yoper
+#Icon: 		yoperlogo.xpm
+Vendor:		Yoper Limited
+Packager:	henry_zooker@gmx.net
+#Provides:
+#Requires:
+#AutoReqProv:	no
+BuildRoot: 	%{_tmppath}/%{name}-buildroot
+BuildRequires: bash, binutils, gcc, glibc, ncurses, make, tar, zlib, glibc, biopackages
+
+
+%define _unpackaged_files_terminate_build       1
+%define _missing_doc_files_terminate_build      1
+%define _smp_mflags -j8
+%define _target_platform i686-pc-linux-gnu
+
+
+
+%description
+This is Your Operating System rpm spec file for libsndfile
+
+
+
+%prep
+rm -rf $RPM_BUILD_DIR/%{name}*
+rm -rf %{buildroot}
+
+%setup -q
+
+#%patch
+
+CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+  CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+  FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+./configure --prefix=/usr --sysconfdir=/etc/ --disable-debug
+
+
+%build
+make
+
+
+%install
+make install DESTDIR="$RPM_BUILD_ROOT"
+
+export SHARES="doc man info"
+
+for i in $SHARES
+do
+        if [ -e %{buildroot}/usr/$i ]
+                then
+                        if [ ! -e  %{buildroot}/usr/share/ ]
+                then
+                        mkdir -p  %{buildroot}/usr/share/
+                        fi
+                mv %{buildroot}/usr/$i %{buildroot}/usr/share/
+        fi
+done
+
+
+find %{buildroot} -type f \
+   -exec /usr/bin/strip --strip-debug '{}' ';'
+
+
+
+
+
+%clean
+rm -rf $RPM_BUILD_DIR/%{name}*
+rm -rf %{buildroot}
+
+
+%files
+%defattr(-,root,root)
+/*
+
+$Log: libsndfile.spec.in,v $
+Revision 1.1  2006/07/10 05:50:49  allenday
+import
+
