@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.5 2006/07/10 06:55:08 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.6 2006/07/10 06:56:31 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704
@@ -39,7 +39,6 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat
   --enable-a52 \
   --enable-pthreads \
   --enable-pp \
-  --enable-shared-pp \
   --enable-amr_nb \
   --enable-amr_nb-fixed \
   --enable-amr_wb \
@@ -75,6 +74,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.6  2006/07/10 06:56:31  allenday
+version
+
 Revision 1.5  2006/07/10 06:55:08  allenday
 version
 
