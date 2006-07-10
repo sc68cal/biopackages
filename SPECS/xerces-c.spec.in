@@ -1,0 +1,55 @@
+#$Id: xerces-c.spec.in,v 1.1 2006/07/10 20:07:20 boconnor Exp $
+Summary: Xerces-C++ is a validating XML parser written in a portable subset of C++.
+Name: xerces-c
+Version: 2.5.0
+Release: %{revision}.%{distro}
+License: LGPL
+Group: System Environment/Libraries
+URL: http://xml.apache.org
+Source: xerces-c-src_2_5_0.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: gcc-c++, biopackages, autoconf
+
+%description
+Xerces-C++ is a validating XML parser written in a portable subset of C++.
+Xerces-C++ makes it easy to give your application the ability to read and
+write XML data. A shared library is provided for parsing, generating,
+manipulating, and validating XML documents.
+
+%prep
+%setup -qn %{name}-src_2_5_0
+export XERCESCROOT=`pwd`
+#perl -p -i -e 's/lib; ln/lib);# ln/' obj/Makefile.in
+
+%build
+export XERCESCROOT=`pwd`
+cd src/xercesc
+XERCESCROOT=`pwd`/../../ ./runConfigure -p linux -P $RPM_BUILD_ROOT%{_prefix} -z -D_GNU_SOURCE
+XERCESCROOT=`pwd`/../../ gmake
+XERCESCROOT=`pwd`/../../ gmake install
+
+%install
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%post
+/sbin/ldconfig
+%ifarch x86_64
+ln -s %{_prefix}/lib/libxerces* %{_prefix}/lib64/
+%endif
+
+%postun
+/sbin/ldconfig
+
+%files
+%defattr(-, root, root, 0755)
+%doc doc/ LICENSE* Readme*
+%{_includedir}/*
+%{_prefix}/lib/*
+#%{_libdir}/*
+
+$Log: xerces-c.spec.in,v $
+Revision 1.1  2006/07/10 20:07:20  boconnor
+Initial addition of spec.in files from the unstable biopackages repo
+

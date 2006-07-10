@@ -1,0 +1,78 @@
+#$Id: perl-PGPLOT.spec.in,v 1.1 2006/07/10 20:07:19 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: allow subroutines in the PGPLOT graphics library to be called from Perl
+Name: perl-PGPLOT
+Version: 2.18
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/PGPLOT/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, gcc, gcc-g77, pgplot, pgplot-devel, perl-ExtUtils-F77
+Requires: pgplot, pgplot-devel, perl-ExtUtils-F77
+Source0: PGPLOT-%{version}.tar.gz
+
+%description
+Originally developed in the olden days of Perl4 (when it was known as 'pgperl' due to the necessity of making a special perl executable) PGPLOT is now a dynamically loadable perl module which interfaces to the FORTRAN graphics library of the same name.
+
+PGPLOT, originally developed as a FORTRAN library, is now available with C bindings (which the Perl module uses), though a FORTRAN compiler is still required to build it.
+
+For every PGPLOT C/FORTRAN function the module provides an equivalent Perl function with the same arguments. Thus the user of the module should refer to the PGPLOT manual to learn all about how to use PGPLOT and for the complete list of available functions. This manual comes with the PGPLOT distribution and is also available at the WWW address:
+
+http://astro.caltech.edu/~tjp/pgplot/
+
+Also refer to the extensive set of test scripts (test*.p) included in the module distribution for examples of usage of all kinds of PGPLOT routines.
+
+How the FORTRAN/C function calls map on to Perl calls is detailed below.
+
+%prep
+%setup -q -n PGPLOT-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-PGPLOT.spec.in,v $
+Revision 1.1  2006/07/10 20:07:19  boconnor
+Initial addition of spec.in files from the unstable biopackages repo
+
