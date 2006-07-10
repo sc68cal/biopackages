@@ -1,0 +1,74 @@
+#$Id: perl-Inline.spec.in,v 1.1 2006/07/10 17:33:34 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Write Perl subroutines in other programming languages
+Name: perl-Inline
+Version: 0.44
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Inline
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+BuildRequires: gcc
+Source0: Inline-0.44.tar.gz
+
+%description
+The Inline module allows you to put source code from other programming languages directly "inline" in a Perl script or module. The code is automatically compiled as needed, and then loaded for immediate access from Perl.
+
+Inline saves you from the hassle of having to write and compile your own glue code using facilities like XS or SWIG. Simply type the code where you want it and run your Perl as normal. All the hairy details are handled for you. The compilation and installation of your code chunks all happen transparently; all you will notice is the delay of compilation on the first run.
+
+The Inline code only gets compiled the first time you run it (or whenever it is modified) so you only take the performance hit once. Code that is Inlined into distributed modules (like on the CPAN) will get compiled when the module is installed, so the end user will never notice the compilation time.
+
+Best of all, it works the same on both Unix and Microsoft Windows. See Inline-Support for support information.
+
+%prep
+%setup -q -n Inline-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Inline.spec.in,v $
+Revision 1.1  2006/07/10 17:33:34  boconnor
+Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
+

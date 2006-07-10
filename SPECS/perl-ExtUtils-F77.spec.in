@@ -1,0 +1,70 @@
+#$Id: perl-ExtUtils-F77.spec.in,v 1.1 2006/07/10 17:33:33 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Simple interface to F77 libs
+Name: perl-ExtUtils-F77
+Version: 1.14
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/enum/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+BuildRequires: gcc-g77
+Source0: ExtUtils-F77-1.14.tar.gz
+
+%description
+This module tries to figure out how to link C programs with Fortran subroutines on your system. Basically one must add a list of Fortran runtime libraries. The problem is their location and name varies with each OS/compiler combination!
+
+This module tries to implement a simple 'rule-of-thumb' database for various flavours of UNIX systems. A simple self-documenting Perl database of knowledge/code for figuring out how to link for various combinations of OS and compiler is embedded in the modules Perl code. Please help save the world by sending database entries for your system to kgb@aaoepp.aao.gov.au
+
+%prep
+%setup -q -n ExtUtils-F77-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-ExtUtils-F77.spec.in,v $
+Revision 1.1  2006/07/10 17:33:33  boconnor
+Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
+
