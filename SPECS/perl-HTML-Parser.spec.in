@@ -1,0 +1,60 @@
+#$Id: perl-HTML-Parser.spec.in,v 1.1 2006/07/10 22:25:40 boconnor Exp $
+%define _use_internal_dependency_generator 0
+
+%define name perl-HTML-Parser
+%define real_name HTML-Parser
+
+Summary: A Perl module for parsing HTML.
+Name: %{name}
+Version: 3.35
+Release: 5
+License: GPL or Artistic
+Group: System Environment/Libraries
+Source: ftp://ftp.cpan.org/pub/perl/CPAN/modules/by-module/HTML/%{real_name}-%{version}.tar.gz
+Url: http://search.cpan.org/search?query=HTML%3A%3AParser
+BuildRoot: %{_tmppath}/%{name}-buildroot/
+Requires: perl >= 5.6.0, perl-HTML-Tagset >= 3.03
+BuildRequires: perl >= 5.6.0, perl-HTML-Tagset >= 3.03
+
+%description
+The HTML-Parser module for perl to parse and extract information from
+HTML documents, including the HTML::Entities, HTML::HeadParser,
+HTML::LinkExtor, HTML::PullParser, and HTML::TokeParser modules.
+
+%prep
+%setup -q -n %{real_name}-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor < /dev/null
+make
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
+
+find $RPM_BUILD_ROOT/usr -type f -print | 
+        sed "s@^$RPM_BUILD_ROOT@@g" | 
+        grep -v perllocal.pod | 
+        grep -v "\.packlist" > perl-HTML-Parser-%{version}-filelist
+if [ "$(cat perl-HTML-Parser-%{version}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit -1
+fi
+
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+%files -f perl-HTML-Parser-%{version}-filelist
+%defattr(-,root,root)
+%dir %{_libdir}/perl5/vendor_perl/%(perl -MConfig -le 'print "$Config{version}/$Config{archname}"')/HTML
+%dir %{_libdir}/perl5/vendor_perl/%(perl -MConfig -le 'print "$Config{version}/$Config{archname}"')/auto/HTML
+
+$Log: perl-HTML-Parser.spec.in,v $
+Revision 1.1  2006/07/10 22:25:40  boconnor
+Initial import, these are normally provided by the host OS but for MacOSX they are missing.
+

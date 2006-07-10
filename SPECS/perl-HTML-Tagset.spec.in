@@ -1,0 +1,59 @@
+#$Id: perl-HTML-Tagset.spec.in,v 1.1 2006/07/10 22:25:40 boconnor Exp $
+%define _use_internal_dependency_generator 0
+
+Summary: HTML::Tagset - data tables useful in parsing HTML.
+Name: perl-HTML-Tagset
+Version: 3.03
+Release: 29
+License: distributable
+Group: Applications/CPAN
+Source0: HTML-Tagset-%{version}.tar.gz
+Url: http://www.cpan.org
+BuildRoot: /var/tmp/perl-HTML-Tagset-buildroot/
+BuildRequires: perl >= 0:5.00503
+Requires: perl >= 0:5.00503
+BuildArch: noarch
+
+%description
+This module contains several data tables useful in various kinds of
+HTML parsing operations, such as tag and entity names.
+
+# Provide perl-specific find-{provides,requires}.
+%define __find_provides /usr/lib/rpm/find-provides.perl
+%define __find_requires /usr/lib/rpm/find-requires.perl
+
+%prep
+%setup -q -n HTML-Tagset-%{version} 
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor
+make
+make test
+
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
+
+find $RPM_BUILD_ROOT/usr -type f -print | 
+	sed "s@^$RPM_BUILD_ROOT@@g" | 
+	grep -v perllocal.pod | 
+	grep -v "\.packlist" > HTML-Tagset-%{version}-filelist
+if [ "$(cat HTML-Tagset-%{version}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit -1
+fi
+
+%files -f HTML-Tagset-%{version}-filelist
+%defattr(-,root,root)
+
+$Log: perl-HTML-Tagset.spec.in,v $
+Revision 1.1  2006/07/10 22:25:40  boconnor
+Initial import, these are normally provided by the host OS but for MacOSX they are missing.
+
