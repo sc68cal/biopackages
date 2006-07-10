@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.6 2006/07/10 06:56:31 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.7 2006/07/10 07:08:56 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704
@@ -51,14 +51,11 @@ make install ;
 
 #these .h files are not installed by make, but are needed to compile with ffmpeg.c
 install -m 444 cmdutils.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
-install -m 444 libavcodec/bswap.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
-install -m 444 libavcodec/dsputil.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
-install -m 444 libavformat/os_support.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
-install -m 444 libavformat/framehook.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
-
+install -m 444 libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
+install -m 444 libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
+install -m 444 libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil/
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
-
 
 find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
 
@@ -74,6 +71,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.7  2006/07/10 07:08:56  allenday
+version
+
 Revision 1.6  2006/07/10 06:56:31  allenday
 version
 
