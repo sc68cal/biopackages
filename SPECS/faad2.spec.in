@@ -1,4 +1,4 @@
-#$Id: faad2.spec.in,v 1.3 2006/07/10 05:36:45 allenday Exp $
+#$Id: faad2.spec.in,v 1.4 2006/07/10 05:54:10 allenday Exp $
 %define xmmsinputdir %(xmms-config --input-plugin-dir 2>/dev/null || echo %{_libdir}/xmms/Input)
 #define prever       rc3
 %define date         20040923
@@ -19,7 +19,7 @@ Source: http://dl.sf.net/faac/%{name}-%{version}%{?prever:-%{prever}}.tar.gz
 Patch: faad2-2.0-Makefile-separator.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, automake, libtool, gcc-c++, zlib-devel
-BuildRequires: libsndfile-devel >= 1.0.0, libstdc++-devel
+BuildRequires: libsndfile >= 1.0.0, libstdc++-devel
 BuildRequires: xmms-devel, id3lib-devel, gtk+-devel
 BuildRequires: biopackages
 
@@ -115,6 +115,9 @@ This package contains development files and documentation for libfaad.
 %{_libdir}/*.so
 
 $Log: faad2.spec.in,v $
+Revision 1.4  2006/07/10 05:54:10  allenday
+dep
+
 Revision 1.3  2006/07/10 05:36:45  allenday
 drop version req
 
