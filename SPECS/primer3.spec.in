@@ -1,0 +1,87 @@
+#$Id: primer3.spec.in,v 1.1 2006/07/10 21:12:51 boconnor Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.0.0
+Release: %{revision}.%{distro}
+Name:     primer3
+Summary:  Primer3 picks primers for PCR reactions
+License:  Copyright Whitehead Institute for Biomedical Research
+URL:      http://fokker.wi.mit.edu/primer3/
+Source:   http://fokker.wi.mit.edu/primer3/primer3_%{version}.tar.gz
+BuildRequires: gcc
+BuildRoot: %{_tmppath}/%{name}-root
+
+%description
+Primer3 is a complete rewrite of the original PRIMER program
+(Primer 0.5), written by Steve Lincoln, Mark Daly, and Eric
+Lander.
+
+Primer3 picks primers for PCR reactions, considering as criteria:
+- oligonucleotide melting temperature, size, GC content,
+  and primer-dimer possibilities
+- PCR product size
+- positional constraints within the source sequence
+- miscellaneous other constraints
+All of these criteria are user-specifiable as constraints, and
+some are specifiable as terms in an objective function that
+characterizes an optimal primer pair.
+
+Reference for Primer3:
+
+We also request that use of this software be cited in publications as 
+
+   Rozen, S., Skaletsky, H.  "Primer3 on the WWW for general 
+   users and for biologist programmers."  In S. Krawetz and
+   S. Misener, eds. Bioinformatics Methods and Protocols in
+   the series Methods in Molecular Biology.  Humana Press, 
+   Totowa, NJ, 2000, pages 365-386. Code available at
+   http://fokker.wi.mit.edu/primer3/
+   
+%prep
+%setup -q -n primer3_%{version}
+perl -pi -e 's[/usr/local/bin][/usr/bin]g' test/dpal_gen.pl
+perl -pi -e 's[/usr/local/bin][/usr/bin]g' test/long_seq_tm_test.pl
+perl -pi -e 's[/usr/bin/perl5][%{__perl}]g' test/dpal_gen.pl
+perl -pi -e 's[/usr/bin/perl5][%{__perl}]g' test/long_seq_tm_test.pl
+perl -pi -e 's[/usr/bin/perl][%{__perl}]g' test/dpal_gen.pl
+perl -pi -e 's[/usr/bin/perl][%{__perl}]g' test/long_seq_tm_test.pl
+
+%build
+export CC=%{__cc}
+export CFLAGS="$RPM_OPT_FLAGS"
+export LDLIBS="-lm"
+cd src
+make primer3_core
+make ntdpal
+# cd ../test
+# perl -w primer_test.pl
+# perl -w dpal_test.pl
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+install -m 755 -d $RPM_BUILD_ROOT%{_bindir}
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
+install -m 755 src/primer3_core $RPM_BUILD_ROOT%{_bindir}
+install -m 755 src/ntdpal $RPM_BUILD_ROOT%{_bindir}
+cp -a test $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+# ----------------------------------------------------------------------------
+
+%files
+%defattr(-,root,root)
+%{_bindir}/*
+%{_datadir}/%{name}-%{version}
+%doc Copyright README example
+%doc src/release_notes
+
+# ----------------------------------------------------------------------------
+
+$Log: primer3.spec.in,v $
+Revision 1.1  2006/07/10 21:12:51  boconnor
+Import of spec.in from the testing repo
+

@@ -1,0 +1,153 @@
+#$Id: pgplot.spec.in,v 1.1 2006/07/10 21:12:51 boconnor Exp $
+%define date    %(echo `LC_ALL="C" date +"%a %b %d %Y"`)
+Summary:	The PGPLOT Graphics Subroutine Library
+Summary(pl):	Biblioteka PGPLOT
+Name:		pgplot
+Version:	5.2.2
+Release:	%{revision}.%{distro}
+%define	foover	%(echo %{version} | tr -d .)
+License:	free for non-commercial purposes
+Group:		Libraries
+Source0:	ftp://ftp.astro.caltech.edu/pub/%{name}/%{name}%{foover}.tar.gz
+Patch0:		%{name}-misc.patch
+Patch1:		%{name}-man.patch
+Patch2:		%{name}-drv.patch
+Patch3:		%{name}-config.patch
+Patch4:		%{name}-png.patch
+Patch5:         %{name}-x86_64-X11.patch
+URL:		http://astro.caltech.edu/~tjp/pgplot/
+BuildRequires:	XFree86-devel,biopackages
+BuildRequires:	lesstif-devel
+BuildRequires:	gcc-g77
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+
+%description
+Device-independent graphics package for making simple scientific
+graphs.
+
+%description -l pl
+Niezale¿ny sprzêtowo pakiet graficzny do tworzenia naukowych wykresów.
+
+%package devel
+Summary:	PGPLOT application development files
+Summary(pl):	Pliki do tworzenia aplikacji dla PGPLOT
+Group:		Development/Libraries
+Requires:	%{name} = %{version}
+
+%description devel
+Libraries and headers for developing applications that use PGPLOT.
+
+%description devel -l pl
+Biblioteki i pliki nag³ówkowe niezbêdne do tworzenia aplikacji dla
+PGPLOT.
+
+%package demos
+Summary:	PGPLOT demo applications
+Summary(pl):	Aplikacje demonstracyjne PGPLOT
+Group:		Development/Libraries
+Requires:	%{name} = %{version}
+
+%description demos
+Demonstration applications for PGPLOT.
+
+%description demos -l pl
+Aplikacje demonstruj±ce wykorzystanie biblioteki PGPLOT.
+
+%package static
+Summary:	PGPLOT static libraries
+Summary(pl):	Biblioteki statyczne dla PGPLOT
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}
+
+%description static
+Static libraries for PGPLOT.
+
+%description static -l pl
+Biblioteki statyczne dla PGPLOT.
+
+%prep
+%setup -q -n %{name}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+
+%build
+./makemake . linux g77_gcc
+%{__make} \
+	FFLAGC="-u -Wall -fPIC $RPM_OPT_FLAGS" \
+	CFLAGC="-Wall -fPIC -DPG_PPU $RPM_OPT_FLAGS" \
+	CFLAGD="-Wall $RPM_OPT_FLAGS"
+
+%{__make} cpg \
+        CFLAGD="-Wall $RPM_OPT_FLAGS"
+
+%{__make} pgplot.html
+%{__make} pgplot-routines.tex
+%{__make} clean
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_includedir},%{_bindir},%{_mandir}/man3} \
+	$RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/{cpg,pgm,demos} \
+	$RPM_BUILD_ROOT%{_libdir}/pgplot
+
+install grfont.dat grexec.f rgb.txt *.inc $RPM_BUILD_ROOT%{_libdir}/pgplot
+install pgdisp pgxwin_server $RPM_BUILD_ROOT%{_bindir}
+install cpgplot.h XmPgplot.h $RPM_BUILD_ROOT%{_includedir}
+install pgplot.3x	     $RPM_BUILD_ROOT%{_mandir}/man3
+install lib*.a		     $RPM_BUILD_ROOT%{_libdir}
+install libpgplot.so.*	     $RPM_BUILD_ROOT%{_libdir}
+
+(cd $RPM_BUILD_ROOT%{_libdir}; ln -sf libpgplot.so.*.*.* libpgplot.so)
+
+install cpgdemo $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/cpg
+install pgdemo* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/demos
+install pgmdemo $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/pgm
+cp -a cpg/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/cpg
+cp -a examples/* $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/demos
+cp -a drivers/xmotif/pgmdemo.c $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/pgm
+
+mv -f pgdispd/aaaread.me pgdispd/pgdisp.txt
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
+
+%files
+%defattr(644,root,root,755)
+%doc drivers.list aaaread.me ver5*.txt pgplot.doc pgdispd/pgdisp.txt copyright.notice
+%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_libdir}/libpgplot.so.*.*
+
+%dir %{_libdir}/pgplot
+%{_libdir}/pgplot/grexec.f
+%{_libdir}/pgplot/grfont.dat
+%{_libdir}/pgplot/rgb.txt
+
+%files devel
+%defattr(644,root,root,755)
+%doc pgplot-routines.tex pgplot.html
+%attr(755,root,root) %{_libdir}/libpgplot.so
+%{_libdir}/libcpgplot.a
+%{_libdir}/libXmPgplot.a
+%{_libdir}/pgplot/*.inc
+%{_includedir}/*
+%{_mandir}/man3/*
+
+%files demos
+%defattr(644,root,root,755)
+%{_datadir}/doc/%{name}-%{version}
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libpgplot.a
+
+$Log: pgplot.spec.in,v $
+Revision 1.1  2006/07/10 21:12:51  boconnor
+Import of spec.in from the testing repo
+
