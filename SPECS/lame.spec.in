@@ -1,0 +1,111 @@
+#$Id: lame.spec.in,v 1.1 2006/07/10 06:14:48 allenday Exp $
+Summary: LAME Ain't an MP3 Encoder... but it's the best of all
+Name: lame
+Version: 3.96.1
+Release: %{revision}.%{distro}
+License: LGPL
+Group: Applications/Multimedia
+URL: http://lame.sourceforge.net/
+Source: http://dl.sf.net/lame/lame-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: ncurses-devel, gcc-c++
+%ifarch %{ix86}
+BuildRequires: nasm
+%endif
+Provides: mp3encoder
+
+%description
+LAME is an educational tool to be used for learning about MP3 encoding.
+The goal of the LAME project is to use the open source model to improve
+the psycho acoustics, noise shaping and speed of MP3. Another goal of
+the LAME project is to use these improvements for the basis of a patent
+free audio compression codec for the GNU project.
+
+
+%package devel
+Summary: Shared and static libraries for LAME
+Group: Development/Libraries
+Requires: %{name} = %{version}
+
+%description devel
+LAME is an educational tool to be used for learning about MP3 encoding.
+This package contains both the shared and the static libraries from the
+LAME project.
+
+You will also need to install the main lame package in order to install
+these libraries.
+
+
+%prep
+%setup
+
+
+%build
+### We want to be optimized to the bone!
+### You know what? This i386 stuff is as good as if it was only i686 and
+### the MMX code is enabled at runtime if found! So this is gooooood :-)
+%ifarch i386
+    export CC_OPTS="-O3 -march=i386 -mcpu=i686 -fomit-frame-pointer -fno-strength-reduce -malign-functions=4 -funroll-loops -ffast-math"
+%else
+    # Vague and ix86 inspired (but working) ppc optimizations
+    %ifarch ppc
+        export CC_OPTS="-O3 -fsigned-char -fomit-frame-pointer -fno-strength-reduce -funroll-loops -ffast-math"
+    %else
+        export CC_OPTS="-O3 -fomit-frame-pointer -fno-strength-reduce -funroll-loops -ffast-math"
+    %endif
+%endif
+
+%configure \
+    --program-prefix=%{?_program_prefix} \
+%ifarch %{ix86}
+    --enable-nasm \
+%endif
+    --enable-decoder \
+    --with-vorbis \
+    --enable-analyser="no" \
+    --enable-brhist
+
+%{__make} %{?_smp_mflags} test CFLAGS="${CC_OPTS}"
+
+
+%install
+%{__rm} -rf %{buildroot}
+%makeinstall
+
+### Some apps still expect to find <lame.h>
+%{__ln_s} -f lame/lame.h %{buildroot}%{_includedir}/lame.h
+
+find doc/html -name "Makefile*" | xargs rm -f
+%{__rm} -rf %{buildroot}%{_docdir}/lame/
+
+
+%post
+/sbin/ldconfig 2>/dev/null
+
+%postun
+/sbin/ldconfig 2>/dev/null
+
+
+%clean
+%{__rm} -rf %{buildroot}
+
+
+%files
+%defattr (-, root, root, 0755)
+%doc ChangeLog COPYING README TODO USAGE doc/html
+%{_bindir}/*
+%{_libdir}/*.so.*
+%{_mandir}/man1/*
+
+%files devel
+%defattr (-, root, root, 0755)
+%doc API HACKING STYLEGUIDE
+%{_includedir}/*
+%{_libdir}/*.a
+%{_libdir}/*.so
+%exclude %{_libdir}/*.la
+
+$Log: lame.spec.in,v $
+Revision 1.1  2006/07/10 06:14:48  allenday
+import
+
