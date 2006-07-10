@@ -1,10 +1,10 @@
-#$Id: ffmpeg.spec.in,v 1.3 2006/01/04 22:26:11 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.4 2006/07/10 06:53:58 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
-Version: 0.4.9pre1
+Version: 5704
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: ffmpeg-20050301.tar.gz
+Source0: ffmpeg-%{version}.tar.gz
 License: Custom 
 Group: Development/Libraries
 Packager: Allen Day <allenday@ucla.edu>
@@ -13,13 +13,13 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
 Requires: lame, libogg, libvorbis, faac faad2, a52dec, imlib2
 BuildRequires: biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
-Provides: libavcodec.so, libavformat.so
+Provides: libavcodec.so, libavformat.so, libavutil.so
 
 %description
 ffmpeg
 
 %prep
-%setup -n %{name}
+%setup -n %{name}-%{version}
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}
@@ -27,11 +27,14 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec
 mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat
 
 %build
+
+./configure   --enable-pthreads   --enable-mp3lame   --enable-shared   --enable-vorbis   --enable-amr_nb   --enable-amr_nb-fixed   --enable-amr_wb   --enable-amr_if2   --enable-libogg
+
 ./configure \
   --prefix=$RPM_BUILD_ROOT/usr \
   --enable-shared \
   --enable-mp3lame \
-  --enable-ogg \
+  --enable-libogg \
   --enable-vorbis \
   --enable-faad \
   --enable-faac \
@@ -39,6 +42,10 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat
   --enable-pthreads \
   --enable-pp \
   --enable-shared-pp \
+  --enable-amr_nb \
+  --enable-amr_nb-fixed \
+  --enable-amr_wb \
+  --enable-amr_if2 \
   --enable-gpl ;
 make -j5;
 
@@ -70,6 +77,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.4  2006/07/10 06:53:58  allenday
+version
+
 Revision 1.3  2006/01/04 22:26:11  allenday
 sync changes log to cvs log
 
