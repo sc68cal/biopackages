@@ -1,4 +1,4 @@
-#$Id: a52dec.spec.in,v 1.2 2006/01/04 22:18:10 allenday Exp $
+#$Id: a52dec.spec.in,v 1.3 2006/07/10 05:35:54 allenday Exp $
 Summary: Library for decoding ATSC A/52 (aka AC-3) audio streams
 Name: a52dec
 Version: 0.7.4
@@ -23,7 +23,7 @@ also known as AC-3.
 %package devel
 Summary: Development header files and static library for liba52
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name}
 
 %description devel
 liba52 is a free library for decoding ATSC A/52 streams. It is released
@@ -81,6 +81,9 @@ to build programs that use it.
 %{_libdir}/*.so
 
 $Log: a52dec.spec.in,v $
+Revision 1.3  2006/07/10 05:35:54  allenday
+drop version req
+
 Revision 1.2  2006/01/04 22:18:10  allenday
 changelog to cvslog
 

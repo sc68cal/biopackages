@@ -1,4 +1,4 @@
-#$Id: faad2.spec.in,v 1.2 2006/01/04 22:26:11 allenday Exp $
+#$Id: faad2.spec.in,v 1.3 2006/07/10 05:36:45 allenday Exp $
 %define xmmsinputdir %(xmms-config --input-plugin-dir 2>/dev/null || echo %{_libdir}/xmms/Input)
 #define prever       rc3
 %define date         20040923
@@ -43,7 +43,7 @@ AAC files are MPEG2 or MPEG4 files that can be found in MPEG4 audio files
 %package devel
 Summary: Development libraries of the FAAD 2 AAC decoder
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name}
 
 %description devel
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder, completely
@@ -115,6 +115,9 @@ This package contains development files and documentation for libfaad.
 %{_libdir}/*.so
 
 $Log: faad2.spec.in,v $
+Revision 1.3  2006/07/10 05:36:45  allenday
+drop version req
+
 Revision 1.2  2006/01/04 22:26:11  allenday
 sync changes log to cvs log
 
