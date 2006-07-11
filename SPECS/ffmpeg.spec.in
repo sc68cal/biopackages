@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.12 2006/07/11 10:20:46 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.13 2006/07/11 10:24:47 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704.1
@@ -57,7 +57,7 @@ make install ;
 install -m 755 libavcodec/libvc1/*.a $RPM_BUILD_ROOT%{_libdir}
 #these .h files are not installed by make, but are needed to compile with ffmpeg.c
 install -m 444 cmdutils.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
-install -m 444 version.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
+#install -m 444 version.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
 install -m 444 libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
 install -m 444 libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
 install -m 444 libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil/
@@ -78,6 +78,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.13  2006/07/11 10:24:47  allenday
+drop version.h for this version
+
 Revision 1.12  2006/07/11 10:20:46  allenday
 wmv9
 
