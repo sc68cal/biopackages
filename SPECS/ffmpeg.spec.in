@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.10 2006/07/11 10:12:25 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.11 2006/07/11 10:15:34 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704.1
@@ -35,7 +35,6 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
   --enable-mp3lame \
   --enable-libogg \
   --enable-vorbis \
-  --enable-faad \
   --enable-faac \
   --enable-a52 \
   --enable-pthreads \
@@ -45,6 +44,7 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
   --enable-amr_wb \
   --enable-amr_if2 \
   --enable-gpl ;
+#  --enable-faad
 make -j5;
 
 %install
@@ -75,6 +75,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.11  2006/07/11 10:15:34  allenday
+wmv9
+
 Revision 1.10  2006/07/11 10:12:25  allenday
 wmv9
 
