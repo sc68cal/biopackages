@@ -1,7 +1,7 @@
-#$Id: ffmpeg.spec.in,v 1.9 2006/07/11 05:26:39 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.10 2006/07/11 10:12:25 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
-Version: 5704
+Version: 5704.1
 Epoch: 0
 Release: %{revision}.%{distro}
 Source0: ffmpeg-%{version}.tar.gz
@@ -50,6 +50,8 @@ make -j5;
 %install
 make install ;
 
+#for WMV-9 / VC-9
+install -m 755 libavcodec/libvc1/*.a $RPM_BUILD_ROOT%{_libdir}
 #these .h files are not installed by make, but are needed to compile with ffmpeg.c
 install -m 444 cmdutils.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
 install -m 444 version.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
@@ -73,6 +75,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.10  2006/07/11 10:12:25  allenday
+wmv9
+
 Revision 1.9  2006/07/11 05:26:39  allenday
 version.h
 
