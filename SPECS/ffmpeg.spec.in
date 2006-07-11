@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.11 2006/07/11 10:15:34 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.12 2006/07/11 10:20:46 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704.1
@@ -28,6 +28,9 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat
 mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
 
 %build
+
+#build VC-9 codec
+cd libavcodec/libvc1/; make ; cd ../../
 
 ./configure \
   --prefix=$RPM_BUILD_ROOT/usr \
@@ -75,6 +78,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.12  2006/07/11 10:20:46  allenday
+wmv9
+
 Revision 1.11  2006/07/11 10:15:34  allenday
 wmv9
 
