@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.5 2006/07/10 21:54:54 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.6 2006/07/11 07:19:41 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: MacOSX-Release
 Version: 4
@@ -12,10 +12,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 #Requires: 
 #BuildRequires: 
-Provides: perl, mod_perl, glibc, httpd-devel, httpd
-Provides: bash, /bin/sh, netcdf-devel, xorg-x11-Mesa-libGLU
-Provides: gd, glibc, netcdf-devel, pgplot-devel
+Provides: automake, gcc, gcc-g77, gd, gd-devel, make, openssl-devel
+Provides: perl, mod_perl, httpd-devel, httpd
+Provides: bash, /bin/sh, netcdf, netcdf-devel, xorg-x11-Mesa-libGLU
+Provides: glibc, glibc-devel, pgplot-devel, pgplot
 Provides: perl(HTML::Parser), perl(URI), perl(Digest::MD5), perl(HTML::Entities)
+Provides: perl(MIME::Base64)
 
 %description
 One problem with the biopackages.net RPM approach is porting to MacOS X.
@@ -48,6 +50,9 @@ with what is required by RPM-based packages.
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.6  2006/07/11 07:19:41  boconnor
+Mod to OS supplied packages list
+
 Revision 1.5  2006/07/10 21:54:54  boconnor
 Added more provides to macos
 
