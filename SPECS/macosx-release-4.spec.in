@@ -1,6 +1,6 @@
-#$Id: macosx-release-4.spec.in,v 1.7 2006/07/13 01:30:57 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.8 2006/07/13 01:50:51 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
-Name: MacOSX-Release
+Name: macosx-release
 Version: 4
 Epoch: 0
 Release: %{revision}
@@ -56,6 +56,9 @@ echo 'PATH="/usr/local/bin:/usr/local/sbin:$PATH"; PERL5LIB="/usr/local/lib/perl
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.8  2006/07/13 01:50:51  boconnor
+Updates
+
 Revision 1.7  2006/07/13 01:30:57  boconnor
 Updates virtual package
 

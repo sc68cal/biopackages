@@ -1,4 +1,4 @@
-#$Id: pgplot.spec.in,v 1.1 2006/07/10 21:12:51 boconnor Exp $
+#$Id: pgplot.spec.in,v 1.2 2006/07/13 01:50:51 boconnor Exp $
 %define date    %(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 Summary:	The PGPLOT Graphics Subroutine Library
 Summary(pl):	Biblioteka PGPLOT
@@ -16,7 +16,7 @@ Patch3:		%{name}-config.patch
 Patch4:		%{name}-png.patch
 Patch5:         %{name}-x86_64-X11.patch
 URL:		http://astro.caltech.edu/~tjp/pgplot/
-BuildRequires:	XFree86-devel,biopackages
+BuildRequires:	XFree86-devel, biopackages
 BuildRequires:	lesstif-devel
 BuildRequires:	gcc-g77
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
@@ -148,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpgplot.a
 
 $Log: pgplot.spec.in,v $
+Revision 1.2  2006/07/13 01:50:51  boconnor
+Updates
+
 Revision 1.1  2006/07/10 21:12:51  boconnor
 Import of spec.in from the testing repo
 

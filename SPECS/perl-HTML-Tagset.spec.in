@@ -1,10 +1,10 @@
-#$Id: perl-HTML-Tagset.spec.in,v 1.1 2006/07/10 22:25:40 boconnor Exp $
+#$Id: perl-HTML-Tagset.spec.in,v 1.2 2006/07/13 01:50:51 boconnor Exp $
 %define _use_internal_dependency_generator 0
 
 Summary: HTML::Tagset - data tables useful in parsing HTML.
 Name: perl-HTML-Tagset
 Version: 3.03
-Release: 29
+Release: %{revision}.%{distro}
 License: distributable
 Group: Applications/CPAN
 Source0: HTML-Tagset-%{version}.tar.gz
@@ -19,8 +19,6 @@ This module contains several data tables useful in various kinds of
 HTML parsing operations, such as tag and entity names.
 
 # Provide perl-specific find-{provides,requires}.
-%define __find_provides /usr/lib/rpm/find-provides.perl
-%define __find_requires /usr/lib/rpm/find-requires.perl
 
 %prep
 %setup -q -n HTML-Tagset-%{version} 
@@ -37,7 +35,7 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 make install
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
 
@@ -54,6 +52,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-HTML-Tagset.spec.in,v $
+Revision 1.2  2006/07/13 01:50:51  boconnor
+Updates
+
 Revision 1.1  2006/07/10 22:25:40  boconnor
 Initial import, these are normally provided by the host OS but for MacOSX they are missing.
 

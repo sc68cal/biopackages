@@ -1,10 +1,10 @@
-#$Id: AmiGO.spec.in,v 1.1 2005/08/23 01:41:17 allenday Exp $
+#$Id: AmiGO.spec.in,v 1.2 2006/07/13 01:50:51 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
 Name: AmiGO
 Version: 2.0
-Release: %{revision}.cvs%{distro}
+Release: %{revision}.%{distro}
 Epoch: 1
 Packager: allenday@ucla.edu
 License: Custom
