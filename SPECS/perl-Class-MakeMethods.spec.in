@@ -1,4 +1,4 @@
-#$Id: perl-Class-MakeMethods.spec.in,v 1.1 2006/07/14 22:10:25 allenday Exp $
+#$Id: perl-Class-MakeMethods.spec.in,v 1.2 2006/07/14 22:11:57 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: perl module Class::MakeMethods
@@ -9,6 +9,7 @@ Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Class-MakeMethods/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
@@ -64,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-MakeMethods.spec.in,v $
+Revision 1.2  2006/07/14 22:11:57  allenday
+import
+
 Revision 1.1  2006/07/14 22:10:25  allenday
 import
 
