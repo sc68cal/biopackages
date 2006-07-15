@@ -1,4 +1,4 @@
-#$Id: primer3.spec.in,v 1.1 2006/07/10 21:12:51 boconnor Exp $
+#$Id: primer3.spec.in,v 1.2 2006/07/15 01:55:23 boconnor Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -8,7 +8,9 @@ Name:     primer3
 Summary:  Primer3 picks primers for PCR reactions
 License:  Copyright Whitehead Institute for Biomedical Research
 URL:      http://fokker.wi.mit.edu/primer3/
-Source:   http://fokker.wi.mit.edu/primer3/primer3_%{version}.tar.gz
+#Source:   http://fokker.wi.mit.edu/primer3/primer3_%{version}.tar.gz
+Source:   %{name}_%{version}.tar.gz
+Patch:    primer3.patch
 BuildRequires: gcc
 BuildRoot: %{_tmppath}/%{name}-root
 
@@ -46,6 +48,7 @@ perl -pi -e 's[/usr/bin/perl5][%{__perl}]g' test/dpal_gen.pl
 perl -pi -e 's[/usr/bin/perl5][%{__perl}]g' test/long_seq_tm_test.pl
 perl -pi -e 's[/usr/bin/perl][%{__perl}]g' test/dpal_gen.pl
 perl -pi -e 's[/usr/bin/perl][%{__perl}]g' test/long_seq_tm_test.pl
+%patch -p1
 
 %build
 export CC=%{__cc}
@@ -65,7 +68,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_bindir}
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
 install -m 755 src/primer3_core $RPM_BUILD_ROOT%{_bindir}
 install -m 755 src/ntdpal $RPM_BUILD_ROOT%{_bindir}
-cp -a test $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
+cp -pR test $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -82,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 # ----------------------------------------------------------------------------
 
 $Log: primer3.spec.in,v $
+Revision 1.2  2006/07/15 01:55:23  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/07/10 21:12:51  boconnor
 Import of spec.in from the testing repo
 

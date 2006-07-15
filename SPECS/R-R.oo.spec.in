@@ -1,4 +1,4 @@
-#$Id: R-R.oo.spec.in,v 1.1 2006/05/23 19:04:02 allenday Exp $
+#$Id: R-R.oo.spec.in,v 1.2 2006/07/15 01:55:20 boconnor Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -28,7 +28,7 @@ R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
 
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.oo.spec.in,v $
+Revision 1.2  2006/07/15 01:55:20  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/05/23 19:04:02  allenday
 imports for afy fusion skd
 

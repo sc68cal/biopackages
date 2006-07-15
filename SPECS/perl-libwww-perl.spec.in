@@ -1,4 +1,4 @@
-#$Id: perl-libwww-perl.spec.in,v 1.4 2006/07/13 01:50:51 boconnor Exp $
+#$Id: perl-libwww-perl.spec.in,v 1.5 2006/07/15 01:55:23 boconnor Exp $
 %define _use_internal_dependency_generator 0
 Summary: A Perl interface to the World-Wide Web.
 Name: perl-libwww-perl
@@ -42,7 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 make install
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
 
@@ -59,6 +59,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-libwww-perl.spec.in,v $
+Revision 1.5  2006/07/15 01:55:23  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.4  2006/07/13 01:50:51  boconnor
 Updates
 

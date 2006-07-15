@@ -1,4 +1,4 @@
-#$Id: perl-Devel-CoreStack.spec.in,v 1.1 2006/02/07 04:44:05 boconnor Exp $
+#$Id: perl-Devel-CoreStack.spec.in,v 1.2 2006/07/15 01:55:21 boconnor Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Devel::CoreStack - try to generate a stack dump from a core file
@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \

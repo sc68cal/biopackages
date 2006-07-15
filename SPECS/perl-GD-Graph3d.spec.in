@@ -1,4 +1,4 @@
-#$Id: perl-GD-Graph3d.spec.in,v 1.1 2006/07/10 17:33:34 boconnor Exp $
+#$Id: perl-GD-Graph3d.spec.in,v 1.2 2006/07/15 01:55:22 boconnor Exp $
 Summary: GD-Graph3d Perl module
 Name: perl-GD-Graph3d
 Version: 0.63
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc Changes
 
 $Log: perl-GD-Graph3d.spec.in,v $
+Revision 1.2  2006/07/15 01:55:22  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/07/10 17:33:34  boconnor
 Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
 

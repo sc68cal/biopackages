@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-PageCache.spec.in,v 1.5 2006/07/05 19:46:16 allenday Exp $
+#$Id: perl-Catalyst-Plugin-PageCache.spec.in,v 1.6 2006/07/15 01:55:21 boconnor Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -164,7 +164,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \

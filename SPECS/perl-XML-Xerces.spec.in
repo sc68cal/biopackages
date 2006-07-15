@@ -1,9 +1,9 @@
-#$Id: perl-XML-Xerces.spec.in,v 1.1 2006/07/10 17:33:34 boconnor Exp $
+#$Id: perl-XML-Xerces.spec.in,v 1.2 2006/07/15 01:55:23 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxml2 xml parsing and DOM library
 Name: perl-XML-Xerces
-Version: 2.5.0
+Version: 2.7.0
 Release: %{revision}.%{distro}
 Packager: allenday@ucla.edu
 License: GPL or Artistic
@@ -11,8 +11,8 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-Xerces/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, xerces-c = 2.5.0
-Requires: xerces-c = 2.5.0
-Source0: XML-Xerces-2.5.0-0.tar.gz
+Requires: xerces-c = 2.7.0
+Source0: XML-Xerces-%{version}-0.tar.gz
 
 %description
 XML::Xerces is the Perl API to the Apache project's Xerces XML parser. It
@@ -23,7 +23,7 @@ of the C++ API from Perl.
 %setup -q -n XML-Xerces-%{version}-0
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" XERCES_LIB=%{_libdir} XERCES_INCLUDE=%{_includedir} XERCESCROOT=/tmp perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+CFLAGS="$RPM_OPT_FLAGS" XERCES_LIB=%{_libdir} XERCES_INCLUDE=%{_includedir} perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
 #make test
 
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-Xerces.spec.in,v $
+Revision 1.2  2006/07/15 01:55:23  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/07/10 17:33:34  boconnor
 Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
 

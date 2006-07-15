@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.8 2006/07/13 01:50:51 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.9 2006/07/15 01:55:21 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -14,10 +14,17 @@ BuildArch: noarch
 #BuildRequires: 
 Provides: autoconf, automake, gcc, gcc-g77, gcc-c++, gd, gd-devel, make
 Provides: perl, mod_perl, httpd-devel, httpd
-Provides: bash, /bin/sh, netcdf, netcdf-devel, xorg-x11-Mesa-libGLU
+Provides: bash, netcdf, netcdf-devel, xorg-x11-Mesa-libGLU
 Provides: glibc, glibc-devel, pgplot-devel, pgplot
 Provides: httpd-mmn, apr, apr-devel, apr-util-devel, openssl, openssl-devel
 Provides: gdbm, gdbm-devel, lesstif, lesstif-devel, XFree86-devel
+Provides: xerces-c
+Provides: libSystem.B.dylib, libpq.4.dylib, libX11.6.dylib
+Provides: libXpm.4.dylib, libfontconfig.1.dylib, libfreetype.6.dylib, libgd.2.dylib
+Provides: libjpeg.62.dylib, libpng12.0.dylib, libz.1.dylib, libnetcdf.3.dylib
+Provides: libcrypto.0.9.7.dylib, libssl.0.9.7.dylib, libxerces-c.27.dylib
+Provides: /usr/local/bin/perl, /bin/sh
+Provides: perl-URI, perl-HTML-Parser
 Provides: perl(HTML::Parser), perl(URI), perl(Digest::MD5), perl(HTML::Entities)
 Provides: perl(MIME::Base64)
 
@@ -46,6 +53,13 @@ with what is required by RPM-based packages.
 echo 'PATH=/usr/local/bin:/usr/local/sbin:$PATH; PERL5LIB=/usr/local/lib/perl5/site_perl:$PERL5LIB' >> /etc/bashrc
 echo 'setenv PATH "/usr/local/bin:/usr/local/sbin:$PATH"; setenv PERL5LIB "/usr/local/lib/perl5/site_perl:$PERL5LIB"' >> /etc/csh.login
 echo 'PATH="/usr/local/bin:/usr/local/sbin:$PATH"; PERL5LIB="/usr/local/lib/perl5/site_perl:$PERL5LIB"' >> /etc/profile
+rm /Network/Library 
+ln -s /Library /Network/Library
+ln -s /usr/bin/perl /usr/local/bin/perl
+# links for xerces libs
+mkdir -p /usr/local/include
+ln -s /sw/include/xercesc /usr/local/include/xercesc
+ln -s /sw/lib/*xerces* /usr/local/lib/
 
 %postun
 
@@ -56,6 +70,9 @@ echo 'PATH="/usr/local/bin:/usr/local/sbin:$PATH"; PERL5LIB="/usr/local/lib/perl
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.9  2006/07/15 01:55:21  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.8  2006/07/13 01:50:51  boconnor
 Updates
 

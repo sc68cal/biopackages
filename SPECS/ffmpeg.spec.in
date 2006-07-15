@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.13 2006/07/11 10:24:47 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.14 2006/07/15 01:55:21 boconnor Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 5704.1
@@ -62,7 +62,7 @@ install -m 444 libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
 install -m 444 libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
 install -m 444 libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil/
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
 
@@ -78,6 +78,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.14  2006/07/15 01:55:21  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.13  2006/07/11 10:24:47  allenday
 drop version.h for this version
 

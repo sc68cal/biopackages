@@ -1,15 +1,15 @@
-#$Id: perl-Devel-Symdump.spec.in,v 1.1 2006/07/10 22:25:40 boconnor Exp $
+#$Id: perl-Devel-Symdump.spec.in,v 1.2 2006/07/15 01:55:21 boconnor Exp $
 %define _use_internal_dependency_generator 0
 
 Summary: A Perl module for inspecting Perl's symbol table.
 Name: perl-Devel-Symdump
 Version: 2.03
-Release: 17
+Release: %{revision}.%{distro}
 License: distributable
 Group: Applications/CPAN
 Source0: Devel-Symdump-%{version}.tar.gz
 Url: http://search.cpan.org/search?query=Devel%3A%3ASymdump
-BuildRoot: /var/tmp/perl-Devel-Symdump-buildroot/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl >= 0:5.00503
 Requires: perl >= 0:5.00503
 Provides: perl(Devel::Symdump)
@@ -18,43 +18,57 @@ Provides: perl(Devel::Symdump)
 The perl module Devel::Symdump provides a convenient way to inspect
 perl's symbol table and the class hierarchie within a running program.
 
-# Provide perl-specific find-{provides,requires}.
-%define __find_provides /usr/lib/rpm/find-provides.perl
-%define __find_requires /usr/lib/rpm/find-requires.perl
-
 %prep
 %setup -q -n Devel-Symdump-%{version} 
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor
-make
-make test
-
-%clean 
-rm -rf $RPM_BUILD_ROOT
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
 
-find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
 
-find $RPM_BUILD_ROOT/usr -type f -print | 
-	sed "s@^$RPM_BUILD_ROOT@@g" | 
-	grep -v perllocal.pod | 
-	grep -v "\.packlist" > Devel-Symdump-%{version}-filelist
-if [ "$(cat Devel-Symdump-%{version}-filelist)X" = "X" ] ; then
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
     echo "ERROR: EMPTY FILE LIST"
-    exit -1
+    exit 1
 fi
 
-%files -f Devel-Symdump-%{version}-filelist
-%defattr(-,root,root)
-%dir /usr/lib/perl5/vendor_perl/%(perl -MConfig -e 'print $Config{version}')/Devel/Symdump
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+
 
 $Log: perl-Devel-Symdump.spec.in,v $
+Revision 1.2  2006/07/15 01:55:21  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/07/10 22:25:40  boconnor
 Initial import, these are normally provided by the host OS but for MacOSX they are missing.
 

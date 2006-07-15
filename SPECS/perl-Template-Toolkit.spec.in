@@ -1,4 +1,4 @@
-#$Id: perl-Template-Toolkit.spec.in,v 1.6 2006/05/08 09:30:36 allenday Exp $
+#$Id: perl-Template-Toolkit.spec.in,v 1.7 2006/07/15 01:55:22 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -470,7 +470,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f | sed "s@$RPM_BUILD_ROOT@@g" > %{name}-%{version}-%{release}-filelist
 
@@ -495,6 +495,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Template-Toolkit.spec.in,v $
+Revision 1.7  2006/07/15 01:55:22  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.6  2006/05/08 09:30:36  allenday
 depcheck
 

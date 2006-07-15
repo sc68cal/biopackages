@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.2 2006/01/13 23:33:39 allenday Exp $
+#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.3 2006/07/15 01:55:20 boconnor Exp $
 %define	base	zebrafishprobe
 Epoch: 1
 Vendor: biopackages.net
@@ -34,7 +34,7 @@ R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
 

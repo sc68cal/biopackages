@@ -1,4 +1,4 @@
-#$Id: perl-PAR-Dist.spec.in,v 1.1 2006/05/03 08:23:55 allenday Exp $
+#$Id: perl-PAR-Dist.spec.in,v 1.2 2006/07/15 01:55:22 boconnor Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -18,8 +18,8 @@ BuildRequires: perl, biopackages
 Source0: PAR-Dist-0.08.tar.gz
 
 %description
-# $File: //member/autrijus/PAR-Dist/README $ $Author: allenday $
-# $Revision: 1.1 $ $Change: 9539 $ $DateTime: 2004/01/01 10:23:13 $
+# $File: //member/autrijus/PAR-Dist/README $ $Author: boconnor $
+# $Revision: 1.2 $ $Change: 9539 $ $DateTime: 2004/01/01 10:23:13 $
 
 This is the README file for PAR::Dist, a toolkit to create and
 manipulate PAR distributions.
@@ -76,7 +76,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-PAR-Dist.spec.in,v $
+Revision 1.2  2006/07/15 01:55:22  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/05/03 08:23:55  allenday
 import
 

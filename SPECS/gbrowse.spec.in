@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.1 2006/07/10 17:33:33 boconnor Exp $
+#$Id: gbrowse.spec.in,v 1.2 2006/07/15 01:55:21 boconnor Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.62
@@ -55,7 +55,7 @@ find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.2  2006/07/15 01:55:21  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
 Revision 1.1  2006/07/10 17:33:33  boconnor
 Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
 
