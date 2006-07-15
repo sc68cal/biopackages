@@ -2,25 +2,54 @@
 use strict;
 use Data::Dumper;
 
+#This script starts with a certain package name and attempts to build all the
+#required packages that the given package both needs for build requirements and
+#also for install requirements.  At the end of this run, all the packages
+#required to build this package are installed.
+
+
+# Usage
+if (scalar(@ARGV) < 1) { print "Usage: resolve_deps.pl <spec_file_name_w/o_ext>\n"; exit; }
+
+# The spec file to start with (name without extension)
 my ($spec_file) = @ARGV;
 
-my $build_req = {};
-my $missing_build_req = {};
+# Hashes to store dependency tree
 my $req = {};
 my $missing_req = {};
 
-parse_req($spec_file, "BuildRequires", $build_req, $missing_build_req, 1);
-#parse_req($spec_file, "Requires", $req, $missing_req, 0);
+# A list of modules not to build
+my $no_build = {};
+$no_build = read_no_build("no_build.txt");
 
-print "\nBuild Req:\n";
-print_req($build_req);
-print "\nMissing Build Req\n";
-print_req($missing_build_req);
-print "\nReq:\n";
-print_req($req);
+# Hashes to store which packages have been previously built
+my %built_before;
+my %parsed_before;
+
+# Should this program install build requirements?
+my $install = 1;
+
+# A file for the dependency tree summary
+open TREE, ">dep_tree.txt" or die;
+
+# distro string
+my $distro_str = `/usr/local/bin/bp-distro`;
+chomp($distro_str);
+
+
+# The actual process 
+parse_req($spec_file, $req, $missing_req, "");
+
+# Print out missing requirements
 print "\nMissing Req:\n";
 print_req($missing_req);
 
+close TREE;
+
+
+# Subroutines
+
+# Just prints the contents of a hash
 sub print_req{
   my ($req) = @_;
   foreach my $key (keys %{$req}) {
@@ -28,52 +57,126 @@ sub print_req{
   }
 }
 
+# parses the requirements for a given spec file and recursively build them
 sub parse_req {
-  my ($file_name, $reg_exp, $req, $missing_req, $install) = @_;
+  my ($file_name, $req, $missing_req, $indent) = @_;
   my @files = glob("SPECS/$file_name.spec.in");
   foreach my $file (@files) {
-  #print "Processing file of ".scalar(@files).": $file_name $file\n";
-  #print "Processing file: $file_name\n";
     if (!-e $file) {
-      #print "Missing file $file\n";
-      $missing_req->{"$file"} = 1; 
+      $missing_req->{"$file_name"} = 1; 
+      print TREE "$indent** $file_name **\n";
     }
-    else {
-      #print "Yes, I found the file $file\n";
+    elsif (!$parsed_before{$file} && !defined($no_build->{$file_name})) {
+      $parsed_before{$file} = 1;
       $req->{"$file"} = 1;
-      open IN, "<$file" or die;
+
+      print TREE "$indent$file_name\n";
+
+      # vars to hold version string
+      my $id_str = "";
+      my $version_str = "";
+      my $arch_str = "ppc";
+      
+      my @deps;
+      $file =~ /^(.*).in$/;
+      my $spec_file = $1;
+      open IN, "<$spec_file" or die;
       while (<IN>) {
         chomp;
-#	if ($_ =~ /^BuildRequires:\s+(.*)$/) { print "BUILD REQ\n\n"; }
-#if ($_ =~ /^Requires:\s+(.*)$/) { print "REQ\n\n$_\n"; }
         if ($_ =~ /^BuildRequires:\s+(.*)$/) {
-	print "BUILD REQ: $_\n\n";
           my @tokens = split ", ", $1;
 	  foreach my $token (@tokens) {
-	    #print "Calling: $token\n";
-	    parse_req($token, $reg_exp, $req, $missing_req, $install);
+	    $token = clean_package_names($token);
+            # there are some crufty entries with %{} in the spec files
+	    push @deps, $token if ($token !~ /%/); 
 	  }
 	}
         elsif ($_ =~ /^Requires:\s+(.*)$/) {
-print "REQ: $_\n\n";
           my @tokens = split ", ", $1;
 	  foreach my $token (@tokens) {
-	    #print "Calling: $token\n";
-	    parse_req($token, $reg_exp, $req, $missing_req, $install);
+	    $token = clean_package_names($token);
+            # there are some crufty entries with %{} in the spec files
+	    push @deps, $token if ($token !~ /%/);
 	  }
+	}
+	elsif ($_ =~ /^Version:\s+(.*)$/) {
+          $version_str = $1;
+	}
+	elsif ($_ =~ /^Release:\s+([\d\.]*)/) {
+	  $id_str = $1;
+	  if ($id_str =~ /^(.*)\.$/) {
+            $id_str = $1;
+	  }
+	}
+        elsif ($_ =~ /^BuildArch:\s+(.*)$/) {
+          $arch_str = $1;
 	}
       }
       close IN;
+      # now recursively examine each
+      foreach my $dep (@deps) {
+        parse_req($dep, $req, $missing_req, "\t$indent");
+      }
+
       $file =~ /SPECS\/(\S+).spec.in$/;
       my $package_name = $1;
-      if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " ") {
-      print "make SPECS/$package_name.spec SPECS/$package_name.built\n";
-      #system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
-      if ($install) {
-        print("sudo rpm -Uvh RPMS/i386/$package_name*.rpm RPMS/noarch/$package_name*.rpm RPMS/ppc/$package_name*.rpm\n");
-        #system("sudo rpm -Uvh RPMS/i386/$package_name*.rpm");
+      if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
+        print "make SPECS/$package_name.spec SPECS/$package_name.built\n";
+        $built_before{$package_name} = 1;
+        my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
+	if ($result) { die "There was an error building $package_name with error code $result\n"; }
+        if ($install) {
+          #print "$version_str $id_str $distro_str $arch_str\n\n";
+	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/) {
+	    if (!already_installed("$package_name-$version_str-$id_str")) {
+              print("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n");
+              $result = system("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+	    }
+	  } else {
+	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
+              print ("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n");
+              $result = system("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+	    }
+	  }
+          if ($result) { die "There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
 	}
       }
     }
   }
+}
+
+# check to see if the package is already installed
+sub already_installed {
+  my ($package_name) = @_;
+  my @query_result = `rpm -qa | grep $package_name`;
+  return(scalar(@query_result));
+}
+
+# The tokens from a spec file can include <= and a version string
+# This method cleans these up and trys to extract a spec name
+sub clean_package_names {
+  my ($raw_name) = @_;
+  my $name = "";
+  if ($raw_name =~ /perl\(([\w\:)]+)\)/) {
+    $name = $1;
+    $name =~ s/::/-/g;
+    $name = "perl-$name";
+  }
+  elsif ($raw_name =~ /^([\w-]+) [><=]+/) {
+    $name = $1;
+  }
+  else { $name = $raw_name; }
+  return($name)
+}
+
+sub read_no_build {
+  my ($file) = @_;
+  my $result = {};
+  open INPUT, $file or die;
+  while (<INPUT>) {
+    chomp;
+    $result->{$_} = 1;
+  }
+  close INPUT;
+  return($result);
 }
