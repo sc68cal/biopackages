@@ -1,0 +1,259 @@
+#$Id: chado.spec.in,v 1.1 2006/07/16 07:54:25 boconnor Exp $
+%define gmod_root /var/lib/gmod
+
+Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
+Name: chado
+Version: 0.003
+Epoch: 0
+Release: %{revision}.%{distro}
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.gmod.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: postgresql-AffxSeq = 1.00-3.20050411
+Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
+Requires: perl-DBD-Pg, perl-DBI, perl-Class-DBI, perl-Class-DBI-Pager, perl-bioperl, perl-XML-Simple
+Requires: perl-Term-ProgressBar, perl-Template-Toolkit, perl-Log-Log4perl, perl-Module-Build
+Requires: perl-Class-Accessor, perl-Class-Accessor-Chained
+BuildRequires: obo-core >= 1.0.0-7, obo-extra, perl-go-perl >= 0.02-3
+BuildRequires: postgresql-AffxSeq = 1.00-3.20050411
+BuildRequires: perl-Template-Toolkit, perl-Log-Log4perl, perl-Class-DBI, perl-Class-DBI-Pager, postgresql >= 7.3
+BuildRequires: perl-Class-DBI-Pg, perl-Term-ProgressBar, perl-DBIx-DBStag
+
+#not sure why i have to hardcode this in...
+Provides: perl(Chado::AutoDBI)
+
+Source0: gmod-%{version}.tar.gz
+Source1: ATCC.txt
+Patch0: chado-0.003-gmod_root.patch
+
+%description
+Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
+
+%prep
+%setup -n gmod-%{version}
+%patch0 -p0
+mkdir -p %{buildroot}%{gmod_root}
+
+%build
+export GMOD_ROOT=%{buildroot}%{gmod_root}
+
+echo "DBHOST=$HOSTNAME"    > build.conf ;
+echo "DBUSER=postgres"    >> build.conf ;
+echo "LOCAL_TMP=/var/tmp" >> build.conf ;
+echo "DBNAME=chado"       >> build.conf ;
+echo "DBDRIVER=Pg"        >> build.conf ;
+echo "DBPORT=5432"        >> build.conf ;
+echo "DBORGANISM="        >> build.conf ;
+echo "DBPASS="            >> build.conf ;
+
+echo "Y" | GMOD_ROOT=%{buildroot}%{gmod_root} perl Makefile.PL \
+  RECONFIGURE=1 \
+  PREFIX=%{buildroot}%{_prefix} \
+  INSTALLSITEMAN1DIR=%{buildroot}/usr/share/man/man1 \
+  INSTALLSITEMAN3DIR=%{buildroot}/usr/share/man/man3
+
+%install
+export GMOD_ROOT=%{buildroot}%{gmod_root}
+#make install
+%makeinstall ;
+
+#these depend on Datastore::MD5, which i could not find
+find %{buildroot} -type f -name cx-enscore2chaos.pl -exec rm {} \;
+find %{buildroot} -type f -name cx-genbank2chaos.pl -exec rm {} \;
+find . -type f -name cx-enscore2chaos.pl -exec rm {} \;
+find . -type f -name cx-genbank2chaos.pl -exec rm {} \;
+
+tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
+
+sudo /etc/init.d/postgresql start
+sudo su postgres -c "createdb $tmp_chado";
+sudo su postgres -c "createlang plpgsql $tmp_chado";
+#Creating tables, functions, views, triggers, rules, etc for database
+sudo su postgres -c "cat modules/default_schema.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";#| grep -E '(ERROR|FATAL)' | grep -v 'ERROR:  type'";
+#Loading generic data into database
+sudo su postgres -c "cat load/etc/initialize.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";#| grep -E '(ERROR|FATAL)'";
+#Load in godb bridge
+#su postgres -c "cat modules/cv/bridges/godb-bridge.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";
+#Bring in AffxSeq functions
+sudo su postgres -c "cat %{_datadir}/doc/postgresql-AffxSeq-1.00/affx-seq-lib-defs.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";#| grep -E '(ERROR|FATAL)'";
+
+#Load ATCC Cell lines.  ATCC is 3 given the above sequence of commands, but may change!
+cat %{SOURCE1} | awk -F '	' '{print 3,"\t",$2,"\t",$3," ",$4}' | perl -ne 's!^3 !3!;print' > ATCC.munged
+sudo su postgres -c "cat ATCC.munged | psql -U postgres $tmp_chado -c 'COPY dbxref (db_id,accession,description) FROM stdin' 2>&1 >/dev/null";
+
+
+#None
+#Taxonomy InterPro MGED
+
+#obo
+obo[0]=Relationship
+obo[1]=Cell
+obo[2]=AttributeValue
+obo[3]=Development_Dme
+obo[4]=Environment
+obo[5]=EvidenceCode
+obo[6]=eVOC
+obo[7]=FIX
+obo[8]=GrossAnatomy_Dme
+obo[9]=ProteinDomain
+obo[10]=Reaction
+obo[11]=Sequence
+#obo[12]=SequenceFeature
+obo[13]=Gene
+###                               obo[14]=Chemical
+
+#go_def
+##def[1]=Development_Ath/TAIR_ontology.defs
+##def[2]=Development_Cel/worm_development.definitions
+###		def[3]=Development_Osa/temporal_gramene.definition
+##def[4]=Development_Pfa/PLO_defs.txt
+##def[5]=GrossAnatomy_Ath/arabidopsis_anatomy.definitions
+###		def[6]=GrossAnatomy_Ddi/anatomy.definitions
+###		def[7]=GrossAnatomy_Ola/medaka_anatomy.definitions
+##def[8]=GrossAnatomy_Osa/anatomy_gramene.definition
+###		def[9]=GrossAnatomy_Plant/anatomy.definition
+##def[10]=GrossAnatomy_Sce/fungal_anatomy.definitions
+###		def[11]=GrossAnatomy_Zma/Zea_mays_anatomy_ontology_definitions.txt
+##def[12]=Phenotype_Mammal/context.definition
+def[13]=Phenotype_Mmu/MP.defs
+##def[14]=ProteinInteraction/psi-mi.def
+###		def[16]=Trait_Osa/trait.definition
+###		def[17]=BrendaTissue/BrendaTissueDefinitions
+
+#go_ont
+###		rel[1]=Development_Ath/temporal.tair
+##rel[2]=Development_Cel/worm_development.ontology
+###		rel[3]=Development_Hsa/human-dev-anat-abstract.ontology
+###		rel[4]=Development_Hsa/human-dev-anat-staged.ontology
+rel[5]=Development_Mmu/EMAP.ontology
+###		rel[6]=Development_Osa/temporal_gramene.ontology
+##rel[7]=Development_Pfa/PLO_ontology.txt
+###		rel[8]=Disease_Hsa/DO_08_18_03.txt
+##rel[9]=GrossAnatomy_Ath/arabidopsis_anatomy.ontology
+##rel[10]=GrossAnatomy_Ddi/anatomy.ontology
+##rel[11]=GrossAnatomy_Dre/zebrafish_anatomy.ontology
+rel[12]=GrossAnatomy_Mmu/MA.ontology
+###		rel[13]=GrossAnatomy_Ola/medaka_anatomy.ontology
+###rel[14]=GrossAnatomy_Osa/anatomy_gramene.ontology
+##rel[15]=GrossAnatomy_Plant/anatomy.ontology
+##rel[16]=GrossAnatomy_Sce/fungal_anatomy.ontology
+###		rel[17]=GrossAnatomy_Zma/Zea_mays_anatomy_ontology.txt
+##rel[18]=Image/image.ontology
+rel[19]=Pathology_Mmu/mpath_obo.ontology
+##rel[20]=Phenotype_Mammal/context.ontology
+rel[21]=Phenotype_Mmu/MPheno.ontology
+##rel[22]=ProteinInteraction/psi-mi.dag
+##rel[24]=Trait_Osa/trait.ontology
+##rel[25]=BrendaTissue/BrendaTissue
+
+for i in ${obo[*]} ; do
+  echo "  * Loading OBO ontology: $i" ;
+  /usr/bin/go2fmt.pl -p obo_text -w xml -e /dev/null /usr/share/obo/$i/* | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/$i.xml ;
+  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/$i.xml" ;
+done ;
+
+for i in ${rel[*]} ; do
+  echo "  * Loading DAG-Edit relationships: $i" ;
+  /usr/bin/go2fmt.pl -p go_ont -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/rel.xml ;
+  if [[ `wc -c /var/tmp/rel.xml | awk '{print $1}'` != 0 ]] ; then
+    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/rel.xml" ;
+  fi ;
+done ;
+
+for i in ${def[*]} ; do
+  echo "  * Loading DAG-Edit definitions: $i" ;
+  /usr/bin/go2fmt.pl -p go_def -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/def.xml ;
+  if [[ `wc -c /var/tmp/def.xml | awk '{print $1}'` != 0 ]] ; then
+    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/def.xml" ;
+  fi ;
+done ;
+
+#materialize the godb GO bridge views
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.go_acc SELECT * FROM godb.v_go_acc'";
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.dbxref SELECT * FROM godb.v_dbxref'";
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.db SELECT * FROM godb.v_db'";
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.term SELECT * FROM godb.v_term'";
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.term2term SELECT * FROM godb.v_term2term'";
+sudo su postgres -c " psql $tmp_chado -c 'UPDATE godb.term SET is_root = 1 WHERE id IN (SELECT cvterm_id FROM public.cvterm WHERE cvterm_id NOT IN (SELECT DISTINCT subject_id FROM public.cvterm_relationship) AND is_obsolete = 0 AND is_relationshiptype = 0)'";
+
+
+#repair SO
+sudo su postgres -c " psql $tmp_chado -c 'DELETE FROM cvterm_relationship WHERE subject_id = (SELECT cvterm_id FROM cvterm WHERE name = '\''precursor_siRNA'\'') AND object_id = (SELECT cvterm_id FROM cvterm WHERE name = '\''precursor_rasiRNA'\'')' " ;
+
+for i in `sudo su postgres -c "psql $tmp_chado -tAF '	' -c 'SELECT cv_id FROM cv'"` ; do
+  sudo su postgres -c "psql $tmp_chado -tAF '	' -c 'SELECT * FROM fill_cvtermpath($i)'";
+done ;
+
+#finish materializing the godb GO bridge views, now that cvtermpath is populated
+sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.graph_path SELECT * FROM godb.v_graph_path'";
+
+sudo su postgres -c "pg_dump -O $tmp_chado" | gzip > %{name}-%{version}.sql.gz
+sudo su postgres -c "dropdb   $tmp_chado"
+
+install -m 444 load/etc/initialize.sql $RPM_BUILD_ROOT%{gmod_root}
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+find $RPM_BUILD_ROOT -type f -exec perl -p -i -e "s!$RPM_BUILD_ROOT!!g" {} \;
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+%doc Changes* INSTALL LICENSE README* TODO build.conf log4perl.conf *.sql.gz
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+/etc/init.d/postgresql start
+su postgres -c 'dropdb chado || exit 1';
+
+#Creating PostgreSQL database 'chado' as user 'postgres'
+su postgres -c 'createdb chado 2>&1' 2>&1 > /dev/null
+#Adding plpgsql language to database 'chado'
+su postgres -c 'createlang plpgsql chado 2>&1' 2>&1 > /dev/null
+#Creating tables, functions, views, triggers, rules, etc for database 'chado'
+su postgres -c 'zcat %{_datadir}/doc/%{name}-%{version}/%{name}-%{version}.sql.gz | psql chado 2>&1' 2>&1 > /dev/null
+#Granting SELECT to PUBLIC on tables
+for i in `su postgres -c "psql %{name} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
+  su postgres -c "psql %{name} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" 2>&1;
+done
+true ;
+
+%preun
+/etc/init.d/postgresql start
+su postgres -c 'dropdb chado';
+true;
+
+%changelog
+* Mon Oct  3 2005 Brian O'Connor <boconnor@ucla.edu> 0.003-11
+- updates to the modules/default_nofuncs.sql file so they will build in SQLFairy (for Turnkey/GmodWeb)
+* Mon Jul 11 2005 Allen Day <allenday@ucla.edu> 0.003-10
+- godb.graph_path now populated.
+* Fri Jul  8 2005 Allen Day <allenday@ucla.edu> 0.003-9
+- Updated to real 0.003 release
+* Tue Jul  5 2005 Allen Day <allenday@ucla.edu> 0.003-8
+- Dropped %preun and %post warning silliness
+- Moved perl-go-perl and obo-* to BuildRequires, where they belong
+- Bumped obo-core prereq to 1.0.0-7 to pull in new mouse ontology
+- Added mpath_obo.ontology to default schema
+- Added ATCC cell lines to db/dbxref tables
+- Added godb bridge so chado can be used by gene ontology tools like go-perl and go-db-perl
+- Populated godb bridge materialized views
+- Added Affymetrix 10K, 100K, and 500K mapping arrays to arraydesign.
+- Removed SOFA ontology from load.  GFF3 was the only thing requiring it, and GFF3 now accepts full SO
+- Added contact module to database
+* Tue Apr 26 2005 Allen Day <allenday@ucla.edu> 0.003-6
+- Updated chado tarball to CVS HEAD.  This contains new cvterm
+  graph traversal code, as well as a more uniform system for
+  naming algorithms, tables, and arraydesigns for affy data.
+* Wed Apr 13 2005 Allen Day <allenday@ucla.edu> 0.003-5
+- Updated chado tarball to CVS HEAD
+- Populated cvtermpath as part of build
+- Granted select on all tables to public
+* Tue Mar 22 2005 Allen Day <allenday@ucla.edu> 0.003-4
+- moved to noarch build
+* Tue Mar 8 2005 Allen Day <allenday@ucla.edu> 0.003-1
+- New specfile.
