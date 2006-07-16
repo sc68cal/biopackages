@@ -1,0 +1,87 @@
+#$Id#
+Name: postgresql-AffxSeq
+Summary: postgresql-AffxSeq
+Version: 1.00
+Release: %{revision}.%{distro}
+License: BSD
+Group: Applications/Databases
+Vendor: Affymetrix, Inc.
+URL: http://www.affymetrix.com
+Source: postgresql-AffxSeq-1.00.tar.gz
+BuildRoot: /var/tmp/%{name}-%{PACKAGE_VERSION}-root
+Provides:  postgresql-AffxSeq
+Buildrequires: postgresql-devel, ucsc, biopackages
+%define __spec_install_post %{_usr}/lib/rpm/brp-compress || :
+
+%description
+This postgres module defines functions to quickly extract
+subsequences from a nibfile and to preform common sequence
+operations upon them.
+
+Keeping large read-only sequences outside the database,
+prevents database bloat both at runtime and during backups.
+The static data does not require the overhead of
+transactional control.  In exchange for these advantages,
+the DBA should make sure that the genome data is read-only
+and backed up from time to time.
+
+%package devel
+Summary: Header files needed to link to AffxSeq
+Group: Development/Libraries
+Requires: postgresql-AffxSeq = %{version}-%{release}, postgresql-devel
+
+%description devel
+Header files needed to link to the AffxSeq PostgreSQL module
+
+%prep
+%setup -q
+
+%build
+	touch debugfiles.list
+	make all
+	make libaffxseq.so
+	make swig PERL_INC=%{perl_archlib}/CORE
+	make test-lib
+
+%install
+	#pg C libs
+	mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/pgsql
+	install -m 755 libaffxseq.so ${RPM_BUILD_ROOT}%{_libdir}/pgsql
+
+	#perl libs
+	mkdir -p ${RPM_BUILD_ROOT}%{perl_archlib}/Affx
+	mkdir -p ${RPM_BUILD_ROOT}%{perl_archlib}/auto/AffxSeqLib
+	install -m 644 Affx/Seq.pm ${RPM_BUILD_ROOT}%{perl_archlib}/Affx
+	install -m 644 AffxSeqLib.pm ${RPM_BUILD_ROOT}%{perl_archlib}
+	install -m 755 AffxSeqLib.so ${RPM_BUILD_ROOT}%{perl_archlib}/auto/AffxSeqLib
+
+	#headers
+	mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/postgresql-AffxSeq/kent-code
+	install -m 644 *.h ${RPM_BUILD_ROOT}%{_includedir}/postgresql-AffxSeq
+	install -m 644 kent-code/*.h ${RPM_BUILD_ROOT}%{_includedir}/postgresql-AffxSeq/kent-code
+
+	#binaries
+	mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
+	install -m 755 nib-extract ${RPM_BUILD_ROOT}%{_bindir}
+
+	#documentation
+	mkdir -p ${RPM_BUILD_ROOT}%{_datadir}
+	find ${RPM_BUILD_ROOT}%{_bindir}      -type f -printf "%{_bindir}/%%P\n"   >> %{name}-%{version}-filelist
+	find ${RPM_BUILD_ROOT}%{_libdir}      -type f -printf "%{_libdir}/%%P\n"   >> %{name}-%{version}-filelist
+	find ${RPM_BUILD_ROOT}%{_datadir}     -type f -printf "%{_datadir}/%%P\n"  >> %{name}-%{version}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%files -f %{name}-%{version}-filelist
+%defattr(-,root,root)
+%doc AFFY-README LICENSE-BSD affx-seq-lib-defs.sql
+
+%files devel
+%defattr(-,root,root)
+%{_includedir}/postgresql-AffxSeq/*
+
+$Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.1  2006/07/16 08:13:30  boconnor
+Added spec file.
+
