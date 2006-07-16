@@ -1,0 +1,109 @@
+#$Id: perl-DBIx-DBSchema.spec.in,v 1.1 2006/07/16 07:30:38 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-DBIx-DBSchema
+Version: 0.24
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/DBIx-DBSchema/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-DBD-Pg >= 1.32
+
+Source0: DBIx-DBSchema-0.24.tar.gz
+
+%description
+DBIx::DBSchema
+
+Copyright (c) 2000-2005 Ivan Kohler
+Copyright (c) 2000 Mail Abuse Prevention System LLC
+All rights reserved.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+This module implements an OO-interface to database schemas.  Using this module,
+you can create a database schema with an OO Perl interface.  You can read the
+schema from an existing database.  You can save the schema to disk and restore
+it from different process.  Most importantly, DBIx::DBSchema can write SQL
+CREATE statements for different databases from a single source.
+
+Currently supported databases are MySQL, PostgreSQL, Oracle and Sybase.
+DBIx::DBSchema will attempt to use generic SQL syntax for other databases.
+Assistance adding support for other databases is welcomed.  See the
+DBIx::DBSchema::DBD manpage, "Driver Writer's Guide and Base Class".
+
+To install:
+	perl Makefile.PL
+	make
+	make test # nothing substantial yet
+	make install
+
+Documentation will then be available via `man DBIx::DBSchema' or
+`perldoc DBIx::DBSchema'.
+
+Anonymous CVS access is available:
+  $ export CVSROOT=":pserver:anonymous@cleanwhisker.420.am:/home/cvs/cvsroot"
+  $ cvs login
+  (Logging in to anonymous@cleanwhisker.420.am)
+  CVS password: anonymous
+  $ cvs checkout DBIx-DBSchema
+as well as <http://www.420.am/cgi-bin/cvsweb/DBIx-DBSchema>.
+
+A mailing list is available.  Send a blank message to
+<ivan-dbix-dbschema-users-subscribe@420.am>.
+
+Homepage: <http://www.420.am/dbix-dbschema>
+
+
+%prep
+%setup -q -n DBIx-DBSchema-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-DBIx-DBSchema.spec.in,v $
+Revision 1.1  2006/07/16 07:30:38  boconnor
+Added spec file
+
