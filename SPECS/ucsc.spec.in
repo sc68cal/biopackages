@@ -1,0 +1,190 @@
+#$Id: ucsc.spec.in,v 1.1 2006/07/16 09:06:38 boconnor Exp $
+Summary: Jim Kent's suite of biological analysis and web display programs
+Name: ucsc
+Version: 456
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: jksrc%{version}.zip
+Source1: gfServer.conf
+Source2: gfServer.sh
+License: Custom 
+Group: Applications/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.genome.ucsc.edu
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+Requires: chkconfig
+BuildRequires: biopackages, gcc, mysql, mysql-devel
+
+#
+#find . -type f -exec perl -p -i -e 's!/usr/local/apache/cgi-bin[^\$\s]+!/var/www/cgi-bin!gs' {} \;
+#
+#patch variable for setting cgi-bin path
+Patch0: jksrc-456.common.mk.patch
+
+#
+#find . -type f -exec perl -p -i -e 's!(\$[\{\(]CGI_BIN[\}\)])-[^/]+!$1!' {} \;
+#
+#should be doable in Patch1, but many cgi-bin paths hardcoded
+Patch1: jksrc-456.cgi-bin.patch
+
+#
+#find . -type f -exec perl -p -i -e 's!\$[\{\(]HOME[\}\)]/bin/\$[\{\(]MACHTYPE[\}\)]!\$\(PREFIX\)/usr/bin!gs' {} \;
+#
+#install in $PREFIX/usr/bin, not ~/bin/$MACHTYPE
+Patch2: jksrc-456.home-bin-machtype.patch
+
+#
+#manual
+#
+#fixes link path problems, mostly
+Patch3: jksrc-456.hg.patch
+
+#
+#manual
+#
+#fixes link path problems, mostly
+Patch4: jksrc-456.utils.patch
+
+#
+#manual
+#
+#input files for blat regression tests, mostly
+Patch5: jksrc-456.sundry-fixes.patch
+
+#
+#manual
+#
+Patch6: jksrc-456.makefile.patch
+
+%description
+CONTENTS AND COPYRIGHT
+
+This archive contains the entire source tree for Jim Kent's suite 
+of biological analysis and web display programs.  All files are
+copyrighted, but license is hereby granted for personal,
+academic, and non-profit use.  A license is also granted
+for the contents of the top level lib directory for commercial
+users.  Commercial users should contact jim_kent@pacbell.net for 
+access to other modules.
+
+Most users will only be interested in the inc and lib
+directories, which contain the interfaces and implementations
+to the library routines,  and in a few specific applications.
+The applications are scattered in other directories.
+Many of them are web based.  A few of them expect
+the MySQL database to be around.
+
+MAJOR MODULES
+
+Here is a list of some of the more useful modules in
+the library.  Unless noted the module is a .h file
+in the inc directory and a .c file in the lib
+directory.
+
+o - common  - String handling, singly-linked list handling. 
+    Other basic stuff every other module uses.
+o - hash - Simple but effective hash table routines.
+o - linefile - Line oriented file input, on some systems
+    much faster than fgets().
+o - cheapcgi - Parses out cgi variables for scripts called
+    from web pages.
+o - htmshell - Helps generate HTML output for scripts that
+    are called from web pages or just want to make web
+    pages.
+o - memgfx - Creates a 256 color image in memory which
+    can be drawn on, then saved as a .GIF file which
+    can be encorperated into a web page.
+o - fuzzyFind - Align two pieces of DNA that are 
+    relatively similar (~80% base identity or better).
+    Works best when one sequence is less than 30,000
+    bases and the other less than 100,000 bases.
+o - patSpace and supStitch - Align longer pieces of
+    DNA.
+o - xensmall - Align two small pieces of dissimilar DNA.
+    (7 State Pairwise HMM)
+o - xenbig - Align two large pieces of dissimilar DNA.
+o - jksql - Interface to mySQL that frees resources on
+    exit and error conditions.
+o - dnautils and dnaseq - Simple utilities on DNA.
+o - fa - Read/write fasta format files.
+o - serv* and port* - Adapt the code to the peculiarities of
+    various web servers.
+
+%package cgi
+Summary: web display programs
+Group: Applications/Bioinformatics
+Requires: ucsc = %{version}-%{release}
+
+%description cgi
+web display programs
+
+%package blat
+Summary: UCSC BLAT programs (blat, gfClient, gfServer)
+Group: Applications/Bioinformatics
+Requires: ucsc = %{version}-%{release}
+
+%description blat
+Utilties for doing sequence alignment.  blat is a standalone program,
+while gfServer and gfClient communicate over TCP sockets.  This package
+also includes an /etc/init.d script for running multiple gfServers as a
+system service.
+
+%prep
+#%setup -q 
+%setup -c %{name}-%{version}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p2
+%patch4 -p2
+%patch5 -p1
+%patch6 -p0
+
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin
+mkdir -p $RPM_BUILD_ROOT/etc/bioinformatics
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+
+%build
+MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'` MYSQLINC=/usr/include/mysql  MYSQLLIBS='-L/usr/lib/mysql -L/usr/lib64/mysql -lmysqlclient' PREFIX=$RPM_BUILD_ROOT make blatSuite ;
+MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'` MYSQLINC=/usr/include/mysql  MYSQLLIBS='-L/usr/lib/mysql -L/usr/lib64/mysql -lmysqlclient' PREFIX=$RPM_BUILD_ROOT make topLibs ;
+cd hg ; MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'` MYSQLINC=/usr/include/mysql  MYSQLLIBS='-L/usr/lib/mysql -L/usr/lib64/mysql -lmysqlclient' PREFIX=$RPM_BUILD_ROOT make utils ; cd ..
+MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'` MYSQLINC=/usr/include/mysql  MYSQLLIBS='-L/usr/lib/mysql -L/usr/lib64/mysql -lmysqlclient' PREFIX=$RPM_BUILD_ROOT make utils ;
+MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'` MYSQLINC=/usr/include/mysql  MYSQLLIBS='-L/usr/lib/mysql -L/usr/lib64/mysql -lmysqlclient' PREFIX=$RPM_BUILD_ROOT make cgi ;
+
+%install
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/bioinformatics
+install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/init.d/gfServer
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  | grep -vE '/blat$' | grep -vE '/gfServer$' | grep -vE '/gfClient$' | grep -vE '/gfServer.conf$' \
+  >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%files cgi 
+%defattr(-,root,root)
+%{_var}/*
+
+%files blat
+/etc/bioinformatics/gfServer.conf
+/etc/init.d/gfServer
+%{_bindir}/blat
+%{_bindir}/gfClient
+%{_bindir}/gfServer
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post blat
+chkconfig --add gfServer
+
+%preun blat
+chkconfig --del gfServer
+
+$Log: ucsc.spec.in,v $
+Revision 1.1  2006/07/16 09:06:38  boconnor
+Added spec files
+
