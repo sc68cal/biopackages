@@ -1,4 +1,4 @@
-#$Id#
+#$Id: postgresql-AffxSeq.spec.in,v 1.2 2006/07/16 08:18:08 boconnor Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
 Version: 1.00
@@ -82,6 +82,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.2  2006/07/16 08:18:08  boconnor
+Added spec file.
+
 Revision 1.1  2006/07/16 08:13:30  boconnor
 Added spec file.
 
