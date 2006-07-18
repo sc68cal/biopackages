@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.18 2006/07/18 18:38:11 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.19 2006/07/18 18:39:30 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -64,7 +64,7 @@ mkdir -p /usr/local/include
 ln -s /sw/include/xercesc /usr/local/include/xercesc
 ln -s /sw/lib/*xerces* /usr/local/lib/
 # now bootstrap the system with fink
-fink -y install apache2 apache2-dev apache2-common apache2-mpm-wo apr apr-common apr-shlibs apt apt-shlibs aquaterm aquaterm-dev aquaterm-shlib autoconf2.5 base-files bash bison bzip2 bzip2-dev bzip2-shlibs cctools-extra compress-zlib- daemonic db43-shlibs debianutils dpkg expat expat-shlibs f2c fink fink-mirrors fink-prebindin fontconfig2-sh fort77 freetype219 freetype219-sh g95 gawk gcc4 gcc4-shlibs gd-bin gd-shlibs gd2 gd2-shlibs gdbm-shlibs gdbm3 gdbm3-shlibs gettext gettext-bin gettext-dev gettext-tools glib glib-shlibs gmp gmp-shlibs gzip html-parser-pm html-tagset-pm image-base-pm image-xpm-pm lesstif lesstif-shlibs libgcrypt libgcrypt-shli libgeos2 libgeos2-shlib libgettext3-sh libgmpxx4-shli libgpg-error-s libiconv libiconv-bin libiconv-dev libjpeg libjpeg-bin libjpeg-shlibs libmpfr1 libmpfr1-shlib libncurses5 libncurses5-sh libpng3 libpng3-shlibs libwww-pm586 libxml2 libxml2-bin libxml2-shlibs libxslt libxslt-bin libxslt-shlibs links m4 make mysql mysql-client mysql-dev mysql-shlibs mysql15-shlibs ncurses ncurses-shlibs netcdf netcdf-bin netcdf-shlibs odcctools openssl openssl-dev openssl-shlibs passwd pgplot pkgconfig postgresql80 postgresql80-d postgresql80-s postgresql80-u proj proj-shlibs pth-shlibs readline-shlib readline5 readline5-shli system-openssl tar unzip uri-pm586 wget xerces-c xerces-c-dev xerces-c-shlib xml-parser-pm5
+/sw/bin/fink -y install apache2 apache2-dev apache2-common apache2-mpm-wo apr apr-common apr-shlibs apt apt-shlibs aquaterm aquaterm-dev aquaterm-shlib autoconf2.5 base-files bash bison bzip2 bzip2-dev bzip2-shlibs cctools-extra compress-zlib- daemonic db43-shlibs debianutils dpkg expat expat-shlibs f2c fink fink-mirrors fink-prebindin fontconfig2-sh fort77 freetype219 freetype219-sh g95 gawk gcc4 gcc4-shlibs gd-bin gd-shlibs gd2 gd2-shlibs gdbm-shlibs gdbm3 gdbm3-shlibs gettext gettext-bin gettext-dev gettext-tools glib glib-shlibs gmp gmp-shlibs gzip html-parser-pm html-tagset-pm image-base-pm image-xpm-pm lesstif lesstif-shlibs libgcrypt libgcrypt-shli libgeos2 libgeos2-shlib libgettext3-sh libgmpxx4-shli libgpg-error-s libiconv libiconv-bin libiconv-dev libjpeg libjpeg-bin libjpeg-shlibs libmpfr1 libmpfr1-shlib libncurses5 libncurses5-sh libpng3 libpng3-shlibs libwww-pm586 libxml2 libxml2-bin libxml2-shlibs libxslt libxslt-bin libxslt-shlibs links m4 make mysql mysql-client mysql-dev mysql-shlibs mysql15-shlibs ncurses ncurses-shlibs netcdf netcdf-bin netcdf-shlibs odcctools openssl openssl-dev openssl-shlibs passwd pgplot pkgconfig postgresql80 postgresql80-d postgresql80-s postgresql80-u proj proj-shlibs pth-shlibs readline-shlib readline5 readline5-shli system-openssl tar unzip uri-pm586 wget xerces-c xerces-c-dev xerces-c-shlib xml-parser-pm5
 
 %postun
 
@@ -75,6 +75,9 @@ fink -y install apache2 apache2-dev apache2-common apache2-mpm-wo apr apr-common
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.19  2006/07/18 18:39:30  boconnor
+Added fink bootstrap
+
 Revision 1.18  2006/07/18 18:38:11  boconnor
 Added fink bootstrap
 
