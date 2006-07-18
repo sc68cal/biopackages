@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.13 2006/07/18 05:54:00 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.14 2006/07/18 06:39:22 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -27,7 +27,7 @@ Provides: libcrypto.0.9.7.dylib, libssl.0.9.7.dylib, libxerces-c.27.dylib
 Provides: /usr/local/bin/perl, /bin/sh
 Provides: perl-URI, perl-HTML-Parser
 Provides: perl(HTML::Parser), perl(URI), perl(Digest::MD5), perl(HTML::Entities)
-Provides: perl(MIME::Base64)
+Provides: perl(MIME::Base64), perl(:WITH_ITHREADS), perl(:WITH_THREADS), perl(:WITH_LARGEFILES)
 
 %description
 One problem with the biopackages.net RPM approach is porting to MacOS X.
@@ -71,6 +71,9 @@ ln -s /sw/lib/*xerces* /usr/local/lib/
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.14  2006/07/18 06:39:22  boconnor
+Added more packages
+
 Revision 1.13  2006/07/18 05:54:00  boconnor
 updated provides
 
