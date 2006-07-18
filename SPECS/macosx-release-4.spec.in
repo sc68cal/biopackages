@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.10 2006/07/18 05:18:21 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.11 2006/07/18 05:35:51 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -13,7 +13,7 @@ BuildArch: noarch
 #Requires: 
 #BuildRequires: 
 Provides: autoconf, automake, gcc, gcc-g77, gcc-c++, gd, gd-devel, make
-Provides: perl, mod_perl, httpd-devel, httpd
+Provides: perl, mod_perl, httpd-devel, httpd, wget
 Provides: bash, netcdf, netcdf-devel, xorg-x11-Mesa-libGLU
 Provides: glibc, glibc-devel, pgplot-devel, pgplot
 Provides: httpd-mmn, apr, apr-devel, apr-util-devel, openssl, openssl-devel
@@ -70,6 +70,9 @@ ln -s /sw/lib/*xerces* /usr/local/lib/
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.11  2006/07/18 05:35:51  boconnor
+Updated macosx provides
+
 Revision 1.10  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
