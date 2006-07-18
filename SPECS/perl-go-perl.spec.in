@@ -1,4 +1,4 @@
-#$Id: perl-go-perl.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+#$Id: perl-go-perl.spec.in,v 1.2 2006/07/18 07:17:26 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: GO Perl
@@ -52,23 +52,24 @@ see INSTALL for installation instructions
 
 %build
 
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/obo_html.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_chadodb_prestore.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_chadoxml.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_dig.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_formal_def_summary.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_godb_prestore.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_obosummary.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_obotext.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_owl.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_racer.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_relationship_summary_table.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_summary_table.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/owl_to_oboxml.xsl?rev=HEAD
-wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/text_html.xsl?rev=HEAD
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/obo_html.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_chadodb_prestore.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_chadoxml.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_dig.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_formal_def_summary.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_godb_prestore.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_obosummary.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_obotext.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_owl.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_racer.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_relationship_summary_table.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/oboxml_to_summary_table.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/owl_to_oboxml.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+wget 'http://geneontology.cvs.sourceforge.net/geneontology/go-dev/xml/xsl/text_html.xsl?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD'
+
 
 for i in *HEAD ; do
-    mv $i ${i/?rev=HEAD/} ;
+    mv $i ${i/?revision=HEAD&content-type=text%2Fplain&pathrev=HEAD/} ;
 done ;
 
 
@@ -115,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.xsl
 
 $Log: perl-go-perl.spec.in,v $
+Revision 1.2  2006/07/18 07:17:26  boconnor
+Updated wget URLs
+
 Revision 1.1  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
