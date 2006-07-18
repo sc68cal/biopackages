@@ -1,0 +1,70 @@
+#$Id: perl-XML-SAX.spec.in,v 1.1 2006/07/18 06:03:24 boconnor Exp $
+%define _use_internal_dependency_generator 0
+
+Summary: XML-SAX Perl module
+Name: perl-XML-SAX
+Version: 0.12
+Release: %{revision}.%{distro}
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/XML-SAX/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl >= 2:5.8.0
+Requires: %(perl -MConfig -le 'if (defined $Config{useithreads}) { print "perl(:WITH_ITHREADS)" } else { print "perl(:WITHOUT_ITHREADS)" }')
+Requires: %(perl -MConfig -le 'if (defined $Config{usethreads}) { print "perl(:WITH_THREADS)" } else { print "perl(:WITHOUT_THREADS)" }')
+Requires: %(perl -MConfig -le 'if (defined $Config{uselargefiles}) { print "perl(:WITH_LARGEFILES)" } else { print "perl(:WITHOUT_LARGEFILES)" }')
+Source0: XML-SAX-0.12.tar.gz
+Source1: filter-requires-xmlsax.sh
+Patch0: perl-XML-SAX-0.12.parserdetails-install.patch 
+BuildRequires: perl, perl-XML-NamespaceSupport, biopackages
+Provides: perl(XML::SAX::PurePerl::DTDDecls), perl(XML::SAX::PurePerl::DocType), perl(XML::SAX::PurePerl::EncodingDetect), perl(XML::SAX::PurePerl::XMLDecl)
+
+# Provide perl-specific find-{provides,requires}.
+%define __find_provides %{_usr}/lib/rpm/find-provides.perl
+# %%define __find_requires /usr/lib/rpm/find-requires.perl
+%define __find_requires %{SOURCE1}
+
+
+%description
+%{summary}.
+
+%prep
+%setup -q -n XML-SAX-%{version}
+%patch0 -p1
+
+%build
+rm -rf $RPM_BUILD_ROOT
+echo Y | CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}
+mkdir -p blib/lib/XML/SAX
+touch blib/lib/XML/SAX/ParserDetails.ini
+make OPTIMIZE="$RPM_OPT_FLAGS"
+#make test
+
+%install
+mkdir -p $RPM_BUILD_ROOT
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-%{version}-%{release}-filelist
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-XML-SAX.spec.in,v $
+Revision 1.1  2006/07/18 06:03:24  boconnor
+Added new spec files
+
