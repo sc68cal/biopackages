@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.15 2006/07/18 06:53:44 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.16 2006/07/18 07:04:36 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -23,6 +23,7 @@ Provides: xerces-c, postgresql, postgresql-devel, postgresql-server, postgresql-
 Provides: libSystem.B.dylib, libpq.4.dylib, libX11.6.dylib, libiconv.2.dylib, libxml2.2.dylib
 Provides: libXpm.4.dylib, libfontconfig.1.dylib, libfreetype.6.dylib, libgd.2.dylib
 Provides: libjpeg.62.dylib, libpng12.0.dylib, libz.1.dylib, libnetcdf.3.dylib
+Provides: libexslt.0.dylib, libxslt.1.dylib
 Provides: libcrypto.0.9.7.dylib, libssl.0.9.7.dylib, libxerces-c.27.dylib
 Provides: /usr/local/bin/perl, /bin/sh
 Provides: perl-URI, perl-HTML-Parser
@@ -71,6 +72,9 @@ ln -s /sw/lib/*xerces* /usr/local/lib/
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.16  2006/07/18 07:04:36  boconnor
+updates
+
 Revision 1.15  2006/07/18 06:53:44  boconnor
 updates
 
