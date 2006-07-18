@@ -1,0 +1,109 @@
+#$Id: perl-XML-LibXML-Common.spec.in,v 1.1 2006/07/18 06:49:22 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Routines and Constants common for XML::LibXML and XML::GDOME
+Name: perl-XML-LibXML-Common
+Version: 0.13
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/XML-LibXML-Common/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: XML-LibXML-Common-0.13.tar.gz
+
+%description
+XML::LibXML::Common 
+===================
+
+XML::LibXML::Common contains several constants and functions that
+are shared by XML::LibXML, XML::GDOME and XML::LibXSLT (not all done, yet)
+
+This package is required at least for XML::LibXML 1.53 or later to 
+work properly.
+
+Of course libxml2 2.4.20 needs to be installed, to compile this package.
+you can get the latest libxml2 version from 
+    ftp://xmlsoft.org
+
+If this library is not installed, don't expect any XML::LibXML module to 
+compile.
+
+The latest cvs can be found at sourceforge:
+http://sourceforge.net/projects/perl-xml
+
+For requests please contact me by e-mail. I try to answer my e-mails
+on a regular basis. But since I am offline from time to time it may take
+up to a week before I will be able to answer.
+
+AUTHOR
+======
+
+christian glahn ( christian.glahn at uibk.ac.at )
+
+License
+=======
+
+This is free software, you may use it and distribute it under the same
+terms as Perl itself. 
+
+Copyright (c) 2002 Christian Glahn, All rights reserved.
+
+DISCLAIMER
+==========
+
+THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+%prep
+%setup -q -n XML-LibXML-Common-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-XML-LibXML-Common.spec.in,v $
+Revision 1.1  2006/07/18 06:49:22  boconnor
+New spec.in
+
