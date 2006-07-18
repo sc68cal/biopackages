@@ -1,4 +1,4 @@
-#$Id: postgresql-AffxSeq.spec.in,v 1.2 2006/07/16 08:18:08 boconnor Exp $
+#$Id: postgresql-AffxSeq.spec.in,v 1.3 2006/07/18 05:18:21 boconnor Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
 Version: 1.00
@@ -8,9 +8,10 @@ Group: Applications/Databases
 Vendor: Affymetrix, Inc.
 URL: http://www.affymetrix.com
 Source: postgresql-AffxSeq-1.00.tar.gz
+Patch: postgresql-AffxSeq-1.00.patch
 BuildRoot: /var/tmp/%{name}-%{PACKAGE_VERSION}-root
 Provides:  postgresql-AffxSeq
-Buildrequires: postgresql-devel, ucsc, biopackages
+BuildRequires: postgresql-devel, ucsc, biopackages
 %define __spec_install_post %{_usr}/lib/rpm/brp-compress || :
 
 %description
@@ -36,12 +37,22 @@ Header files needed to link to the AffxSeq PostgreSQL module
 %prep
 %setup -q
 
+if [ "%{distro}" == "bp.darwin" ]; then
+echo "Detected Darwin, patching Makefile"
+%patch -p1
+else 
+  echo "Not applying Darwin patch"
+fi
+
 %build
 	touch debugfiles.list
 	make all
 	make libaffxseq.so
+# FIXME: Haven't gotten these to work on Darwin
+if [ "%{distro}" != "bp.darwin" ]; then
 	make swig PERL_INC=%{perl_archlib}/CORE
 	make test-lib
+fi
 
 %install
 	#pg C libs
@@ -53,7 +64,10 @@ Header files needed to link to the AffxSeq PostgreSQL module
 	mkdir -p ${RPM_BUILD_ROOT}%{perl_archlib}/auto/AffxSeqLib
 	install -m 644 Affx/Seq.pm ${RPM_BUILD_ROOT}%{perl_archlib}/Affx
 	install -m 644 AffxSeqLib.pm ${RPM_BUILD_ROOT}%{perl_archlib}
+# FIXME: don't currently build on Darwin
+if [ "%{distro}" != "bp.darwin" ]; then
 	install -m 755 AffxSeqLib.so ${RPM_BUILD_ROOT}%{perl_archlib}/auto/AffxSeqLib
+fi
 
 	#headers
 	mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/postgresql-AffxSeq/kent-code
@@ -66,9 +80,17 @@ Header files needed to link to the AffxSeq PostgreSQL module
 
 	#documentation
 	mkdir -p ${RPM_BUILD_ROOT}%{_datadir}
+# Find doesn't support this printf feature in Darwin
+if [ "%{distro}" != "bp.darwin" ]; then
 	find ${RPM_BUILD_ROOT}%{_bindir}      -type f -printf "%{_bindir}/%%P\n"   >> %{name}-%{version}-filelist
 	find ${RPM_BUILD_ROOT}%{_libdir}      -type f -printf "%{_libdir}/%%P\n"   >> %{name}-%{version}-filelist
 	find ${RPM_BUILD_ROOT}%{_datadir}     -type f -printf "%{_datadir}/%%P\n"  >> %{name}-%{version}-filelist
+else
+  find ${RPM_BUILD_ROOT}%{perl_archlib} -type f | perl -pe "s@.*%{perl_archlib}@%{perl_archlib}@" >> %{name}-%{version}-filelist
+  find ${RPM_BUILD_ROOT}%{_bindir} -type f | perl -pe "s@.*%{_bindir}@%{_bindir}@" >> %{name}-%{version}-filelist
+  find ${RPM_BUILD_ROOT}%{_libdir} -type f | perl -pe "s@.*%{_libdir}@%{_libdir}@" >> %{name}-%{version}-filelist
+  find ${RPM_BUILD_ROOT}%{_datadir} -type f | perl -pe "s@.*%{_datadir}@%{_datadir}@" >> %{name}-%{version}-filelist
+fi
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -82,6 +104,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.3  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+
 Revision 1.2  2006/07/16 08:18:08  boconnor
 Added spec file.
 

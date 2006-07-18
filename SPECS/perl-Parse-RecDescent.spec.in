@@ -1,4 +1,4 @@
-#$Id: perl-Parse-RecDescent.spec.in,v 1.1 2006/07/16 07:33:52 boconnor Exp $
+#$Id: perl-Parse-RecDescent.spec.in,v 1.2 2006/07/18 05:18:21 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -115,7 +115,7 @@ Parse::RecDescent has been uploaded to the CPAN
 
 
 %prep 
-%setup -q -n perl-Parse-RecDescent-%{version}
+%setup -q -n Parse-RecDescent-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -160,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Parse-RecDescent.spec.in,v $
+Revision 1.2  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+
 Revision 1.1  2006/07/16 07:33:52  boconnor
 Added spec file
 

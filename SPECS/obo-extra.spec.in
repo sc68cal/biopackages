@@ -1,0 +1,116 @@
+#$Id: obo-extra.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+Summary: Open BioMedical Ontologies, Non-core subset
+Name: obo-extra
+Version: 1.0.0
+Epoch: 0
+Release: %{revision}.%{distro}
+# mkdir SOURCES/obo-extra-1.0.0 ; cd SOURCES/obo-extra-1.0.0
+# cat ../../SPECS/obo-extra.spec | grep -E '^#Source' | ( while read crap dir url; do mkdir $dir; cd $dir ; wget $url ; cd .. ; done )
+#Animal natural history and life history
+#Source: BrendaTissue       http://www.brenda.uni-koeln.de/ontology/tissue/tree/update/update_files/BrendaTissue
+#Source: BrendaTissue       http://www.brenda.uni-koeln.de/ontology/tissue/tree/update/update_files/BrendaTissueDefinitions
+#Source: Trait_Osa          http://brebiou.cshl.edu/viewcvs/*checkout*/Poc/traits/trait.ontology
+#Source: Trait_Osa          http://brebiou.cshl.edu/viewcvs/*checkout*/Poc/traits/trait.definition
+#Source: Chemical           ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/ontology.obo
+#Source: ProteinInteraction http://psidev.sourceforge.net/mi/controlledVocab/psi-mi.dag
+#Source: ProteinInteraction http://psidev.sourceforge.net/mi/controlledVocab/psi-mi.def
+#Habronattus courtship
+#Loggerhead nesting
+#Source: EvidenceCode       http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/evidence_code.obo
+#Source: eVOC               http://www.evocontology.org/uploads/Main/evoc_v2.4_obo.tar.gz
+#Source: MGED               http://mged.sourceforge.net/ontologies/MGEDOntology.daml
+#Source: FIX                http://www.ebi.ac.uk/~kirill/FIX/fix.ontology
+#Source: Disease_Hsa        http://easynews.dl.sourceforge.net/sourceforge/diseaseontology/DO_08_18_03.txt
+#Source: Image              http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/experimental_conditions/imaging_methods/image.ontology
+#Source: ProteinDomain      http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/genomic-proteomic/mao.obo
+#MESH to GO
+#Source: Phenotype_Mmu      ftp://ftp.informatics.jax.org/pub/reports/MPheno.ontology
+#Source: Phenotype_Mmu      ftp://ftp.informatics.jax.org/pub/reports/MP.defs
+#NCI Thesaurus
+#Swissprot organismal classification
+#Source: Phenotype_Mammal   http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/phenotype/context.ontology
+#Source: Phenotype_Mammal   http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/phenotype/context.definition
+#Source: Environment        http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/phenotype/environment/environment_ontology.obo
+#Source: Reaction           http://www.ebi.ac.uk/~kirill/REX/rex.obo
+#Source: Taxonomy           ftp://ftp.ebi.ac.uk/pub/databases/taxonomy/taxonomy.dat
+#Caenorhabditis gross anatomy 
+Source0: %{name}-%{version}.tar.gz
+
+License: Custom
+Group: Bioinformatics/Ontologies
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://obo.sf.net
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+BuildArch: noarch
+BuildRequires: biopackages
+
+%description
+Open Biomedical Ontologies is an umbrella web address for well-structured controlled vocabularies for shared use across different
+biological and medical domains. 
+
+1. The ontologies must be open and can be used by all without any constraint other than that their origin must be acknowledged and
+they cannot be altered and redistributed under the same name. 
+
+The OBO ontologies are for sharing and are resources for the entire community. For this reason, they must be available to all without
+any constraint or license on their use or redistribution. However, it is proper that their original source is always credited and that
+after any external alterations, they must never be redistributed under the same name or with the same identifiers. 
+
+2. The ontologies are in, or can be instantiated in, a common shared syntax. This may be either the GO syntax, extensions of this
+syntax, or OWL. 
+
+The reason for this is that the same tools can then be usefully applied. This facilitates shared software implementations. This
+criterion is not met in all of the ontologies currently listed, but we are working with the ontology developers to have them available
+in a common OBO syntax. 
+
+3. The ontologies are orthogonal to other ontologies already lodged within OBO. 
+
+The major reason for this principle is to allow two different ontologies, for example anatomy and process, to be combined through
+additional relationships. These relationships could then be used to constrain when terms could be jointly applied to describe
+complementary (but distinguishable) perspectives on the same biological or medical entity.  As a corollary to this, we would strive
+for community acceptance of a single ontology for one domain, rather than encouraging rivalry between ontologies. 
+
+4. The ontologies share a unique identifier space. 
+
+The source of concepts from any ontology can be immediately identified by the prefix of the identifier of each concept. It is,
+therefore, important that this prefix be unique. 
+
+5. The ontologies include textual definitions of their terms. 
+
+Many biological and medical terms may be ambiguous, so concepts should be defined so that their precise meaning within the context of
+a particular ontology is clear to a human reader. 
+
+%prep
+%setup -q 
+
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo
+
+
+%build
+
+%install
+
+for i in * ; do
+  mkdir $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
+  chmod a+rX,u+w,g-w,o-w $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
+  for j in $i/* ; do
+    install -m 444 $j $RPM_BUILD_ROOT%{_datadir}/obo/$i/ ;
+  done ;
+done ;
+
+%files
+%{_datadir}/obo/*
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: obo-extra.spec.in,v $
+Revision 1.1  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+

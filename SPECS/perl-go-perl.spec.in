@@ -1,0 +1,120 @@
+#$Id: perl-go-perl.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: GO Perl
+Name: perl-go-perl
+Version: 0.02
+Release: %{revision}.%{distro} 
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/go-perl/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-XML-LibXSLT
+BuildRequires: wget
+Requires: perl-Graph, perl-XML-Writer, perl-bioperl
+
+Source0: go-perl-%{version}.tar.gz
+
+#remove RDF dependency
+Patch0: go-perl-%{version}-rdf.patch
+#modules in GO namespace referenced but not in dist
+Patch1: go-perl-%{version}-missing_modules.patch
+#new handler for biopackages use only
+Patch2: go-perl-%{version}-biopackages-handler.patch
+#merge go-apply-xslt from xml codebase
+Patch3: go-perl-%{version}-xslt.patch
+#defs parser should output name
+Patch4: go-perl-%{version}-go_def.patch
+
+%description
+go-perl modules
+===============
+
+This is a perl library for parsing go/obo flatfiles into various
+formats, or into perl objects
+
+See the doc/ directory
+
+See also
+
+  perldoc GO/Parser.pm
+
+see INSTALL for installation instructions
+
+%prep
+%setup -q -n go-perl-%{version}
+%patch0 -p1
+%patch1 -p1
+#%patch2 -p1
+%patch3 -p1
+%patch4 -p2
+
+%build
+
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/obo_html.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_chadodb_prestore.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_chadoxml.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_dig.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_formal_def_summary.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_godb_prestore.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_obosummary.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_obotext.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_owl.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_racer.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_relationship_summary_table.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/oboxml_to_summary_table.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/owl_to_oboxml.xsl?rev=HEAD
+wget http://cvs.sourceforge.net/viewcvs.py/geneontology/go-dev/xml/xsl/text_html.xsl?rev=HEAD
+
+for i in *HEAD ; do
+    mv $i ${i/?rev=HEAD/} ;
+done ;
+
+
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+%doc *.xsl
+
+$Log: perl-go-perl.spec.in,v $
+Revision 1.1  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+

@@ -1,4 +1,4 @@
-#$Id: macosx-release-4.spec.in,v 1.9 2006/07/15 01:55:21 boconnor Exp $
+#$Id: macosx-release-4.spec.in,v 1.10 2006/07/18 05:18:21 boconnor Exp $
 Summary: An RPM to provide fake packages already provided by Mac OS X.
 Name: macosx-release
 Version: 4
@@ -18,7 +18,7 @@ Provides: bash, netcdf, netcdf-devel, xorg-x11-Mesa-libGLU
 Provides: glibc, glibc-devel, pgplot-devel, pgplot
 Provides: httpd-mmn, apr, apr-devel, apr-util-devel, openssl, openssl-devel
 Provides: gdbm, gdbm-devel, lesstif, lesstif-devel, XFree86-devel
-Provides: xerces-c
+Provides: xerces-c, postgresql, postgresql-devel, postgresql-server, postgresql-libs
 Provides: libSystem.B.dylib, libpq.4.dylib, libX11.6.dylib
 Provides: libXpm.4.dylib, libfontconfig.1.dylib, libfreetype.6.dylib, libgd.2.dylib
 Provides: libjpeg.62.dylib, libpng12.0.dylib, libz.1.dylib, libnetcdf.3.dylib
@@ -70,6 +70,9 @@ ln -s /sw/lib/*xerces* /usr/local/lib/
 %doc README
 
 $Log: macosx-release-4.spec.in,v $
+Revision 1.10  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+
 Revision 1.9  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 

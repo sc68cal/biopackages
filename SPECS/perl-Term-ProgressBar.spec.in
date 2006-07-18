@@ -1,0 +1,106 @@
+#$Id: perl-Term-ProgressBar.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: provide a progress meter on a standard terminal
+Name: perl-Term-ProgressBar
+Version: 2.06
+Release: %{revision}.%{distro} 
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Term-ProgressBar/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Term-ProgressBar-2.06-r1.tar.gz
+
+%description
+Module Term-ProgressBar (2.06):
+
+Description:
+
+    A progress bar for things that take a while.  It looks like
+
+      50% [=====     ]
+
+    and is as long as the terminal.  Linear estimation of the time left for
+    the process to run is available.
+
+Modules & Classes Provided:
+
+    Term::ProgressBar - provide a progress meter on a standard terminal
+
+Required Packages:
+
+    Class::MethodMaker	1.02
+    Term::ReadKey	2.14
+
+Required Perl Version:
+
+    5.006
+
+Package Maintainer:
+
+    Martyn J. Pearce fluffy@cpan.org
+
+Copyright:
+
+    Copyright (c) 2003, 2002, 2001 Martyn J. Pearce.  This program is free
+    software; you can redistribute it and/or modify it under the same terms
+    as Perl itself.
+
+    Copyright (c) 2000 Ed Avis.  This program is free software; you can
+    redistribute it and/or modify it under the same terms as Perl itself.
+
+14th March, 2004
+
+
+%prep
+%setup -q -n Term-ProgressBar-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Term-ProgressBar.spec.in,v $
+Revision 1.1  2006/07/18 05:18:21  boconnor
+Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
+
