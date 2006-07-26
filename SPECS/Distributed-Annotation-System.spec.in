@@ -1,4 +1,4 @@
-#$Id: Distributed-Annotation-System.spec.in,v 1.6 2006/07/15 01:55:18 boconnor Exp $
+#$Id: Distributed-Annotation-System.spec.in,v 1.7 2006/07/26 21:43:31 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Distributed Annotation System
@@ -17,6 +17,7 @@ Requires: httpd, httpd-devel, perl, mod_perl, perl-Apache-Test, perl-Apache-Pars
 Requires: chado = 0.003
 
 Source0: Distributed-Annotation-System-%{version}.tar.gz
+
 
 %description
 A DAS/2 server that connects to a Chado database instance.
@@ -236,6 +237,9 @@ perl -p -i -e "s!  PerlAddVar  source                'mouse'!# PerlAddVar  sourc
 
 
 $Log: Distributed-Annotation-System.spec.in,v $
+Revision 1.7  2006/07/26 21:43:31  boconnor
+Updated DAS/2 to cvs HEAD
+
 Revision 1.6  2006/07/15 01:55:18  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
