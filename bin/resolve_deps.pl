@@ -9,10 +9,10 @@ use Data::Dumper;
 
 
 # Usage
-if (scalar(@ARGV) < 1) { print "Usage: resolve_deps.pl <spec_file_name_w/o_ext>\n"; exit; }
+if (scalar(@ARGV) < 2) { print "Usage: resolve_deps.pl <arch> <spec_file_name_w/o_ext>\n"; exit; }
 
 # The spec file to start with (name without extension)
-my ($spec_file) = @ARGV;
+my ($arch_str_universal, $spec_file) = @ARGV;
 
 # Hashes to store dependency tree
 my $req = {};
@@ -33,7 +33,7 @@ my $install = 1;
 open TREE, ">dep_tree.txt" or die;
 
 # distro string
-my $distro_str = `/usr/local/bin/bp-distro`;
+my $distro_str = `bp-distro`;
 chomp($distro_str);
 
 
@@ -75,12 +75,14 @@ sub parse_req {
       # vars to hold version string
       my $id_str = "";
       my $version_str = "";
-      my $arch_str = "ppc";
+
+      my $arch_str = $arch_str_universal;
       
       my @deps;
       $file =~ /^(.*).in$/;
       my $spec_file = $1;
-      open IN, "<$spec_file" or die;
+      system("make $spec_file");
+      open IN, "<$spec_file" or die "Can't open file: $spec_file\n";
       while (<IN>) {
         chomp;
         if ($_ =~ /^BuildRequires:\s+(.*)$/) {
@@ -110,6 +112,7 @@ sub parse_req {
 	}
         elsif ($_ =~ /^BuildArch:\s+(.*)$/) {
           $arch_str = $1;
+          print "Setting arch string to $arch_str for $spec_file\n";
 	}
       }
       close IN;
@@ -172,7 +175,7 @@ sub clean_package_names {
 sub read_no_build {
   my ($file) = @_;
   my $result = {};
-  open INPUT, $file or die;
+  open INPUT, $file or die "Can't read file: $file\n";
   while (<INPUT>) {
     chomp;
     $result->{$_} = 1;
