@@ -1,0 +1,44 @@
+#$Id: microarray-normalization-pool-Mapping50K_Hind240.spec.in,v 1.1 2006/07/29 00:44:22 boconnor Exp $
+%define platform Mapping50K_Hind240
+Summary: Microarrays to be used for quantification/normalization with BRLMM which is part of the Affymetrix Power Tools.
+Name: microarray-normalization-pool-%{platform}
+Version: 1.1
+Epoch: 0
+Release: %{revision}.%{distro} 
+Source0: %{platform}.tar.gz
+License: Custom
+Group: Bioinformatics/Data
+Packager: Brian O'Connor <boconnor@ucla.edu>
+URL: http://genomics.ctrl.ucla.edu
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+BuildRequires: biopackages
+
+%description
+%{platform} Microarrays to be used for quantification/normalization with BRLMM which is part of the Affymetrix Power Tools.
+
+%prep
+%setup -n %{platform}
+
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/microarray/%{platform};
+install -m 444 *.CEL $RPM_BUILD_ROOT%{_datadir}/microarray/%{platform}/;
+find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-%{platform};
+
+%files -f %{name}-%{version}-%{release}-%{platform}
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: microarray-normalization-pool-Mapping50K_Hind240.spec.in,v $
+Revision 1.1  2006/07/29 00:44:22  boconnor
+Adding new mapping normalization pool specs
+
+
