@@ -1,0 +1,103 @@
+#$Id: perl-HTTP-ProxySelector.spec.in,v 1.1 2006/08/02 01:53:03 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Perl extension for automatically setting an anonymous proxy
+Name: perl-HTTP-ProxySelector
+Version: 0.02
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/HTTP-ProxySelector/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: HTTP-ProxySelector-0.02.tar.gz
+
+%description
+HTTP/ProxySelector version 0.01
+===============================
+
+Automatically selects you an anonymous proxy for use of your UserAgent instance.
+Just hand it your favorite proxy list site, or use the defaults. The package will then
+use your existing useragent instance to access the site and set it's proxy settings according
+to a random entry in the list.
+
+See inline POD documentation for usage.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+The libwwwperl package (LWP). 
+No need to download, it's part of the perl distribution.
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2003 Eyal Udassin
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+
+
+%prep
+%setup -q -n HTTP-ProxySelector-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-HTTP-ProxySelector.spec.in,v $
+Revision 1.1  2006/08/02 01:53:03  allenday
+import
+
