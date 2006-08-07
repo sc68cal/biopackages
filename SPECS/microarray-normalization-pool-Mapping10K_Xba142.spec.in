@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool-Mapping10K_Xba142.spec.in,v 1.1 2006/01/09 20:06:48 allenday Exp $
+#$Id: microarray-normalization-pool-Mapping10K_Xba142.spec.in,v 1.2 2006/08/07 20:48:17 boconnor Exp $
 %define platform Mapping10K_Xba142
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool-%{platform}
@@ -44,9 +44,6 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_B
 %preun 
 
 $Log: microarray-normalization-pool-Mapping10K_Xba142.spec.in,v $
-Revision 1.1  2006/01/09 20:06:48  allenday
-microarray-normalization-pool-ATH1-121501.spec.in
-
-Revision 1.1  2006/01/09 19:54:54  allenday
-import
+Revision 1.2  2006/08/07 20:48:17  boconnor
+The 10K mapping normaliztion pool has been updated, rather than use 20ish arrays I've created a new RPM that includes 50, the min recommended by BRLMM for doing genotyping calls
 
