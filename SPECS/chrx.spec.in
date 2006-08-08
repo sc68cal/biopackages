@@ -1,0 +1,41 @@
+#$Id: chrx.spec.in,v 1.1 2006/08/08 19:49:45 boconnor Exp $
+Summary: Chromosome X definition files for all Affymetrix mapping platforms.
+Name: chrx
+Version: 1.1
+Epoch: 0
+Release: %{revision}.%{distro} 
+Source0: %{name}.tar.gz
+License: Custom
+Group: Bioinformatics/Data
+Packager: Brian O'Connor <boconnor@ucla.edu>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+BuildRequires: biopackages
+ 
+%description
+Chromosome X definition files for all Affymetrix mapping platforms.
+
+%prep
+%setup -qn %{name}
+
+%build
+
+%install
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name};
+install -m 444 *.chrx $RPM_BUILD_ROOT%{_datadir}/%{name}/;
+find $RPM_BUILD_ROOT/%{_datadir}/%{name} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release};
+
+%files -f %{name}-%{version}-%{release}
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+%preun 
+
+$Log: chrx.spec.in,v $
+Revision 1.1  2006/08/08 19:49:45  boconnor
+First checkin, package contains Chromosome X files for BRLMM (and other apps?)
+
+
