@@ -1,4 +1,4 @@
-#$Id: fftw.spec.in,v 1.1 2006/08/10 05:06:23 allenday Exp $
+#$Id: fftw.spec.in,v 1.2 2006/08/10 05:27:34 allenday Exp $
 Summary: Fastest Fourier Transform in the West library
 Name: fftw
 Version: 2.1.5
@@ -8,6 +8,8 @@ Group: System Environment/Libraries
 Source: http://www.fftw.org/fftw-%{version}.tar.gz
 URL: http://www.fftw.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: gcc, gcc-g77
+#gcc-gfortan on FC4
 
 %description
 FFTW is a C subroutine library for computing the Discrete Fourier Transform
@@ -114,6 +116,9 @@ develop programs using the FFTW fast Fourier transform library.
 %{_infodir}/fftw.info*
 
 $Log: fftw.spec.in,v $
+Revision 1.2  2006/08/10 05:27:34  allenday
+depcheck
+
 Revision 1.1  2006/08/10 05:06:23  allenday
 import
 
