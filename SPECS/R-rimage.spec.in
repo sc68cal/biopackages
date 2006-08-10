@@ -1,0 +1,44 @@
+#$Id: R-rimage.spec.in,v 1.1 2006/08/10 05:15:21 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.5.7
+Release: %{revision}.%{distro}
+Name: R-rimage
+Summary: Image Processing Module for R
+Group: Applications/Engineering
+License: GPL
+Source0: R.rimage_0.5-7.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: gcc, libjpeg-devel, fftw-devel
+Requires: libjpeg, fftw
+
+%description
+This package provides functions for image processing, including sobel filter, rank filters, fft, histogram equalization, and reading JPEG file. This package requires fftw-2  and libjpeg . This version doesn't require pixmap package, which the older version of rimage (private only) required. This package can be used on Unixes / MacOS X / Windows.
+
+%prep
+%setup -n rimage
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-rimage.spec.in,v $
+Revision 1.1  2006/08/10 05:15:21  allenday
+import
+
