@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.10 2006/03/23 21:53:10 boconnor Exp $
+#$Id: Makefile,v 1.11 2006/08/14 21:55:57 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -21,6 +21,30 @@ sources ::
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
+
+sync :		sync_clean sync_down sync_up
+sync_down :	sync_clean sync_down_small sync_down_large
+sync_up :	sync_clean sync_up_small sync_up_large
+sync_small :	sync_clean sync_down_small sync_up_small
+sync_large :	sync_clean sync_down_large sync_up_large
+
+sync_clean ::
+	find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+	find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+
+sync_down_large ::
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large/ ./SOURCES.large
+	ln -s SOURCES.large/* SOURCES/
+
+sync_down_small ::
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small/ ./SOURCES.small
+	ln -s SOURCES.small/* SOURCES/
+
+sync_up_large ::
+	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large
+
+sync_up_small ::
+	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small
 
 up ::
 	echo TODO
