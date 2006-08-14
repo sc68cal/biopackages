@@ -1,15 +1,17 @@
 #!/usr/bin/perl
 use strict;
 use Data::Dumper;
+use constant USAGE => <<"UUU";
+$0 <Spec-BuildArch> <Spec-Name>
 
-#This script starts with a certain package name and attempts to build all the
-#required packages that the given package both needs for build requirements and
-#also for install requirements.  At the end of this run, all the packages
-#required to build this package are installed.
-
+This script starts with a certain package name and attempts to build all the
+required packages that the given package both needs for build requirements and
+also for install requirements.  At the end of this run, all the packages
+required to build this package are installed.
+UUU
 
 # Usage
-if (scalar(@ARGV) < 2) { print "Usage: resolve_deps.pl <arch> <spec_file_name_w/o_ext>\n"; exit; }
+if (scalar(@ARGV) < 2) { print USAGE; exit(1); }
 
 # The spec file to start with (name without extension)
 my ($arch_str_universal, $spec_file) = @ARGV;
