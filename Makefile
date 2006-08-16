@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.11 2006/08/14 21:55:57 allenday Exp $
+#$Id: Makefile,v 1.12 2006/08/16 17:20:53 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -22,6 +22,15 @@ sources ::
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
 
+link : link_clean link_small link_large
+link_clean : sync_clean
+
+link_large ::
+	ln -s ~bpbuild/SOURCES.large/* ./SOURCES/
+
+link_small ::
+	ln -s ~bpbuild/SOURCES.small/* ./SOURCES/
+
 sync :		sync_clean sync_down sync_up
 sync_down :	sync_clean sync_down_small sync_down_large
 sync_up :	sync_clean sync_up_small sync_up_large
@@ -29,8 +38,9 @@ sync_small :	sync_clean sync_down_small sync_up_small
 sync_large :	sync_clean sync_down_large sync_up_large
 
 sync_clean ::
-	find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
-	find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "Move your files from SOURCES/ to one of ~bpbuild/SOURCES.{large,small}"; exit 1; fi
+	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 sync_down_large ::
 	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large/ ./SOURCES.large
