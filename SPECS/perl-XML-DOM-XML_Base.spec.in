@@ -1,4 +1,4 @@
-#$Id: perl-XML-DOM-XML_Base.spec.in,v 1.1 2006/08/16 17:37:38 allenday Exp $
+#$Id: perl-XML-DOM-XML_Base.spec.in,v 1.2 2006/08/16 17:42:35 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,8 +12,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/XML-DOM-XML_Base/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-XML-DOM
-Requires: perl-XML-DOM
+BuildRequires: perl, biopackages, perl-libxml-enno
+Requires: perl-libxml-enno
 Source0: XML-DOM-XML_Base-0.01.tar.gz
 
 %description
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-DOM-XML_Base.spec.in,v $
+Revision 1.2  2006/08/16 17:42:35  allenday
+depcheck
+
 Revision 1.1  2006/08/16 17:37:38  allenday
 import
 
