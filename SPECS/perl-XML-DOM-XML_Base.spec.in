@@ -1,0 +1,112 @@
+#$Id: perl-XML-DOM-XML_Base.spec.in,v 1.1 2006/08/16 17:37:38 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-XML-DOM-XML_Base
+Version: 0.01
+Release: 1.1.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/XML-DOM-XML_Base/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, perl-XML-DOM
+Requires: perl-XML-DOM
+Source0: XML-DOM-XML_Base-0.01.tar.gz
+
+%description
+NAME
+       XML::DOM::XML_Base - Apply xml:base to attribute values.
+
+SYNOPSIS
+         use XML::DOM::XML_Base;
+         my $parser = XML::DOM::Parser->new();
+
+         my $xml = qq(
+           <ecto x="1" xml:base="a/">
+             <meso x="2" xml:base="b/">
+               <endo x="3" xml:base="c/"/>
+             </meso>
+           </ecto>
+         );
+
+         # build the DOM
+         my $dom = $parser->parse( $xml );
+
+         # get some elements
+         my $endo = $dom->getElementsByTagName( 'endo' )->item( 0 );
+         my $meso = $dom->getElementsByTagName( 'meso' )->item( 0 );
+         my $ecto = $dom->getElementsByTagName( 'ecto' )->item( 0 );
+
+         print $endo->getAttributeWithBase( 'x' )."\n"; # a/b/c/3
+         print $meso->getAttributeWithBase( 'x' )."\n"; # a/b/2
+         print $ecto->getAttributeWithBase( 'x' )."\n"; # a/1
+
+DESCRIPTION
+       "XML::DOM::XML_Base" implements the W3C XML Base specification as an extension to XML::DOM.
+
+       XML Base spec (http://www.w3.org/TR/xmlbase/) says: The rules for determining the base URI can be summarized as follows (highest priority to lowest):
+
+         [1] The base URI is embedded in the document's content.
+         [2] The base URI is that of the encapsulating entity (message, document, or none).
+         [3] The base URI is the URI used to retrieve the entity.
+         [4] The base URI is defined by the context of the application.
+
+       Rules [1] and [2] and handled by this module by recursively examining parent nodes for "xml:base" attributes, and returning the first constructable
+       absolute URI, or the relative URI constructed at the end of the recursion (i.e. at the root XML element).
+
+       Rules [3] and [4] are outside the scope of what "XML::DOM::XML_Base" is capable of, as an XML::DOM::Document can be constructed without a URI (e.g.
+       from a string or filehandle).
+
+%prep
+%setup -q -n XML-DOM-XML_Base%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-XML-DOM-XML_Base.spec.in,v $
+Revision 1.1  2006/08/16 17:37:38  allenday
+import
+
