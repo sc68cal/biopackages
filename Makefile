@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.12 2006/08/16 17:20:53 allenday Exp $
+#$Id: Makefile,v 1.13 2006/08/16 17:33:12 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -16,51 +16,10 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 
 sources ::
-	@echo "This target should http or ftp rsync to a FAST repository of a SOURCES/"
-	@echo "directory.  Right now this target just prints a message."
+	perl -e 'print $$ENV{HOSTNAME}=~ /ucla.edu$$/ ? "make symlink\n" : "make rsync\n"'  | /bin/bash
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
-
-link : link_clean link_small link_large
-link_clean : sync_clean
-
-link_large ::
-	ln -s ~bpbuild/SOURCES.large/* ./SOURCES/
-
-link_small ::
-	ln -s ~bpbuild/SOURCES.small/* ./SOURCES/
-
-sync :		sync_clean sync_down sync_up
-sync_down :	sync_clean sync_down_small sync_down_large
-sync_up :	sync_clean sync_up_small sync_up_large
-sync_small :	sync_clean sync_down_small sync_up_small
-sync_large :	sync_clean sync_down_large sync_up_large
-
-sync_clean ::
-	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "Move your files from SOURCES/ to one of ~bpbuild/SOURCES.{large,small}"; exit 1; fi
-	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
-	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
-
-sync_down_large ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large/ ./SOURCES.large
-	ln -s SOURCES.large/* SOURCES/
-
-sync_down_small ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small/ ./SOURCES.small
-	ln -s SOURCES.small/* SOURCES/
-
-sync_up_large ::
-	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large
-
-sync_up_small ::
-	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small
-
-up ::
-	echo TODO
-
-publish ::
-	echo TODO
 
 ####################################
 #extension rules
@@ -94,6 +53,42 @@ publish ::
 
 %.spec : %.spec.in
 	cat $< | $(PERL) bin/in2spec.pl > $@
+
+####################################
+#symlink/rsync targets to maintain SOURCES/
+symlink : symlink_clean symlink_small symlink_large
+symlink_clean : sync_clean
+
+symlink_large ::
+	ln -s ~bpbuild/SOURCES.large/* ./SOURCES/
+
+symlink_small ::
+	ln -s ~bpbuild/SOURCES.small/* ./SOURCES/
+
+rsync :		sync_clean rsync_down rsync_up
+rsync_down :	sync_clean rsync_down_small rsync_down_large
+rsync_up :	sync_clean rsync_up_small rsync_up_large
+rsync_small :	sync_clean rsync_down_small rsync_up_small
+rsync_large :	sync_clean rsync_down_large rsync_up_large
+
+sync_clean ::
+	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "Move your files from SOURCES/ to one of ~bpbuild/SOURCES.{large,small}"; exit 1; fi
+	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+
+rsync_down_large ::
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large/ ./SOURCES.large
+	ln -s SOURCES.large/* SOURCES/
+
+rsync_down_small ::
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small/ ./SOURCES.small
+	ln -s SOURCES.small/* SOURCES/
+
+rsync_up_large ::
+	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large
+
+rsync_up_small ::
+	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small
 
 ####################################
 #stuff for initial environment setup
