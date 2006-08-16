@@ -1,4 +1,4 @@
-#$Id: perl-XML-DOM-XML_Base.spec.in,v 1.2 2006/08/16 17:42:35 allenday Exp $
+#$Id: perl-XML-DOM-XML_Base.spec.in,v 1.3 2006/08/16 17:43:19 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -61,7 +61,7 @@ DESCRIPTION
        from a string or filehandle).
 
 %prep
-%setup -q -n XML-DOM-XML_Base%{version}
+%setup -q -n XML-DOM-XML_Base-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-DOM-XML_Base.spec.in,v $
+Revision 1.3  2006/08/16 17:43:19  allenday
+depcheck
+
 Revision 1.2  2006/08/16 17:42:35  allenday
 depcheck
 
