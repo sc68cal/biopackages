@@ -1,4 +1,4 @@
-#$Id: ucsc.spec.in,v 1.1 2006/07/16 09:06:38 boconnor Exp $
+#$Id: ucsc.spec.in,v 1.2 2006/08/18 22:29:14 allenday Exp $
 Summary: Jim Kent's suite of biological analysis and web display programs
 Name: ucsc
 Version: 456
@@ -12,8 +12,7 @@ Group: Applications/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.genome.ucsc.edu
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-#Icon: 
-Requires: chkconfig
+Requires: chkconfig, mysql
 BuildRequires: biopackages, gcc, mysql, mysql-devel
 
 #
@@ -185,6 +184,9 @@ chkconfig --add gfServer
 chkconfig --del gfServer
 
 $Log: ucsc.spec.in,v $
+Revision 1.2  2006/08/18 22:29:14  allenday
+added mysql dep
+
 Revision 1.1  2006/07/16 09:06:38  boconnor
 Added spec files
 
