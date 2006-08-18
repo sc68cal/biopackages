@@ -1,0 +1,387 @@
+#$Id: mysql.spec.in,v 1.1 2006/08/18 22:40:50 allenday Exp $
+Name: mysql
+Version: 5.0.18
+Vendor: biopackages.net
+Release: %{revision}.%{distro}
+Summary: MySQL client programs and shared libraries.
+License: GPL
+Group: Applications/Databases
+URL: http://www.mysql.com
+
+# Regression tests take a long time, you can skip 'em with this
+%{!?runselftest:%define runselftest 1}
+
+Source0: http://dev.mysql.com/get/Downloads/MySQL-5.0/mysql-%{version}.tar.gz
+Source1: mysql.init
+Source2: mysql.logrotate
+Source3: my.cnf
+Source4: scriptstub.c
+Source5: my_config.h
+# Working around perl dependency checking bug in rpm FTTB. Remove later.
+Source999: filter-requires-mysql.sh 
+Patch1: mysql-libdir.patch
+Patch2: mysql-errno.patch
+Patch3: mysql-libtool.patch
+Patch4: mysql-testing.patch
+Patch5: mysql-no-atomic.patch
+Patch6: mysql-rpl_ddl.patch
+Patch7: mysql-rpl-test.patch
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Prereq: /sbin/ldconfig, /sbin/install-info, grep, fileutils, chkconfig
+BuildRequires: gperf, perl, readline-devel, openssl-devel
+BuildRequires: gcc-c++, ncurses-devel, zlib-devel
+BuildRequires: libtool automake autoconf
+Requires: bash
+Conflicts: MySQL
+Obsoletes: mysql-client mysql-perl
+# make test requires time
+BuildRequires: time
+
+# Working around perl dependency checking bug in rpm FTTB. Remove later.
+%define __perl_requires %{SOURCE999}
+
+%description
+MySQL is a multi-user, multi-threaded SQL database server. MySQL is a
+client/server implementation consisting of a server daemon (mysqld)
+and many different client programs and libraries. The base package
+contains the MySQL client programs, the client shared libraries, and
+generic MySQL files.
+
+%package server
+
+Summary: The MySQL server and related files.
+License: GPL
+Group: Applications/Databases
+Prereq: /sbin/chkconfig, /usr/sbin/useradd
+Requires: %{name} = %{version}-%{release}, sh-utils
+# mysqlhotcopy needs DBI/DBD support
+Requires: perl-DBI, perl-DBD-MySQL
+Conflicts: MySQL-server
+
+%description server
+MySQL is a multi-user, multi-threaded SQL database server. MySQL is a
+client/server implementation consisting of a server daemon (mysqld)
+and many different client programs and libraries. This package contains
+the MySQL server and some accompanying files and directories.
+
+%package devel
+
+Summary: Files for development of MySQL applications.
+License: GPL
+Group: Applications/Databases
+Requires: %{name} = %{version}-%{release}
+Requires: openssl-devel
+Conflicts: MySQL-devel
+
+%description devel
+MySQL is a multi-user, multi-threaded SQL database server. This
+package contains the libraries and header files that are needed for
+developing MySQL client applications.
+
+%package bench
+
+Summary: MySQL benchmark scripts and data.
+License: GPL
+Group: Applications/Databases
+Requires: %{name} = %{version}-%{release}
+Conflicts: MySQL-bench
+
+%description bench
+MySQL is a multi-user, multi-threaded SQL database server. This
+package contains benchmark scripts and data for use when benchmarking
+MySQL.
+
+%prep
+%setup -q 
+
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+
+libtoolize --force
+aclocal
+automake
+autoconf
+autoheader
+
+%build
+CFLAGS="%{optflags} -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+# MySQL 4.1.10 definitely doesn't work under strict aliasing; also,
+# gcc 4.1 breaks MySQL 5.0.16 without -fwrapv
+CFLAGS="$CFLAGS -fno-strict-aliasing -fwrapv"
+%ifarch alpha
+# Can't link C++ objects into an executable without this. Odd!
+# -ECL 2002-12-19
+CFLAGS="$CFLAGS -fPIC"
+%endif
+CXXFLAGS="$CFLAGS -fno-rtti -fno-exceptions"
+export CFLAGS CXXFLAGS
+
+%configure \
+	--with-readline \
+	--with-openssl \
+	--without-debug \
+	--enable-shared \
+	--with-bench \
+	--localstatedir=/var/lib/mysql \
+	--with-unix-socket-path=/var/lib/mysql/mysql.sock \
+	--with-mysqld-user="mysql" \
+	--with-extra-charsets=all \
+	--with-innodb \
+	--with-berkeley-db \
+	--enable-local-infile \
+	--enable-largefile \
+	--enable-thread-safe-client \
+	--disable-dependency-tracking \
+	--with-named-thread-libs="-lpthread"
+
+gcc $CFLAGS $LDFLAGS -o scriptstub "-DLIBDIR=\"%{_libdir}/mysql\"" %{SOURCE4}
+
+# Not enabling assembler
+
+make %{?_smp_mflags}
+make check
+
+%if %runselftest
+  make test
+%endif
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+%makeinstall
+install -m 644 include/my_config.h $RPM_BUILD_ROOT/usr/include/mysql/my_config_`uname -i`.h
+install -m 644 %{SOURCE5} $RPM_BUILD_ROOT/usr/include/mysql/
+mkdir -p $RPM_BUILD_ROOT/var/log
+touch $RPM_BUILD_ROOT/var/log/mysqld.log
+
+# List the installed tree for RPM package maintenance purposes.
+find $RPM_BUILD_ROOT -print | sed "s|^$RPM_BUILD_ROOT||" | sort > ROOTFILES
+gzip ${RPM_BUILD_ROOT}%{_infodir}/*
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-*.spec
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate
+
+mkdir -p $RPM_BUILD_ROOT/etc/{rc.d/init.d,logrotate.d}
+mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
+install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
+install -m 0755 %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/mysqld
+install -m 0644 %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/mysqld
+install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
+rm -f $RPM_BUILD_ROOT/%{_infodir}/dir*
+mv $RPM_BUILD_ROOT/usr/sql-bench $RPM_BUILD_ROOT%{_datadir}/sql-bench
+
+mv ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug ${RPM_BUILD_ROOT}%{_libdir}/mysql/mysqlbug
+install -m 0755 scriptstub ${RPM_BUILD_ROOT}%{_bindir}/mysqlbug
+mv ${RPM_BUILD_ROOT}%{_bindir}/mysql_config ${RPM_BUILD_ROOT}%{_libdir}/mysql/mysql_config
+install -m 0755 scriptstub ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
+
+rm -fr $RPM_BUILD_ROOT/usr/mysql-test
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/*client_test
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/comp_err
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/make_win_binary_distribution
+rm -f ${RPM_BUILD_ROOT}%{_bindir}/make_win_src_distribution
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/mysql/libmysqlclient*.la
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/binary-configure
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/make_binary_distribution
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/make_sharedlib_distribution
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mi_test_all*
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/*.cnf
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/*.ini
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql.server
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/MySQL-shared-compat.spec
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/*.plist
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/preinstall
+rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/postinstall
+
+mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
+echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%pre server
+/usr/sbin/useradd -M -o -r -d /var/lib/mysql -s /bin/bash \
+	-c "MySQL Server" -u 27 mysql > /dev/null 2>&1 || :
+
+%post 
+/sbin/install-info %{_infodir}/mysql.info.gz %{_infodir}/dir
+/sbin/ldconfig
+
+%post server
+if [ $1 = 1 ]; then
+    /sbin/chkconfig --add mysqld
+fi
+/bin/chmod 0755 /var/lib/mysql
+/bin/touch /var/log/mysqld.log
+
+%preun
+if [ $1 = 0 ]; then
+    /sbin/install-info --delete %{_infodir}/mysql.info.gz %{_infodir}/dir
+fi
+
+%preun server
+if [ $1 = 0 ]; then
+    /sbin/chkconfig --del mysqld
+fi
+
+%postun
+if [ $1 = 0 ] ; then
+    /sbin/ldconfig
+fi
+
+
+%postun server
+if [ $1 -ge 1 ]; then
+    /sbin/service mysqld condrestart >/dev/null 2>&1 || :
+fi
+if [ $1 = 0 ] ; then
+	userdel mysql >/dev/null 2>&1 || :
+fi
+
+
+%files
+%defattr(-,root,root)
+%doc README COPYING EXCEPTIONS-CLIENT
+
+%{_bindir}/msql2mysql
+%{_bindir}/mysql
+%{_bindir}/mysql_config
+%{_bindir}/mysql_find_rows
+%{_bindir}/mysql_tableinfo
+%{_bindir}/mysql_waitpid
+%{_bindir}/mysqlaccess
+%{_bindir}/mysqladmin
+%{_bindir}/mysqlbinlog
+%{_bindir}/mysqlcheck
+%{_bindir}/mysqldump
+%{_bindir}/mysqldumpslow
+%{_bindir}/mysqlimport
+%{_bindir}/mysqlshow
+
+%{_infodir}/*
+
+%{_mandir}/man1/mysql.1*
+%{_mandir}/man1/mysqlaccess.1*
+%{_mandir}/man1/mysqladmin.1*
+%{_mandir}/man1/mysqldump.1*
+%{_mandir}/man1/mysqlshow.1*
+
+%dir %{_libdir}/mysql
+%{_libdir}/mysql/libmysqlclient*.so.*
+%{_libdir}/mysql/mysqlbug
+%{_libdir}/mysql/mysql_config
+/etc/ld.so.conf.d/*
+
+%dir %{_datadir}/mysql
+%{_datadir}/mysql/english
+%lang(cs) %{_datadir}/mysql/czech
+%lang(da) %{_datadir}/mysql/danish
+%lang(nl) %{_datadir}/mysql/dutch
+%lang(et) %{_datadir}/mysql/estonian
+%lang(fr) %{_datadir}/mysql/french
+%lang(de) %{_datadir}/mysql/german
+%lang(el) %{_datadir}/mysql/greek
+%lang(hu) %{_datadir}/mysql/hungarian
+%lang(it) %{_datadir}/mysql/italian
+%lang(ja) %{_datadir}/mysql/japanese
+%lang(ko) %{_datadir}/mysql/korean
+%lang(no) %{_datadir}/mysql/norwegian
+%lang(no) %{_datadir}/mysql/norwegian-ny
+%lang(pl) %{_datadir}/mysql/polish
+%lang(pt) %{_datadir}/mysql/portuguese
+%lang(ro) %{_datadir}/mysql/romanian
+%lang(ru) %{_datadir}/mysql/russian
+%lang(sr) %{_datadir}/mysql/serbian
+%lang(sk) %{_datadir}/mysql/slovak
+%lang(es) %{_datadir}/mysql/spanish
+%lang(sv) %{_datadir}/mysql/swedish
+%lang(uk) %{_datadir}/mysql/ukrainian
+%{_datadir}/mysql/charsets
+%config(noreplace) /etc/my.cnf
+
+%files server
+%defattr(-,root,root)
+%doc support-files/*.cnf
+
+%{_bindir}/my_print_defaults
+%{_bindir}/myisamchk
+%{_bindir}/myisam_ftdump
+%{_bindir}/myisamlog
+%{_bindir}/myisampack
+%{_bindir}/mysql_convert_table_format
+%{_bindir}/mysql_create_system_tables
+%{_bindir}/mysql_explain_log
+%{_bindir}/mysql_fix_extensions
+%{_bindir}/mysql_fix_privilege_tables
+%{_bindir}/mysql_install_db
+%{_bindir}/mysql_secure_installation
+%{_bindir}/mysql_setpermission
+%{_bindir}/mysql_tzinfo_to_sql
+%{_bindir}/mysql_zap
+%{_bindir}/mysqlbug
+%{_bindir}/mysqld_multi
+%{_bindir}/mysqld_safe
+%{_bindir}/mysqlhotcopy
+%{_bindir}/mysqltestmanager
+%{_bindir}/mysqltestmanager-pwgen
+%{_bindir}/mysqltestmanagerc
+%{_bindir}/mysqltest
+%{_bindir}/innochecksum
+%{_bindir}/perror
+%{_bindir}/replace
+%{_bindir}/resolve_stack_dump
+%{_bindir}/resolveip
+
+/usr/libexec/*
+
+%{_mandir}/man1/msql2mysql.1.gz
+%{_mandir}/man1/myisamchk.1.gz
+%{_mandir}/man1/myisamlog.1.gz
+%{_mandir}/man1/myisampack.1.gz
+%{_mandir}/man1/mysql.server.1.gz
+%{_mandir}/man1/mysql_config.1.gz
+%{_mandir}/man1/mysql_fix_privilege_tables.1*
+%{_mandir}/man1/mysql_zap.1*
+%{_mandir}/man1/mysqlbinlog.1.gz
+%{_mandir}/man1/mysqlcheck.1.gz
+%{_mandir}/man1/mysqld.1*
+%{_mandir}/man1/mysqld_multi.1*
+%{_mandir}/man1/mysqld_safe.1*
+%{_mandir}/man1/mysqlhotcopy.1.gz
+%{_mandir}/man1/mysqlimport.1.gz
+%{_mandir}/man1/mysqlman.1.gz
+%{_mandir}/man1/mysqlmanager.1.gz
+%{_mandir}/man1/perror.1*
+%{_mandir}/man1/replace.1*
+%{_mandir}/man1/safe_mysqld.1*
+
+%dir %{_datadir}/mysql
+%{_datadir}/mysql/errmsg.txt
+%{_datadir}/mysql/fill_help_tables.sql
+%{_datadir}/mysql/mysql_fix_privilege_tables.sql
+/etc/rc.d/init.d/mysqld
+%attr(0755,mysql,mysql) %dir /var/run/mysqld
+%config(noreplace) /etc/logrotate.d/mysqld
+%attr(0755,mysql,mysql) %dir /var/lib/mysql
+%attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
+
+%files devel
+%defattr(-,root,root)
+/usr/include/mysql
+%dir %{_libdir}/mysql
+%{_libdir}/mysql/*.a
+%{_libdir}/mysql/libmysqlclient*.so
+
+%files bench
+%defattr(-,root,root)
+%{_datadir}/sql-bench
+
+$Log: mysql.spec.in,v $
+Revision 1.1  2006/08/18 22:40:50  allenday
+port from FC5 5.0.18-2.1
+
