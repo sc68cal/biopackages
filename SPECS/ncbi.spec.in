@@ -1,0 +1,115 @@
+#$Id: ncbi.spec.in,v 1.1 2006/08/19 00:29:42 allenday Exp $
+# ----------------------------------------------------------------------------
+#
+#  NCBI 
+#
+# ----------------------------------------------------------------------------
+
+Name:      ncbi
+Version:   2.2.8
+Release:   %{revision}.%{distro}
+Summary:   NCBI Toolkit
+Vendor: biopackages.net
+Group:     Applications/BioInformatics
+License:   Public Domain
+URL:       http://www.ncbi.nlm.nih.gov/BLAST/
+Source0:   ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/ncbi.tar.gz
+Patch0:    ncbi.patch
+Patch1:    ncbi-gcc.patch
+Patch2:    ncbi-X11R6-lib64.patch
+BuildRequires: biopackages
+BuildRoot: %{_tmppath}/%{name}
+
+%description
+The NCBI Toolkit shared libraries
+
+# ----------------------------------------------------------------------------
+
+%package devel
+Summary:   NCBI Toolkit static libraries and header files
+Group:     Development/Libraries
+
+%description devel
+The NCBI Toolkit static libraries and header files
+
+# ----------------------------------------------------------------------------
+
+%define localbindir /usr/bin
+
+%prep
+%setup -q -n ncbi
+%patch0 -p1
+%patch1 -p1
+%patch2 -p2
+
+%build
+cd ..
+./ncbi/make/makedis.csh
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+DESTDIR=$RPM_BUILD_ROOT/%{localbindir}
+install -m 755 -d $DESTDIR
+install -m 755 bin/* $DESTDIR
+
+DESTDIR=$RPM_BUILD_ROOT/%{_libdir}
+install -m 755 -d $DESTDIR
+install -m 755 lib/*.so $DESTDIR
+install -m 644 lib/*.a $DESTDIR
+install -m 644 lib/ncbithr.o $DESTDIR
+
+DESTDIR=$RPM_BUILD_ROOT/%{_includedir}/%{name}
+install -m 755 -d $DESTDIR
+cd include
+for f in `find .`; do
+  if [ -d $f ]; then
+    install -m 755 -d $DESTDIR/$f
+  else
+    install -m 644 $f $DESTDIR/$f
+  fi
+done
+cd ..
+
+DESTDIR=$RPM_BUILD_ROOT/%{_mandir}/man1
+install -m 755 -d $DESTDIR
+install -m 644 doc/man/* $DESTDIR
+
+DESTDIR=$RPM_BUILD_ROOT/%{_datadir}/%{name}/data
+install -m 755 -d $DESTDIR
+install -m 644 data/* $DESTDIR
+
+DESTDIR=$RPM_BUILD_ROOT/%{_datadir}/%{name}/blastdb
+install -m 755 -d $DESTDIR
+
+DESTDIR=$RPM_BUILD_ROOT/%{_sysconfdir}/profile.d
+install -m 755 -d $DESTDIR
+echo "export BLASTMAT=%{_datadir}/%{name}/data"   >  $DESTDIR/ncbi.sh
+echo "export BLASTDB=%{_datadir}/%{name}/blastdb" >> $DESTDIR/ncbi.sh
+echo "setenv BLASTMAT %{_datadir}/%{name}/data"   >  $DESTDIR/ncbi.csh
+echo "setenv BLASTDB %{_datadir}/%{name}/blastdb" >> $DESTDIR/ncbi.csh
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+# ----------------------------------------------------------------------------
+
+%files
+%defattr(-,root,root)
+%{_libdir}/lib*so
+%{_datadir}/%{name}
+%{localbindir}/*
+%config %{_sysconfdir}/profile.d/*
+%doc doc/*
+%doc %{_mandir}/man1/*
+
+%files devel
+%defattr(-,root,root)
+%{_libdir}/lib*a
+%{_libdir}/ncbithr.o
+%{_includedir}/%{name}/*
+
+$Log: ncbi.spec.in,v $
+Revision 1.1  2006/08/19 00:29:42  allenday
+import
+
