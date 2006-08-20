@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.15 2006/08/20 19:30:30 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.16 2006/08/20 19:39:58 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 6036
@@ -30,7 +30,7 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
 %build
 
 #build VC-9 codec
-cd libavcodec/libvc1/; make ; cd ../../
+#cd libavcodec/libvc1/; make ; cd ../../
 
 ./configure \
   --prefix=$RPM_BUILD_ROOT/usr \
@@ -54,10 +54,11 @@ make -j5;
 make install ;
 
 #for WMV-9 / VC-9
-install -m 755 libavcodec/libvc1/*.a $RPM_BUILD_ROOT%{_libdir}
+#install -m 755 libavcodec/libvc1/*.a $RPM_BUILD_ROOT%{_libdir}
 #these .h files are not installed by make, but are needed to compile with ffmpeg.c
+
 install -m 444 cmdutils.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
-#install -m 444 version.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
+install -m 444 version.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg
 install -m 444 libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec/
 install -m 444 libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat/
 install -m 444 libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil/
@@ -78,6 +79,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.16  2006/08/20 19:39:58  allenday
+brought version.h back in (why was it omitted???).  dropped VC1/VC9/WMV code for now
+
 Revision 1.15  2006/08/20 19:30:30  allenday
 sync to cvs
 
