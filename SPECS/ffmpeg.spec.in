@@ -1,7 +1,7 @@
-#$Id: ffmpeg.spec.in,v 1.14 2006/07/15 01:55:21 boconnor Exp $
+#$Id: ffmpeg.spec.in,v 1.15 2006/08/20 19:30:30 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
-Version: 5704.1
+Version: 6036
 Epoch: 0
 Release: %{revision}.%{distro}
 Source0: ffmpeg-%{version}.tar.gz
@@ -78,6 +78,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.15  2006/08/20 19:30:30  allenday
+sync to cvs
+
 Revision 1.14  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
