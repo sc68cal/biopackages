@@ -1,10 +1,12 @@
-#$Id: ffmpeg.spec.in,v 1.16 2006/08/20 19:39:58 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.17 2006/08/21 02:14:25 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 6036
 Epoch: 0
 Release: %{revision}.%{distro}
 Source0: ffmpeg-%{version}.tar.gz
+Source1: 26073-510.zip
+Source2: 26204-510.zip
 License: Custom 
 Group: Development/Libraries
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,20 +14,28 @@ URL: http://www.ffmpeg.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
 Requires: lame, libogg, libvorbis, faac faad2, a52dec, imlib2
-BuildRequires: biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
+BuildRequires: perl, biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
 Provides: libavcodec.so, libavformat.so, libavutil.so
 
 %description
 ffmpeg
 
 %prep
-%setup -n %{name}-%{version}
+%setup -qn %{name}-%{version}
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}
 mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavcodec
 mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavformat
 mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
+
+mkdir libavcodec/amr;
+pushd libavcodec/amr;
+unzip %{SOURCE1}; unzip *.zip; popd;
+perl -pi -e 's/pedantic-errors/DMMS_IO/' libavcodec/amr/makefile
+mkdir libavcodec/amrwb_float;
+pushd libavcodec/amrwb_float;
+unzip %{SOURCE2}; unzip 26204-510_ANSI-C_source_code.zip; popd;
 
 %build
 
@@ -42,9 +52,9 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
   --enable-a52 \
   --enable-pthreads \
   --enable-pp \
+  --enable-amr_wb \
   --enable-amr_nb \
   --enable-amr_nb-fixed \
-  --enable-amr_wb \
   --enable-amr_if2 \
   --enable-gpl ;
 #  --enable-faad
@@ -79,6 +89,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.17  2006/08/21 02:14:25  allenday
+amr functionality via 3gpp zips and patches
+
 Revision 1.16  2006/08/20 19:39:58  allenday
 brought version.h back in (why was it omitted???).  dropped VC1/VC9/WMV code for now
 
