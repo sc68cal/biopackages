@@ -1,4 +1,4 @@
-#$Id: prosite.spec.in,v 1.3 2006/08/25 02:19:10 jmendler Exp $
+#$Id: prosite.spec.in,v 1.4 2006/08/25 02:20:21 jmendler Exp $
 Summary:  perl program used to scan one or several patterns, rules and/or profiles from PROSITE against one or several protein sequnces in Swiss-Prot or FASTA format
 Name: prosite 
 Version: 18.49
@@ -47,8 +47,7 @@ install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}
 
 %files
 %defattr(-,root,root)
-%{_bindir}/pfscan
-%{_bindir}/ps_scan.pl
+%{_bindir}/*
 %doc LICENSE README.prf prosite.dat
 %doc experts.txt jourlist.txt pautindx.txt prosite.doc ps_98.txt ps_reldt.txt psdelac.txt
 %doc pft2.2/2ft pft2.2/6ft pft2.2/gtop pft2.2/htop pft2.2/pfmake pft2.2/pfscale pft2.2/pfsearch pft2.2/pfw pft2.2/psa2msa pft2.2/ptof pft2.2/ptoh
@@ -57,6 +56,9 @@ install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 $Log: prosite.spec.in,v $
+Revision 1.4  2006/08/25 02:20:21  jmendler
+install everything in bindir
+
 Revision 1.3  2006/08/25 02:19:10  jmendler
 actually, targets were not prebuilt, oops!
 
