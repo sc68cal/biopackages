@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.4 2006/01/04 22:16:09 allenday Exp $
+#$Id: in2spec.pl,v 1.5 2006/08/25 01:15:38 jmendler Exp $
 use strict;
 use Date::Manip;
 use Text::Wrap;
@@ -40,7 +40,7 @@ my $revision = undef;
 my $spec = join '', <>;
 
 my ( $revision ) = $spec =~ /^$rcstag.+?,v (\S+)/s;
-my ( $version )  = $spec =~ /\nVersion: (\S+)\n/s;
+my ( $version )  = $spec =~ /\nVersion:\s+(\S+)\n/s;
 
 $spec =~ s/%{revision}/$revision/gs;
 
@@ -76,6 +76,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.5  2006/08/25 01:15:38  jmendler
+fixed whitespace bug
+
 Revision 1.4  2006/01/04 22:16:09  allenday
 transform cvs log to rpm changelog
 
