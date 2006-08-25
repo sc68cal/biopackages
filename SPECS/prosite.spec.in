@@ -1,4 +1,4 @@
-#$Id: prosite.spec.in,v 1.1 2006/08/25 02:10:11 jmendler Exp $
+#$Id: prosite.spec.in,v 1.2 2006/08/25 02:16:14 jmendler Exp $
 Summary:  perl program used to scan one or several patterns, rules and/or profiles from PROSITE against one or several protein sequnces in Swiss-Prot or FASTA format
 Name: prosite 
 Version: 18.49
@@ -36,11 +36,14 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 
 %build
 tar -xzf pft2.2.tar.Z
-cd pft2.2 ; make ; cd ..
+cd pft2.2 ; make clean ; make ; cd ..
 
 %install
-install -m 755 pft2.2/pfscan $RPM_BUILD_ROOT%{_bindir}/pfscan
-install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}/ps_scan.pl
+install -m 755 pft2.2/pfscan $RPM_BUILD_ROOT%{_bindir}
+install -m 755 pft2.2/ptof $RPM_BUILD_ROOT%{_bindir}
+install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}
+#TODO install the other executables that were created in the build
+#ptof ptoh pfw etc
 
 %files
 %defattr(-,root,root)
@@ -54,6 +57,9 @@ install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}/ps_scan.pl
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 $Log: prosite.spec.in,v $
+Revision 1.2  2006/08/25 02:16:14  jmendler
+clean up of precompiled binaries in tarball, add install commands for ALL binaries built
+
 Revision 1.1  2006/08/25 02:10:11  jmendler
 import
 
