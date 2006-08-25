@@ -1,0 +1,59 @@
+#$Id: prosite.spec.in,v 1.1 2006/08/25 02:10:11 jmendler Exp $
+Summary:  perl program used to scan one or several patterns, rules and/or profiles from PROSITE against one or several protein sequnces in Swiss-Prot or FASTA format
+Name: prosite 
+Version: 18.49
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.tar.gz
+License: Custom 
+Group: Applications/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: ftp://au.expasy.org/databases/prosite
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: perl
+BuildRequires: perl, gcc, gcc-g77
+
+%description
+ps_scan documentation
+=====================
+
+Reference:
+Alexandre Gattiker, Elisabeth Gasteiger, Amos Bairoch.
+ScanProsite: a reference implementation of a PROSITE scanning tool.
+Applied Bioinformatics 2002:1(2) 107-108.
+
+Contact: prosite@isb-sib.ch
+
+ps_scan is a perl program used to scan one or several patterns, rules and/or
+profiles from PROSITE against one or several protein sequnces in Swiss-Prot or
+FASTA format. It requires two compiled external programs from the PFTOOLS
+package : "pfscan" used to scan a sequence against a profile library and
+"psa2msa" which is necessary for the "-o msa" output format only.
+
+%prep
+%setup -q 
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+
+%build
+tar -xzf pft2.2.tar.Z
+cd pft2.2 ; make ; cd ..
+
+%install
+install -m 755 pft2.2/pfscan $RPM_BUILD_ROOT%{_bindir}/pfscan
+install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}/ps_scan.pl
+
+%files
+%defattr(-,root,root)
+%{_bindir}/pfscan
+%{_bindir}/ps_scan.pl
+%doc LICENSE README.prf prosite.dat
+%doc experts.txt jourlist.txt pautindx.txt prosite.doc ps_98.txt ps_reldt.txt psdelac.txt
+%doc pft2.2/2ft pft2.2/6ft pft2.2/gtop pft2.2/htop pft2.2/pfmake pft2.2/pfscale pft2.2/pfsearch pft2.2/pfw pft2.2/psa2msa pft2.2/ptof pft2.2/ptoh
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+$Log: prosite.spec.in,v $
+Revision 1.1  2006/08/25 02:10:11  jmendler
+import
+
