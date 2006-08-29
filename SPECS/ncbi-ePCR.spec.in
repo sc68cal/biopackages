@@ -1,4 +1,4 @@
-#$Id: ncbi-ePCR.spec.in,v 1.2 2006/08/29 22:58:05 allenday Exp $
+#$Id: ncbi-ePCR.spec.in,v 1.3 2006/08/29 22:59:58 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
@@ -10,7 +10,7 @@ License: GPL or Artistic
 Group: Applications/Bioinformatics
 URL: http://www.ncbi.nlm.nih.gov/sutils/e-pcr/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc, biopackages
+BuildRequires: gcc-c++, biopackages
 Source0: e-PCR-%{version}-src.tar.gz
 
 %description
@@ -28,7 +28,7 @@ install -m 755 e-PCR  %{buildroot}%{_bindir}
 install -m 755 famap  %{buildroot}%{_bindir}
 install -m 755 fahash %{buildroot}%{_bindir}
 install -m 755 re-PCR %{buildroot}%{_bindir}
-ln -s %{buildroot}%{_bindir}/e-PCR %{buildroot}%{_bindir}/ePCR
+ln -s %{_bindir}/e-PCR %{buildroot}%{_bindir}/ePCR
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -38,6 +38,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: ncbi-ePCR.spec.in,v $
+Revision 1.3  2006/08/29 22:59:58  allenday
+fix symlink, change compiler dep to g++
+
 Revision 1.2  2006/08/29 22:58:05  allenday
 make args
 
