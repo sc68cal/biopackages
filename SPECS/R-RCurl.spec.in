@@ -1,4 +1,4 @@
-#$Id: R-RCurl.spec.in,v 1.4 2006/08/29 20:20:57 allenday Exp $
+#$Id: R-RCurl.spec.in,v 1.5 2006/08/29 20:41:16 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -33,21 +33,22 @@ This package will be used to implement the low-level communication in the SSOAP 
 %prep
 %setup -n RCurl
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-cp %{SOURCE0} .
 %patch0 -p1
+pushd ..
+tar -cvzf RCurl/RCurl_%{version}.tar.gz RCurl
+popd
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library RCurl_%{version}.tar.gz
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
-rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
 
 %files -f %{name}-%{version}-%{release}-filelist
 
@@ -55,6 +56,9 @@ rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RCurl.spec.in,v $
+Revision 1.5  2006/08/29 20:41:16  allenday
+patch!!
+
 Revision 1.4  2006/08/29 20:20:57  allenday
 add patch for fc2 version of curl
 
