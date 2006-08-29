@@ -1,4 +1,4 @@
-#$Id: ncbi-ePCR.spec.in,v 1.3 2006/08/29 22:59:58 allenday Exp $
+#$Id: ncbi-ePCR.spec.in,v 1.4 2006/08/29 23:01:31 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
@@ -29,6 +29,7 @@ install -m 755 famap  %{buildroot}%{_bindir}
 install -m 755 fahash %{buildroot}%{_bindir}
 install -m 755 re-PCR %{buildroot}%{_bindir}
 ln -s %{_bindir}/e-PCR %{buildroot}%{_bindir}/ePCR
+ln -s %{_bindir}/re-PCR %{buildroot}%{_bindir}/rePCR
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -38,6 +39,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: ncbi-ePCR.spec.in,v $
+Revision 1.4  2006/08/29 23:01:31  allenday
+symlink for rePCR
+
 Revision 1.3  2006/08/29 22:59:58  allenday
 fix symlink, change compiler dep to g++
 
