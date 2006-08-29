@@ -1,0 +1,58 @@
+#$Id: R-RCurl.spec.in,v 1.1 2006/08/29 18:53:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.6.3
+Release: %{revision}.%{distro}
+Name: R-RCurl
+Summary: The RCurl package is an R-interface to the libcurl library that provides HTTP facilities.
+Group: Applications/Engineering
+License: GPL
+URL: http://www.rosuda.org/R/GDD/
+Source0: RCurl-0.6-3.tar.gz
+Requires: R >= 2.0.0, libcurl
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, libcurl-devel, gcc, biopackages
+
+%description
+The RCurl package is an R-interface to the libcurl library that provides HTTP facilities. This allows us to download files from Web servers, post forms, use HTTPS (the secure HTTP), use persistent connections, upload files, use binary content, handle redirects, password authentication, etc.
+
+The primary top-level entry points are
+
+    * getURL()
+    * getForm()
+    * postForm() 
+
+However, access to the C-level routines is also available via the R code, and one can specify options to all of the libcurl operations to control how they are performed. Documentation about the options and commands can be found at the libcurl web site
+
+R functions can be specified to collect text from both the response and its headers. This can be used to customize the processing of the requests and feed the results to higher-level processing (e.g. HTML parsing via the htmlTreeParse function in the XML package).
+
+This package will be used to implement the low-level communication in the SSOAP package and other high-level packages that utilize HTTP to exchange requests and data. 
+
+%prep
+%setup -n RCurl
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-RCurl.spec.in,v $
+Revision 1.1  2006/08/29 18:53:58  allenday
+import
+
