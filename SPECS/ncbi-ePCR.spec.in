@@ -1,4 +1,4 @@
-#$Id: ncbi-ePCR.spec.in,v 1.1 2006/08/29 22:56:03 allenday Exp $
+#$Id: ncbi-ePCR.spec.in,v 1.2 2006/08/29 22:58:05 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
@@ -21,13 +21,14 @@ Electronic PCR (e-PCR) is computational procedure that is used to identify seque
 mkdir -p %{buildroot}%{_bindir}
 
 %build
-make OPTIMIZE="$RPM_OPT_FLAGS"
+make
 
 %install
 install -m 755 e-PCR  %{buildroot}%{_bindir}
 install -m 755 famap  %{buildroot}%{_bindir}
 install -m 755 fahash %{buildroot}%{_bindir}
 install -m 755 re-PCR %{buildroot}%{_bindir}
+ln -s %{buildroot}%{_bindir}/e-PCR %{buildroot}%{_bindir}/ePCR
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -37,6 +38,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: ncbi-ePCR.spec.in,v $
+Revision 1.2  2006/08/29 22:58:05  allenday
+make args
+
 Revision 1.1  2006/08/29 22:56:03  allenday
 import
 
