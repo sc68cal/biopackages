@@ -1,0 +1,42 @@
+#$Id: ncbi-ePCR.spec.in,v 1.1 2006/08/29 22:56:03 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
+Name: ncbi-ePCR
+Version: 2.3.4
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Applications/Bioinformatics
+URL: http://www.ncbi.nlm.nih.gov/sutils/e-pcr/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: gcc, biopackages
+Source0: e-PCR-%{version}-src.tar.gz
+
+%description
+Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences. e-PCR looks for potential STSs in DNA sequences by searching for subsequences that closely match the PCR primers and have the correct order, orientation, and spacing that could represent the PCR primers used to generate known STSs.
+
+%prep
+%setup -n e-PCR-%{version}
+mkdir -p %{buildroot}%{_bindir}
+
+%build
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+install -m 755 e-PCR  %{buildroot}%{_bindir}
+install -m 755 famap  %{buildroot}%{_bindir}
+install -m 755 fahash %{buildroot}%{_bindir}
+install -m 755 re-PCR %{buildroot}%{_bindir}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%{_bindir}/*
+%defattr(-,root,root,-)
+
+$Log: ncbi-ePCR.spec.in,v $
+Revision 1.1  2006/08/29 22:56:03  allenday
+import
+
