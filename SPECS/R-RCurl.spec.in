@@ -1,4 +1,4 @@
-#$Id: R-RCurl.spec.in,v 1.1 2006/08/29 18:53:58 allenday Exp $
+#$Id: R-RCurl.spec.in,v 1.2 2006/08/29 18:54:42 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,7 +9,7 @@ Summary: The RCurl package is an R-interface to the libcurl library that provide
 Group: Applications/Engineering
 License: GPL
 URL: http://www.rosuda.org/R/GDD/
-Source0: RCurl-0.6-3.tar.gz
+Source0: RCurl_0.6-3.tar.gz
 Requires: R >= 2.0.0, libcurl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.0.0, libcurl-devel, gcc, biopackages
@@ -53,6 +53,9 @@ rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RCurl.spec.in,v $
+Revision 1.2  2006/08/29 18:54:42  allenday
+import
+
 Revision 1.1  2006/08/29 18:53:58  allenday
 import
 
