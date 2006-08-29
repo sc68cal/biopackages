@@ -1,0 +1,123 @@
+#$Id: genome-Sce.spec.in,v 1.1 2006/08/29 23:54:30 allenday Exp $
+Summary: S. cerevisiae genome sequence in FASTA format from SGD S228C (Oct 1 2003) release.
+Name: genome-Sce
+Version: S228C
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: saccharomyces_cerevisiae.gff.tar.gz
+Source1: Sce_gff.pl
+License: Custom
+Group: Bioinformatics/Sequence
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.genome.ucsc.edu
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+BuildArch: noarch
+BuildRequires: ucsc >= 456-1, perl-bioperl, biopackages, ncbi, ncbi-ePCR
+
+%description
+Yeast data from SGD
+
+%package nib
+Summary: S. cerevisiae genome sequence in NIB format from SGD 228C (Oct 1 2003) release.
+Group: Bioinformatics/Sequence
+BuildArch: noarch
+BuildRequires: ucsc >= 456-1, perl-bioperl, biopackages, ncbi, ncbi-ePCR
+
+%description nib
+Yeast genome sequence converted to NIB format for use with BLAT, for instance.
+
+%package annotation-gene
+Summary: S. cerevisiae gene annotations
+Group: Bioinformatics/Data
+BuildArch: noarch
+BuildRequires: ucsc >= 456-1, perl-bioperl, biopackages, ncbi, ncbi-ePCR
+
+%description annotation-gene
+Yeast annotation-gene annotations
+
+%package blast
+Summary: S. cerevisiae genome sequence in BLAST format from SGD 228C (Oct 1 2003) release.
+Group: Bioinformatics/Sequence
+BuildArch: noarch
+BuildRequires: ucsc >= 456-1, perl-bioperl, biopackages, ncbi, ncbi-ePCR
+
+%description blast
+Yeast genome sequence converted to BLAST format.
+
+%package ePCR
+Summary: S. cerevisiae genome sequence in rePCR format from SGD 228C (Oct 1 2003) release.
+Group: Bioinformatics/Sequence
+BuildArch: noarch
+BuildRequires: ucsc >= 456-1, perl-bioperl, biopackages, ncbi, ncbi-ePCR
+
+%description ePCR
+Yeast genome sequence converted to ePCR format.
+
+%prep
+%setup -c genome-Sce
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/fa
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/nib
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/gff
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/blast
+
+%build
+#make gff file
+cat saccharomyces_cerevisiae.gff | grep -E '^(chr|#)' | grep -v '##FASTA' | gzip > gff-Sce-gene.gff.gz
+
+#make .fa files
+cat saccharomyces_cerevisiae.gff | grep -vE '^(chr|#)' | grep -v '##FASTA' | perl -MBio::SeqIO -e '$i=Bio::SeqIO->new(-fh=>\*STDIN,-format=>'fasta'); while($s = $i->next_seq){warn $s->primary_id;open(S,"| fold > ".$s->primary_id.".fa"); print S ">".$s->primary_id."\n".$s->seq;close(S)}'
+
+#make .nib files
+for i in *.fa ; do %{_bindir}/faToNib $i ${i/.fa/.nib} ; done
+
+#make blast files
+cat *.fa > chrall.fa ; formatdb -t %{name}-%{version} -n $RPM_BUILD_ROOT%{_datadir}/blast/%{name}-%{version} -i chrall.fa -p F
+chmod 444 $RPM_BUILD_ROOT%{_datadir}/blast/*
+chmod 755 $RPM_BUILD_ROOT%{_datadir}/blast
+
+#make ePCR files
+famap -tN -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap *.fa
+fahash -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
+
+%install
+
+for i in *.fa ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/fa ; done
+for i in *.nib ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/nib ; done
+install -m 444 gff-Sce-gene.gff.gz $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/gff
+
+find $RPM_BUILD_ROOT -type f -name '*.fa'     | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f -name '*.famap'  | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
+find $RPM_BUILD_ROOT -type f -name '*.fahash' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
+find $RPM_BUILD_ROOT -type f -name '*.nib'    | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-nib-filelist
+find $RPM_BUILD_ROOT -type f -name '*.gff.gz' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-gene-filelist
+find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-blast-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%files ePCR -f %{name}-%{version}-%{release}-ePCR-filelist
+%defattr(-,root,root)
+
+%files nib -f %{name}-%{version}-%{release}-nib-filelist
+%defattr(-,root,root)
+
+%files annotation-gene -f %{name}-%{version}-%{release}-gene-filelist
+%defattr(-,root,root)
+
+%files blast -f %{name}-%{version}-%{release}-blast-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: genome-Sce.spec.in,v $
+Revision 1.1  2006/08/29 23:54:30  allenday
+import genome package.  added ePCR dep
+
