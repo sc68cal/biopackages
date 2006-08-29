@@ -1,4 +1,4 @@
-#$Id: ncbi-ePCR.spec.in,v 1.4 2006/08/29 23:01:31 allenday Exp $
+#$Id: ncbi-ePCR.spec.in,v 1.5 2006/08/29 23:02:50 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
@@ -37,8 +37,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %{_bindir}/*
 %defattr(-,root,root,-)
+%doc Changes README.txt README.html 
 
 $Log: ncbi-ePCR.spec.in,v $
+Revision 1.5  2006/08/29 23:02:50  allenday
+add docs
+
 Revision 1.4  2006/08/29 23:01:31  allenday
 symlink for rePCR
 
