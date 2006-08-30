@@ -1,4 +1,4 @@
-#$Id: genome-Sce.spec.in,v 1.4 2006/08/30 02:34:15 allenday Exp $
+#$Id: genome-Sce.spec.in,v 1.5 2006/08/30 02:38:03 allenday Exp $
 Summary: S. cerevisiae genome sequence in FASTA format from SGD S228C (Oct 1 2003) release.
 Name: genome-Sce
 Version: S228C
@@ -113,12 +113,19 @@ find %{buildroot}%{_datadir}/blast -type f | sed "s@^%{buildroot}@%dir @g" >> %{
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 %post 
-fahash -b %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 %{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
 
 %preun 
+
+%post ePCR
+fahash -b %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 %{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
+
+%preun ePCR
 rm -f %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
 
 $Log: genome-Sce.spec.in,v $
+Revision 1.5  2006/08/30 02:38:03  allenday
+cannot do fahash in rpm build -- moved to %post and %preun :(
+
 Revision 1.4  2006/08/30 02:34:15  allenday
 cannot do fahash in rpm build -- moved to %post and %preun :(
 
