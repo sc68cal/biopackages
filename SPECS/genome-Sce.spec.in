@@ -1,4 +1,4 @@
-#$Id: genome-Sce.spec.in,v 1.3 2006/08/30 02:18:58 allenday Exp $
+#$Id: genome-Sce.spec.in,v 1.4 2006/08/30 02:34:15 allenday Exp $
 Summary: S. cerevisiae genome sequence in FASTA format from SGD S228C (Oct 1 2003) release.
 Name: genome-Sce
 Version: S228C
@@ -57,11 +57,11 @@ Yeast genome sequence converted to ePCR format.
 %prep
 %setup -c genome-Sce
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/fa
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/nib
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/gff
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/blast
+mkdir -p %{buildroot}%{_datadir}/genome/Sce/%{version}/ePCR
+mkdir -p %{buildroot}%{_datadir}/genome/Sce/%{version}/fa
+mkdir -p %{buildroot}%{_datadir}/genome/Sce/%{version}/nib
+mkdir -p %{buildroot}%{_datadir}/genome/Sce/%{version}/gff
+mkdir -p %{buildroot}%{_datadir}/blast
 
 %build
 #make gff file
@@ -74,28 +74,25 @@ cat saccharomyces_cerevisiae.gff | grep -vE '^(chr|#)' | grep -v '##FASTA' | per
 for i in *.fa ; do %{_bindir}/faToNib $i ${i/.fa/.nib} ; done
 
 #make blast files
-cat *.fa > chrall.fa ; formatdb -t %{name}-%{version} -n $RPM_BUILD_ROOT%{_datadir}/blast/%{name}-%{version} -i chrall.fa -p F
-chmod 444 $RPM_BUILD_ROOT%{_datadir}/blast/*
-chmod 755 $RPM_BUILD_ROOT%{_datadir}/blast
+cat *.fa > chrall.fa ; formatdb -t %{name}-%{version} -n %{buildroot}%{_datadir}/blast/%{name}-%{version} -i chrall.fa -p F
+chmod 444 %{buildroot}%{_datadir}/blast/*
+chmod 755 %{buildroot}%{_datadir}/blast
 
 #make ePCR files
-famap -tN -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap *.fa
-fahash -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
-perl -pi -e "s#$RPM_BUILD_ROOT##g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
-perl -pi -e "s#$RPM_BUILD_ROOT##g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
+famap -tN -b %{buildroot}%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap *.fa
 
 %install
 
-for i in *.fa ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/fa ; done
-for i in *.nib ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/nib ; done
-install -m 444 gff-Sce-gene.gff.gz $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/gff
+for i in *.fa ; do install -m 444 $i %{buildroot}%{_datadir}/genome/Sce/%{version}/fa ; done
+for i in *.nib ; do install -m 444 $i %{buildroot}%{_datadir}/genome/Sce/%{version}/nib ; done
+install -m 444 gff-Sce-gene.gff.gz %{buildroot}%{_datadir}/genome/Sce/%{version}/gff
 
-find $RPM_BUILD_ROOT -type f -name '*.fa'     | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
-find $RPM_BUILD_ROOT -type f -name '*.famap'  | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
-find $RPM_BUILD_ROOT -type f -name '*.fahash' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
-find $RPM_BUILD_ROOT -type f -name '*.nib'    | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-nib-filelist
-find $RPM_BUILD_ROOT -type f -name '*.gff.gz' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-gene-filelist
-find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-blast-filelist
+find %{buildroot} -type f -name '*.fa'     | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -name '*.famap'  | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
+find %{buildroot} -type f -name '*.fahash' | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-ePCR-filelist
+find %{buildroot} -type f -name '*.nib'    | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-nib-filelist
+find %{buildroot} -type f -name '*.gff.gz' | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-gene-filelist
+find %{buildroot}%{_datadir}/blast -type f | sed "s@^%{buildroot}@%dir @g" >> %{name}-%{version}-%{release}-blast-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
@@ -116,10 +113,15 @@ find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g"
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 %post 
+fahash -b %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 %{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
 
 %preun 
+rm -f %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
 
 $Log: genome-Sce.spec.in,v $
+Revision 1.4  2006/08/30 02:34:15  allenday
+cannot do fahash in rpm build -- moved to %post and %preun :(
+
 Revision 1.3  2006/08/30 02:18:58  allenday
 fixed s/// error
 
