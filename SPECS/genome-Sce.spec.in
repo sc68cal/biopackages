@@ -1,4 +1,4 @@
-#$Id: genome-Sce.spec.in,v 1.2 2006/08/30 02:11:05 allenday Exp $
+#$Id: genome-Sce.spec.in,v 1.3 2006/08/30 02:18:58 allenday Exp $
 Summary: S. cerevisiae genome sequence in FASTA format from SGD S228C (Oct 1 2003) release.
 Name: genome-Sce
 Version: S228C
@@ -81,8 +81,8 @@ chmod 755 $RPM_BUILD_ROOT%{_datadir}/blast
 #make ePCR files
 famap -tN -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap *.fa
 fahash -b $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
-perl -pi -e "s/$RPM_BUILD_ROOT//g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
-perl -pi -e "s/$RPM_BUILD_ROOT//g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
+perl -pi -e "s#$RPM_BUILD_ROOT##g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
+perl -pi -e "s#$RPM_BUILD_ROOT##g" $RPM_BUILD_ROOT%{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
 
 %install
 
@@ -120,6 +120,9 @@ find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g"
 %preun 
 
 $Log: genome-Sce.spec.in,v $
+Revision 1.3  2006/08/30 02:18:58  allenday
+fixed s/// error
+
 Revision 1.2  2006/08/30 02:11:05  allenday
 hash was internally referencing buildroot
 
