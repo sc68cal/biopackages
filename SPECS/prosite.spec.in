@@ -1,4 +1,4 @@
-#$Id: prosite.spec.in,v 1.4 2006/08/25 02:20:21 jmendler Exp $
+#$Id: prosite.spec.in,v 1.5 2006/08/31 18:16:14 allenday Exp $
 Summary:  perl program used to scan one or several patterns, rules and/or profiles from PROSITE against one or several protein sequnces in Swiss-Prot or FASTA format
 Name: prosite 
 Version: 18.49
@@ -32,16 +32,16 @@ package : "pfscan" used to scan a sequence against a profile library and
 
 %prep
 %setup -q 
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p %{buildroot}%{_bindir}
 
 %build
 tar -xzf pft2.2.tar.Z
 cd pft2.2 ; make ; cd ..
 
 %install
-install -m 755 pft2.2/pfscan $RPM_BUILD_ROOT%{_bindir}
-install -m 755 pft2.2/ptof $RPM_BUILD_ROOT%{_bindir}
-install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}
+install -m 755 pft2.2/pfscan %{buildroot}%{_bindir}
+install -m 755 pft2.2/ptof %{buildroot}%{_bindir}
+install -m 755 ps_scan.pl    %{buildroot}%{_bindir}
 #TODO install the other executables that were created in the build
 #ptof ptoh pfw etc
 
@@ -53,9 +53,12 @@ install -m 755 ps_scan.pl    $RPM_BUILD_ROOT%{_bindir}
 %doc pft2.2/2ft pft2.2/6ft pft2.2/gtop pft2.2/htop pft2.2/pfmake pft2.2/pfscale pft2.2/pfsearch pft2.2/pfw pft2.2/psa2msa pft2.2/ptof pft2.2/ptoh
 
 %clean
-[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && rm -rf %{buildroot};
 
 $Log: prosite.spec.in,v $
+Revision 1.5  2006/08/31 18:16:14  allenday
+replaced $RPM_BUILD_ROOT with %{buildroot}
+
 Revision 1.4  2006/08/25 02:20:21  jmendler
 install everything in bindir
 
