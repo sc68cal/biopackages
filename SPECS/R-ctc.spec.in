@@ -1,0 +1,45 @@
+#$Id: R-ctc.spec.in,v 1.1 2006/08/31 19:04:49 allenday Exp $
+%define R_name ctc
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.6.0
+Release: %{revision}.%{distro}
+Name: R-%{R_name}
+Summary: %{R_name}: Cluster and Tree Conversion.
+Group: Applications/Engineering
+License: GPL
+URL: http://antoinelucas.free.fr/ctc
+Source0: %{R_name}_%{version}.tar.gz
+Requires: R >= 2.0.0
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, biopackages
+
+%description
+Tools for export and import classification trees and clusters to other programs
+
+%prep
+%setup -n %{R_name}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-ctc.spec.in,v $
+Revision 1.1  2006/08/31 19:04:49  allenday
+import
+
