@@ -2,7 +2,7 @@
 use strict;
 use Data::Dumper;
 use constant USAGE => <<"UUU";
-$0 <Spec-BuildArch> <Spec-Name>
+$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip>
 
 This script starts with a certain package name and attempts to build all the
 required packages that the given package both needs for build requirements and
@@ -11,10 +11,10 @@ required to build this package are installed.
 UUU
 
 # Usage
-if (scalar(@ARGV) < 2) { print USAGE; exit(1); }
+if (scalar(@ARGV) < 3) { print USAGE; exit(1); }
 
 # The spec file to start with (name without extension)
-my ($arch_str_universal, $spec_file) = @ARGV;
+my ($arch_str_universal, $spec_file, $no_build_file) = @ARGV;
 
 # Hashes to store dependency tree
 my $req = {};
@@ -22,7 +22,7 @@ my $missing_req = {};
 
 # A list of modules not to build
 my $no_build = {};
-$no_build = read_no_build("no_build.txt");
+$no_build = read_no_build($no_build_file);
 
 # Hashes to store which packages have been previously built
 my %built_before;
