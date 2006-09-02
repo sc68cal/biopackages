@@ -1,4 +1,4 @@
-#$Id: perl-Class-Trigger.spec.in,v 1.4 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-Class-Trigger.spec.in,v 1.5 2006/09/02 06:53:55 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Class-Trigger/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-Class-Data-Inheritable
 
 Source0: Class-Trigger-0.09.tar.gz
 
@@ -196,6 +197,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-Trigger.spec.in,v $
+Revision 1.5  2006/09/02 06:53:55  boconnor
+Updated perl-Class-Trigger.spec.in deps
+
 Revision 1.4  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
