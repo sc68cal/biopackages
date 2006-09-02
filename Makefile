@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.13 2006/08/16 17:33:12 allenday Exp $
+#$Id: Makefile,v 1.14 2006/09/02 01:44:26 boconnor Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -77,18 +77,18 @@ sync_clean ::
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 rsync_down_large ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large/ ./SOURCES.large
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large/ ./SOURCES.large
 	ln -s SOURCES.large/* SOURCES/
 
 rsync_down_small ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small/ ./SOURCES.small
+	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.small/ ./SOURCES.small
 	ln -s SOURCES.small/* SOURCES/
 
 rsync_up_large ::
-	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.large
+	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large
 
 rsync_up_small ::
-	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/build/SOURCES.small
+	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.small
 
 ####################################
 #stuff for initial environment setup
