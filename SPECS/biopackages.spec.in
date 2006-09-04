@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.7 2006/07/10 17:33:33 boconnor Exp $
+#$Id: biopackages.spec.in,v 1.8 2006/09/04 10:47:58 boconnor Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.1
@@ -80,8 +80,15 @@ install -m 755 bp-distro %{buildroot}%{_bindir}
 #done ;
 
 %post
-cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
-echo "%%distro %%(eval %{_bindir}/bp-distro)" >> %{_libdir}/rpm/macros
+# turns out %{_libdir} points to /usr/lib64 on CentOS for noarch packages
+# but the macros file is in /usr/lib
+if  [ -e /usr/lib/rpm/macros ]; then
+  cp -prv /usr/lib/rpm/macros /usr/lib/rpm/macros.bak
+  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> /usr/lib/rpm/macros
+else
+  cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
+  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> %{_libdir}/rpm/macros
+fi
 
 #cp -prv /etc/apt/sources.list /etc/apt.sources.list.bak
 #MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'`
@@ -106,6 +113,9 @@ rm -rf %{buildroot}
 #/usr/bin/bp-update
 
 $Log: biopackages.spec.in,v $
+Revision 1.8  2006/09/04 10:47:58  boconnor
+Updates to deps and also some extra code in the biopackages spec to support strangeness in CentOS on x86_64
+
 Revision 1.7  2006/07/10 17:33:33  boconnor
 Added spec.in files for several packages that were previously built on the testing branch and not yet imported into the biopackages system
 

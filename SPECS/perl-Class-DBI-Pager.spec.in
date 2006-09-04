@@ -1,4 +1,4 @@
-#$Id: perl-Class-DBI-Pager.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+#$Id: perl-Class-DBI-Pager.spec.in,v 1.2 2006/09/04 10:47:58 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,7 +10,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Class-DBI-Pager/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-Data-Page
 
 Source0: Class-DBI-Pager-0.06.tar.gz
 
@@ -143,6 +143,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-DBI-Pager.spec.in,v $
+Revision 1.2  2006/09/04 10:47:58  boconnor
+Updates to deps and also some extra code in the biopackages spec to support strangeness in CentOS on x86_64
+
 Revision 1.1  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
