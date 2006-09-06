@@ -1,0 +1,177 @@
+#$Id: firefox.spec.in,v 1.1 2006/09/06 01:23:23 jmendler Exp $
+Summary:        Mozilla Firefox Web browser.
+Name:           firefox
+Version:        1.0.3
+Release:        1.%{distro}
+Epoch:          0
+URL:            http://www.mozilla.org/projects/firefox/
+License:        MPL/LGPL
+Group:          Applications/Internet
+Source0:        firefox-%{version}-source.tar.bz2
+Source1:        mozconfig-firefox
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  libpng-devel, libjpeg-devel
+BuildRequires:  zlib-devel, zip
+BuildRequires:  libIDL-devel
+BuildRequires:  desktop-file-utils
+BuildRequires:  gtk2-devel, gnome-vfs2-devel
+BuildRequires:  krb5-devel
+BuildRequires:  pango-devel
+BuildRequires:  autoconf
+BuildRequires:  freetype-devel
+BuildRequires:  biopackages
+
+Requires:       desktop-file-utils >= %{desktop_file_utils_version}
+Obsoletes:      phoenix, mozilla-firebird, MozillaFirebird
+Provides:       mozilla-firebird = %{epoch}:%{version}, MozillaFirebird = %{epoch}:%{version}
+Provides:       webclient
+%define ffdir %{_libdir}/firefox-%{version}
+
+AutoProv: 0
+%define _use_internal_dependency_generator 0
+
+%description
+Mozilla Firefox is an open-source web browser, designed for standards
+compliance, performance and portability.
+
+#---------------------------------------------------------------------
+
+%prep
+%setup -q -n mozilla
+
+%{__rm} -f .mozconfig
+%{__cp} %{SOURCE1} .mozconfig
+
+
+#---------------------------------------------------------------------
+
+%build
+export BUILD_OFFICIAL=1
+export MOZILLA_OFFICIAL=1
+./configure \
+  --with-system-jpeg \
+  --with-system-zlib \
+  --with-system-png \
+  --with-pthreads \
+  --disable-tests \
+  --disable-debug \
+  --disable-jsd \
+  --disable-installer \
+  --enable-optimize="$RPM_OPT_FLAGS" \
+  --enable-xft \
+  --enable-xinerama \
+  --enable-official-branding \
+  --disable-xprint \
+  --disable-strip \
+  --enable-default-toolkit=gtk2 \
+  --enable-pango
+
+export RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed s/-O2/-Os/`
+MAKE="gmake -j5" make -f client.mk build
+
+#---------------------------------------------------------------------
+
+%install
+%{__rm} -rf $RPM_BUILD_ROOT
+
+cd xpinstall/packager/
+%{__make} MOZILLA_BIN="\$(DIST)/bin/firefox-bin" STRIP=/bin/true
+cd -
+
+%{__mkdir_p} $RPM_BUILD_ROOT{%{_libdir},%{_bindir},%{_datadir}/applications}
+
+%{__tar} -C $RPM_BUILD_ROOT%{_libdir}/ -xzf dist/firefox-*-linux-gnu.tar.gz
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/firefox $RPM_BUILD_ROOT%{ffdir}
+
+%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/firefox-*-linux-gnu.tar
+
+%{__rm} -f $RPM_BUILD_ROOT%{ffdir}/firefox-config
+
+cd $RPM_BUILD_ROOT%{ffdir}/chrome
+find . -name "*" -type d -maxdepth 1 -exec %{__rm} -rf {} \;
+cd -
+
+# another bug fixed by looking at the debian package
+%{__mkdir_p} $RPM_BUILD_ROOT%{ffdir}/chrome/icons/default/
+
+# own mozilla plugin dir (#135050)
+%{__mkdir_p} $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins
+
+install -m 755 dist/bin/firefox $RPM_BUILD_ROOT%{_bindir}
+
+# ghost files
+touch $RPM_BUILD_ROOT%{ffdir}/chrome/chrome.rdf
+for overlay in {"browser","communicator","inspector","messenger","navigator"}; do
+  %{__mkdir_p} $RPM_BUILD_ROOT%{ffdir}/chrome/overlayinfo/$overlay/content
+  touch $RPM_BUILD_ROOT%{ffdir}/chrome/overlayinfo/$overlay/content/overlays.rdf
+done
+touch $RPM_BUILD_ROOT%{ffdir}/components.ini
+touch $RPM_BUILD_ROOT%{ffdir}/components/compreg.dat
+touch $RPM_BUILD_ROOT%{ffdir}/components/xpti.dat
+%{__mkdir_p}  $RPM_BUILD_ROOT%{ffdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}
+touch $RPM_BUILD_ROOT%{ffdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/install.rdf
+touch $RPM_BUILD_ROOT%{ffdir}/extensions/installed-extensions-processed.txt
+touch $RPM_BUILD_ROOT%{ffdir}/extensions/Extensions.rdf
+
+
+
+#---------------------------------------------------------------------
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+#---------------------------------------------------------------------
+
+%post
+
+umask 022
+%{ffdir}/firefox-rebuild-databases.pl || :
+
+# create extensions directory
+%{ffdir}/firefox -register
+
+%postun
+umask 022
+# was this an upgrade?
+if [ $1 -gt 1 ]; then
+  %{ffdir}/firefox-rebuild-databases.pl
+fi
+
+%preun
+# is it a final removal?
+if [ $1 -eq 0 ]; then
+  %{__rm} -rf %{ffdir}/chrome/overlayinfo
+  %{__rm} -rf %{ffdir}/components
+  %{__rm} -f  %{ffdir}/chrome/*.rdf
+  %{__rm} -rf %{ffdir}/extensions
+  %{__rm} -f %{ffdir}/components.ini
+fi
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/firefox
+%{ffdir}
+%{_libdir}/mozilla
+
+%ghost %{ffdir}/chrome/chrome.rdf
+%ghost %{ffdir}/chrome/overlayinfo/browser/content/overlays.rdf
+%ghost %{ffdir}/chrome/overlayinfo/communicator/content/overlays.rdf
+%ghost %{ffdir}/chrome/overlayinfo/inspector/content/overlays.rdf
+%ghost %{ffdir}/chrome/overlayinfo/messenger/content/overlays.rdf
+%ghost %{ffdir}/chrome/overlayinfo/navigator/content/overlays.rdf
+%ghost %{ffdir}/components.ini
+%ghost %{ffdir}/components/compreg.dat
+%ghost %{ffdir}/components/xpti.dat
+%ghost %{ffdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/install.rdf
+%ghost %{ffdir}/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/install.rdf
+%ghost %{ffdir}/extensions/installed-extensions-processed.txt
+%ghost %{ffdir}/extensions/Extensions.rdf
+
+
+#---------------------------------------------------------------------
+
+$Log: firefox.spec.in,v $
+Revision 1.1  2006/09/06 01:23:23  jmendler
+import from testing
+
