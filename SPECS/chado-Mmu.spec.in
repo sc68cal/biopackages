@@ -1,4 +1,4 @@
-#$Id: chado-Mmu.spec.in,v 1.1 2006/09/06 00:44:40 jmendler Exp $
+#$Id: chado-Mmu.spec.in,v 1.2 2006/09/06 16:46:06 jmendler Exp $
 %define gmod_root /var/lib/gmod
 %define org Mmu
 %define orgCommonName mouse
@@ -6,9 +6,9 @@
 %define chadoVersion 0.003
 Summary: Chado, prepopulated with Mus musculus genome features
 Name: chado-%{org}
-Version: %{orgVersion}.%{chadoVersion}
+Version: 0.003
 Epoch: 0
-Release: 10.%{distro}
+Release: %{revision}.%{distro}
 Source0: %{name}-%{version}.tar.gz
 Source1: split.pl
 License: GPL
@@ -138,6 +138,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Mmu.spec.in,v $
+Revision 1.2  2006/09/06 16:46:06  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 00:44:40  jmendler
 import from testing
 
