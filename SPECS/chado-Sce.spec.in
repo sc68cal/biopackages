@@ -1,0 +1,124 @@
+#$Id: chado-Sce.spec.in,v 1.1 2006/09/06 00:46:44 jmendler Exp $
+%define gmod_root /var/lib/gmod
+%define org Sce
+%define orgCommonName yeast
+%define orgVersion S228C
+%define chadoVersion 0.003
+Summary: Chado, prepopulated with Saccharomyces cerevisiae genome features
+Name: chado-%{org}
+Version: %{orgVersion}.%{chadoVersion}
+Epoch: 0
+Release: 4.cvs%{distro}
+Source0: %{name}-%{version}.tar.gz
+Source1: split.pl
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.gmod.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: postgresql-AffxSeq, postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
+Requires: perl-DBD-Pg, perl-DBI, perl-Class-DBI, perl-Class-DBI-Pager, perl-bioperl, perl-XML-Simple
+Requires: perl-Term-ProgressBar, perl-Template-Toolkit, perl-Log-Log4perl, perl-Module-Build
+Requires: perl-Class-Accessor, perl-Class-Accessor-Chained
+Requires: nmap
+Requires: obo-core, obo-extra, perl-go-perl >= 0.02-3
+Requires: genome-%{org}-nib = %{orgVersion}
+BuildRequires: postgresql-AffxSeq, perl-Template-Toolkit, perl-Log-Log4perl, perl-Class-DBI, perl-Class-DBI-Pager, postgresql >= 7.3
+BuildRequires: perl-Class-DBI-Pg, perl-Term-ProgressBar
+BuildRequires: chado = %{chadoVersion}
+BuildRequires: genome-%{org}-annotation-gene = %{orgVersion}
+BuildRequires: genome-%{org}-annotation-affymetrix = %{orgVersion}
+BuildRequires: ucsc
+
+#not sure why i have to hardcode this in...
+Provides: perl(Chado::AutoDBI)
+
+%description
+Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project.  Prepopulated with Saccharomyces cerevisiae genome features
+
+%prep
+%setup -q
+cp %{SOURCE1} .
+
+%build
+#HACK this needs to be done as part of the base chado package install
+if [ ! -e /var/lib/gmod/conf/default.conf ] ; then
+  sudo ln -s /var/lib/gmod/conf/chado.conf /var/lib/gmod/conf/default.conf;
+fi ;
+
+%install
+
+tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
+
+sudo /etc/init.d/postgresql start
+sudo su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
+sudo su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
+sudo su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+#su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+
+#HACK this should be in genome-Sce-nib !!!
+for i in %{_datadir}/genome/%{org}/%{orgVersion}/nib/*.nib ; do
+  sudo su postgres -c "nibSize $i | perl -ne 'chomp;@F=split/\s+/;print qq(INSERT INTO feature (organism_id,name,uniquename,seqlen,type_id) VALUES ((SELECT organism_id FROM organism WHERE common_name = ^%{orgCommonName}^),^\$F[1]^,^\$F[1]^,\$F[2],(SELECT cvterm_id FROM cvterm WHERE name = ^chromosome^ AND cv_id = (SELECT cv_id FROM cv WHERE name = ^so.ontology^)));\n) if \$F[1]' | perl -ne \"s/\^/'/g;print\" |  psql $tmp_chado-%{org}-%{orgVersion}" 2>&1 > /dev/null;
+done ;
+
+#########################
+###load in genes
+######################### 
+echo `date`;
+sudo su postgres -c "zcat %{_datadir}/genome/%{org}/%{orgVersion}/gff/gff-%{org}-gene.gff.gz | grep -vw chromosome | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
+echo `date`;
+
+###########################################################
+##load Affymetrix PCR_product (target) alignments to genome
+###########################################################
+for i in %{_datadir}/genome/%{org}/%{orgVersion}/gff/Affymetrix*target*.gff.gz ; do
+  sudo su postgres -c "zcat $i | perl -ne 's/\tBLAT\tsimilarity\t/\tAffymetrix\tPCR_product\t/;print' | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
+  echo `date`;
+done ;
+
+#######################
+#DUMP AND DROP DATABASE
+#######################
+sudo su postgres -c "pg_dump -O $tmp_chado-%{org}-%{orgVersion}" | gzip > %{name}-%{version}.sql.gz
+sudo su postgres -c "dropdb   $tmp_chado-%{org}-%{orgVersion}"
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+%doc *.sql.gz *.pl
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+/etc/init.d/postgresql start
+sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion} || exit 1';
+
+#echo "[1/4] Creating PostgreSQL database 'chado-%{org}-%{orgVersion}' as user 'postgres'";
+sudo su postgres -c 'createdb chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+#echo "[2/4] Adding plpgsql language to database 'chado-%{org}-%{orgVersion}'";
+sudo su postgres -c 'createlang plpgsql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+
+#echo "[3/4] Creating tables, functions, views, triggers, rules, etc for database 'chado-%{org}-%{orgVersion}'";
+sudo su postgres -c 'zcat %{_datadir}/doc/%{name}-%{version}/%{name}-%{version}.sql.gz | psql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null
+
+#echo "[4/4] Grant permissions for SELECT to public users
+for i in `sudo su postgres -c "psql chado-%{org}-%{orgVersion} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
+  sudo su postgres -c "psql chado-%{org}-%{orgVersion} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" 2>&1 > /dev/null;
+done
+
+true ;
+
+%preun
+/etc/init.d/postgresql start
+sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
+true;
+
+$Log: chado-Sce.spec.in,v $
+Revision 1.1  2006/09/06 00:46:44  jmendler
+import from testing
+
