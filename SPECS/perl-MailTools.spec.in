@@ -1,4 +1,4 @@
-#$Id: perl-MailTools.spec.in,v 1.1 2006/09/06 06:40:04 boconnor Exp $
+#$Id: perl-MailTools.spec.in,v 1.2 2006/09/06 07:16:22 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -13,6 +13,7 @@ URL: http://search.cpan.org/dist/MailTools/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-TimeDate
 Source0: MailTools-%{version}.tar.gz
 
 %description
@@ -76,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-MailTools.spec.in,v $
+Revision 1.2  2006/09/06 07:16:22  boconnor
+Updated deps
+
 Revision 1.1  2006/09/06 06:40:04  boconnor
 New spec.in file
 
