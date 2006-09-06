@@ -1,0 +1,149 @@
+#$Id: perl-Algorithm-Diff.spec.in,v 1.1 2006/09/06 03:24:54 jmendler Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Algorithm-Diff
+Version: 1.1901
+Release: 1.%{distro}
+Packager: allenday@
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Algorithm-Diff/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Algorithm-Diff-1.1901.zip
+
+%description
+This is a module for computing the difference between two files, two
+strings, or any other two lists of things.  It uses an intelligent
+algorithm similar to (or identical to) the one used by the Unix "diff"
+program.  It is guaranteed to find the *smallest possible* set of
+differences.
+
+This package contains a few parts.
+
+Algorithm::Diff is the module that contains several interfaces for which
+computing the differences betwen two lists.
+
+The several "diff" programs also included in this package use
+Algorithm::Diff to find the differences and then they format the output.
+
+Algorithm::Diff also includes some other useful functions such as "LCS",
+which computes the longest common subsequence of two lists.
+
+A::D is suitable for many uses.  You can use it for finding the smallest
+set of differences between two strings, or for computing the most
+efficient way to update the screen if you were replacing "curses".
+
+Algorithm::DiffOld is a previous version of the module which is included
+primarilly for those wanting to use a custom comparison function rather
+than a key generating function (and who don't mind the significant
+performance penalty of perhaps 20-fold).
+
+diff.pl implements a "diff" in Perl that is as simple as (was
+previously) possible so that you can see how it works.  The output
+format is not compatible with regular "diff".  It needs to be
+reimplemented using the OO interface to greatly simplify the code.
+
+diffnew.pl implements a "diff" in Perl with full bells and whistles.  By
+Mark-Jason, with code from cdiff.pl included.
+
+cdiff.pl implements "diff" that generates real context diffs in either
+traditional format or GNU unified format.  Original contextless
+"context" diff supplied by Christian Murphy.  Modifications to make it
+into a real full-featured diff with -c and -u options supplied by Amir
+D. Karger.
+
+Yes, you can use this program to generate patches.
+
+OTHER RESOURCES
+
+"Longest Common Subsequences", at
+http://www.ics.uci.edu/~eppstein/161/960229.html
+
+This code was adapted from the Smalltalk code of Mario Wolczko
+<mario@wolczko.com>, which is available at
+ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st
+
+THANKS SECTION
+
+Thanks to Ned Konz's for rewriting the module to greatly improve
+performance, for maintaining it over the years, and for readilly handing
+it over to me so I could plod along with my improvements.
+
+(From Ned Konz's earlier versions):
+
+Thanks to Mark-Jason Dominus for doing the original Perl version and
+maintaining it over the last couple of years. Mark-Jason has been a huge
+contributor to the Perl community and CPAN; it's because of people like
+him that Perl has become a success.
+
+Thanks to Mario Wolczko <mario@wolczko.com> for writing and making
+publicly available his Smalltalk version of diff, which this Perl
+version is heavily based on.
+
+Thanks to Mike Schilli <m@perlmeister.com> for writing sdiff and
+traverse_balanced and making them available for the Algorithm::Diff
+distribution.
+
+(From Mark-Jason Dominus' earlier versions):
+
+Huge thanks to Amir Karger for adding full context diff supprt to
+"cdiff.pl", and then for waiting patiently for five months while I let
+it sit in a closet and didn't release it.  Thank you thank you thank
+you, Amir!
+
+Thanks to Christian Murphy for adding the first context diff format
+support to "cdiff.pl".
+
+
+%prep
+%setup -q -n Algorithm-Diff-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Algorithm-Diff.spec.in,v $
+Revision 1.1  2006/09/06 03:24:54  jmendler
+import from testing
+
