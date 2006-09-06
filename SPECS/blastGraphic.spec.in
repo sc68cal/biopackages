@@ -1,8 +1,8 @@
-#$Id: blastGraphic.spec.in,v 1.1 2006/09/06 00:10:17 jmendler Exp $
+#$Id: blastGraphic.spec.in,v 1.2 2006/09/06 16:10:36 jmendler Exp $
 Summary: blastGraphic
 Name: blastGraphic
 Version: 0.01
-Release: 3.%{distro}
+Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -203,6 +203,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS DISCLAIMER README VERSION sample_query_sequence
 
 $Log: blastGraphic.spec.in,v $
+Revision 1.2  2006/09/06 16:10:36  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 00:10:17  jmendler
 import from testing
 
