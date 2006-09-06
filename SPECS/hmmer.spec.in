@@ -1,0 +1,89 @@
+#$Id: hmmer.spec.in,v 1.1 2006/09/06 01:54:55 jmendler Exp $
+
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 2.3.2
+Release: 6.%{distro}
+Summary: profile HMMs for protein sequence analysis
+Name: hmmer
+Source0: ftp://ftp.genetics.wustl.edu/pub/eddy/hmmer/2.3.2/hmmer-2.3.2.tar.gz
+License: GPL
+URL: http://hmmer.wustl.edu/
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+
+%description
+HMMER is an implementation of profile HMM methods for
+sensitive database searches using multiple sequence alignments as queries.
+
+Basically, you give HMMER a multiple sequence alignment as input;
+it builds a statistical model called a "hidden Markov model"
+which you can then use as a query into a sequence database
+to find (and/or align) additional homologues of the sequence family.
+
+%package squid
+Summary: SQUID - library of functions for biological sequence analysis
+Group: Applications/Scientific
+%description squid
+SQUID is Eddy's own personal library of C functions and utility programs for 
+sequence analysis. He doesn't really suggest that you use it in your programs, 
+as he changes it frequently and at will. However, it does contains some 
+small utility programs that some people have found useful in scripts that 
+drive large HMMER tasks.
+
+%prep
+%setup
+
+%build
+%ifarch x86_64
+export CFLAGS="-O3 -static -m64 -msse2  " 
+%endif
+%ifarch athlon
+export CFLAGS="-O3 -static -march=athlon-xp -mmmx -m3dnow " 
+%endif
+%ifarch i686
+export CFLAGS="-O3 -static  -march=pentium3  " 
+%endif
+%ifarch p4
+export CFLAGS="-O3 -static  -march=pentium4  -mfpmath=sse " 
+%endif
+%ifarch i386
+export CFLAGS="-O3 -static -march=pentium " 
+%endif
+
+./configure --prefix=$RPM_BUILD_ROOT%{_prefix} --mandir=$RPM_BUILD_ROOT%{_mandir} --enable-lfs --enable-threads
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -m 755 -d $RPM_BUILD_ROOT%{_prefix}
+
+%makeinstall
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/%{name}/hmmerdb
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/tutorial
+install -m 644 00README COPYRIGHT INSTALL LICENSE NOTES Userguide.pdf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}
+cd tutorial
+install -m 644 * $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version}/tutorial
+cd ..
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
+echo "export HMMERDB=/usr/share/hmmer/hmmerdb" > $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/%{name}.sh
+echo "setenv HMMERDB /usr/share/hmmer/hmmerdb" > $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/%{name}.csh
+for prg in $(ls $RPM_BUILD_ROOT%{_bindir} ); do echo %{_bindir}/$prg; done > mainprgs.list
+for prg in $(find squid -type f -perm +a=x -exec basename {} \; | grep -v config); do install -m 755 squid/$prg $RPM_BUILD_ROOT%{_bindir}; echo %{_bindir}/$prg; done > squidprgs.list
+%files -f mainprgs.list
+%defattr(-, root, root)
+%{_mandir}/man*/*
+%{_sysconfdir}/profile.d/%{name}.*
+%{_datadir}/%{name}/*
+%{_datadir}/doc/%{name}-%{version}/*
+
+%files squid -f squidprgs.list
+
+%clean
+
+rm -rf $RPM_BUILD_ROOT
+
+$Log: hmmer.spec.in,v $
+Revision 1.1  2006/09/06 01:54:55  jmendler
+import from testing
+
