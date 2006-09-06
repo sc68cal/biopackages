@@ -1,0 +1,208 @@
+#$Id: blastGraphic.spec.in,v 1.1 2006/09/06 00:10:17 jmendler Exp $
+Summary: blastGraphic
+Name: blastGraphic
+Version: 0.01
+Release: 3.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://www.gmod.org/blastGraphic.shtml
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
+#Requires: genome-Cel-blast, genome-Dme-blast, genome-Dps-blast
+#Requires: genome-Hsa-blast, genome-Mmu-blast, genome-Rno-blast
+#Requires: genome-Sce-blast
+Source: blastGraphic-%{version}.tar.gz
+Patch: blastGraphic-%{version}.patch
+
+%package Hsa
+Summary: A blastGraphic configured to work with the Hsa database.
+Group: Development/Web
+BuildRequires: perl, biopackages
+Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
+Requires: genome-Hsa-blast
+Patch: blastGraphic-%{version}.patch
+
+%package Sce
+Summary: A blastGraphic configured to work with the Sce database.
+Group: Development/Web
+BuildRequires: perl, biopackages
+Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
+Requires: genome-Sce-blast
+Patch: blastGraphic-%{version}.patch
+
+%description Hsa
+BlastGraphic configured to work with Hsa genome database.
+
+%description Sce
+BlastGraphic configured to work with Sce genome database.
+
+%description
+The BLAST Graphic Viewer provides a graphical visualization of the regions 
+contained within HSPs relative to the query sequence. This distribution 
+includes sample databases and a BLAST Search form. It is a component of 
+the Generic Model Organism Systems Database project (GMOD.sourceforge.net).
+
+ - For a demo, go to http://seq.yeastgenome.org/cgi-bin/GMOD/nph-blast.pl
+ 
+ - To download the Washington University BLAST(WU-BLAST), 
+   go to http://blast.wustl.edu/
+
+ - To download the NCBI BLAST programs, 
+   go to http://www.ncbi.nlm.nih.gov/BLAST/
+ 
+ - To download the sample databases, go to 
+   ftp://genome-ftp.stanford.edu/pub/people/programmer/gmod/
+
+ - This graphic module will support BLASTN, BLASTP, BLASTX, TBLASTX, 
+   and TBLASTN. For the databases, it will support any fasta-
+   formated datasets (i.e., nr, nt, etc). 
+
+ - The cgi program (nph-blast.pl) included in this
+   distribution is used to display a BLAST search form and 
+   search result for WU-BLAST. It can be copied into any directory 
+   under your cgi-bin. You can update the $CONF_FILE variable 
+   in the top of this script to point to your own location of 
+   the configuration file.
+
+ - To set your own locations for blast programs, databases, filters,
+   and matrix, and tmp directory for storing the png file, please 
+   see the configuration file (conf/Blast.conf). You can copy this 
+   file (Blast.conf) into any world readable directories.
+
+ - To install this module on your own system, issue the following commands:
+
+   perl Makefile.PL
+   make
+   make install   
+
+ - Prerequisites: this module runs on top of several software packages. 
+   These packages must be installed before you can run this viewer. 
+
+	A)  	Apache Web Server -- http://www.apache.org
+        		The Apache web server is the industry 
+			standard open source
+        		web server for Unix and Windows systems.
+
+  	B) 	Perl 5.005 or higher-- http://www.cpan.org
+        		The Perl language is widely used for web 
+			applications.
+        	
+  	C)	Standard Perl modules -- http://www.cpan.org
+        		The following Perl modules must be installed 
+			for the Blast Graphic Viewer to work.
+        		They can be found on CPAN:
+
+		File::Listing
+		File::Basename
+		GD
+		CGI
+		
+
+	D)	Bioperl modules --  http://www.bioperl.org
+        		The following Bioperl modules must be installed
+			for this viewer to work.	
+	
+		Bio::Root::IO
+		Bio::SearchIO
+		Bio::SearchIO::Writer::HTMLResultWriter
+	
+
+This is a free software.  You can use it under the same terms as Perl
+itself. Please see DISCLAIMER for limitations ...
+ 	
+Support is available from the discussion groups and mailing lists at
+www.gmod.org
+
+Shuai Weng & SGD team
+shuai@genome.stanford.edu
+www.yeastgenome.org
+Oct. 15, 2003
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+%setup -q -n blastGraphic-%{version}
+%patch -p0
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+# FIXME: is there a better way to do this?
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/blastGraphic
+cp cgi-bin/* $RPM_BUILD_ROOT/var/www/cgi-bin/blastGraphic
+chmod a+x $RPM_BUILD_ROOT/var/www/cgi-bin/blastGraphic/*
+mkdir -p $RPM_BUILD_ROOT/etc
+cp conf/* $RPM_BUILD_ROOT/etc
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -exec perl -p -i -e "s!$RPM_BUILD_ROOT!!g" {} \;
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%post
+mkdir /var/www/html/blast_image_tmp
+chmod a+rwx /var/www/html/blast_image_tmp
+perl -p -i -e 's!\[DBNAME\]!NONE!' /etc/Blast.conf
+
+%post Sce
+mkdir /var/www/html/blast_image_tmp
+chmod a+rwx /var/www/html/blast_image_tmp
+perl -p -i -e 's!\[DBNAME\]!genome-Sce-S228C!' /etc/Blast.conf
+perl -p -i -e 's!\[DBNAME\]!genome-Sce-S228C!' /etc/Blast.conf
+
+%post Hsa
+mkdir /var/www/html/blast_image_tmp
+chmod a+rwx /var/www/html/blast_image_tmp
+perl -p -i -e 's!\[DBNAME\]!genome-Hsa-17!' /etc/Blast.conf
+perl -p -i -e 's!\[DBNAME\]!genome-Hsa-17!' /etc/Blast.conf
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+%doc CREDITS DISCLAIMER README VERSION sample_query_sequence
+
+%files Sce -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+%doc CREDITS DISCLAIMER README VERSION sample_query_sequence
+
+%files Hsa -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+%doc CREDITS DISCLAIMER README VERSION sample_query_sequence
+
+$Log: blastGraphic.spec.in,v $
+Revision 1.1  2006/09/06 00:10:17  jmendler
+import from testing
+
