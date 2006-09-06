@@ -1,0 +1,62 @@
+#$Id: gec-Hsa.spec.in,v 1.1 2006/09/06 01:44:27 jmendler Exp $
+%define gmod_root /var/lib/gmod
+%define org Hsa
+%define orgCommonName human
+%define orgVersion 17
+%define chadoVersion 0.003
+Summary: Chado for %{orgCommonName} data from GEC
+Name: gec-%{org}
+Version: %{orgVersion}.%{chadoVersion}
+Epoch: 0
+Release: 5.%{distro}
+Source0: %{name}-%{version}.tar.gz
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: chado-%{org} = %{orgVersion}.%{chadoVersion}
+Requires: gec-tools
+BuildRequires: perl, biopackages
+
+%description
+Chado for %{orgCommonName} data from GEC
+
+%prep
+%setup -q
+mkdir -p $RPM_BUILD_ROOT/etc/cron.daily
+
+%build
+
+%install
+install -m 755 %{org}-GEC-Mirror.cron $RPM_BUILD_ROOT/etc/cron.daily/;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+/etc/init.d/postgresql start
+#su postgres -c 'dropdb gec-%{org}-%{orgVersion} || exit 1';
+su postgres -c 'createdb gec-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+su postgres -c 'createlang plpgsql gec-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+su postgres -c 'zcat %{_datadir}/doc/chado-%{org}-%{version}/chado-%{org}-%{version}.sql.gz | psql gec-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null
+for i in `su postgres -c "psql gec-%{org}-%{orgVersion} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
+  su postgres -c "psql gec-%{org}-%{orgVersion} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" > /dev/null;
+done
+true ;
+
+%preun
+/etc/init.d/postgresql start
+#su postgres -c 'dropdb gec-%{org}-%{orgVersion}';
+true;
+
+$Log: gec-Hsa.spec.in,v $
+Revision 1.1  2006/09/06 01:44:27  jmendler
+import from testing
+
