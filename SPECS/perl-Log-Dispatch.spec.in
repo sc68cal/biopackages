@@ -1,4 +1,4 @@
-#$Id: perl-Log-Dispatch.spec.in,v 1.5 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Log-Dispatch.spec.in,v 1.6 2006/09/06 05:51:57 boconnor Exp $
 Summary: Log-Dispatch Perl module
 Name: perl-Log-Dispatch
 Version: 2.11
@@ -41,7 +41,7 @@ if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
 fi
 
 #HACK ALERT! replace .3pm with .3pm.gz 
-#perl -p -i -e 's/.3pm/.3pm.gz/' %{name}-%{version}-%{release}-filelist
+perl -p -i -e 's/.3pm/.3pm.gz/' %{name}-%{version}-%{release}-filelist
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Log-Dispatch.spec.in,v $
+Revision 1.6  2006/09/06 05:51:57  boconnor
+The rename hack was needed to build on CentOS 4
+
 Revision 1.5  2006/07/15 01:55:22  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
