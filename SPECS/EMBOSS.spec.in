@@ -1,0 +1,128 @@
+#$Id: EMBOSS.spec.in,v 1.1 2006/09/06 01:12:16 jmendler Exp $
+%define emhome %{_datadir}/EMBOSS
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 2.10.0
+Release: 1.%{distro}
+Name:      EMBOSS
+Summary:   The European Molecular Biology Open Software Suite
+License:   GPL/LGPL
+URL:       http://www.emboss.org/
+Source:    ftp://ftp.uk.embnet.org/pub/EMBOSS/EMBOSS-%{version}.tar.gz
+Source2:   emboss.default
+Requires:  primer3, gd, libpng, EMBOSS-libs
+BuildRequires: glibc-devel, gcc, gd, gd-devel, libpng, libpng-devel, biopackages
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+
+%description
+EMBOSS is a new, free Open Source software analysis package specially
+developed for the needs of the molecular biology (e.g. EMBnet) user community.
+The software automatically copes with data in a variety of formats and even
+allows transparent retrieval of sequence data from the web. Also, as extensive
+libraries are provided with the package, it is a platform to allow other
+scientists to develop and release software in true open source spirit.
+EMBOSS also integrates a range of currently available packages and tools for
+sequence analysis into a seamless whole.
+
+Reference for EMBOSS: Rice,P. Longden,I. and Bleasby,A.
+"EMBOSS: The European Molecular Biology Open Software Suite"
+Trends in Genetics June 2000, vol 16, No 6. pp.276-277
+
+%prep
+%setup -q
+
+%build
+export CFLAGS="$RPM_OPT_FLAGS"
+./configure --prefix=$RPM_BUILD_ROOT%{_prefix} --mandir=$RPM_BUILD_ROOT%{_mandir} \
+    --without-java
+make -j5
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -m 755 -d $RPM_BUILD_ROOT%{_prefix}
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/%{name}
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/doc/%{name}
+
+%makeinstall
+
+rm -rf %{buildroot}%{_datadir}/%{name}/jemboss
+rm -f %{buildroot}%{_bindir}/jembossctl
+rm -f %{buildroot}%{_bindir}/runJemboss.csh
+
+# environment stuff
+install -m 755 -d $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d
+echo "export PLPLOT_LIB=%{emhome}" > $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.sh
+echo "export EMBOSS_ACDROOT=%{emhome}/acd" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.sh
+echo "export EMBOSS_DOCROOT=%{emhome}/doc" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.sh
+echo "export EMBOSS_DATABASE_DIR=%{emhome}/data" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.sh
+echo "export EMBOSS_DATA=%{emhome}/data" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.sh
+echo "setenv PLPLOT_LIB %{emhome}" > $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.csh
+echo "setenv EMBOSS_ACDROOT %{emhome}/acd" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.csh
+echo "setenv EMBOSS_DOCROOT %{emhome}/doc" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.csh
+echo "setenv EMBOSS_DATABASE_DIR %{emhome}/data" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.csh
+echo "setenv EMBOSS_DATA %{emhome}/data" >> $RPM_BUILD_ROOT/%{_sysconfdir}/profile.d/emboss.csh
+
+
+# ----------------------------------------------------------------------------
+cd $RPM_BUILD_ROOT
+ls -1 .%{_bindir}/* | grep -vi jemboss | perl -pe 's[^./][/]' > %{_tmppath}/emboss.binfiles
+cd ..
+
+%files -f %{_tmppath}/emboss.binfiles
+%defattr(-,root,root)
+%{_datadir}/EMBOSS/acd
+%{_datadir}/EMBOSS/data
+%{_datadir}/EMBOSS/doc
+%{_datadir}/EMBOSS/test
+%{_datadir}/EMBOSS/emboss.default.template
+%{_datadir}/EMBOSS/plstnd5.fnt
+%{_datadir}/EMBOSS/plxtnd5.fnt
+%config %{_sysconfdir}/profile.d/*
+%doc AUTHORS ChangeLog COPYING FAQ INSTALL LICENSE NEWS README THANKS
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
+%package devel
+Summary: Development tools for programs which will use the %{name} library.
+Group: Development/Libraries
+Provides: %{name}-devel
+Requires: %{name} = %{version}
+
+%description devel
+The %{name}-devel package includes the header files and static libraries
+necessary for developing programs which will use the %{name} library.
+
+%files devel
+%defattr(-, root, root)
+%{_libdir}/*.*a
+%{_libdir}/*.so
+%{_includedir}/*.h
+%{_includedir}/*.c
+
+%package libs
+Summary: shared libraries for %{name}.
+Group: Development/Libraries
+Provides: %{name}-libs
+
+%description libs
+The %{name}-libs package includes the dynamic libraries
+necessary for %{name}.
+
+%files libs
+%defattr(-, root, root)
+%{_libdir}/*.so.*
+# ----------------------------------------------------------------------------
+
+$Log: EMBOSS.spec.in,v $
+Revision 1.1  2006/09/06 01:12:16  jmendler
+import from testing
+
