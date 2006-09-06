@@ -1,4 +1,4 @@
-#$Id: gec-Mmu.spec.in,v 1.1 2006/09/06 01:41:19 jmendler Exp $
+#$Id: gec-Mmu.spec.in,v 1.2 2006/09/06 16:25:45 jmendler Exp $
 %define gmod_root /var/lib/gmod
 %define org Mmu
 %define orgCommonName mouse
@@ -8,7 +8,7 @@ Summary: Chado for %{orgCommonName} data from GEC
 Name: gec-%{org}
 Version: %{orgVersion}.%{chadoVersion}
 Epoch: 0
-Release: 2.%{distro}
+Release: %{revision}.%{distro}
 Source0: %{name}-%{version}.tar.gz
 License: GPL
 Group: Databases/Bioinformatics
@@ -57,6 +57,9 @@ su postgres -c 'dropdb gec-%{org}-%{orgVersion}';
 true;
 
 $Log: gec-Mmu.spec.in,v $
+Revision 1.2  2006/09/06 16:25:45  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:41:19  jmendler
 import from testing
 

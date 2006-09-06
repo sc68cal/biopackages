@@ -1,4 +1,4 @@
-#$Id: gec-Hsa.spec.in,v 1.1 2006/09/06 01:44:27 jmendler Exp $
+#$Id: gec-Hsa.spec.in,v 1.2 2006/09/06 16:25:31 jmendler Exp $
 %define gmod_root /var/lib/gmod
 %define org Hsa
 %define orgCommonName human
@@ -8,7 +8,7 @@ Summary: Chado for %{orgCommonName} data from GEC
 Name: gec-%{org}
 Version: %{orgVersion}.%{chadoVersion}
 Epoch: 0
-Release: 5.%{distro}
+Release: %{revision}.%{distro}
 Source0: %{name}-%{version}.tar.gz
 License: GPL
 Group: Databases/Bioinformatics
@@ -57,6 +57,9 @@ true ;
 true;
 
 $Log: gec-Hsa.spec.in,v $
+Revision 1.2  2006/09/06 16:25:31  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:44:27  jmendler
 import from testing
 

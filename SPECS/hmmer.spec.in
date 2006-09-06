@@ -1,10 +1,10 @@
-#$Id: hmmer.spec.in,v 1.1 2006/09/06 01:54:55 jmendler Exp $
+#$Id: hmmer.spec.in,v 1.2 2006/09/06 16:28:59 jmendler Exp $
 
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
 Version: 2.3.2
-Release: 6.%{distro}
+Release: %{revision}.%{distro}
 Summary: profile HMMs for protein sequence analysis
 Name: hmmer
 Source0: ftp://ftp.genetics.wustl.edu/pub/eddy/hmmer/2.3.2/hmmer-2.3.2.tar.gz
@@ -84,6 +84,9 @@ for prg in $(find squid -type f -perm +a=x -exec basename {} \; | grep -v config
 rm -rf $RPM_BUILD_ROOT
 
 $Log: hmmer.spec.in,v $
+Revision 1.2  2006/09/06 16:28:59  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:54:55  jmendler
 import from testing
 

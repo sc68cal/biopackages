@@ -1,10 +1,10 @@
-#$Id: perl-Class-Accessor-Chained.spec.in,v 1.1 2006/09/06 03:50:57 jmendler Exp $
+#$Id: perl-Class-Accessor-Chained.spec.in,v 1.2 2006/09/06 16:38:33 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Class-Accessor-Chained
 Version: 0.01
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-Accessor-Chained.spec.in,v $
+Revision 1.2  2006/09/06 16:38:33  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 03:50:57  jmendler
 import from testing
 

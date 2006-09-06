@@ -1,10 +1,10 @@
-#$Id: graphviz.spec.in,v 1.1 2006/09/06 01:49:27 jmendler Exp $
+#$Id: graphviz.spec.in,v 1.2 2006/09/06 16:29:10 jmendler Exp $
 # graphviz.spec.  Generated from graphviz.spec.in by configure.
 
 Summary:        Graph Visualization Tools
 Name:           graphviz
 Version:        2.2.1
-Release:        1.%{distro}
+Release:        %{revision}.%{distro}
 Group:          Applications/Graphics
 License:        CPL (see COPYING)
 URL:            http://www.graphviz.org/
@@ -141,6 +141,9 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %__rm -rf "$RPM_BUILD_ROOT"
 
 $Log: graphviz.spec.in,v $
+Revision 1.2  2006/09/06 16:29:10  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:49:27  jmendler
 import from testing
 

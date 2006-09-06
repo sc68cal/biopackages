@@ -1,8 +1,8 @@
-#$Id: perl-bioperl-pedigree.spec.in,v 1.1 2006/09/06 03:32:14 jmendler Exp $
+#$Id: perl-bioperl-pedigree.spec.in,v 1.2 2006/09/06 16:36:45 jmendler Exp $
 Summary: bioperl pedigree Perl module
 Name: perl-bioperl-pedigree
 Version: 0.01
-Release: 1.cvs%{distro} 
+Release: %{revision}.%{distro}
 Packager: allenday@ucla.edu
 License: GPL
 Group: Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-bioperl-pedigree.spec.in,v $
+Revision 1.2  2006/09/06 16:36:45  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 03:32:14  jmendler
 import from testing
 

@@ -1,10 +1,10 @@
-#$Id: EMBOSS.spec.in,v 1.1 2006/09/06 01:12:16 jmendler Exp $
+#$Id: EMBOSS.spec.in,v 1.2 2006/09/06 16:19:21 jmendler Exp $
 %define emhome %{_datadir}/EMBOSS
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
 Version: 2.10.0
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Name:      EMBOSS
 Summary:   The European Molecular Biology Open Software Suite
 License:   GPL/LGPL
@@ -123,6 +123,9 @@ necessary for %{name}.
 # ----------------------------------------------------------------------------
 
 $Log: EMBOSS.spec.in,v $
+Revision 1.2  2006/09/06 16:19:21  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:12:16  jmendler
 import from testing
 

@@ -1,8 +1,8 @@
-#$Id: firefox.spec.in,v 1.1 2006/09/06 01:23:23 jmendler Exp $
+#$Id: firefox.spec.in,v 1.2 2006/09/06 16:21:29 jmendler Exp $
 Summary:        Mozilla Firefox Web browser.
 Name:           firefox
 Version:        1.0.3
-Release:        1.%{distro}
+Release:        %{revision}.%{distro}
 Epoch:          0
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPL/LGPL
@@ -172,6 +172,9 @@ fi
 #---------------------------------------------------------------------
 
 $Log: firefox.spec.in,v $
+Revision 1.2  2006/09/06 16:21:29  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 01:23:23  jmendler
 import from testing
 

@@ -1,10 +1,10 @@
-#$Id: perl-Algorithm-Diff.spec.in,v 1.1 2006/09/06 03:24:54 jmendler Exp $
+#$Id: perl-Algorithm-Diff.spec.in,v 1.2 2006/09/06 16:33:43 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Algorithm-Diff
 Version: 1.1901
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@
 License: GPL or Artistic
 Group: Development/Libraries
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Algorithm-Diff.spec.in,v $
+Revision 1.2  2006/09/06 16:33:43  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/06 03:24:54  jmendler
 import from testing
 
