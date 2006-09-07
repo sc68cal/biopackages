@@ -1,0 +1,72 @@
+#$Id: perl-CPANPLUS.spec.in,v 1.1 2006/09/07 17:10:16 boconnor Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-CPANPLUS
+Version: 0.072 
+Release: %{revision}.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/CPANPLUS/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: CPANPLUS-%{version}.tar.gz
+
+%description
+The CPANPLUS library is an API to the CPAN mirrors and a collection of
+interactive shells, commandline programs, etc, that use this API.
+
+%prep
+%setup -q -n CPANPLUS-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-CPANPLUS.spec.in,v $
+Revision 1.1  2006/09/07 17:10:16  boconnor
+New spec
+
