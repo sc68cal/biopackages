@@ -1,0 +1,143 @@
+#$Id: perl-GD-SVG.spec.in,v 1.1 2006/09/07 02:06:34 jmendler Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Seamlessly enable SVG output from scripts written using GD
+Name: perl-GD-SVG
+Version: 0.25
+Release: %{revision}.%{distro} 
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/GD-SVG/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: GD-SVG-0.25.tar.gz
+
+%description
+GD/SVG version 0.24
+===================
+
+GD::SVG seamlessly enables the scalable vector graphics (SVG) output
+from scripts written using GD.  It accomplishes this by translating GD
+functions into SVG functions.
+
+IMPORTANT NOTES
+
+1. In addition to GD::SVG, Ronan Oger has created a similar module
+(SVG::GD). In principle these modules perform a similar function but
+go about it in slightly different ways.  Ronan and I are now
+concurrently developing these modules which may be merged in the
+future. In particular, Ronan's module ultimately aims to tap into the
+raster editing abilities of GD.  GD::SVG focuses primarily on
+generating SVG-output from scripts written with GD - focusing on
+generating images de novo from stacks of data.
+
+2. See the internal documentation on important notes on how to use
+GD::SVG.
+
+QUICKSTART USAGE GUIDE
+
+To enable SVG output, you must change several elements of your
+script. This includes the use statement and direct calls to the
+classes that GD implements.
+
+In short:
+    
+    # use GD;
+    use GD::SVG;
+  
+    # my $image = GD::Image->new($width,$height);
+    my $image = GD::SVG::Image->new($width,$height);
+   
+    ...
+
+    print $image->svg();
+
+See the full documentation for examples on enabling dynamic selection
+of image output.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   sudo make install
+
+You may need to be root (or sudo) to executre the make install
+command.
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+  GD, SVG
+
+ACKNOWLEDGEMENTS
+
+Lincoln Stein, creator of GD and my postdoctoral mentor, desires
+special credit. Ronan Oger, creator of the SVG module and co-creator
+of a similar GD-wrapper, has been very helpful with discussions about
+interfacing GD to SVG.
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2003 Todd Harris (harris@cshl.org) and the Cold Spring
+Harbor Laboratory
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+
+
+%prep
+%setup -q -n GD-SVG-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-GD-SVG.spec.in,v $
+Revision 1.1  2006/09/07 02:06:34  jmendler
+import from testing
+
