@@ -1,0 +1,82 @@
+#$Id: perl-Digest-SHA1.spec.in,v 1.1 2006/09/07 01:57:16 jmendler Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Digest-SHA1
+Version: 2.10
+Release: %{revision}.%{distro} 
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Digest-SHA1/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Digest-SHA1-2.10.tar.gz
+
+%description
+The Digest::SHA1 module allows you to use the NIST SHA-1 message
+digest algorithm from within Perl programs.  The algorithm takes as
+input a message of arbitrary length and produces as output a 160-bit
+"fingerprint" or "message digest" of the input.
+
+SHA1 is described at <http://www.itl.nist.gov/fipspubs/fip180-1.htm>
+
+You will need Perl version 5.004 or better to install this module.
+
+Copyright 1999-2003 Gisle Aas.
+Copyright 1997 Uwe Hollerbach.
+
+This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+
+%prep
+%setup -q -n Digest-SHA1-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Digest-SHA1.spec.in,v $
+Revision 1.1  2006/09/07 01:57:16  jmendler
+import from testing
+
