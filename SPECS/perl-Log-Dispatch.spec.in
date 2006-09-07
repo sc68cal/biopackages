@@ -1,4 +1,4 @@
-#$Id: perl-Log-Dispatch.spec.in,v 1.6 2006/09/06 05:51:57 boconnor Exp $
+#$Id: perl-Log-Dispatch.spec.in,v 1.7 2006/09/07 23:19:32 boconnor Exp $
 Summary: Log-Dispatch Perl module
 Name: perl-Log-Dispatch
 Version: 2.11
@@ -10,7 +10,7 @@ URL: http://search.cpan.org/dist/Bio-Das/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Module-Build
-Requires: perl-Params-Validate, perl-Mail-Sendmail, perl-Mail-Sender
+Requires: perl-Params-Validate, perl-Mail-Sendmail, perl-Mail-Sender, perl-MailTools, perl-MIME-Lite
 Source0: Log-Dispatch-2.11.tar.gz
 
 %description
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Log-Dispatch.spec.in,v $
+Revision 1.7  2006/09/07 23:19:32  boconnor
+Added new spec.in files
+
 Revision 1.6  2006/09/06 05:51:57  boconnor
 The rename hack was needed to build on CentOS 4
 
