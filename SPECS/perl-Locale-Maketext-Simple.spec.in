@@ -1,4 +1,4 @@
-#$Id: perl-Locale-Maketext-Simple.spec.in,v 1.1 2006/09/08 01:28:25 jmendler Exp $
+#$Id: perl-Locale-Maketext-Simple.spec.in,v 1.2 2006/09/08 01:30:37 jmendler Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -15,7 +15,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: Local-Maketext-Simple-%{version}.tar.gz
+Source0: Locale-Maketext-Simple-%{version}.tar.gz
 
 %description
 This is the README file for Locale::Maketext::Simple, a simple interface
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Locale-Maketext-Simple.spec.in,v $
+Revision 1.2  2006/09/08 01:30:37  jmendler
+typo
+
 Revision 1.1  2006/09/08 01:28:25  jmendler
 *** empty log message ***
 
