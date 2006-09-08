@@ -1,4 +1,4 @@
-#$Id: perl-bioperl.spec.in,v 1.4 2006/09/08 22:59:39 boconnor Exp $
+#$Id: perl-bioperl.spec.in,v 1.5 2006/09/08 23:37:24 boconnor Exp $
 Summary: bioperl Perl module
 Name: perl-bioperl
 Version: 1.5
@@ -11,7 +11,7 @@ URL: http://search.cpan.org/dist/bioperl/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-bioperl-run, perl-Cache-Cache, perl-Class-AutoClass, perl-Data-Stag, perl-Error, perl-Graph
+Requires: perl-Cache-Cache, perl-Class-AutoClass, perl-Data-Stag, perl-Error, perl-Graph
 Requires: perl-IO-String, perl-SOAP-Lite, perl-SVG, perl-SVG-Graph, perl-Text-Shellwords, perl-Tree-DAG_Node
 Requires: perl-WWW-Mechanize, perl-XML-DOM-XPath, perl-XML-SAX-Writer, perl-XML-Writer
 Source0: bioperl-1.5.tar.gz
