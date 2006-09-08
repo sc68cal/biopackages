@@ -1,0 +1,322 @@
+#$Id: perl-Text-TabularDisplay.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Text-TabularDisplay
+Version: 1.20
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Text-TabularDisplay/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Text-TabularDisplay-1.20.tar.gz
+
+%description
+NAME
+    Text::TabularDisplay - Display text in formatted table output
+
+SYNOPSIS
+        use Text::TabularDisplay;
+
+        my $table = Text::TabularDisplay->new(@columns);
+        $table->add(@row)
+            while (@row = $sth->fetchrow);
+        print $table->render;
+
+        +----+-----------+
+        | id | name      |
+        +----+-----------+
+        | 1  | Tom       |
+        | 2  | Dick      |
+        | 3  | Harry     |
+        +----+-----------+
+
+DESCRIPTION
+    Text::TabularDisplay simplifies displaying textual data in a table. The
+    output is identical to the columnar display of query results in the
+    mysql text monitor. For example, this data:
+
+        1, "Tom Jones", "(666) 555-1212"
+        2, "Barnaby Jones", "(666) 555-1213"
+        3, "Bridget Jones", "(666) 555-1214"
+
+    Used like so:
+
+        my $t = Text::TabularDisplay->new(qw(id name phone));
+        $t->add(1, "Tom Jones", "(666) 555-1212");
+        $t->add(2, "Barnaby Jones", "(666) 555-1213");
+        $t->add(3, "Bridget Jones", "(666) 555-1214");
+        print $t->render;
+
+    Produces:
+
+        +----+---------------+----------------+
+        | id | name          | phone          |
+        +----+---------------+----------------+
+        | 1  | Tom Jones     | (666) 555-1212 |
+        | 2  | Barnaby Jones | (666) 555-1213 |
+        | 3  | Bridget Jones | (666) 555-1214 |
+        +----+---------------+----------------+
+
+METHODS
+    Text::TabularDisplay has four primary methods: new(), columns(), add(),
+    and render(). new() creates a new Text::TabularDisplay instance;
+    columns() sets the column headers in the output table; add() adds data
+    to the instance; and render() returns a formatted string representation
+    of the instance.
+
+    There are also a few auxilliary convenience methods: clone(), items(),
+    reset(), populate(), and paginate().
+
+    new A Text::TabularDisplay instance can be created with column names
+        passed as constructor args, so these two calls produce similar
+        objects:
+
+            my $t1 = Text::TabularDisplay->new;
+            $t1->columns(qw< one two >);
+
+            my $t2 = Text::TabularDisplay->new(qw< one two >);
+
+        Calling new() on a Text::TabularDisplay instance returns a clone of
+        the object. See the clone entry in the Text::TabularDisplay manpage.
+
+    columns
+        Gets or sets the column names for an instance. This method is called
+        automatically by the constructor with any parameters that are passed
+        to the constructor (if any are passed).
+
+        When called in scalar context, columns() returns the *number of
+        columns in the instance*, rather than the columns themselves. In
+        list context, copies of the columns names are returned; the names of
+        the columns cannot be modified this way.
+
+    add Takes a list of items and appends it to the list of items to be
+        displayed. add() can also take a reference to an array, so that
+        large arrays don't need to be copied.
+
+        As elements are processed, add() maintains the width of each column
+        so that the resulting table has the correct dimensions.
+
+        add() returns $self, so that calls to add() can be chained:
+
+            $t->add(@one)->add(@two)->add(@three);
+
+    render
+        render() does most of the actual work. It returns a string
+        containing the data added via add(), formatted as a table, with a
+        header containing the column names.
+
+        render() does not change the state of the object; it can be called
+        multiple times, with identical output (including identical running
+        time: the output of render is not cached).
+
+        If there are no columns defined, then the output table does not
+        contains a row of column names. Compare these two sequences:
+
+            my $t = Text::TabularDisplay->new;
+            $t->add(qw< 1 2 3 4 >);
+            $t->add(qw< 5 6 7 8 >);
+            print $t->render;
+
+            $t->columns(qw< one two three four >);
+            print $t->render;
+
+            # Example 1 output
+            +---+---+---+---+
+            | 1 | 2 | 3 | 4 |
+            | 5 | 6 | 7 | 8 |
+            +---+---+---+---+
+
+            # Example 2 output
+            +-----+-----+-------+------+
+            | one | two | three | four |
+            +-----+-----+-------+------+
+            | 1   | 2   | 3     | 4    |
+            | 5   | 6   | 7     | 8    |
+            +-----+-----+-------+------+
+
+        render() takes optional $start and $end arguments; these indicate
+        the start and end *indexes* for the data to be rendered. This can be
+        used for paging and the like:
+
+            $t->add(1, 2, 3)->add(4, 5, 6)->add(7, 8, 9)->add(10, 11, 12);
+            print $t->render(0, 1), "\n";
+            print $t->render(2, 3), "\n";
+
+        Produces:
+
+            +-------+--------+-------+
+            | First | Second | Third |
+            +-------+--------+-------+
+            | 1     | 2      | 3     |
+            | 4     | 5      | 6     |
+            +-------+--------+-------+
+
+            +-------+--------+-------+
+            | First | Second | Third |
+            +-------+--------+-------+
+            | 7     | 8      | 9     |
+            | 10    | 11     | 12    |
+            +-------+--------+-------+
+
+        As an aside, note the chaining of calls to add().
+
+        The elements in the table are padded such that there is the same
+        number of items in each row, including the header. Thus:
+
+            $t->columns(qw< One Two >);
+            print $t->render;
+
+            +-----+-----+----+
+            | One | Two |    |
+            +-----+-----+----+
+            | 1   | 2   | 3  |
+            | 4   | 5   | 6  |
+            | 7   | 8   | 9  |
+            | 10  | 11  | 12 |
+            +-----+-----+----+
+
+        And:
+
+            $t->columns(qw< One Two Three Four>);
+            print $t->render;
+
+            +-----+-----+-------+------+
+            | One | Two | Three | Four |
+            +-----+-----+-------+------+
+            | 1   | 2   | 3     |      |
+            | 4   | 5   | 6     |      |
+            | 7   | 8   | 9     |      |
+            | 10  | 11  | 12    |      |
+            +-----+-----+-------+------+
+
+OTHER METHODS
+    clone()
+        The clone() method returns an identical copy of a
+        Text::TabularDisplay instance, completely separate from the cloned
+        instance.
+
+    items()
+        The items() method returns the number of elements currently stored
+        in the data structure:
+
+            printf "There are %d elements in \$t.\n", $t->items;
+
+    reset()
+        Reset deletes the data from the instance, including columns. If
+        passed arguments, it passes them to columns(), just like new().
+
+    populate()
+        populate() as a special case of add(); populate() expects a
+        reference to an array of references to arrays, such as returned by
+        DBI's selectall_arrayref method:
+
+            $sql = "SELECT " . join(", ", @c) . " FROM mytable";
+            $t->columns(@c);
+            $t->populate($dbh->selectall_arrayref($sql));
+
+        This is for convenience only; the implementation maps this to
+        multiple calls to add().
+
+NOTES / ISSUES
+    Text::TabularDisplay assumes it is handling strings, and does stringy
+    things with the data, like legnth() and sprintf(). Non-character data
+    can be passed in, of course, but will be treated as strings; this may
+    have ramifications for objects that implement overloading.
+
+    Newlines contained within the data ruin formatting. This is consistent
+    with the software that this module is emulating (the mysql command line
+    client), but only because this was easier to implement.
+
+    Currently, this:
+
+        my $t = Text::TabularDisplay->new("id", "text");
+        $t->add(1, "This is my text.\nThere are many like it, but this one is mine.");
+        print $t->render;
+
+    renders as this:
+
+        +----+----------------------------------------------------------------+
+        | id | text
+        |
+        +----+----------------------------------------------------------------+
+        | 1  | This is my text.
+        There are many like it, but this one is mine. |
+        +----+----------------------------------------------------------------+
+
+    I would like it to render like so:
+
+        +----+----------------------------------------------------------------+
+        | id | text                                                           |
+        +----+----------------------------------------------------------------+
+        | 1  | This is my text.                                               |
+        |    | There are many like it, but this one is mine.                  |
+        +----+----------------------------------------------------------------+
+
+    Patches welcome, of course. ;)
+
+    The biggest issue, though, is that this module duplicates a some of the
+    functionality of Data::ShowTable. Of course, Data::ShowTable is a large,
+    complex monolithic tool that does a lot of things, while
+    Text::TabularDisplay is small and fast.
+
+VERSION
+    $Id: perl-Text-TabularDisplay.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+
+AUTHOR
+    darren chamberlain <darren@cpan.org>
+
+
+
+%prep
+%setup -q -n Text-TabularDisplay-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Text-TabularDisplay.spec.in,v $
+Revision 1.1  2006/09/08 00:10:25  boconnor
+Import of new SPECs
+

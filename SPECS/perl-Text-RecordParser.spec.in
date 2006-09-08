@@ -1,0 +1,413 @@
+#$Id: perl-Text-RecordParser.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Parse record-oriented data in a text file
+Name: perl-Text-RecordParser
+Version: 0.08
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Text-RecordParser/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-Text-TabularDisplay
+
+Source0: Text-RecordParser-0.08.tar.gz
+
+%description
+NAME
+    Text::RecordParser - read record-oriented files
+
+SYNOPSIS
+      use Text::RecordParser;
+      my $p = Text::RecordParser->new;
+      $p->filename('foo.csv');
+
+      # Split records on two newlines
+      $p->record_separator("\n\n");
+
+      # Split fields on tabs
+      $p->field_separator("\t");
+
+      # Skip lines beginning with hashes
+      $p->comment( qr/^#/ );
+
+      # Trim whitespace
+      $p->trim(1);
+
+      # Use the fields in the first line as column names
+      $p->bind_header;
+
+      # Get a list of the header fields (in order)
+      my @columns = $p->field_list;
+
+      # Extract a particular field from the next row
+      my ( $name, $age ) = $p->extract( qw[name age] );
+
+      # Return all the fields from the next row
+      my @fields = $p->fetchrow_array;
+
+      # Return all the fields from the next row as a hashref
+      my $record = $p->fetchrow_hashref;
+      print $record->{'name'};
+
+      # Get all data as arrayref of arrayrefs
+      my $data = $p->fetchall_arrayref;
+
+      # Get all data as arrayref of hashrefs
+      my $data = $p->fetchall_arrayref( { Columns => {} } );
+
+      # Get all data as hashref of hashrefs
+      my $data = $p->fetchall_hashref('name');
+
+DESCRIPTION
+    This module is for reading record-oriented data. The most common example
+    have records separated by newlines and fields separated by commas or
+    tabs, but this module aims to provide a consistent interface for
+    handling sequential records in a file however they may be delimited.
+    Typically this data lists the fields in the first line of the file, in
+    which case you should call "bind_header" to bind the field name. If the
+    first line contains data, you can still bind your own field names via
+    "bind_fields". Either way, you can then use many methods to get at the
+    data as arrays or hashes.
+
+METHODS
+  new
+    This is the constructor. It takes a hash of optional arguments. Each
+    argument can also be set through the method of the same name.
+
+    * filename
+        The path to the file being read. If the filename is passed and the
+        fh is not, then it will open a filehandle on that file and sets "fh"
+        accordingly.
+
+    * comment
+        A compiled regular expression identifying comment lines that should
+        be skipped.
+
+    * data
+        The data to read.
+
+    * fh
+        The filehandle of the file to read.
+
+    * field_separator
+        The field separator (default is comma).
+
+    * record_separator
+        The record separator (default is newline).
+
+    * field_filter
+        A callback applied to all the fields as they are read.
+
+    * header_filter
+        A callback applied to the column names.
+
+    * trim
+        Boolean to enable trimming of leading and trailing whitespace from
+        fields (useful if splitting on whitespace only).
+
+    See methods for each argument name for more information.
+
+    Alternately, if you supply a single argument to "new", it will be
+    treated as the "filename" argument.
+
+  bind_fields
+    Takes an array of field names and memorizes the field positions for
+    later use. If the input file has no header line but you still wish to
+    retrieve the fields by name (or even if you want to call "bind_header"
+    and then give your own field names), simply pass in the an array of
+    field names you wish to use.
+
+      $p->bind_fields( qw[ name rank serial_number ] );
+
+  bind_header
+    Takes the fields from the next row under the cursor and assigns the
+    field names to the values. Usually you would call this immediately after
+    opening the file in order to bind the field names in the first row.
+
+      $p->bind_header;
+      my $name = $p->extract('name');
+
+  comment
+    Takes a regex to apply to a record to see if it looks like a comment to
+    skip.
+
+      $p->comment( qr/^#/ );  # Perl-style comments
+      $p->comment( qr/^--/ ); # SQL-style comments
+
+  data
+    Allows a scalar, scalar reference, glob, array, or array reference as
+    the thing to read instead of a file handle.
+
+      $p->data( $string );
+      $p->data( \$string );
+      $p->data( @lines );
+      $p->data( [ $line1, $line2, $line3] );
+      $p->data( IO::File->new('<data') );
+
+    It's not advised to pass a filehandle to "data" as it will read the
+    entire contents of the file rather than one line at a time if you set it
+    via "fh".
+
+  extract
+    Extracts a list of fields out of the last row read. The field names must
+    correspond to the field names bound either via "bind_fields" or
+    "bind_header".
+
+      my ( $foo, $bar, $baz ) = $p->extract( qw[ foo bar baz ] );
+
+  fetchrow_array
+    Reads a row from the file and returns an array or array reference of the
+    fields.
+
+      my @values = $p->fetchrow_array;
+
+  fetchrow_hashref
+    Reads a line of the file and returns it as a hash reference. The keys of
+    the hashref are the field names bound via "bind_fields" or
+    "bind_header".
+
+      my $record = $p->fetchrow_hashref;
+      print "Name = ", $record->{'name'}, "\n";
+
+  fetchall_arrayref
+    Like DBI's fetchall_arrayref, returns an arrayref of arrayrefs. Also
+    accepts optional "{ Columns => {} }" argument to return an arrayref of
+    hashrefs.
+
+      my $records = $p->fetchall_arrayref;
+      for my $record ( @$records ) {
+          print "Name = ", $record->[0], "\n";
+      }
+
+      my $records = $p->fetchall_arrayref( { Columns => {} } );
+      for my $record ( @$records ) {
+          print "Name = ", $record->{'name'}, "\n";
+      }
+
+  fetchall_hashref
+    Like DBI's fetchall_hashref, this returns a hash reference of hash
+    references. The keys of the top-level hashref are the field values of
+    the field argument you supply. The field name you supply can be a field
+    created by a "field_compute".
+
+      my $records = $p->fetchall_hashref('id');
+      for my $id ( keys %$records ) {
+          my $record = $records->{ $id };
+          print "Name = ", $record->{'name'}, "\n";
+      }
+
+  fh
+    Gets or sets the filehandle of the file being read.
+
+      open my $fh, "<./data.csv";
+      $p->fh( $fh );
+
+  field_compute
+    A callback applied to the fields identified by position (or field name
+    if "bind_fields" or "bind_header" was called).
+
+    The callback will be passed two arguments:
+
+    1   The current field
+
+    2   A reference to all the other fields, either as an array or hash
+        reference, depending on the method which you called.
+
+    If data looks like this:
+
+      parent    children
+      Mike      Greg,Peter,Bobby
+      Carol     Marcia,Jane,Cindy
+
+    You could split the "children" field into an array reference with the
+    values like so:
+
+      $p->field_compute( 'children', sub { [ split /,/, shift() ] } );
+
+    The field position or name doesn't actually have to exist, which means
+    you could create new, computed fields on-the-fly. E.g., if you data
+    looks like this:
+
+        1,3,5
+        32,4,1
+        9,5,4
+
+    You could write a field_compute like this:
+
+        $p->field_compute( 3,
+            sub {
+                my ( $cur, $others ) = @_;
+                my $sum;
+                $sum += $_ for @$others;
+                return $sum;
+            }
+        );
+
+    Field "3" will be created as the sum of the other fields. This allows
+    you to further write:
+
+        my $data = $p->fetchall_arrayref;
+        for my $rec ( @$data ) {
+            print "$rec->[0] + $rec->[1] + $rec->[2] = $rec->[3]\n";
+        }
+
+    Prints:
+
+        1 + 3 + 5 = 9
+        32 + 4 + 1 = 37
+        9 + 5 + 4 = 18
+
+  field_filter
+    A callback which is applied to each field. The callback will be passed
+    the current value of the field. Whatever is passed back will become the
+    new value of the field. Here's an example that capitalizes field values:
+
+      $p->field_filter( sub { $_ = shift; uc(lc($_)) } );
+
+  field_list
+    Returns the fields bound via "bind_fields" (or "bind_header").
+
+      $p->bind_fields( qw[ foo bar baz ] );
+      my @fields = $p->field_list;
+      print join(', ', @fields); # prints "foo, bar, baz"
+
+  field_positions
+    Returns a hash of the fields and their positions bound via "bind_fields"
+    (or "bind_header").
+
+  field_separator
+    Gets and sets the token to use as the field delimiter. The default is a
+    comma. Regular expressions can be specified using qr//.
+
+      $p->field_separator("\t");     # splits fields on tabs
+      $p->field_separator('::');     # splits fields on double colons
+      $p->field_separator(qr/\s+/);  # splits fields on whitespace
+      my $sep = $p->field_separator; # returns the current separator
+
+  filename
+    Gets or sets the complete path to the file to be read. If a file is
+    already opened, then the handle on it will be closed and a new one
+    opened on the new file.
+
+      $p->filename('/path/to/file.dat');
+
+  header_filter
+    A callback applied to column header names. The callback will be passed
+    the current value of the header. Whatever is returned will become the
+    new value of the header. Here's an example that collapses spaces into a
+    single underscore and lowercases the letters:
+
+      $p->header_filter( sub { $_ = shift; s/\s+/_/g; lc $_ } );
+
+  record_separator
+    Gets and sets the token to use as the record separator. The default is a
+    newline ("\n").
+
+    To read a file that looks like this:
+
+      field1
+      field2
+      field3
+      // 
+      data1
+      data2
+      data3
+      //
+
+    Set the record and field separators like so:
+
+      $p->record_separator("\n//\n");
+      $p->field_separator("\n");
+
+  trim
+    Remove leading and trailing whitespace from fields.
+
+      my $trim_value = $p->trim(1);
+
+AUTHOR
+    Ken Youens-Clark <kclark@cpan.org>
+
+CREDITS
+    Thanks to the following:
+
+    * Benjamin Tilly
+        For Text::xSV, the inspirado for this module
+
+    * Tim Bunce et al.
+        For DBI, from which many of the methods were shamelessly stolen
+
+    * Tom Aldcroft
+        For contributing code to make it easy to parse whitespace-delimited
+        data
+
+    * Liya Ren
+        For catching the column-ordering error when parsing with
+        "no-headers"
+
+COPYRIGHT
+    Copyright (c) 2004 Ken Youens-Clark
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+BUGS
+    None known. Please use http://rt.cpan.org/ for reporting bugs.
+
+    The tests that use Text::TabularDisplay (10-tablify.t and 11-tabmerge.t)
+    are known to fail with version 1.20 of that module. A patch has been
+    sent to the author of T::TD.
+
+
+
+%prep
+%setup -q -n Text-RecordParser-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Text-RecordParser.spec.in,v $
+Revision 1.1  2006/09/08 00:10:25  boconnor
+Import of new SPECs
+

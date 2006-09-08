@@ -1,0 +1,142 @@
+#$Id: perl-Spreadsheet-WriteExcel.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Write to a cross platform Excel binary file
+Name: perl-Spreadsheet-WriteExcel
+Version: 2.12
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Spreadsheet-WriteExcel/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Spreadsheet-WriteExcel-2.12.tar.gz
+
+%description
+======================================================================
+NAME
+
+    Spreadsheet::WriteExcel - Write formatted text and numbers to a
+    cross-platform Excel binary file.
+
+======================================================================
+DESCRIPTION
+
+    The Spreadsheet::WriteExcel module can be used to create a cross-
+    platform Excel binary file. Multiple worksheets can be added to a
+    workbook and formatting can be applied to cells. Text, numbers,
+    formulas, hyperlinks and images can be written to the cells.
+
+    TThe Excel file produced by this module is compatible with 97,
+    2000, 2002 and 2003.
+
+    The module will work on the majority of Windows, UNIX and
+    Macintosh platforms. Generated files are also compatible with the
+    spreadsheet applications Gnumeric and OpenOffice.org.
+
+    This module cannot be used to read an Excel file. See
+    Spreadsheet::ParseExcel or look at the main documentation for some
+    suggestions. This module cannot be uses to write to an existing
+    Excel file.
+
+======================================================================
+SYNOPSIS
+
+    To write a string, a formatted string, a number and a formula to
+    the first worksheet in an Excel workbook called perl.xls:
+
+        use Spreadsheet::WriteExcel;
+
+        # Create a new Excel workbook
+        my $workbook = Spreadsheet::WriteExcel->new("perl.xls");
+
+        # Add a worksheet
+        $worksheet = $workbook->add_worksheet();
+
+        #  Add and define a format
+        $format = $workbook->add_format(); # Add a format
+        $format->set_bold();
+        $format->set_color('red');
+        $format->set_align('center');
+
+        # Write a formatted and unformatted string.
+        $col = $row = 0;
+        $worksheet->write($row, $col, "Hi Excel!", $format);
+        $worksheet->write(1,    $col, "Hi Excel!");
+
+        # Write a number and a formula using A1 notation
+        $worksheet->write('A3', 1.2345);
+        $worksheet->write('A4', '=SIN(PI()/4)');
+
+======================================================================
+REQUIREMENTS
+
+    This module requires Perl 5.005 (or later), Parse::RecDescent
+    and File::Temp:
+
+    http://search.cpan.org/search?dist=Parse-RecDescent/
+    http://search.cpan.org/search?dist=File-Temp/
+
+======================================================================
+INSTALLATION
+
+    See the INSTALL file for details.
+
+
+======================================================================
+AUTHOR
+
+    John McNamara (jmcnamara@cpan.org)
+
+
+%prep
+%setup -q -n Spreadsheet-WriteExcel-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Spreadsheet-WriteExcel.spec.in,v $
+Revision 1.1  2006/09/08 00:10:25  boconnor
+Import of new SPECs
+

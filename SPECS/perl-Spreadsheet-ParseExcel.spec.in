@@ -1,0 +1,132 @@
+#$Id: perl-Spreadsheet-ParseExcel.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Spreadsheet-ParseExcel
+Version: 0.2603
+Release: %{revision}.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Spreadsheet-ParseExcel/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-Jcode, perl-OLE-Storage_Lite, perl-Spreadsheet-WriteExcel, perl-Unicode-Map
+
+Source0: Spreadsheet-ParseExcel-0.2603.tar.gz
+
+%description
+
+NAME
+    Spreadsheet::ParseExcel - Get information from Excel file
+
+DESCRIPTION
+    This module allows you to get information from Excel file.
+
+    This module can handle files of Excel95, 97 and 2000.
+    (and now supports Excel4)
+
+    The module will work on the majority of Windows, UNIX and
+    Macintosh platforms. 
+
+REQUIREMENT
+    This module requires these modules:
+        OLE::Storage_Lite
+        Jcode.pm    (if you are using FmtJapan, or FmtJapan2)
+        Unicode::Map    (if you are using FmtJapan2 or FmtUnicode)
+
+INSTALLATION
+    The module can be installed using the standard Perl procedure:
+
+        perl Makefile.PL
+        make
+        make test
+        make install    # You may need to be root
+        make clean      # or make realclean
+
+    Windows users without a working "make" can get nmake from:
+        ftp://ftp.microsoft.com/Softlib/MSLFILES/nmake15.exe
+
+For FmtJapan2
+  If you use FmtJapan2, you must do following actions:
+
+  (1) Copy "CP932Excel.map" included with this distribution to an 
+      applicatable directry.
+
+  (2) To add "CP932Excel" as map name, append following lines to 
+      REGISTRY in the Unicode::Map hierarchy 
+      (changing map directy to applicatable directry):
+
+name:    CP932Excel
+srcURL:  $SrcUnicode/VENDORS/MICSFT/WINDOWS/CP932.TXT
+src:     $DestUnicode/VENDORS/MICSFT/WINDOWS/CP932.TXT
+map:     (which you copied directry)/CP932Excel.map
+# Don't remove this line
+
+
+VERSION
+    This document refers to version 0.2602 of Spreadsheet::ParseExcel,
+    released Jul 15, 2002.
+
+AUTHOR
+    Kawai Takanori (kwitknr@cpan.org)
+
+SUPPORT
+    Of course, I'll welcome e-mails.
+    And now, I have a Wiki-clone. If you have a question or suggestion, 
+    please let me know with Wiki.
+
+  KbWiki
+    http://www.hippo2000.info/cgi-bin/KbWikiE/KbWiki.pl (English)
+    http://www.hippo2000.info/cgi-bin/KbWiki/KbWiki.pl  (Japanese)
+
+
+%prep
+%setup -q -n Spreadsheet-ParseExcel-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Spreadsheet-ParseExcel.spec.in,v $
+Revision 1.1  2006/09/08 00:10:25  boconnor
+Import of new SPECs
+
