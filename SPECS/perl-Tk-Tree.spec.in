@@ -1,0 +1,99 @@
+#$Id: perl-Tk-Tree.spec.in,v 1.1 2006/09/09 23:53:01 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-Tk-Tree
+Version: 4.4
+Release: %{revision}.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/Tk-Tree/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+
+Source0: Tk-Tree-4.4.tar.gz
+
+%description
+README for Tk::Tree
+===================
+
+This is a port of the Tix widget "TixTree" to Perl/Tk.
+
+Tree is now part of the Tk core code.  This is a patch off of Tk800.0_02.
+I haven't tested it, but it will probably work with Tk402 as well.
+
+Please note that a Tree is not Scrolled like in Tix.  If you want it
+scrolled use $w->Scrolled( qw/Tree .../ ) or $w->ScrlTree( qw/.../ )
+
+This release includes:
+
+    Tree.pm             The Tree class.
+    DirTree.pm          The DirTree class.
+    perl-tix-tree       Perl version of Tix4.1.0/demos/samples/Tree.tcl
+    perl-tix-dyntree    Perl version of Tix4.1.0/demos/samples/DynTree.tcl
+    perl-tix-dirtree    Perl version of Tix4.1.0/demos/samples/DirTree.tcl
+    adjuster            An example with an adjustable window.
+    HList.patch         Required patch for HList.pm
+    HList.pm.patched    Already patched version of HList.pm 2.013
+
+HList.patch
+===========
+This is a patch for the HList.pm. It is installed automatically if
+needed.
+
+Enjoy,
+Chris Dean
+20 March 1998
+
+%prep
+%setup -q -n Tk-Tree-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Tk-Tree.spec.in,v $
+Revision 1.1  2006/09/09 23:53:01  boconnor
+added spec file
+
