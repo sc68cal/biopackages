@@ -1,7 +1,8 @@
-#$Id: usr-local-bin-perl.spec.in,v 1.1 2006/09/09 23:39:20 boconnor Exp $
+#$Id: usr-local-bin-perl.spec.in,v 1.2 2006/09/09 23:42:49 boconnor Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: boconnor@ucla.edu
+License: GPL
 Version: 1.0
 Release: %{revision}.%{distro}
 Name: usr-local-bin-perl
@@ -43,6 +44,9 @@ if [ ! -e /bin/perl ] ; then
 fi ;
 
 $Log: usr-local-bin-perl.spec.in,v $
+Revision 1.2  2006/09/09 23:42:49  boconnor
+Updates deps
+
 Revision 1.1  2006/09/09 23:39:20  boconnor
 Added package
 

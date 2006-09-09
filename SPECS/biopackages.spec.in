@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.11 2006/09/07 18:33:10 boconnor Exp $
+#$Id: biopackages.spec.in,v 1.12 2006/09/09 23:41:12 boconnor Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.1
@@ -10,8 +10,7 @@ URL: http://www.biopackages.net
 Source0: %{name}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires: bash
-Provides: /usr/local/bin/perl
+Requires: bash, usr-local-bin-perl
 
 #%package server
 #Summary: Files for running a biopackages apt and yum server
@@ -81,10 +80,6 @@ install -m 755 bp-distro %{buildroot}%{_bindir}
 #done ;
 
 %post
-# Some package makefiles are hardcoded (not our fault)
-if [ ! -e /usr/local/bin/perl ]; then
-  ln -s `which perl` /usr/local/bin/perl
-fi
 # turns out %{_libdir} points to /usr/lib64 on CentOS for noarch packages
 # but the macros file is in /usr/lib
 if [ -e /usr/lib/rpm/macros ]; then
@@ -118,6 +113,9 @@ rm -rf %{buildroot}
 #/usr/bin/bp-update
 
 $Log: biopackages.spec.in,v $
+Revision 1.12  2006/09/09 23:41:12  boconnor
+Updates deps
+
 Revision 1.11  2006/09/07 18:33:10  boconnor
 Update to if
 
