@@ -1,4 +1,4 @@
-#$Id: perl-Data-Stag.spec.in,v 1.6 2006/09/09 23:18:02 boconnor Exp $
+#$Id: perl-Data-Stag.spec.in,v 1.7 2006/09/09 23:20:12 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Structured Tags
@@ -13,7 +13,7 @@ URL: http://search.cpan.org/dist/Data-Stag/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-IO-String, perl-MLDBM, perl-Tk-804, perl-Tk-Tree, perl-XML-LibXSLT
+Requires: perl-IO-String, perl-MLDBM, perl-Tk, perl-Tk-Tree, perl-XML-LibXSLT
 #FIXME: perl-Graph requires weak references, however CentOS 4's perl doesn't support them!!!
 %{ifdistro centos}Provides: perl(Graph)
 %{ifdistro fedora}Requires: perl-Graph
