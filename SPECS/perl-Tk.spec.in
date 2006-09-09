@@ -1,9 +1,9 @@
-#$Id: perl-Tk.spec.in,v 1.1 2006/09/09 22:46:31 boconnor Exp $
+#$Id: perl-Tk.spec.in,v 1.2 2006/09/09 22:48:24 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Tk-804
-Version: 026
+Version: 027
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
@@ -13,7 +13,7 @@ URL: http://search.cpan.org/dist/Tk/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: Tk-804.026.tar.gz
+Source0: Tk-804.027.tar.gz
 
 %description
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tk.spec.in,v $
+Revision 1.2  2006/09/09 22:48:24  boconnor
+Updated deps
+
 Revision 1.1  2006/09/09 22:46:31  boconnor
 Added tk package
 
