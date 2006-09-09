@@ -1,4 +1,4 @@
-#$Id: perl-Tk.spec.in,v 1.2 2006/09/09 22:48:24 boconnor Exp $
+#$Id: perl-Tk.spec.in,v 1.3 2006/09/09 22:49:37 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -18,7 +18,7 @@ Source0: Tk-804.027.tar.gz
 %description
 
 %prep
-%setup -q -n Tk-%{version}
+%setup -q -n Tk-804.%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tk.spec.in,v $
+Revision 1.3  2006/09/09 22:49:37  boconnor
+Updated deps
+
 Revision 1.2  2006/09/09 22:48:24  boconnor
 Updated deps
 
