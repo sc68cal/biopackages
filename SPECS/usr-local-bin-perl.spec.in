@@ -1,0 +1,48 @@
+#$Id: usr-local-bin-perl.spec.in,v 1.1 2006/09/09 23:39:20 boconnor Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: boconnor@ucla.edu
+Version: 1.0
+Release: %{revision}.%{distro}
+Name: usr-local-bin-perl
+Summary: symlinks /usr/bin/perl to /usr/local/bin/perl
+Group: Applications/Engineering
+URL: http://biopackages.org
+Requires: perl
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Provides: /usr/local/bin/perl
+Provides: /bin/perl
+
+%description
+symlinks /usr/bin/perl to /usr/local/bin/perl
+and /usr/bin/perl to /bin/perl
+
+%prep
+%setup -T -c
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%post
+if [ ! -e /usr/local/bin/perl ] ; then
+  ln -s %{_bindir}/perl /usr/local/bin/perl
+fi ;
+if [ ! -e /bin/perl ] ; then
+  ln -s %{_bindir}/perl /bin/perl
+fi ;
+
+$Log: usr-local-bin-perl.spec.in,v $
+Revision 1.1  2006/09/09 23:39:20  boconnor
+Added package
+
