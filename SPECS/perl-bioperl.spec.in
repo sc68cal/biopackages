@@ -1,4 +1,4 @@
-#$Id: perl-bioperl.spec.in,v 1.6 2006/09/08 23:59:11 boconnor Exp $
+#$Id: perl-bioperl.spec.in,v 1.7 2006/09/09 21:12:42 boconnor Exp $
 Summary: bioperl Perl module
 Name: perl-bioperl
 Version: 1.5
@@ -141,24 +141,20 @@ o A simple module summary
 
 
 %prep
-mkdir bioperl
-mkdir bioperl-run
-cd bioperl
 %setup -q -n bioperl-%{version}
 %patch0 -p1
 %patch1 -p0
-cd ../bioperl-run
-%setup -q -n bioperl-run-1.4
-cd ..
+# for some reason the macro doesn't work for second source
+#%setup -q -D -a 1 -n bioperl-run-1.4
+%setup -D -a 1 -n bioperl-%{version}
+
 
 %build
-cd bioperl
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-cd ../bioperl-run
+cd bioperl-run-1.4
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
