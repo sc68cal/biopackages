@@ -1,8 +1,8 @@
-#$Id: perl-Module-Loaded.spec.in,v 1.1 2006/09/09 03:47:06 jmendler Exp $
+#$Id: perl-Module-Loaded.spec.in,v 1.2 2006/09/09 04:05:58 jmendler Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Unknown
+Summary: When testing applications, often you find yourself needing to provide functionality in your test environment that would usually be provided by external modules. Rather than munging the %INC by hand to mark these external modules as loaded, so they are not attempted to be loaded by perl, this module offers you a very simple way to mark modules as loaded and/or unloaded.
 Name: perl-Module-Loaded
 Version: 0.01
 Release: %{revision}.%{distro}
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Module-Loaded.spec.in,v $
+Revision 1.2  2006/09/09 04:05:58  jmendler
+added summary
+
 Revision 1.1  2006/09/09 03:47:06  jmendler
 import
 
