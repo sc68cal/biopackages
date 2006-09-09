@@ -1,4 +1,4 @@
-#$Id: perl-go-perl.spec.in,v 1.2 2006/07/18 07:17:26 boconnor Exp $
+#$Id: perl-go-perl.spec.in,v 1.3 2006/09/09 16:35:20 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: GO Perl
@@ -12,6 +12,7 @@ URL: http://search.cpan.org/dist/go-perl/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-XML-LibXSLT
 BuildRequires: wget
+BuildArch: noarch
 Requires: perl-Graph, perl-XML-Writer, perl-bioperl
 
 Source0: go-perl-%{version}.tar.gz
@@ -116,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.xsl
 
 $Log: perl-go-perl.spec.in,v $
+Revision 1.3  2006/09/09 16:35:20  jmendler
+noarch
+
 Revision 1.2  2006/07/18 07:17:26  boconnor
 Updated wget URLs
 

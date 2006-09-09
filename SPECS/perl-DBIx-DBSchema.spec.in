@@ -1,4 +1,4 @@
-#$Id: perl-DBIx-DBSchema.spec.in,v 1.1 2006/07/16 07:30:38 boconnor Exp $
+#$Id: perl-DBIx-DBSchema.spec.in,v 1.2 2006/09/09 16:28:01 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,6 +12,7 @@ URL: http://search.cpan.org/dist/DBIx-DBSchema/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-DBD-Pg >= 1.32
+BuildArch: noarch
 
 Source0: DBIx-DBSchema-0.24.tar.gz
 
@@ -104,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBIx-DBSchema.spec.in,v $
+Revision 1.2  2006/09/09 16:28:01  jmendler
+noarch
+
 Revision 1.1  2006/07/16 07:30:38  boconnor
 Added spec file
 

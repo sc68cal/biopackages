@@ -1,4 +1,4 @@
-#$Id: perl-GD-SVG.spec.in,v 1.1 2006/09/07 02:06:34 jmendler Exp $
+#$Id: perl-GD-SVG.spec.in,v 1.2 2006/09/09 16:32:54 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Seamlessly enable SVG output from scripts written using GD
@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/GD-SVG/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-
+BuildArch: noarch
 Source0: GD-SVG-0.25.tar.gz
 
 %description
@@ -138,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-GD-SVG.spec.in,v $
+Revision 1.2  2006/09/09 16:32:54  jmendler
+noarch
+
 Revision 1.1  2006/09/07 02:06:34  jmendler
 import from testing
 

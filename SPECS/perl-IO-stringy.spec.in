@@ -1,4 +1,4 @@
-#$Id: perl-IO-stringy.spec.in,v 1.1 2006/09/07 02:36:55 jmendler Exp $
+#$Id: perl-IO-stringy.spec.in,v 1.2 2006/09/09 16:37:53 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,6 +10,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/IO-stringy/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
 BuildRequires: perl, biopackages
 
 Source0: IO-stringy-2.110.tar.gz
@@ -92,7 +93,7 @@ INSTALLATION
     them in the next change log. I'll do it. Don't think I won't.
 
 VERSION
-    $Id: perl-IO-stringy.spec.in,v 1.1 2006/09/07 02:36:55 jmendler Exp $
+    $Id: perl-IO-stringy.spec.in,v 1.2 2006/09/09 16:37:53 jmendler Exp $
 
 TO DO
     (2000/08/02) Finalize $/ support
@@ -374,6 +375,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-IO-stringy.spec.in,v $
+Revision 1.2  2006/09/09 16:37:53  jmendler
+noarch
+
 Revision 1.1  2006/09/07 02:36:55  jmendler
 import from testing
 
