@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/enum/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 Source0: enum-1.016.tar.gz
 
 %description
@@ -89,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-enum.spec.in,v $
+Revision 1.2  2006/09/09 16:25:43  jmendler
+noarch
+
 Revision 1.1  2006/09/07 02:08:20  jmendler
 import from testing
 

@@ -1,4 +1,4 @@
-#$Id: perl-Digest-HMAC.spec.in,v 1.1 2006/09/07 00:26:43 jmendler Exp $
+#$Id: perl-Digest-HMAC.spec.in,v 1.2 2006/09/09 16:23:52 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Digest-HMAC/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 
 Source0: Digest-HMAC-1.01.tar.gz
 
@@ -80,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Digest-HMAC.spec.in,v $
+Revision 1.2  2006/09/09 16:23:52  jmendler
+noarch
+
 Revision 1.1  2006/09/07 00:26:43  jmendler
 import from testing
 

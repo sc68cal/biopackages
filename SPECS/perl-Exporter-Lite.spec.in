@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Exporter-Lite/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-
+BuildArch: noarch
 Source0: Exporter-Lite-0.01.tar.gz
 
 %description
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Exporter-Lite.spec.in,v $
+Revision 1.2  2006/09/09 16:25:43  jmendler
+noarch
+
 Revision 1.1  2006/09/07 02:10:09  jmendler
 import from testing
 
