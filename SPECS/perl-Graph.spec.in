@@ -1,9 +1,9 @@
-#$Id: perl-Graph.spec.in,v 1.4 2006/09/09 21:58:19 boconnor Exp $
+#$Id: perl-Graph.spec.in,v 1.5 2006/09/09 22:09:51 boconnor Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
 Name: perl-Graph
-Version: 0.55
+Version: 0.79
 Release: %{revision}.%{distro}
 Epoch: 1
 Packager: allenday@sumo.genetics.ucla.edu
@@ -15,7 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-Heap
 Requires: perl-Scalar-List-Utils
-Source0: Graph-0.55.tar.gz
+Source0: Graph-0.79.tar.gz
 
 %description
 This is Graph, a Perl module for dealing with graphs, the abstract
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Graph.spec.in,v $
+Revision 1.5  2006/09/09 22:09:51  boconnor
+Updates to version
+
 Revision 1.4  2006/09/09 21:58:19  boconnor
 Update deps
 
