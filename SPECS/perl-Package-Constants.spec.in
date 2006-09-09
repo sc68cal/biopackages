@@ -1,9 +1,9 @@
-#$Id: perl-Package-Constants.spec.in,v 1.1 2006/09/09 03:52:36 jmendler Exp $
+#$Id: perl-Package-Constants.spec.in,v 1.2 2006/09/09 03:55:38 jmendler Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
-Name: perl-Package Constants
+Name: perl-Package-Constants
 Version: 0.01
 Release: %{revision}.%{distro}
 Packager: jmendler@ucla.edu
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Package-Constants.spec.in,v $
+Revision 1.2  2006/09/09 03:55:38  jmendler
+fixed space in name
+
 Revision 1.1  2006/09/09 03:52:36  jmendler
 import
 
