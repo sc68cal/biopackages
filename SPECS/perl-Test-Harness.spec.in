@@ -1,8 +1,8 @@
-#$Id: perl-Test-Harness.spec.in,v 1.1 2006/09/09 04:00:41 jmendler Exp $
+#$Id: perl-Test-Harness.spec.in,v 1.2 2006/09/09 04:08:49 jmendler Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Unknown
+Summary: Test::Harness is the module that reads the output from Test::Simple, Test::More and other modules based on Test::Builder. You don't need to know about Test::Harness to use those modules.
 Name: perl-Test-Harness
 Version: 2.62
 Release: %{revision}.%{distro}
@@ -18,7 +18,13 @@ BuildRequires: perl, biopackages
 Source0: Test-Harness-%{version}.tar.gz
 
 %description
-perl-Test-Harness
+STOP! If all you want to do is write a test script, consider using Test::Simple. Test::Harness is the module that reads the output from Test::Simple, Test::More and other modules based on Test::Builder. You don't need to know about Test::Harness to use those modules.
+
+Test::Harness runs tests and expects output from the test in a certain format. That format is called TAP, the Test Anything Protocol. It is defined in Test::Harness::TAP.
+
+Test::Harness::runtests(@tests) runs all the testscripts named as arguments and checks standard output for the expected strings in TAP format.
+
+The prove utility is a thin wrapper around Test::Harness.
 
 %prep
 %setup -q -n Test-Harness-%{version}
@@ -67,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-Harness.spec.in,v $
+Revision 1.2  2006/09/09 04:08:49  jmendler
+added Summary and Description
+
 Revision 1.1  2006/09/09 04:00:41  jmendler
 import
 
