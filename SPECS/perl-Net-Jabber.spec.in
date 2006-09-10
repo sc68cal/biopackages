@@ -1,4 +1,4 @@
-#$Id: perl-Net-Jabber.spec.in,v 1.3 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Net-Jabber.spec.in,v 1.4 2006/09/10 06:54:04 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -13,6 +13,7 @@ URL: http://search.cpan.org/dist/Net-Jabber/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-Net-XMPP
 Source0: Net-Jabber-2.0.tar.gz
 
 %description

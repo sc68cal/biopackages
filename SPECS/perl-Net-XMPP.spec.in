@@ -1,4 +1,4 @@
-#$Id: perl-Net-XMPP.spec.in,v 1.3 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Net-XMPP.spec.in,v 1.4 2006/09/10 06:54:04 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -13,6 +13,7 @@ URL: http://search.cpan.org/dist/Net-XMPP/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-Authen-SASL, perl-XML-Stream
 Source0: Net-XMPP-1.0.tar.gz
 
 %description
