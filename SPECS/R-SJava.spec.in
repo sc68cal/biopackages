@@ -1,4 +1,4 @@
-#$Id: R-SJava.spec.in,v 1.2 2006/09/10 18:42:40 allenday Exp $
+#$Id: R-SJava.spec.in,v 1.3 2006/09/10 18:43:16 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,7 +12,7 @@ URL: http://www.omegahat.org/RSJava/
 Source0: SJava_0.69-0.tar.gz
 Requires: R >= 2.0.0, jdk >= 1.2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, jdk >= 1.2, biopackages
+BuildRequires: R >= 2.0.0, jdk >= 1.2, gcc, biopackages
 
 %description
 It allows R and S users to invoke Java methods and create Java objects from within R commands. It even allows R functions to be used to implement Java interfaces. This connection to Java gives R and S users access to a increasingly popular language and large collection of tools that include
@@ -60,6 +60,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-SJava.spec.in,v $
+Revision 1.3  2006/09/10 18:43:16  allenday
+depcheck
+
 Revision 1.2  2006/09/10 18:42:40  allenday
 import
 
