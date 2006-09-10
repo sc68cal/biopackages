@@ -1,4 +1,4 @@
-#$Id: R-SJava.spec.in,v 1.12 2006/09/10 20:06:05 allenday Exp $
+#$Id: R-SJava.spec.in,v 1.13 2006/09/10 20:26:34 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -40,25 +40,18 @@ This is the first release of the interface as an R package. There is an issue wi
 Earlier versions of this interface have worked with S version 4. Due to some conflicts with C level symbols, there were problems using it with SPlus 5. We aim to have a basic version that works with new releases of SPlus within a few weeks. 
 
 %prep
+#rm -rf ${RPM_BUILD_ROOT}
 %setup -n SJava 
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library/SJava/org/omegahat/Jars
-mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java/SJava
 cp %{SOURCE0} .
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
-rm -rf ${RPM_BUILD_ROOT}
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 ln -s %{_libdir}/R/library/SJava/libs/libjvm.so $RPM_BUILD_ROOT%{_libdir}
 ln -s %{_libdir}/R/library/SJava/libs/libRSNativeJava.so $RPM_BUILD_ROOT%{_libdir}
-ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars/Environment.jar $RPM_BUILD_ROOT%{_datadir}/java/SJava/
-ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars/ROmegahatExamples.jar $RPM_BUILD_ROOT%{_datadir}/java/SJava/
-ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars/antlr.jar $RPM_BUILD_ROOT%{_datadir}/java/SJava/
-ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars/jas.jar $RPM_BUILD_ROOT%{_datadir}/java/SJava/
-ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars/jhall.jar $RPM_BUILD_ROOT%{_datadir}/java/SJava/
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -67,9 +60,12 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %files -f %{name}-%{version}-%{release}-filelist
 
 %clean
-rm -rf ${RPM_BUILD_ROOT}
+#rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-SJava.spec.in,v $
+Revision 1.13  2006/09/10 20:26:34  allenday
+jars
+
 Revision 1.12  2006/09/10 20:06:05  allenday
 jars
 
