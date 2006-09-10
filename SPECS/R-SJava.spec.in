@@ -1,4 +1,4 @@
-#$Id: R-SJava.spec.in,v 1.9 2006/09/10 19:08:50 allenday Exp $
+#$Id: R-SJava.spec.in,v 1.10 2006/09/10 20:00:52 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -42,6 +42,7 @@ Earlier versions of this interface have worked with S version 4. Due to some con
 %prep
 %setup -n SJava 
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/java
 cp %{SOURCE0} .
 
 %build
@@ -52,6 +53,8 @@ R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 ln -s %{_libdir}/R/library/SJava/libs/libjvm.so $RPM_BUILD_ROOT%{_libdir}
 ln -s %{_libdir}/R/library/SJava/libs/libRSNativeJava.so $RPM_BUILD_ROOT%{_libdir}
+ln -s %{_libdir}/R/library/SJava/org/omegahat/Jars $RPM_BUILD_ROOT%{_datadir}/java/SJava
+
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -63,6 +66,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-SJava.spec.in,v $
+Revision 1.10  2006/09/10 20:00:52  allenday
+jars
+
 Revision 1.9  2006/09/10 19:08:50  allenday
 link .so files
 
