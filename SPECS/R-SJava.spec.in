@@ -1,0 +1,65 @@
+#$Id: R-SJava.spec.in,v 1.1 2006/09/10 18:41:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.69.0
+Release: %{revision}.%{distro}
+Name: R-SJava
+Summary: allows R and S users to invoke Java methods and create Java objects from within R commands
+Group: Applications/Engineering
+License: GPL
+URL: http://www.omegahat.org/RSJava/
+Source0: SJava_0.69-0.tar.gz
+Requires: R >= 2.0.0, jdk >= 1.2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, jdk >= 1.2, biopackages
+
+%description
+It allows R and S users to invoke Java methods and create Java objects from within R commands. It even allows R functions to be used to implement Java interfaces. This connection to Java gives R and S users access to a increasingly popular language and large collection of tools that include
+
+    * Graphical User Interface facilities;
+    * 2D and 3D Graphics capabilities;
+    * Network access;
+    * Standardized Database access;
+    * XML (eXtensible Markup Language) capabilities;
+    * Statistical and Mathemtical classes (Omegahat, COLT, JAMA, Jampack, ORCA, etc.);
+    * CORBA access;
+    * Distributed or Clustered Computing;
+    * Cryptography;
+    * portable code that can be used on the Internet
+    * and the list goes on. 
+
+This is a rich environment, allowing access to any Java class and all of its (public) methods. It uses an embedded Omegahat interpreter, and hence provides an interactive Java session. The Omegahat evaluator offers many utilities that simplify using Java and also make it more familiar to R and S users.
+
+The features of this interface and a brief contrast with other types of inter-language and system communication mechanisms is available here (as a PDF file).
+
+This is the first release of the interface as an R package. There is an issue with one of the advanced features of the interface related to synchronizing Java threads accessing the R evaluator. All feedback is extremely welcome.
+
+Earlier versions of this interface have worked with S version 4. Due to some conflicts with C level symbols, there were problems using it with SPlus 5. We aim to have a basic version that works with new releases of SPlus within a few weeks. 
+
+%prep
+%setup -n GDD
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-SJava.spec.in,v $
+Revision 1.1  2006/09/10 18:41:58  allenday
+import
+
