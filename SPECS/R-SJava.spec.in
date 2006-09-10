@@ -1,4 +1,4 @@
-#$Id: R-SJava.spec.in,v 1.1 2006/09/10 18:41:58 allenday Exp $
+#$Id: R-SJava.spec.in,v 1.2 2006/09/10 18:42:40 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -38,7 +38,7 @@ This is the first release of the interface as an R package. There is an issue wi
 Earlier versions of this interface have worked with S version 4. Due to some conflicts with C level symbols, there were problems using it with SPlus 5. We aim to have a basic version that works with new releases of SPlus within a few weeks. 
 
 %prep
-%setup -n GDD
+%setup -n SJava 
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
@@ -60,6 +60,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-SJava.spec.in,v $
+Revision 1.2  2006/09/10 18:42:40  allenday
+import
+
 Revision 1.1  2006/09/10 18:41:58  allenday
 import
 
