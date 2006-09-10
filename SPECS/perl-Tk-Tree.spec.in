@@ -1,9 +1,9 @@
-#$Id: perl-Tk-Tree.spec.in,v 1.1 2006/09/09 23:53:01 boconnor Exp $
+#$Id: perl-Tk-Tree.spec.in,v 1.2 2006/09/10 00:00:46 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Tk-Tree
-Version: 4.4
+Version: 4.3
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
@@ -13,7 +13,7 @@ URL: http://search.cpan.org/dist/Tk-Tree/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 
-Source0: Tk-Tree-4.4.tar.gz
+Source0: Tk-Tree-4.3.tar.gz
 
 %description
 README for Tk::Tree
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tk-Tree.spec.in,v $
+Revision 1.2  2006/09/10 00:00:46  boconnor
+added spec file
+
 Revision 1.1  2006/09/09 23:53:01  boconnor
 added spec file
 
