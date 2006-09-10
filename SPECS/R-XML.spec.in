@@ -1,0 +1,47 @@
+#$Id: R-XML.spec.in,v 1.1 2006/09/10 21:28:55 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.99.91
+Release: %{revision}.%{distro}
+Name: R-XML
+Summary: An XML package for the S language
+Group: Applications/Engineering
+License: GPL
+URL: http://www.omegahat.org/RSXML/
+Source0: XML_99-91.tar.gz
+Requires: R >= 2.0.0, libxml2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, libxml2-devel, gcc, biopackages
+
+%description
+This package provides facilities for the S language to
+
+    * parse XML files, URLs and strings, using either the DOM (Document Object Model)/tree-based approach, or the event-driven SAX (Simple API for XML) mechanism;
+    * generate XML content to buffers, files, URLs, and internal XML trees;
+    * read DTDs as S objects. 
+
+%prep
+#rm -rf ${RPM_BUILD_ROOT}
+%setup -n XML
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-XML.spec.in,v $
+Revision 1.1  2006/09/10 21:28:55  allenday
+import
+
