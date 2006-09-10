@@ -1,4 +1,4 @@
-#$Id: perl-Graph.spec.in,v 1.5 2006/09/09 22:09:51 boconnor Exp $
+#$Id: perl-Graph.spec.in,v 1.6 2006/09/10 07:25:50 boconnor Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Unknown
@@ -14,7 +14,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-Heap
-Requires: perl-Scalar-List-Utils
+#Requires: perl-Scalar-List-Utils
 Source0: Graph-0.79.tar.gz
 
 %description
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Graph.spec.in,v $
+Revision 1.6  2006/09/10 07:25:50  boconnor
+Experimenting with deps
+
 Revision 1.5  2006/09/09 22:09:51  boconnor
 Updates to version
 
