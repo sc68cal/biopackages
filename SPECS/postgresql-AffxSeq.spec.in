@@ -1,4 +1,4 @@
-#$Id: postgresql-AffxSeq.spec.in,v 1.3 2006/07/18 05:18:21 boconnor Exp $
+#$Id: postgresql-AffxSeq.spec.in,v 1.4 2006/09/10 10:21:10 boconnor Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
 Version: 1.00
@@ -8,7 +8,7 @@ Group: Applications/Databases
 Vendor: Affymetrix, Inc.
 URL: http://www.affymetrix.com
 Source: postgresql-AffxSeq-1.00.tar.gz
-Patch: postgresql-AffxSeq-1.00.patch
+#Patch: postgresql-AffxSeq-1.00.patch
 BuildRoot: /var/tmp/%{name}-%{PACKAGE_VERSION}-root
 Provides:  postgresql-AffxSeq
 BuildRequires: postgresql-devel, ucsc, biopackages
@@ -37,12 +37,12 @@ Header files needed to link to the AffxSeq PostgreSQL module
 %prep
 %setup -q
 
-if [ "%{distro}" == "bp.darwin" ]; then
-echo "Detected Darwin, patching Makefile"
-%patch -p1
-else 
-  echo "Not applying Darwin patch"
-fi
+#if [ "%{distro}" == "bp.darwin" ]; then
+#echo "Detected Darwin, patching Makefile"
+#%patch -p1
+#else 
+#  echo "Not applying Darwin patch"
+#fi
 
 %build
 	touch debugfiles.list
@@ -104,6 +104,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.4  2006/09/10 10:21:10  boconnor
+Temp removing patch, will add back in once I get the patch file off my Mac
+
 Revision 1.3  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
