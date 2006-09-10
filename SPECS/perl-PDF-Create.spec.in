@@ -1,0 +1,163 @@
+#$Id: perl-PDF-Create.spec.in,v 1.1 2006/09/10 10:01:08 boconnor Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-PDF-Create
+Version: 0.01
+Release: %{revision}.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/PDF-Create/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: PDF-Create-0.01.tar.gz
+
+%description
+  NAME
+
+    PDF::Create - create PDF files
+
+  DESCRIPTION
+
+    PDF::Create allows you to create PDF documents using a large
+    number of primitives, and emit the result as a PDF file or
+    stream. PDF stands for Portable Document Format.
+
+    Documents can have several pages, a table of content, an
+    information section and many other PDF elements. More
+    functionnalities will be added as needs arise.
+
+    Documents are constructed on the fly so the memory footprint is
+    not tied to the size of the pages but only to their number.
+
+    More information about this module is included in this package.
+
+  SYNOPSIS
+
+        use PDF::Create;
+
+        my $pdf = new PDF::Create('filename' => 'mypdf.pdf',
+                                  'Version'  => 1.2,
+                                  'PageMode' => 'UseOutlines',
+                                  'Author'   => 'Fabien Tassin',
+                                  'Title'    => 'My title',
+                             );
+        my $root = $pdf->new_page('MediaBox' => [ 0, 0, 612, 792 ]);
+
+        # Add a page which inherits its attributes from $root
+        my $page = $root->new_page;
+
+        # Prepare 2 fonts
+        my $f1 = $pdf->font('Subtype'  => 'Type1',
+                            'Encoding' => 'WinAnsiEncoding',
+                            'BaseFont' => 'Helvetica');
+        my $f2 = $pdf->font('Subtype'  => 'Type1',
+                            'Encoding' => 'WinAnsiEncoding',
+                            'BaseFont' => 'Helvetica-Bold');
+
+        # Prepare a Table of Content
+        my $toc = $pdf->new_outline('Title' => 'Document',
+                                    'Destination' => $page);
+        $toc->new_outline('Title' => 'Section 1');
+        my $s2 = $toc->new_outline('Title' => 'Section 2',
+                                   'Status' => 'closed');
+        $s2->new_outline('Title' => 'Subsection 1');
+
+        $page->stringc($f2, 40, 306, 426, "PDF::Create");
+        $page->stringc($f1, 20, 306, 396, "version $PDF::Create::VERSION");
+
+        # Add another page
+        my $page2 = $root->new_page;
+        $page2->line(0, 0, 612, 792);
+        $page2->line(0, 792, 612, 0);
+
+        $toc->new_outline('Title' => 'Section 3');
+        $pdf->new_outline('Title' => 'Summary');
+
+        # Add something to the first page
+        $page->stringc($f1, 20, 306, 300,
+                       'by Fabien Tassin <fta@oleane.net>');
+
+        # Add the missing PDF objects and a the footer then close the file
+        $pdf->close;
+
+
+  INSTALLATION
+
+    Quick answer:
+
+        perl -MCPAN -e 'install PDF::Create'
+
+    Long answer:
+
+    To install manually, cd to the directory containing the unpacked
+    distribution and do one of the following:
+
+    a.  Create a makefile by running Makefile.PL using the perl
+        program into whose library you want to install and then run
+        make three times:
+
+            perl Makefile.PL
+            make
+            make test
+            make install
+
+    b.  To install into a private library, for example your home
+        directory:
+
+            perl Makefile.PL INSTALLSITELIB=$HOME/lib INSTALLMAN3DIR=$HOME/man
+            make
+            make test
+            make pure_install
+
+
+%prep
+%setup -q -n PDF-Create-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-PDF-Create.spec.in,v $
+Revision 1.1  2006/09/10 10:01:08  boconnor
+Added
+

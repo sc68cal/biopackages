@@ -1,4 +1,4 @@
-#$Id: perl-HTML-Parser.spec.in,v 1.3 2006/09/10 09:01:01 boconnor Exp $
+#$Id: perl-HTML-Parser.spec.in,v 1.4 2006/09/10 10:01:18 boconnor Exp $
 %define _use_internal_dependency_generator 0
 
 %define name perl-HTML-Parser
@@ -7,7 +7,7 @@
 Summary: A Perl module for parsing HTML.
 Name: %{name}
 Version: 3.55
-Release: 5
+Release: %{revision}.%{distro}
 License: GPL or Artistic
 Group: System Environment/Libraries
 Source: ftp://ftp.cpan.org/pub/perl/CPAN/modules/by-module/HTML/%{real_name}-%{version}.tar.gz
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/perl5/vendor_perl/%(perl -MConfig -le 'print "$Config{version}/$Config{archname}"')/auto/HTML
 
 $Log: perl-HTML-Parser.spec.in,v $
+Revision 1.4  2006/09/10 10:01:18  boconnor
+Added
+
 Revision 1.3  2006/09/10 09:01:01  boconnor
 version num
 
