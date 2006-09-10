@@ -1,4 +1,4 @@
-#$Id: R-SJava.spec.in,v 1.13 2006/09/10 20:26:34 allenday Exp $
+#$Id: R-SJava.spec.in,v 1.14 2006/09/10 20:35:47 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -50,7 +50,7 @@ export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
-ln -s %{_libdir}/R/library/SJava/libs/libjvm.so $RPM_BUILD_ROOT%{_libdir}
+#ln -s %{_libdir}/R/library/SJava/libs/libjvm.so $RPM_BUILD_ROOT%{_libdir}
 ln -s %{_libdir}/R/library/SJava/libs/libRSNativeJava.so $RPM_BUILD_ROOT%{_libdir}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -63,6 +63,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 #rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-SJava.spec.in,v $
+Revision 1.14  2006/09/10 20:35:47  allenday
+jars
+
 Revision 1.13  2006/09/10 20:26:34  allenday
 jars
 
