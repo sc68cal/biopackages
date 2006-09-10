@@ -1,0 +1,128 @@
+#$Id: textpresso.spec.in,v 1.1 2006/09/10 09:56:09 boconnor Exp $
+Summary: A text mining system for scientific literature
+Name: textpresso
+Version: 1.0.0
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: textpressopackage-%{version}.tgz
+Source1: textpresso_inject_pmid
+Source2: textpresso_inject_pdf
+Source3: upload.cgi
+Source4: textpresso_load.cron
+License: Custom
+Group: Applications/Bioinformatics
+Vendor: biopackages.net
+Packager: boconnor@ucla.edu
+URL: http://www.textpresso.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+Requires: perl, perl-bioperl >= 1.5, perl-MailTools, perl-PDF-Create, httpd
+BuildRequires: perl,biopackages
+Patch0: textpresso-1.0.0-path.patch
+Patch1: textpresso-1.0.0-ace.patch
+Patch2: textpresso-1.0.0-pdf.patch
+
+%description
+In PDF format, damnit
+
+%prep
+%setup -c %{name}-%{version}
+#remove reading from STDIN, we pass these variables in the environment during %build
+#remove aceperl dependency
+%patch0 -p0
+%patch1 -p0
+%patch2 -p0
+mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/textpresso
+mkdir -p $RPM_BUILD_ROOT/var/www/html/textpresso
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}-%{version}-%{release}
+mkdir -p $RPM_BUILD_ROOT/etc/cron.hourly
+
+cp %{SOURCE1} package/
+cp %{SOURCE2} package/
+cp %{SOURCE3} package/cgi-scripts/
+cp %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.hourly/
+
+%build
+
+#clean and remake xpdf
+cd package/database/programs/pdf2txtconverter/xpdf-2.02 ;
+make clean ;
+./configure ;
+make ;
+cd ../../../../../ ;
+
+#now install textpresso
+cd package/installation;
+CGIDIRPATH=$RPM_BUILD_ROOT/var/www/cgi-bin/textpresso \
+CGIURLPATH=http://____HOSTNAME____/cgi-bin/textpresso \
+HTMLDIRPATH=$RPM_BUILD_ROOT/var/www/html/textpresso \
+HTMLURLPATH=http://____HOSTNAME____/textpresso \
+DATABASEPATH=$RPM_BUILD_ROOT/var/lib/textpresso \
+./install_textpresso ;
+cd ../../
+
+find $RPM_BUILD_ROOT -type f -exec perl -p -i -e "s!$RPM_BUILD_ROOT!!g" {} \;
+
+%install
+#directory for staging from cron / web staging
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/pdfs/upload
+#directories for pubmed metadata
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Abstracts
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Author
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Citation
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Journal
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Title
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Type
+mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso/database/tmp/Year
+mkdir -p $RPM_BUILD_ROOT/var/www/html/textpresso/tdb/url
+install -m 755 package/textpresso_inject_pdf $RPM_BUILD_ROOT%{_bindir}
+install -m 755 package/textpresso_inject_pmid $RPM_BUILD_ROOT%{_bindir}
+chmod -R a+rwx $RPM_BUILD_ROOT/var/www/html/textpresso
+chmod -R a+rwx $RPM_BUILD_ROOT/var/lib/textpresso/database
+
+%files 
+%defattr(-,root,root)
+/var/*
+%{_bindir}/*
+/etc/*
+%doc package/TextpressoManual.pdf package/README package/LICENSE
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+find /var/www/cgi-bin/textpresso -type f -exec perl -p -i -e "s/____HOSTNAME____/$HOSTNAME/g" {} \;
+find /var/www/html/textpresso    -type f -exec perl -p -i -e "s/____HOSTNAME____/$HOSTNAME/g" {} \;
+
+%preun 
+
+#* Tue May  3 2005 Allen Day <allenday@ucla.edu> - 1.0.0-9
+#- Fixed bug when multiple files posted, cron didn't handle individually.
+#  Now we have a staging directory, and files are copied over one at a time
+#* Tue May  3 2005 Allen Day <allenday@ucla.edu> - 1.0.0-8
+#- Cleanup of /usr/bin/textpresso_inject_* scripts
+#- Addition of upload cgi script
+#- Addition of cron.hourly script to process uploads
+#* Thu Apr 28 2005 Allen Day <allenday@ucla.edu> - 1.0.0-7
+#- Minor adjustment to specfile to be more forgiving of contents of $PATH
+#* Thu Apr 28 2005 Allen Day <allenday@ucla.edu> - 1.0.0-6
+#- Added biopackges build dep.
+#* Wed Feb 16 2005 Allen Day <allenday@ucla.edu>
+#- rc5: added inject_pmid script
+#- rc5: added perl-bioperl dependency (required for textpresso_inject_pmid)
+#* Tue Feb 15 2005 Allen Day <allenday@ucla.edu>
+#- rc4: added tmpdir subdirectories
+#* Fri Feb 11 2005 Allen Day <allenday@ucla.edu>
+#- New specfile
+#- rc1: Added patch to hardocde standard paths into installation script
+#- rc2: Added patch to remove aceperl dependency and wormbase-specific code
+#- rc2: Added search-and-replace to set hostname in %post post-install step
+#- rc3: Added reconfigure and remake of pdf2txtconverter
+#- rc3: Added patch for textpresso_inject_pdf script that loads PDFs to
+#  database.  Also required chmod on database and web dirs
+$Log: textpresso.spec.in,v $
+Revision 1.1  2006/09/10 09:56:09  boconnor
+Added textpresso
+
