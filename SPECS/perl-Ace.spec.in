@@ -1,4 +1,4 @@
-#$Id: perl-Ace.spec.in,v 1.1 2006/09/10 08:31:03 boconnor Exp $
+#$Id: perl-Ace.spec.in,v 1.2 2006/09/10 09:01:01 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,6 +12,9 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Ace/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildRequires: perl-WeakRef
+Requires: perl-WeakRef
+Provides: perl(Ace::Browser::LocalSiteDefs)
 
 Source0: AcePerl-1.89.tar.gz
 
@@ -265,6 +268,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Ace.spec.in,v $
+Revision 1.2  2006/09/10 09:01:01  boconnor
+version num
+
 Revision 1.1  2006/09/10 08:31:03  boconnor
 Added ace perl
 
