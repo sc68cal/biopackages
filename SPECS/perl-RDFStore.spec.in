@@ -1,0 +1,149 @@
+#$Id: perl-RDFStore.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: RDF storage Perl library
+Name: perl-RDFStore
+Version: 0.50
+Release: 1.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/RDFStore/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires: perl, biopackages
+Source0: RDFStore-0.50.tar.gz
+
+%description
+NAME
+	RDFStore - Perl API for RDF Storage
+
+FEATURES
+
+*Modular interface using packages
+*Perl-way API to fetch, parse, process, store and query RDF models
+*W3C RDF and strawman syntax parsing
+*Perl TIE seamless access to RDF triplet databases
+*Either DB_File and BerkeleyDB support
+*Automatic Vocabulary generation
+*Basic RDF Schema support
+*Initial TCP/IP remote storage service support
+
+DESCRIPTION
+
+RDFStore is a set of Perl modules to manage Resource Description Framework
+(RDF) model databases in a easy and straightforward way. It is a pure Perl
+implementation of the Draft Java API from the Stanford University DataBase
+Group (http://www-db.stanford.edu/~melnik/rdf/api.html) by Sergey Melnik 
+with some additional cool modules to read/write RDF triples directly from 
+the Perl language environment.
+By using the Perl TIE interface, a generic application script can access RDF
+triplets using normal key/value hashes; the storage can happen either
+in-memory data structures (not tie) or on the local filesystem by using the
+DB_File.pm or BerkeleyDB.pm modules. An experimental remote storage service
+is also provided using a custom DBMS.pm module coupled with a fast and
+performant TCP/IP deamon (http://rdfstore.sourceforge.net/dbms.html). The 
+deamon has been written entirely in the C language and is actually storing 
+the data in Berkeley DB v1.x files; such a software is similar to the rdfbd 
+(http://web1.guha.com/rdfdb/) approach from Guha.  The input RDF files are 
+being parsed and processed by using a streaming SiRPAC like parser completely 
+written in Perl. Such an implementation includes most of the proposed bug 
+fixes and updates as suggested on the W3C RDF-interest-Group mailing list and 
+on the SiRPAC Web site.  A strawman parser for a simplified syntax proposed 
+by Jonathan Borden at http://www.openhealth.org/RDF/rdf_Syntax_and_Names.htm, 
+Jason Diamond's at http://www.injektilo.org/rdf/rdf.xsl and Dan Connolly at 
+http://www.w3.org/XML/2000/04rdf-parse/ is also included. By using the Sablotron 
+XSLT engine is then possible to easily tranform XML documents to RDF and query 
+them from the Perl language.
+
+INSTALLATION
+
+(see INSTALL help file)
+
+DOCUMENTATION
+
+The RDFStore Perl API documentation is now available at 
+http://rdfstore.sourceforge.net/documentation/api.html. You might want to refer 
+to the Perl pod documentation coming with the RDFStore distribution using hte 
+perldoc command or by browsing through it at http://rdfstore.sourceforge.net/documentation/pod.
+Additionally you can refer to the good Javadoc stuff of Sergey at 
+http://www-db.stanford.edu/~melnik/rdf/api-doc/ (or at 
+http://rdfstore.sourceforge.net/documentation/doc/). If you want to read more 
+about the TCP/IP based storage go at http://rdfstore.sourceforge.net/dbms.html .
+
+For technical details about the indexing algorithm used by the software see
+the SWADe-rdfstore.html paper into the doc/ directory  or remotely at
+http://www.asemantics.net/presos/SWAD-E/SWADe-rdfstore.html .
+
+SUPPORT & DEVELOPMENT
+
+The homepage for RDFStore is http://rdfstore.sourceforge.net
+A public mailing about technical developments, updates and bug reports
+is available at rdfstore@yahoogroups.com and archived at http://groups.yahoo.com/group/rdfstore
+
+DEMONSTRATION
+
+An on-line demostration of the capabilities of RDFStore is available at http://demo.asemantics.com/rdfstore
+
+COPYRIGHT
+
+Copyright (c) 2000-2003 All rights reserved
+Alberto Reggiori <areggiori@webweaving.org>
+Dirk-Willem van Gulik <dirkx@webweaving.org>
+
+Parts copyright (c) 1991-2000 iMatix Corporation.
+
+This product uses parts of the iMatix SFL, Copyright 1991-2000 iMatix Corporation <http://www.imatix.com>.
+
+$Id: perl-RDFStore.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+
+
+%prep
+%setup -q -n RDFStore-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-RDFStore.spec.in,v $
+Revision 1.1  2006/09/11 17:52:01  jmendler
+import from testing
+

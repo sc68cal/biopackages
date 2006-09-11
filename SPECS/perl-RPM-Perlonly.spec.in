@@ -1,0 +1,118 @@
+#$Id: perl-RPM-Perlonly.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-RPM-Perlonly
+Version: 1.0.1
+Release: 1.%{distro}
+Packager: allenday@sumo.genetics.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/RPM-Perlonly/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires: perl, biopackages
+
+Source0: RPM-Perlonly-1.0.1.tar.gz
+
+%description
+Perl-RPM-Perlonly - Native bindings to the RPM package format, without needing rpm.
+
+Version: 1.0.1
+
+WHAT IS IT:
+
+  Perl-RPM-Perlonly is a clone of RPM::Header written in only perl, so it provides
+  a way to read a rpm package on systems where rpm is installed. Perl-RPM-Perlonly
+  can used as a drop in replacement for RPM::Header, if needed also the other way 
+  around.
+
+  The interface is a tied-hash, there are some tags not provided by RPM::Header but
+  avalible in Perl-RPM-Perlonly.
+
+BUILDING/INSTALLING:
+
+  This package is set up to configure and build like a typical Perl extension.
+  To build:
+    
+    perl Makefile.PL
+    make && make test
+
+  If the RPM package passes all tests, then:
+  
+    make install
+
+You may need super-user access to install.
+
+
+PROBLEMS/BUG REPORTS:
+  
+  Please send any reports of problems or bugs to tlb@rapanden.dk
+
+CHANGES:
+  
+  2002.07.28 - Version 1.0.1
+   Added some new tags to the Tagtable:
+    PLATFORM, RHNPLATFORM
+    (Credits should go to Marco Fioretti for the information).
+ 
+  2001.11.29 - Version 1.0
+    First release.
+
+LICENSE:
+  
+  This package is Copyright (C) 2001 by Troels Liebe Bentsen. 
+  You may redistribute this and/or modify under the terms of 
+  the LGPL License or you can redistribute it and/or modify 
+  it under the same terms as Perl itself. 
+
+
+%prep
+%setup -q -n RPM-Perlonly-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-RPM-Perlonly.spec.in,v $
+Revision 1.1  2006/09/11 17:52:01  jmendler
+import from testing
+

@@ -1,37 +1,41 @@
-#$Id: ncbi-e-PCR.spec.in,v 1.1 2006/08/25 01:07:09 jmendler Exp $
-
-%define package e-PCR
-Name:      ncbi-%{package}
-Version:   2.3.4
-Release:   %{revision}.%{distro}
-Summary:   Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
-Vendor:    biopackages.net
-Group:     Applications/BioInformatics
-License:   Public Domain
-URL:       http://www.ncbi.nlm.nih.gov/sutils/e-pcr/
-Source0:   %{package}-%{version}-src.tar.gz
-BuildRequires: biopackages
+#$Id: ncbi-e-PCR.spec.in,v 1.2 2006/09/11 17:52:01 jmendler Exp $
+#%define package e-PCR
+Name: ncbi-e-PCR
+Version: 2.3.4
+Release: %{revision}.%{distro}
+Summary: Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences.
+#Vendor: biopackages.net
+Group: Applications/BioInformatics
+License: Public Domain
+#URL: http://www.ncbi.nlm.nih.gov/sutils/e-pcr/
+Source0: e-PCR-%{version}-src.tar.gz
+#BuildRequires: biopackages, gcc
+#Requires:
+#BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}
 
-%description
-Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences. e-PCR looks for potential STSs in DNA sequences by searching for subsequences that closely match the PCR primers and have the correct order, orientation, and spacing that could represent the PCR primers used to generate known STSs.
+#%description
+#Electronic PCR (e-PCR) is computational procedure that is used to identify sequence tagged sites(STSs), within DNA sequences. e-PCR looks for potential STSs in DNA sequences by searching for subsequences that closely match the PCR primers and have the correct order, orientation, and spacing that could represent the PCR primers used to generate known STSs.
+
 
 %prep
-%setup -qn %{package}-%{version}
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_bindir}
+%setup -n e-PCR-%{version}
+#rm -rf %{buildroot}
+#mkdir -p %{buildroot}%{_bindir}
+#mkdir -p %{buildroot}%{_usrsrc}/debug
+#mkdir -p %{buildroot}%{_libdir}/debug
 
 %build
-make
+#make
 
 %install
-install -m 755 e-PCR  %{buildroot}%{_bindir}
-install -m 755 famap  %{buildroot}%{_bindir}
-install -m 755 fahash %{buildroot}%{_bindir}
-install -m 755 re-PCR %{buildroot}%{_bindir}
+#install -m 755 e-PCR  %{buildroot}%{_bindir}
+#install -m 755 famap  %{buildroot}%{_bindir}
+#install -m 755 fahash %{buildroot}%{_bindir}
+#install -m 755 re-PCR %{buildroot}%{_bindir}
 
 %clean
-rm -rf %{buildroot}
+#rm -rf %{buildroot}
 
 %files
 %doc Changes README.txt README.html 
@@ -39,6 +43,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 $Log: ncbi-e-PCR.spec.in,v $
+Revision 1.2  2006/09/11 17:52:01  jmendler
+import from testing
+
 Revision 1.1  2006/08/25 01:07:09  jmendler
 import
 

@@ -1,4 +1,4 @@
-#$Id: hmmer.spec.in,v 1.2 2006/09/06 16:28:59 jmendler Exp $
+#$Id: hmmer.spec.in,v 1.3 2006/09/11 17:52:01 jmendler Exp $
 
 Vendor: biopackages.net
 Group: Applications/Scientific
@@ -11,6 +11,7 @@ Source0: ftp://ftp.genetics.wustl.edu/pub/eddy/hmmer/2.3.2/hmmer-2.3.2.tar.gz
 License: GPL
 URL: http://hmmer.wustl.edu/
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildArch: noarch
 
 %description
 HMMER is an implementation of profile HMM methods for
@@ -84,6 +85,9 @@ for prg in $(find squid -type f -perm +a=x -exec basename {} \; | grep -v config
 rm -rf $RPM_BUILD_ROOT
 
 $Log: hmmer.spec.in,v $
+Revision 1.3  2006/09/11 17:52:01  jmendler
+import from testing
+
 Revision 1.2  2006/09/06 16:28:59  jmendler
 fixed Release string
 

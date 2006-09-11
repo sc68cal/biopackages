@@ -1,4 +1,4 @@
-#$Id: perl-Spreadsheet-ParseExcel.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+#$Id: perl-Spreadsheet-ParseExcel.spec.in,v 1.2 2006/09/11 17:52:01 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,6 +10,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Spreadsheet-ParseExcel/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
 BuildRequires: perl, biopackages
 Requires: perl-Jcode, perl-OLE-Storage_Lite, perl-Spreadsheet-WriteExcel, perl-Unicode-Map
 
@@ -127,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Spreadsheet-ParseExcel.spec.in,v $
+Revision 1.2  2006/09/11 17:52:01  jmendler
+import from testing
+
 Revision 1.1  2006/09/08 00:10:25  boconnor
 Import of new SPECs
 

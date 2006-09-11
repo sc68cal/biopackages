@@ -1,0 +1,45 @@
+#$Id: perl-Archive-Extract.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: A generic archive extracting mechanism
+Name: perl-Archive-Extract
+Version: 0.12
+Release: %{revision}.%{distro}
+Packager: jmendler@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/~kane/Archive-Extract-0.12/lib/Archive/Extract.pm
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+BuildArch: noarch
+
+Source0: Archive-Extract-%{version}.tar.gz
+
+%description
+Archive::Extract is a generic archive extraction mechanism.
+
+It allows you to extract any archive file of the type .tar, .tar.gz, .gz, tar.bz, .tbz2, .bz2 or .zip without having to worry how it does so, or use different interfaces for each type by using either perl modules, or commandline tools on your system.
+
+%prep
+%setup -q -n Storable-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+make install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Archive-Extract.spec.in,v $
+Revision 1.1  2006/09/11 17:52:01  jmendler
+import from testing
+
