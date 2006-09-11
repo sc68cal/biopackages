@@ -1,4 +1,4 @@
-#$Id: perl-Jcode.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+#$Id: perl-Jcode.spec.in,v 1.2 2006/09/11 17:25:14 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Japanese Charset Handler
@@ -11,12 +11,12 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Jcode/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-
+BuildArch: noarch
 Source0: Jcode-0.88.tar.gz
 
 %description
 #
-# $Id: perl-Jcode.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+# $Id: perl-Jcode.spec.in,v 1.2 2006/09/11 17:25:14 jmendler Exp $
 #
 
 Jcode:
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Jcode.spec.in,v $
+Revision 1.2  2006/09/11 17:25:14  jmendler
+noarch
+
 Revision 1.1  2006/09/08 00:10:25  boconnor
 Import of new SPECs
 
