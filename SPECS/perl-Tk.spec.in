@@ -1,4 +1,4 @@
-#$Id: perl-Tk.spec.in,v 1.8 2006/09/10 00:09:52 boconnor Exp $
+#$Id: perl-Tk.spec.in,v 1.9 2006/09/11 18:04:12 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,6 +12,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Tk/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 #FIXME: Where do you get these!?!? Not on CPAN.
 Provides: perl(Tk::LabRadio), perl(Tk::TextReindex)
 provides: perl(Tk::Tree)
@@ -68,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tk.spec.in,v $
+Revision 1.9  2006/09/11 18:04:12  jmendler
+noarch
+
 Revision 1.8  2006/09/10 00:09:52  boconnor
 deps
 

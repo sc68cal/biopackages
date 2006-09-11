@@ -1,4 +1,4 @@
-#$Id: perl-Text-TabularDisplay.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+#$Id: perl-Text-TabularDisplay.spec.in,v 1.2 2006/09/11 18:04:12 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-TabularDisplay/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-
+BuildArch: noarch
 Source0: Text-TabularDisplay-1.20.tar.gz
 
 %description
@@ -264,7 +264,7 @@ NOTES / ISSUES
     Text::TabularDisplay is small and fast.
 
 VERSION
-    $Id: perl-Text-TabularDisplay.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+    $Id: perl-Text-TabularDisplay.spec.in,v 1.2 2006/09/11 18:04:12 jmendler Exp $
 
 AUTHOR
     darren chamberlain <darren@cpan.org>
@@ -317,6 +317,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-TabularDisplay.spec.in,v $
+Revision 1.2  2006/09/11 18:04:12  jmendler
+noarch
+
 Revision 1.1  2006/09/08 00:10:25  boconnor
 Import of new SPECs
 

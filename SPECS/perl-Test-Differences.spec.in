@@ -1,4 +1,4 @@
-#$Id: perl-Test-Differences.spec.in,v 1.1 2006/09/07 23:19:32 boconnor Exp $
+#$Id: perl-Test-Differences.spec.in,v 1.2 2006/09/11 18:04:11 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Test-Differences/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Algorithm-Diff
+BuildArch: noarch
 Requires: perl-Algorithm-Diff, perl-Text-Diff
 
 Source0: Test-Differences-%{version}.tar.gz
@@ -71,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-Differences.spec.in,v $
+Revision 1.2  2006/09/11 18:04:11  jmendler
+noarch
+
 Revision 1.1  2006/09/07 23:19:32  boconnor
 Added new spec.in files
 

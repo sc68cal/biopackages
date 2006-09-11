@@ -1,4 +1,4 @@
-#$Id: perl-Text-Iconv.spec.in,v 1.1 2006/09/10 06:54:04 boconnor Exp $
+#$Id: perl-Text-Iconv.spec.in,v 1.2 2006/09/11 18:04:12 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl interface to iconv() codeset conversion function
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-Iconv/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 Source0: Text-Iconv-1.4.tar.gz
 
 %description
@@ -163,6 +164,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-Iconv.spec.in,v $
+Revision 1.2  2006/09/11 18:04:12  jmendler
+noarch
+
 Revision 1.1  2006/09/10 06:54:04  boconnor
 Added text-iconv and updated other spec files
 

@@ -1,4 +1,4 @@
-#$Id: perl-Text-RecordParser.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+#$Id: perl-Text-RecordParser.spec.in,v 1.2 2006/09/11 18:04:12 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Parse record-oriented data in a text file
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-RecordParser/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 Requires: perl-Text-TabularDisplay
 
 Source0: Text-RecordParser-0.08.tar.gz
@@ -408,6 +409,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-RecordParser.spec.in,v $
+Revision 1.2  2006/09/11 18:04:12  jmendler
+noarch
+
 Revision 1.1  2006/09/08 00:10:25  boconnor
 Import of new SPECs
 
