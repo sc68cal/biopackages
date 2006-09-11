@@ -1,4 +1,4 @@
-#$Id: perl-NTLM.spec.in,v 1.1 2006/09/11 17:17:37 jmendler Exp $
+#$Id: perl-NTLM.spec.in,v 1.2 2006/09/11 17:18:39 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/NTLM/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 
 Source0: NTLM-1.02.tar.gz
 
@@ -112,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-NTLM.spec.in,v $
+Revision 1.2  2006/09/11 17:18:39  jmendler
+noarch
+
 Revision 1.1  2006/09/11 17:17:37  jmendler
 import from testing
 
