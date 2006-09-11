@@ -1,4 +1,4 @@
-#$Id: perl-PDF-Create.spec.in,v 1.1 2006/09/10 10:01:08 boconnor Exp $
+#$Id: perl-PDF-Create.spec.in,v 1.2 2006/09/11 17:41:17 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/PDF-Create/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+BuildArch: noarch
 Source0: PDF-Create-0.01.tar.gz
 
 %description
@@ -158,6 +159,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-PDF-Create.spec.in,v $
+Revision 1.2  2006/09/11 17:41:17  jmendler
+noarch
+
 Revision 1.1  2006/09/10 10:01:08  boconnor
 Added
 

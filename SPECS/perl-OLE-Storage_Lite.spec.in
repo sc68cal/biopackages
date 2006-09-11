@@ -1,4 +1,4 @@
-#$Id: perl-OLE-Storage_Lite.spec.in,v 1.1 2006/09/08 00:10:25 boconnor Exp $
+#$Id: perl-OLE-Storage_Lite.spec.in,v 1.2 2006/09/11 17:41:17 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Read and write OLE storage files.
@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/OLE-Storage_Lite/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-
+BuildArch: noarch
 Source0: OLE-Storage_Lite-0.14.tar.gz
 
 %description
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-OLE-Storage_Lite.spec.in,v $
+Revision 1.2  2006/09/11 17:41:17  jmendler
+noarch
+
 Revision 1.1  2006/09/08 00:10:25  boconnor
 Import of new SPECs
 

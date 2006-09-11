@@ -1,4 +1,4 @@
-#$Id: perl-PGPLOT.spec.in,v 1.2 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-PGPLOT.spec.in,v 1.3 2006/09/11 17:41:17 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: allow subroutines in the PGPLOT graphics library to be called from Perl
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/PGPLOT/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, gcc, gcc-g77, pgplot, pgplot-devel, perl-ExtUtils-F77
+BuildArch: noarch
 Requires: pgplot, pgplot-devel, perl-ExtUtils-F77
 Source0: PGPLOT-%{version}.tar.gz
 
@@ -73,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-PGPLOT.spec.in,v $
+Revision 1.3  2006/09/11 17:41:17  jmendler
+noarch
+
 Revision 1.2  2006/07/15 01:55:22  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
