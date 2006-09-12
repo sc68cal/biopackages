@@ -1,4 +1,4 @@
-#$Id: affyfusion.spec.in,v 1.1 2006/05/23 19:04:02 allenday Exp $
+#$Id: affyfusion.spec.in,v 1.2 2006/09/12 17:59:42 allenday Exp $
 Name: affyfusion
 Epoch: 1
 Version: 2
@@ -8,7 +8,8 @@ License: BSD
 Group: System Environment/Libraries
 Source0: affyfusion.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: gcc-c++, make, biopackages
+BuildRequires: gcc-c++, xerces-c, make, biopackages
+Requires: xerces-c
 
 %description
 The File Parsers SDK is a toolkit for providing parsing capabilities with the
@@ -54,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 $Log: affyfusion.spec.in,v $
+Revision 1.2  2006/09/12 17:59:42  allenday
+xerces req
+
 Revision 1.1  2006/05/23 19:04:02  allenday
 imports for afy fusion skd
 
