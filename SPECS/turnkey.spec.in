@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.12 2006/09/12 08:43:50 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.13 2006/09/12 08:45:48 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -33,7 +33,7 @@ The Turnkey project makes it easy to quickly convert a database schema file into
 distro_str=%{distro}
 if [ ${distro_str:0:9} == "bp.centos" ]; then
 echo "Detected CentOS, patching and removing disconnect call in model objects"
-%patch -p0
+%patch -p1
 else
 echo "Not applying Centos patch"
 fi
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.13  2006/09/12 08:45:48  boconnor
+Updates to distro check
+
 Revision 1.12  2006/09/12 08:43:50  boconnor
 Updates to distro check
 
