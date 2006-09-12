@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.9 2006/09/12 07:47:52 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.10 2006/09/12 08:22:38 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -20,13 +20,20 @@ Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Cl
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
-
+Patch0: Turnkey-%{version}-disconnect.patch
 
 %description
 The Turnkey project makes it easy to quickly convert a database schema file into a mod_perl database.
 
 %prep
 %setup -q -n Turnkey-%{version}
+
+if [ "%{distro}" == "bp.centos" ]; then
+echo "Detected CentOS, patching and removing disconnect call in model objects"
+%patch -p0
+else 
+echo "Not applying Centos patch"
+fi
 
 #substitute in "hard coded" $TURNKEY_ROOT path for rpm
 perl -p -i -e 's!(\$ENV{TURNKEY_ROOT})!$1 or my \$working_dir = "%{_datadir}/doc/%{name}-%{version}/"!' scripts/turnkey_generate;
@@ -75,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.10  2006/09/12 08:22:38  boconnor
+Added conditional patch to remove disconnect calls on CentOS where some odd cacheing problem is causing the server to barf
+
 Revision 1.9  2006/09/12 07:47:52  boconnor
 trigger new version
 
