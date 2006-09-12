@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.8 2006/07/15 01:55:23 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.9 2006/09/12 07:47:52 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -20,6 +20,7 @@ Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Cl
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
+
 
 %description
 The Turnkey project makes it easy to quickly convert a database schema file into a mod_perl database.
@@ -74,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.9  2006/09/12 07:47:52  boconnor
+trigger new version
+
 Revision 1.8  2006/07/15 01:55:23  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
