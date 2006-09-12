@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.10 2006/09/12 08:22:38 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.11 2006/09/12 08:39:46 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -28,7 +28,8 @@ The Turnkey project makes it easy to quickly convert a database schema file into
 %prep
 %setup -q -n Turnkey-%{version}
 
-if [ "%{distro}" == "bp.centos" ]; then
+distro_str=%{distro}
+if [ ${distro_str:0:9} == "bp.centos" ]; then
 echo "Detected CentOS, patching and removing disconnect call in model objects"
 %patch -p0
 else 
@@ -82,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.11  2006/09/12 08:39:46  boconnor
+Updates to distro check
+
 Revision 1.10  2006/09/12 08:22:38  boconnor
 Added conditional patch to remove disconnect calls on CentOS where some odd cacheing problem is causing the server to barf
 
