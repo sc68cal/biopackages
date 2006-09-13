@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.14 2006/09/02 01:44:26 boconnor Exp $
+#$Id: Makefile,v 1.15 2006/09/13 05:57:45 boconnor Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -78,11 +78,15 @@ sync_clean ::
 
 rsync_down_large ::
 	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large/ ./SOURCES.large
-	ln -s SOURCES.large/* SOURCES/
+	cd SOURCES
+	ln -s ../SOURCES.large/* .
+	cd ..
 
 rsync_down_small ::
 	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.small/ ./SOURCES.small
-	ln -s SOURCES.small/* SOURCES/
+	cd SOURCES
+	ln -s ../SOURCES.small/* .
+	cd ..
 
 rsync_up_large ::
 	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large
@@ -96,3 +100,5 @@ prep ::
 	echo '' >> ~/.rpmmacros
 	$(RM_I) ~/.rpmmacros
 	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
+	echo 'for d in SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
+
