@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: pmfetch.pl,v 1.2 2006/09/07 17:02:39 boconnor Exp $
+#$Id: pmfetch.pl,v 1.3 2006/09/13 06:01:18 boconnor Exp $
 use strict;
 use CPANPLUS::Backend;
 use File::Copy;
@@ -47,6 +47,7 @@ $namespace =~ s/-/::/g;
 my $retry = 0;
 my $source = undef;
 while ( $retry < 10 ) {
+  print "Fetching module $namespace\n";
   my $rv = $cb->fetch(modules => [$namespace]);
   ($source) = values( %{ $rv->rv() } );
 
@@ -128,7 +129,7 @@ close(SPEC);
 
 
 __DATA__
-#$Id: pmfetch.pl,v 1.2 2006/09/07 17:02:39 boconnor Exp $
+#$Id: pmfetch.pl,v 1.3 2006/09/13 06:01:18 boconnor Exp $
 Distribution: @@DISTRIBUTION@@
 Vendor: @@VENDOR@@
 Summary: @@SUMMARY@@
@@ -193,6 +194,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: pmfetch.pl,v $
+Revision 1.3  2006/09/13 06:01:18  boconnor
+Added a status printout, I found that, at least on CentOS4, this script doesn't work.  It seems to hang when using CPANPLUS.  I didn't have time to debug.
+
 Revision 1.2  2006/09/07 17:02:39  boconnor
 Updates to pm spec file generators
 
