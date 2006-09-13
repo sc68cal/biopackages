@@ -1,0 +1,105 @@
+Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
+Version: 1
+Name: turnkey-demo
+Epoch: 0
+Release: 4.%{distro}
+Source0: Turnkey-%{version}.tar.gz
+License: GPL
+Group: Development/Web
+Packager: Brian OConnor <boconnor@ucla.edu>
+URL: http://turnkey.sf.net
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
+BuildRequires: perl, biopackages, turnkey
+Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI)
+
+%description
+Demos for Turnkey
+
+%package wine
+Summary: A wine demo application based on Turnkey.
+Group: Development/Web
+Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
+BuildRequires: perl, biopackages, turnkey
+Provides: perl(TurnkeyWine::Atom::AutoAtom), perl(TurnkeyWine::Model::AutoDBI)
+
+%description wine
+The Wine web application demo for Turnkey.
+
+%package wiki
+Summary: A wiki demo application based on Turnkey.
+Group: Development/Web
+Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, httpd, mod_perl
+BuildRequires: perl, biopackages, turnkey
+Provides: perl(TurnkeyWiki::Atom::AutoAtom), perl(TurnkeyWiki::Model::AutoDBI)
+
+%description wiki
+The Wiki web application demo for turnkey.
+
+%prep
+%setup -n Turnkey-%{version}
+
+%build
+
+%install
+%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=%{_datadir}/doc/turnkey-%{version}/schema/wine_just_schema.sql --dbname=turnkey-wine-demo --output_path=%{buildroot}/var/www/html/turnkey-wine-demo --install_path=/var/www/html/turnkey-wine-demo --dbport=5432 --concat=Wine --uri_prefix=Wine --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=wine 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=%{_datadir}/doc/turnkey-%{version}/schema/wiki_just_schema.sql --dbname=turnkey-wiki-demo --output_path=%{buildroot}/var/www/html/turnkey-wiki-demo --install_path=/var/www/html/turnkey-wiki-demo --dbport=5432 --concat=Wiki --uri_prefix=Wiki --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=wiki 2>&1 >/dev/null;
+
+%post wine
+/etc/init.d/postgresql start
+su postgres -c "createdb turnkey-wine-demo";
+#Creating tables, functions, views, triggers, rules, etc for database
+su postgres -c "cat %{_datadir}/doc/turnkey-demo-wine-%{version}/wine_data_and_schema.sql | psql -U postgres turnkey-wine-demo 2>&1" 2>&1 > /dev/null;
+cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
+echo 'Include /var/www/html/turnkey-wine-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+/etc/init.d/httpd restart
+
+%post wiki
+/etc/init.d/postgresql start
+su postgres -c "createdb turnkey-wiki-demo" 2>&1 > /dev/null;
+#Creating tables, functions, views, triggers, rules, etc for database
+su postgres -c "cat %{_datadir}/doc/turnkey-demo-wiki-%{version}/wiki_data_and_schema.sql | psql -U postgres turnkey-wiki-demo 2>&1 >/dev/null" 2>&1 > /dev/null;
+cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
+echo 'Include /var/www/html/turnkey-wiki-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+/etc/init.d/httpd restart
+
+%postun wine
+/etc/init.d/postgresql start
+/etc/init.d/httpd stop
+su postgres -c "dropdb turnkey-wine-demo"
+perl -p -i -e 's!Include /var/www/html/turnkey-wine-demo/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/html/turnkey-wine-demo
+/etc/init.d/httpd start
+
+%postun wiki
+/etc/init.d/postgresql start
+/etc/init.d/httpd stop
+su postgres -c "dropdb turnkey-wiki-demo"
+perl -p -i -e 's!Include /var/www/html/turnkey-wiki-demo/conf/httpd.conf!!' /etc/httpd/conf/httpd.conf
+rm -rf /var/www/html/turnkey-wiki-demo
+/etc/init.d/httpd start
+
+%clean
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && rm -rf %{buildroot};
+
+%files wine
+%doc README INSTALL LICENSE schema/wine_data_and_schema.sql
+/var/www/html/turnkey-wine-demo/*
+
+
+%files wiki
+%doc README INSTALL LICENSE schema/wiki_data_and_schema.sql
+/var/www/html/turnkey-wiki-demo/*
+
+%changelog
+* Tue Jun 28 2005 Brian OConnor <boconnor@ucla.edu> 0.03-4
+- updating the revision number because there are already compiled packages in the i386 directory.
+* Mon Jun 27 2005 Brian OConnor <boconnor@ucla.edu> 0.03-2
+- Generates the website at rpm build time and not when the user installs.
+* Fri Apr 29 2005 Brian OConnor <boconnor@ucla.edu> 0.03-1
+- An initial version of this SPEC file to create various Turnkey demo RPMs.
+
