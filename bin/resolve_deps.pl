@@ -20,6 +20,9 @@ my ($arch_str_universal, $spec_file, $no_build_file) = @ARGV;
 my $req = {};
 my $missing_req = {};
 
+# keep track of what's been yum installed
+my $yum_installed = {};
+
 # A list of modules not to build
 my $no_build = {};
 $no_build = read_no_build($no_build_file);
@@ -41,6 +44,9 @@ chomp($distro_str);
 
 # The actual process 
 parse_req($spec_file, $req, $missing_req, "");
+
+# Done
+print "\nBUILD COMPLETE!\n\n";
 
 # Print out missing requirements
 print "\nMissing Req:\n";
@@ -67,6 +73,12 @@ sub parse_req {
     if (!-e $file) {
       $missing_req->{"$file_name"} = 1; 
       print TREE "$indent** $file_name **\n";
+      # so there is a dependency that isn't part of the SPEC.in 
+      # so it must be either a system dep (e.g. provided by the distro)
+      # or it's simply not yet imported into the biopackages repo
+      # try to install with yum, it will just fail if it's not available
+      print "Trying to yum install: $file_name\n";
+      if (!defined $yum_installed->{$file_name}) { system "sudo yum -y install $file_name"; $yum_installed->{$file_name} = 1; }
     }
     elsif (!$parsed_before{$file} && !defined($no_build->{$file_name})) {
       $parsed_before{$file} = 1;
@@ -134,13 +146,13 @@ sub parse_req {
           #print "$version_str $id_str $distro_str $arch_str\n\n";
 	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/) {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
-              print("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n");
-              $result = system("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+              print("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n");
+              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
 	    }
 	  } else {
 	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
-              print ("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n");
-              $result = system("sudo rpm -Uvh RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+              print ("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n");
+              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
 	    }
 	  }
           if ($result) { die "There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
@@ -180,6 +192,7 @@ sub read_no_build {
   open INPUT, $file or die "Can't read file: $file\n";
   while (<INPUT>) {
     chomp;
+    next if (/^#/);
     $result->{$_} = 1;
   }
   close INPUT;
