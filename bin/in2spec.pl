@@ -1,9 +1,16 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.5 2006/08/25 01:15:38 jmendler Exp $
+#$Id: in2spec.pl,v 1.6 2006/09/13 06:00:06 boconnor Exp $
 use strict;
 use Date::Manip;
 use Text::Wrap;
 $Text::Wrap::columns = 72;
+
+# figure out what distro we have
+my @results = `rpm -qa | grep 'release'`;
+chomp $results[0];
+$results[0] =~ /^([^-]+)-release-([^-]+)/;
+my $distro = $1;
+my $distro_release = $2;
 
 my %day   = (
              1 => 'Mon',
@@ -44,6 +51,14 @@ my ( $version )  = $spec =~ /\nVersion:\s+(\S+)\n/s;
 
 $spec =~ s/%{revision}/$revision/gs;
 
+#check distro, if matches then include this line otherwise don't
+$spec =~ s/%{ifdistro $distro}(.*)/$1/g;
+$spec =~ s/%{ifdistro \w+}(.*)//g;
+
+#check distro and release, if matches then include line otherwise don't
+$spec =~ s/%{ifdistro_release $distro $distro_release}(.*)/$1/g;
+$spec =~ s/%{ifdistro_release \w+ \d+}(.*)//g;
+
 $spec =~ s/$logtag(.+)$//s;
 my $cvslog = $1;
 my @revisions = split /\nRevision\s+/, $cvslog;
@@ -76,6 +91,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.6  2006/09/13 06:00:06  boconnor
+Added ifdistro and ifdistro_release tags to the pre-processor. Currently it just supports one line but it would be nice if this could be a multi-line enclosed by a fi
+
 Revision 1.5  2006/08/25 01:15:38  jmendler
 fixed whitespace bug
 
