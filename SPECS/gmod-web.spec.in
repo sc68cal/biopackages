@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.11 2006/09/12 08:25:36 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.12 2006/09/13 10:20:12 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -73,8 +73,8 @@ The Wiki web application demo for turnkey.
 
 %install
 %{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado --output_path=%{buildroot}/var/www/gmod-web-demo --install_path=/var/www/gmod-web-demo --dbport=5432 --concat=GmodWeb --uri_prefix=GmodWeb --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
-%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Sce-%{Sce_version} --output_path=%{buildroot}/var/www/Sce/%{Sce_version} --install_path=/var/www/Sce/%{Sce_version} --dbport=5432 --concat=Sce%{Sce_version} --uri_prefix=Sce/%{Sce_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
-%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/Hsa/%{Hsa_version} --install_path=/var/www/Hsa/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version} --uri_prefix=Hsa/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Sce-%{Sce_version} --output_path=%{buildroot}/var/www/Sce/%{Sce_version} --install_path=/var/www/Sce/%{Sce_version} --dbport=5432 --concat=Sce%{Sce_version} --uri_prefix=Sce/%{Sce_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web-Sce 2>&1 >/dev/null;
+%{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/Hsa/%{Hsa_version} --install_path=/var/www/Hsa/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version} --uri_prefix=Hsa/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=gmod-web-Hsa 2>&1 >/dev/null;
 %{_bindir}/turnkey_generate --output_type=web_mod_perl --dbuser=postgres --dbpass= --dbhost=localhost --wwwemail=admin@host --sqlfile_path=/var/lib/gmod/src/chado/modules/default_nofuncs.sql --skip_tables=affymetrixprobeset,affymetrixprobe,affymetrixcel,affymetrixsnp,affymetrixmas5,affymetrixdchip,affymetrixvsn,affymetrixsea,affymetrixplier,affymetrixdabg,affymetrixrma,affymetrixgcrma,affymetrixprobesetstat --dbname=chado-Hsa-%{Hsa_version} --output_path=%{buildroot}/var/www/Hsa-Normal-Tissue/%{Hsa_version} --install_path=/var/www/Hsa-Normal-Tissue/%{Hsa_version} --dbport=5432 --concat=Hsa%{Hsa_version}NormalTissue --uri_prefix=HsaNormalTissue/%{Hsa_version} --virtual=N --wwwport=80 --wwwhost=$HOSTNAME --usedemo=1 --demo=normal-tissue 2>&1 >/dev/null;
 
 %post
@@ -144,6 +144,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.12  2006/09/13 10:20:12  boconnor
+The demo for Hsa and Sce GMODWeb sites was not specified correctly.
+
 Revision 1.11  2006/09/12 08:25:36  boconnor
 Incremented version since turnkey changed
 
