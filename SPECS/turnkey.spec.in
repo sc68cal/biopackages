@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.13 2006/09/12 08:45:48 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.14 2006/09/13 17:39:24 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -30,13 +30,13 @@ The Turnkey project makes it easy to quickly convert a database schema file into
 # only apply this patch on centos where calling disconnect on model object db
 # handles causes problems because db handles appear to be recycled when they
 # aren't on FC2
-distro_str=%{distro}
-if [ ${distro_str:0:9} == "bp.centos" ]; then
-echo "Detected CentOS, patching and removing disconnect call in model objects"
+#distro_str=%{distro}
+#if [ ${distro_str:0:9} == "bp.centos" ]; then
+#echo "Detected CentOS, patching and removing disconnect call in model objects"
 %patch -p1
-else
-echo "Not applying Centos patch"
-fi
+#else
+#echo "Not applying Centos patch"
+#fi
 
 #substitute in "hard coded" $TURNKEY_ROOT path for rpm
 perl -p -i -e 's!(\$ENV{TURNKEY_ROOT})!$1 or my \$working_dir = "%{_datadir}/doc/%{name}-%{version}/"!' scripts/turnkey_generate;
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.14  2006/09/13 17:39:24  boconnor
+Now that I've consolidated RPM versions for the deps it seems as though this patch is required for FC2.
+
 Revision 1.13  2006/09/12 08:45:48  boconnor
 Updates to distro check
 

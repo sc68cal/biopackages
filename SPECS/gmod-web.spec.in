@@ -1,7 +1,6 @@
-#$Id: gmod-web.spec.in,v 1.15 2006/09/13 11:12:34 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.16 2006/09/13 17:39:48 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
-
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
@@ -147,6 +146,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.16  2006/09/13 17:39:48  boconnor
+Now that I've consolidated RPM versions for the deps it seems as though this patch is required for FC2.
+
 Revision 1.15  2006/09/13 11:12:34  boconnor
 Added blast graphic deps
 
