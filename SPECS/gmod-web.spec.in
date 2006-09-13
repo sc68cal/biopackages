@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.13 2006/09/13 10:28:58 boconnor Exp $
+#$Id: gmod-web.spec.in,v 1.14 2006/09/13 10:33:46 boconnor Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -86,18 +86,21 @@ echo 'Include /var/www/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.c
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformatics/gbrowse.conf/chado-Sce-S228C.conf
+ln -s /usr/share/genome/Sce/%{Sce_version}/* /var/www/Sce/%{Sce_version}/html/files/
 /etc/init.d/httpd restart
 
 %post Hsa
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
+ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa/%{Hsa_version}/html/files/
 /etc/init.d/httpd restart
 
 %post Hsa-normal-tissue
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
+ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/files/
 /etc/init.d/httpd restart
 
 %postun
@@ -144,6 +147,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.14  2006/09/13 10:33:46  boconnor
+Nib and fasta files for Hsa and Sce.
+
 Revision 1.13  2006/09/13 10:28:58  boconnor
 Nib and fasta files for Hsa and Sce.
 
