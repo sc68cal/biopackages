@@ -1,0 +1,48 @@
+#$Id: celtools.spec.in,v 1.1 2006/09/14 19:56:05 allenday Exp $
+Name: celtools
+Epoch: 1
+Version: 1
+Release: %{revision}.%{distro}
+Summary: Utilities for Affymetrix CEL files.
+License: GPL
+Group: Applications/Bioinformatics
+Source0: celconvert.cpp
+Source1: celsniff.cpp
+Source2: cel2pqi.cpp
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: affyfile, affyfusion, xerces-c
+BuildRequires: affyfile, affyfusion, xerces-c
+BuildRequires: gcc, gcc-c++, make, biopackages
+
+%description
+Utilities for Affymetrix CEL files.
+
+%prep
+mkdir -p %{name} ; cd %{name}
+cp %{SOURCE0} .
+cp %{SOURCE1} .
+cp %{SOURCE2} .
+
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+
+%build
+g++ -I %{_includedir}/affyfusion/data -I %{_includedir}/affyfusion/exception -I %{_includedir}/affyfusion/fusion -I %{_includedir}/affyfusion/parameter -I %{_includedir}/affyfusion/portability -I %{_includedir}/affyfusion/parsers -I %{_includedir}/affyfusion/utils -laffyfile -laffyfusion -lxerces-c -o celconvert %{SOURCE0}
+g++ -I %{_includedir}/affyfusion/data -I %{_includedir}/affyfusion/exception -I %{_includedir}/affyfusion/fusion -I %{_includedir}/affyfusion/parameter -I %{_includedir}/affyfusion/portability -I %{_includedir}/affyfusion/parsers -I %{_includedir}/affyfusion/utils -laffyfusion -lxerces-c -o celsniff %{SOURCE1}
+g++ -I %{_includedir}/affyfusion/data -I %{_includedir}/affyfusion/exception -I %{_includedir}/affyfusion/fusion -I %{_includedir}/affyfusion/parameter -I %{_includedir}/affyfusion/portability -I %{_includedir}/affyfusion/parsers -I %{_includedir}/affyfusion/utils -laffyfile -laffyfusion -lxerces-c -o cel2pqi %{SOURCE2}
+
+%install
+install -m 555 celconvert $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 celsniff   $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 cel2pqi    $RPM_BUILD_ROOT/%{_bindir}/
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_bindir}/cel*
+
+$Log: celtools.spec.in,v $
+Revision 1.1  2006/09/14 19:56:05  allenday
+split cel utils out from affy sdk packages
+
