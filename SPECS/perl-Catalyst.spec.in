@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst.spec.in,v 1.15 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-Catalyst.spec.in,v 1.16 2006/09/19 23:03:09 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -15,7 +15,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
-Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
+Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache, perl-Text-SimpleTable
 
 Source0: Catalyst-%{version}.tar.gz
 
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst.spec.in,v $
+Revision 1.16  2006/09/19 23:03:09  allenday
+depcheck
+
 Revision 1.15  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
