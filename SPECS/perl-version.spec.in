@@ -1,0 +1,149 @@
+#$Id: perl-version.spec.in,v 1.1 2006/09/19 21:25:28 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Structured version objects
+Name: perl-version
+Version: 0.6701
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/version/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages, gcc
+
+Source0: version-0.6701.tar.gz
+
+%description
+version 0.6701
+==================================
+
+Provides the same version objects as included in Perl v5.9.x (and hopefully in
+the 5.10.0 release).  In fact, if you attempt to use this module with a version
+of Perl >= v5.9.0, this module will not do anything, since the code already
+exists in the Perl core.  Note that the CPAN release cannot be installed
+with the interim 5.9.0, 5.9.1, and 5.9.2 releases (since it duplicates code
+in the core).  If you are testing 5.9.x, you must check out bleadperl in
+order to get the current changes (the CPAN release has no effect in
+bleadperl).
+
+Minor changes in 0.6701 - 2006-08-16
+=====================================
+
+Another Build.PL tweak for Module::Build 0.2805, which nukes the version::
+namespace during the test for an installed release of version.pm.  This
+makes it impossible to install version.pm from CPAN with M::B.
+
+Major changes in 0.67 - 2006-08-08
+=====================================
+
+Redo pure Perl code to correctly handle all instances of very small version
+objects (where Perl "helpfully" hands us exponential notation).
+
+
+Please read the POD documentation for usage/details.  See the CHANGES file
+for full details of all changes to the module behavior.
+
+INSTALLATION
+
+To install this module type the following:
+
+   $ perl Build.PL
+   $ ./Build
+   $ ./Build test
+   # ./Build install
+
+This release includes an optional pure Perl implementation (in case
+you don't have a C-compiler or if some reason you want your code to be
+much slower).  You can test it by calling the build script as
+
+    $ perl Build.PL --perl_only
+
+and it will install the Perl only version.
+
+OR
+
+To install with ExtUtils::MakeMaker:
+
+   $ perl Makefile.PL
+   $ make
+   $ make test
+   # make install
+
+and correspondingly
+
+   $ perl Makefile.PL --perl_only
+
+will install the Perl only version.
+  
+
+DEPENDENCIES
+
+The same C compiler used to build Perl (or not).  Module::Build 0.2611
+or better.
+
+Module::Build installs fine under 5.005_03 or better, though the optional
+dependency Archive::Tar doesn't.  If you install Module::Build without any
+of the optional dependencies, you can safely install version.pm.
+
+
+COPYRIGHT AND LICENCE
+
+This module can be distributed under the same terms as Perl.
+
+Copyright (C) 2004,2005,2006 John Peacock
+
+
+
+%prep
+%setup -q -n version-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-version.spec.in,v $
+Revision 1.1  2006/09/19 21:25:28  allenday
+import
+
