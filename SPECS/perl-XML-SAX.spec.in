@@ -1,4 +1,4 @@
-#$Id: perl-XML-SAX.spec.in,v 1.1 2006/07/18 06:03:24 boconnor Exp $
+#$Id: perl-XML-SAX.spec.in,v 1.2 2006/09/21 04:29:34 jmendler Exp $
 %define _use_internal_dependency_generator 0
 
 Summary: XML-SAX Perl module
@@ -8,6 +8,7 @@ Release: %{revision}.%{distro}
 License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-SAX/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl >= 2:5.8.0
 Requires: %(perl -MConfig -le 'if (defined $Config{useithreads}) { print "perl(:WITH_ITHREADS)" } else { print "perl(:WITHOUT_ITHREADS)" }')
@@ -65,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-SAX.spec.in,v $
+Revision 1.2  2006/09/21 04:29:34  jmendler
+noarch
+
 Revision 1.1  2006/07/18 06:03:24  boconnor
 Added new spec files
 
