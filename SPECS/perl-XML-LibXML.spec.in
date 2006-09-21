@@ -1,4 +1,4 @@
-#$Id: perl-XML-LibXML.spec.in,v 1.2 2006/09/07 23:19:32 boconnor Exp $
+#$Id: perl-XML-LibXML.spec.in,v 1.3 2006/09/21 04:01:20 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxml2 xml parsing and DOM library
@@ -10,6 +10,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-LibXML/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
 BuildRequires: perl, biopackages, perl-XML-SAX, perl-XML-LibXML-Common
 %{ifdistro centos}Requires: libxml2
 %{ifdistro fedora}Requires: libxml
@@ -308,6 +309,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-LibXML.spec.in,v $
+Revision 1.3  2006/09/21 04:01:20  jmendler
+noarch
+
 Revision 1.2  2006/09/07 23:19:32  boconnor
 Added new spec.in files
 
