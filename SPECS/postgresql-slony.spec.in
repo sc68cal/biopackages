@@ -1,0 +1,67 @@
+#$Id: postgresql-slony.spec.in,v 1.1 2006/09/22 01:36:56 jmendler Exp $
+%define postgresql_version 7.4.7
+%define postgresql_release 3
+
+Vendor: biopackages.net
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.0.5
+Release: 4.%{distro}
+Name: postgresql-slony
+Summary: A replication system for PostgreSQL
+URL: http://gborg.postgresql.org/project/slony1/projdisplay.php
+Group: Applications/Databases
+Source0: slony1-%{version}.tar.gz
+#we need this b/c slony needs the postgres source tree
+Source1: postgresql-%{postgresql_version}-%{postgresql_release}.FC2.1.src.rpm
+License: BSD
+BuildRoot: %{_tmppath}/%{name}-root
+Provides: %{name}
+Requires: postgresql-server >= %{postgresql_version}-%{postgresql_release}
+#these are required to be mentioned as they do not install to $PATH
+Provides: perl(slon-tools), perl(slon.env)
+Requires: postgresql-libs >= %{postgresql_version}-%{postgresql_release}
+BuildRequires: gcc, make
+#for postgres build
+BuildRequires: bison, flex, gettext, pam-devel, python-devel, tcl-devel
+
+%description
+Slony-I is a "master to multiple slaves" replication system with
+cascading and failover.
+
+The big picture for the development of Slony-I is a master-slave
+system that includes all features and capabilities needed to
+replicate large databases to a reasonably limited number of slave
+systems.
+
+Slony-I is a system for data centers and backup sites, where the
+normal mode of operation is that all nodes are available. 
+
+%prep
+%setup -n slony1-%{version}
+#we need this b/c slony needs the postgres source tree
+rpm -i %{SOURCE1};
+rpmbuild -bc ../../SPECS/postgresql.spec
+
+%build
+./configure --with-pgsourcetree=../postgresql-%{postgresql_version} --quiet --prefix=%{_prefix} --mandir=%{_mandir} --libdir=%{_libdir}
+make all
+
+%install
+%makeinstall 
+rm -rf $RPM_BUILD_ROOT%{_datadir};
+
+
+%files
+%defattr(-, root, root)
+%doc COPYRIGHT README* doc src/xxid src/backend tools
+%{_bindir}/slon
+%{_bindir}/slonik
+%{_libdir}/*.so
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+$Log: postgresql-slony.spec.in,v $
+Revision 1.1  2006/09/22 01:36:56  jmendler
+import from testing
+

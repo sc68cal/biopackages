@@ -1,0 +1,41 @@
+#$Id: R-Hmisc.spec.in,v 1.1 2006/09/22 01:41:02 jmendler Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 3.0
+Release: 1.%{distro}
+Name: R-Hmisc
+Summary: R Harrell Miscellaneous library
+Group: Applications/Engineering
+Copyright: GPL
+URL: http://www.r-project.org
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
+
+%description
+R Harrell Miscellaneous library
+
+%prep
+%setup -T -c
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+echo "install.packages('Hmisc','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-Hmisc.spec.in,v $
+Revision 1.1  2006/09/22 01:41:02  jmendler
+import from testing
+

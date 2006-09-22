@@ -1,0 +1,43 @@
+#$Id: R-RNetCDF.spec.in,v 1.1 2006/09/22 01:45:38 jmendler Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.1
+Release: 3.%{distro}
+Name: R-RNetCDF
+Summary: R Interface to NetCDF Datasets
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Requires: R >= 2.0.0, netcdf, udunits
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages, netcdf, netcdf-devel, udunits, udunits-devel
+
+%description
+R Interface to NetCDF Datasets
+
+%prep
+%setup -T -c
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+echo "install.packages('RNetCDF','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-RNetCDF.spec.in,v $
+Revision 1.1  2006/09/22 01:45:38  jmendler
+import from testing
+
