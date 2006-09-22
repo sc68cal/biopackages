@@ -1,4 +1,4 @@
-#$Id: R-gregmisc.spec.in,v 1.1 2006/09/22 01:38:25 jmendler Exp $
+#$Id: R-gregmisc.spec.in,v 1.2 2006/09/22 01:39:25 jmendler Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -11,6 +11,7 @@ License: GPL
 URL: http://www.r-project.org
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
 BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
 
 %description
@@ -38,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-gregmisc.spec.in,v $
+Revision 1.2  2006/09/22 01:39:25  jmendler
+noarch
+
 Revision 1.1  2006/09/22 01:38:25  jmendler
 import from testing
 
