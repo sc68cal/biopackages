@@ -2,7 +2,7 @@ Summary: Chado, a modular relational schema at the core of the Generic Model Org
 Version: 1
 Name: turnkey-demo
 Epoch: 0
-Release: 4.%{distro}
+Release: %{revision}.%{distro}
 Source0: Turnkey-%{version}.tar.gz
 License: GPL
 Group: Development/Web

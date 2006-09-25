@@ -1,10 +1,10 @@
-#$Id: perl-XML-Twig.spec.in,v 1.1 2006/09/21 04:32:25 jmendler Exp $
+#$Id: perl-XML-Twig.spec.in,v 1.2 2006/09/25 20:35:53 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: XML, The Perl Way
 Name: perl-XML-Twig
 Version: 3.16
-Release: 1.%{distro} 
+Release: %{revision}.%{distro} 
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -103,7 +103,7 @@ DEPENDANCIES
 
 CHANGES
 
-    $Id: perl-XML-Twig.spec.in,v 1.1 2006/09/21 04:32:25 jmendler Exp $
+    $Id: perl-XML-Twig.spec.in,v 1.2 2006/09/25 20:35:53 jmendler Exp $
 
     See the Changes file    
 
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-Twig.spec.in,v $
+Revision 1.2  2006/09/25 20:35:53  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/21 04:32:25  jmendler
 import from testing
 

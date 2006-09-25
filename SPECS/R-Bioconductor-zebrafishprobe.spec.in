@@ -1,11 +1,11 @@
-#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.3 2006/07/15 01:55:20 boconnor Exp $
+#$Id: R-Bioconductor-zebrafishprobe.spec.in,v 1.4 2006/09/25 20:39:31 jmendler Exp $
 %define	base	zebrafishprobe
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Jared Fox <jaredfox@ucla.edu>
 Version: 1.1
-Release: 1.1.%{distro}
+Release: %{revision}.%{distro}
 Name: R-Bioconductor-%{base}
 Summary: A package containing an environment represeting the %{base} probes.
 Group: Applications/Engineering

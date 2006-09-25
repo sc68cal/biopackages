@@ -1,11 +1,11 @@
-#$Id: postgresql-slony.spec.in,v 1.1 2006/09/22 01:36:56 jmendler Exp $
+#$Id: postgresql-slony.spec.in,v 1.2 2006/09/25 20:38:05 jmendler Exp $
 %define postgresql_version 7.4.7
 %define postgresql_release 3
 
 Vendor: biopackages.net
 Packager: Allen Day <allenday@ucla.edu>
 Version: 1.0.5
-Release: 4.%{distro}
+Release: %{revision}.%{distro}
 Name: postgresql-slony
 Summary: A replication system for PostgreSQL
 URL: http://gborg.postgresql.org/project/slony1/projdisplay.php
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir};
 rm -rf $RPM_BUILD_ROOT
 
 $Log: postgresql-slony.spec.in,v $
+Revision 1.2  2006/09/25 20:38:05  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/22 01:36:56  jmendler
 import from testing
 

@@ -1,9 +1,9 @@
-#$Id: R-gregmisc.spec.in,v 1.2 2006/09/22 01:39:25 jmendler Exp $
+#$Id: R-gregmisc.spec.in,v 1.3 2006/09/25 20:40:05 jmendler Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
 Version: 2.0.6
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Name: R-gregmisc
 Summary: The gregmisc bundle is a repository for a variety of useful functions. See the individual packages for more details.
 Group: Applications/Engineering
@@ -39,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-gregmisc.spec.in,v $
+Revision 1.3  2006/09/25 20:40:05  jmendler
+fixed Release string
+
 Revision 1.2  2006/09/22 01:39:25  jmendler
 noarch
 

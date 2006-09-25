@@ -1,9 +1,9 @@
-#$Id: R-RNetCDF.spec.in,v 1.1 2006/09/22 01:45:38 jmendler Exp $
+#$Id: R-RNetCDF.spec.in,v 1.2 2006/09/25 20:42:27 jmendler Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
 Version: 1.1
-Release: 3.%{distro}
+Release: %{revision}.%{distro}
 Name: R-RNetCDF
 Summary: R Interface to NetCDF Datasets
 Group: Applications/Engineering
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RNetCDF.spec.in,v $
+Revision 1.2  2006/09/25 20:42:27  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/22 01:45:38  jmendler
 import from testing
 
