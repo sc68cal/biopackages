@@ -1,10 +1,10 @@
-#$Id: perl-RDFStore.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+#$Id: perl-RDFStore.spec.in,v 1.2 2006/09/25 20:26:38 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: RDF storage Perl library
 Name: perl-RDFStore
 Version: 0.50
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -95,7 +95,7 @@ Parts copyright (c) 1991-2000 iMatix Corporation.
 
 This product uses parts of the iMatix SFL, Copyright 1991-2000 iMatix Corporation <http://www.imatix.com>.
 
-$Id: perl-RDFStore.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+$Id: perl-RDFStore.spec.in,v 1.2 2006/09/25 20:26:38 jmendler Exp $
 
 
 %prep
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-RDFStore.spec.in,v $
+Revision 1.2  2006/09/25 20:26:38  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/11 17:52:01  jmendler
 import from testing
 

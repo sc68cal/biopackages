@@ -1,11 +1,11 @@
-#$Id: perl-Object-Signature.spec.in,v 1.5 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Object-Signature.spec.in,v 1.6 2006/09/25 20:24:51 jmendler Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Object-Signature
 Version: 1.03
-Release: 1.1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries

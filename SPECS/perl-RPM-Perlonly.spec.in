@@ -1,10 +1,10 @@
-#$Id: perl-RPM-Perlonly.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+#$Id: perl-RPM-Perlonly.spec.in,v 1.2 2006/09/25 20:28:39 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-RPM-Perlonly
 Version: 1.0.1
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-RPM-Perlonly.spec.in,v $
+Revision 1.2  2006/09/25 20:28:39  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/11 17:52:01  jmendler
 import from testing
 

@@ -1,10 +1,10 @@
-#$Id: perl-Shuffle.spec.in,v 1.1 2006/09/11 17:52:01 jmendler Exp $
+#$Id: perl-Shuffle.spec.in,v 1.2 2006/09/25 20:30:07 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Shuffle
 Version: 1.4
-Release: 1.%{distro}
+Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Shuffle.spec.in,v $
+Revision 1.2  2006/09/25 20:30:07  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/11 17:52:01  jmendler
 import from testing
 

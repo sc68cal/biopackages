@@ -1,10 +1,10 @@
-#$Id: perl-UNIVERSAL-exports.spec.in,v 1.1 2006/09/21 04:11:10 jmendler Exp $
+#$Id: perl-UNIVERSAL-exports.spec.in,v 1.2 2006/09/25 20:32:42 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-UNIVERSAL-exports
 Version: 0.03
-Release: 1.%{distro} 
+Release: %{revision}.%{distro} 
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-UNIVERSAL-exports.spec.in,v $
+Revision 1.2  2006/09/25 20:32:42  jmendler
+fixed Release string
+
 Revision 1.1  2006/09/21 04:11:10  jmendler
 import from testing
 

@@ -1,10 +1,10 @@
-#$Id: perl-NTLM.spec.in,v 1.2 2006/09/11 17:18:39 jmendler Exp $
+#$Id: perl-NTLM.spec.in,v 1.3 2006/09/25 20:24:04 jmendler Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-NTLM
 Version: 1.02
-Release: %{version}.%{distro} 
+Release: %{revision}.%{distro} 
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-NTLM.spec.in,v $
+Revision 1.3  2006/09/25 20:24:04  jmendler
+fixed Release string
+
 Revision 1.2  2006/09/11 17:18:39  jmendler
 noarch
 
