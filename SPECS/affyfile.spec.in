@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.8 2006/09/14 19:32:55 allenday Exp $
+#$Id: affyfile.spec.in,v 1.9 2006/09/26 23:09:45 boconnor Exp $
 Name: affyfile
 Epoch: 1
 Version: 2
@@ -11,6 +11,11 @@ Source0: FileParsersDocs.zip
 Source1: FileParsersSampleCode.zip
 Source2: FileParsersSource.zip
 Source3: affyfile-Makefile
+Source4: cel-convert.cpp
+Source5: celsniff.cpp
+Source6: cel2pqi.cpp
+Source7: hash.h
+Source8: hash.cpp
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gcc-c++, make, biopackages, unzip
 
@@ -28,6 +33,11 @@ cp %{SOURCE0} .
 cp %{SOURCE1} .
 cp %{SOURCE2} .
 cp %{SOURCE3} ./Makefile
+cp %{SOURCE4} .
+cp %{SOURCE5} .
+cp %{SOURCE6} .
+cp %{SOURCE7} .
+cp %{SOURCE8} .
 for i in *.zip; do unzip -o $i; done
 
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}
@@ -51,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 $Log: affyfile.spec.in,v $
+Revision 1.9  2006/09/26 23:09:45  boconnor
+I had these changes on my laptop and I'm checking them in, someone revert if they aren't current
+
 Revision 1.8  2006/09/14 19:32:55  allenday
 splitting out cel* utilities
 
