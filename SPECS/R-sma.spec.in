@@ -1,0 +1,42 @@
+#$Id: R-sma.spec.in,v 1.1 2006/09/27 04:05:15 jmendler Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.5.14
+Release: %{revision}.%{distro}
+Name: R-sma
+Summary: R Statistical Microarray Analysis library
+Group: Applications/Engineering
+Copyright: GPL
+URL: http://www.r-project.org
+#Source0: sma_0.5.14.ar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
+
+%description
+R Statistical Microarray Analysis library
+
+%prep
+%setup -T -c
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+echo "install.packages('sma','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-sma.spec.in,v $
+Revision 1.1  2006/09/27 04:05:15  jmendler
+import from testing
+
