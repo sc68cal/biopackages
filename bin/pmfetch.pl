@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: pmfetch.pl,v 1.3 2006/09/13 06:01:18 boconnor Exp $
+#$Id: pmfetch.pl,v 1.4 2006/10/03 06:52:33 allenday Exp $
 use strict;
 use CPANPLUS::Backend;
 use File::Copy;
@@ -129,7 +129,8 @@ close(SPEC);
 
 
 __DATA__
-#$Id: pmfetch.pl,v 1.3 2006/09/13 06:01:18 boconnor Exp $
+#$Id: pmfetch.pl,v 1.4 2006/10/03 06:52:33 allenday Exp $
+%define _unpackaged_files_terminate_build 0
 Distribution: @@DISTRIBUTION@@
 Vendor: @@VENDOR@@
 Summary: @@SUMMARY@@
@@ -139,7 +140,9 @@ Release: %{revision}.%{distro}
 Packager: @@EMAIL@@
 License: @@LICENSE@@
 Group: Development/Libraries
+Epoch: 0
 URL: http://search.cpan.org/dist/@@NAME@@/
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 @@REQUIRES@@
@@ -154,6 +157,7 @@ Source0: @@SOURCE@@
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -194,10 +198,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: pmfetch.pl,v $
-Revision 1.3  2006/09/13 06:01:18  boconnor
-Added a status printout, I found that, at least on CentOS4, this script doesn't work.  It seems to hang when using CPANPLUS.  I didn't have time to debug.
-
-Revision 1.2  2006/09/07 17:02:39  boconnor
-Updates to pm spec file generators
-
+Revision 1.4  2006/10/03 06:52:33  allenday
+changelog
 
