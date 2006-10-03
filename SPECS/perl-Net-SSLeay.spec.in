@@ -1,4 +1,4 @@
-#$Id: perl-Net-SSLeay.spec.in,v 1.9 2006/10/03 07:11:50 allenday Exp $
+#$Id: perl-Net-SSLeay.spec.in,v 1.10 2006/10/03 07:17:39 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Perl extension for using OpenSSL 
@@ -15,13 +15,14 @@ BuildRequires: perl, biopackages
 BuildRequires: openssl, openssl-devel
 Requires: openssl
 Source0: Net_SSLeay.pm-%{version}.tar.gz
+Patch0: Net_SSLeay.pm-%{version}.patch
 
 %description
 README - Net::SSLeay Perl module for using OpenSSL
 
 13.6.2003, Sampo Kellomaki <sampo@symlabs.com>
 Version: 1.16
-$Id: perl-Net-SSLeay.spec.in,v 1.9 2006/10/03 07:11:50 allenday Exp $
+$Id: perl-Net-SSLeay.spec.in,v 1.10 2006/10/03 07:17:39 allenday Exp $
 
 1.23: tested against openssl-0.9.6j and openssl-0.9.7b
 ...
@@ -399,6 +400,7 @@ http://lists.alioth.debian.org/mailman/listinfo/net-ssleay-devel
 
 %prep
 %setup -q -n Net_SSLeay.pm-%{version}
+%patch0 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" echo '/usr/include/openssl/' | perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -443,6 +445,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Net-SSLeay.spec.in,v $
+Revision 1.10  2006/10/03 07:17:39  allenday
+patch input
+
 Revision 1.9  2006/10/03 07:11:50  allenday
 input
 
