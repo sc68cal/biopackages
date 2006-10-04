@@ -1,4 +1,4 @@
-#$Id: perl-Test-Base.spec.in,v 1.4 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Test-Base.spec.in,v 1.5 2006/10/04 22:43:42 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -14,7 +14,7 @@ URL: http://search.cpan.org/dist/Test-Base/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Spiffy
-Requires: perl-Spiffy
+Requires: perl-Spiffy, perl-Module-Install
 
 Source0: Test-Base-0.50.tar.gz
 
@@ -682,6 +682,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-Base.spec.in,v $
+Revision 1.5  2006/10/04 22:43:42  bpbuild
+added Requirement
+
 Revision 1.4  2006/07/15 01:55:22  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
