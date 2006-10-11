@@ -1,4 +1,4 @@
-#$Id: gd.spec.in,v 1.1 2006/09/13 07:43:48 boconnor Exp $
+#$Id: gd.spec.in,v 1.2 2006/10/11 23:45:16 bpbuild Exp $
 Summary: A graphics library for quick creation of PNG or JPEG images.
 Name: gd
 Version: 2.0.28
@@ -9,7 +9,7 @@ License: BSD-style
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-root
 Prereq: /sbin/ldconfig
-BuildPrereq: freetype-devel, libjpeg-devel, libpng-devel, zlib-devel
+BuildRequires: freetype-devel, libjpeg-devel, libpng-devel, zlib-devel
 %define shlibver %(echo %{version} | cut -f-2 -d.)
 
 %description
@@ -191,6 +191,9 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/libgd.la
 #- built for 5.2
 
 $Log: gd.spec.in,v $
+Revision 1.2  2006/10/11 23:45:16  bpbuild
+changed tag to BuildRequires
+
 Revision 1.1  2006/09/13 07:43:48  boconnor
 Added gd because FC2 has < 2.0.28 which is what perl-GD requires.
 
