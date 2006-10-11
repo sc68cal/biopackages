@@ -144,7 +144,7 @@ sub parse_req {
 	if ($result) { die "There was an error building $package_name with error code $result\n"; }
         if ($install) {
           #print "$version_str $id_str $distro_str $arch_str\n\n";
-	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/) {
+	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
               print("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
