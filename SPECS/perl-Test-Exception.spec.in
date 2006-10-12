@@ -1,4 +1,4 @@
-#$Id: perl-Test-Exception.spec.in,v 1.2 2006/09/11 18:04:11 jmendler Exp $
+#$Id: perl-Test-Exception.spec.in,v 1.3 2006/10/12 00:58:32 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,7 +12,9 @@ URL: http://search.cpan.org/dist/Test-Exception/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 BuildArch: noarch
-Requires: perl-Test-Builder-Tester, perl-Sub-Uplevel
+#Requires: perl-Test-Builder-Tester, perl-Sub-Uplevel
+%{?fc2:Requires: perl-Test-Builder-Tester, perl-Sub-Uplevel}
+%{?fc5:Requires: perl-Sub-Uplevel}
 
 Source0: Test-Exception-%{version}.tar.gz
 
@@ -272,6 +274,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-Exception.spec.in,v $
+Revision 1.3  2006/10/12 00:58:32  bpbuild
+multiplatform
+
 Revision 1.2  2006/09/11 18:04:11  jmendler
 noarch
 
