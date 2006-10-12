@@ -1,4 +1,4 @@
-#$Id: perl-Template-Toolkit.spec.in,v 1.7 2006/07/15 01:55:22 boconnor Exp $
+#$Id: perl-Template-Toolkit.spec.in,v 1.8 2006/10/12 00:15:41 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, perl-AppConfig, biopackages
 Requires: perl-AppConfig, perl-GD-Graph3d, perl-GDGraph, perl-GDTextUtil
 Requires: perl-XML-RSS, perl-Pod-POM, perl-Text-Autoformat, perl-XML-Simple
+Requires: perl-DBI, perl-XML-DOM, perl-XML-XPATH
 Source0: Template-Toolkit-2.14.tar.gz
 
 %description
@@ -495,6 +496,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Template-Toolkit.spec.in,v $
+Revision 1.8  2006/10/12 00:15:41  bpbuild
+install dep
+
 Revision 1.7  2006/07/15 01:55:22  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
