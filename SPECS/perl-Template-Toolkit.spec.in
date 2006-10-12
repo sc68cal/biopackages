@@ -1,4 +1,4 @@
-#$Id: perl-Template-Toolkit.spec.in,v 1.8 2006/10/12 00:15:41 bpbuild Exp $
+#$Id: perl-Template-Toolkit.spec.in,v 1.9 2006/10/12 00:27:33 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, perl-AppConfig, biopackages
 Requires: perl-AppConfig, perl-GD-Graph3d, perl-GDGraph, perl-GDTextUtil
 Requires: perl-XML-RSS, perl-Pod-POM, perl-Text-Autoformat, perl-XML-Simple
-Requires: perl-DBI, perl-XML-DOM, perl-XML-XPATH
+Requires: perl-DBI, perl-XML-DOM, perl-XML-XPath
 Source0: Template-Toolkit-2.14.tar.gz
 
 %description
@@ -496,6 +496,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Template-Toolkit.spec.in,v $
+Revision 1.9  2006/10/12 00:27:33  bpbuild
+fixed Requires
+
 Revision 1.8  2006/10/12 00:15:41  bpbuild
 install dep
 
