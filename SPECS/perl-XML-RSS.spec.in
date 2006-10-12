@@ -1,4 +1,4 @@
-#$Id: perl-XML-RSS.spec.in,v 1.4 2006/09/25 20:34:39 jmendler Exp $
+#$Id: perl-XML-RSS.spec.in,v 1.5 2006/10/12 00:10:46 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,7 +12,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/XML-RSS/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Test-Manifest
+BuildRequires: perl, biopackages, perl-Test-Manifest, perl-XML-Parser
 Requires: perl-Test-Manifest
 
 Source0: XML-RSS-1.05.tar.gz
