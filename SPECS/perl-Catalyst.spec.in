@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst.spec.in,v 1.17 2006/09/19 23:04:00 allenday Exp $
+#$Id: perl-Catalyst.spec.in,v 1.18 2006/10/12 01:15:55 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -14,8 +14,12 @@ URL: http://search.cpan.org/dist/Catalyst/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
-Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Time-HiRes, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
+BuildRequires: perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
+%{ifdistro_release fedora 2}BuildRequires: perl-Time-HiRes
+
+Requires:      perl-UNIVERSAL-require, perl-Class-Accessor, perl-Class-Data-Inheritable, perl-Class-Inspector, perl-File-Modified, perl-HTTP-Body, perl-libwww-perl >= 5.805, perl-HTTP-Request-AsCGI, perl-MIME-Types, perl-Module-Pluggable-Fast, perl-Path-Class, perl-Template-Toolkit, perl-Text-SimpleTable, perl-Test-MockObject, perl-Test-NoWarnings, perl-Tree-Simple, perl-Tree-Simple-VisitorFactory, perl-URI >= 1.35, perl-File-Copy-Recursive, perl-Module-Install, perl-YAML >= 0.58, perl-Data-Visitor, perl-Catalyst-Engine-Apache
+%{ifdistro_release fedora 2}Requires: perl-Time-HiRes
+
 
 Source0: Catalyst-%{version}.tar.gz
 
@@ -76,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst.spec.in,v $
+Revision 1.18  2006/10/12 01:15:55  bpbuild
+multiplatform
+
 Revision 1.17  2006/09/19 23:04:00  allenday
 oops,dup
 
