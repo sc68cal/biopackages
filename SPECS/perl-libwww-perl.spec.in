@@ -1,4 +1,4 @@
-#$Id: perl-libwww-perl.spec.in,v 1.8 2006/10/13 00:29:03 bpbuild Exp $
+#$Id: perl-libwww-perl.spec.in,v 1.9 2006/10/13 00:40:34 bpbuild Exp $
 %define _use_internal_dependency_generator 0
 Summary: A Perl interface to the World-Wide Web.
 Name: perl-libwww-perl
@@ -13,7 +13,7 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/perl-libwww-perl-buildroot/
 BuildRequires: perl
 Requires: perl
-Requires: perl(URI), perl(Digest::MD5)
+Requires: perl(URI)
 Requires: perl(HTML::Parser)
 Requires: perl(HTML::Entities)
 BuildRequires: perl(MIME::Base64)
@@ -59,6 +59,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-libwww-perl.spec.in,v $
+Revision 1.9  2006/10/13 00:40:34  bpbuild
+removed dep
+
 Revision 1.8  2006/10/13 00:29:03  bpbuild
 revived
 
