@@ -2,7 +2,7 @@
 use strict;
 use Data::Dumper;
 use constant USAGE => <<"UUU";
-$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip>
+$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip> <File-Listing-Packages-To-Not-Yum-Install> <Dep-Tree-Output-File> 
 
 This script starts with a certain package name and attempts to build all the
 required packages that the given package both needs for build requirements and
@@ -11,10 +11,10 @@ required to build this package are installed.
 UUU
 
 # Usage
-if (scalar(@ARGV) < 3) { print USAGE; exit(1); }
+if (scalar(@ARGV) < 5) { print USAGE; exit(1); }
 
 # The spec file to start with (name without extension)
-my ($arch_str_universal, $spec_file, $no_build_file) = @ARGV;
+my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $dep_tree_file) = @ARGV;
 
 # Hashes to store dependency tree
 my $req = {};
@@ -22,6 +22,10 @@ my $missing_req = {};
 
 # keep track of what's been yum installed
 my $yum_installed = {};
+
+# keep a list of what not to yum install
+
+my $no_yum_install = read_no_build($no_yum_install_file);
 
 # A list of modules not to build
 my $no_build = {};
@@ -35,7 +39,7 @@ my %parsed_before;
 my $install = 1;
 
 # A file for the dependency tree summary
-open TREE, ">dep_tree.txt" or die;
+open TREE, ">$dep_tree_file" or die;
 
 # distro string
 my $distro_str = `bp-distro`;
@@ -49,9 +53,8 @@ parse_req($spec_file, $req, $missing_req, "");
 print "\nBUILD COMPLETE!\n\n";
 
 # Print out missing requirements
-print "\nMissing Req:\n";
-print_req($missing_req);
-
+print "\nMISSING REQS:\n";
+print_req($missing_req); 
 close TREE;
 
 
@@ -61,7 +64,7 @@ close TREE;
 sub print_req{
   my ($req) = @_;
   foreach my $key (keys %{$req}) {
-    print "$key\n";
+    print "+$key\n";
   }
 }
 
@@ -70,20 +73,43 @@ sub parse_req {
   my ($file_name, $req, $missing_req, $indent) = @_;
   my @files = glob("SPECS/$file_name.spec.in");
   foreach my $file (@files) {
-    if (!-e $file) {
-      $missing_req->{"$file_name"} = 1; 
+    my $yum_install_status = 0;
+    # yum install if there is no spec.in file or it's not in the no_yum_install list
+    if (!-e $file || !defined($no_yum_install->{$file_name})) {
+      print "\n+Trying to yum install: $file_name\n\n";
+      # only missing if there is no spec file
+      if (!-e $file ) { 
+        $missing_req->{"$file_name"} = 1; 
+      }
       print TREE "$indent** $file_name **\n";
       # so there is a dependency that isn't part of the SPEC.in 
       # so it must be either a system dep (e.g. provided by the distro)
       # or it's simply not yet imported into the biopackages repo
       # try to install with yum, it will just fail if it's not available
-      print "Trying to yum install: $file_name\n";
-      if (!defined $yum_installed->{$file_name}) { system "sudo yum -y install $file_name"; $yum_installed->{$file_name} = 1; }
+      if (!defined $yum_installed->{$file_name}) {
+        $yum_install_status = system "sudo yum -y install $file_name >& /tmp/yum_output.txt";
+        open YUM, "</tmp/yum_output.txt" or die;
+        my $output_txt;
+        while(<YUM>) {
+          chomp;
+          $output_txt .= $_;
+        }
+        close YUM;
+        if ($output_txt =~ /Cannot find a package matching/) { $yum_install_status = 1; } 
+        $yum_installed->{$file_name} = 1;
+      }
+      else { print "\n+Previously yum installed\n\n"; }
     }
-    elsif (!$parsed_before{$file} && !defined($no_build->{$file_name})) {
+    # otherwise there is either a spec file (taken care of below) or it's in the no_yum_install 
+    # so essentially the yum failed and the status is non-zero
+    else {
+     print "\n+Coundn't yum install: $file_name\n\n";
+     $yum_install_status = 1;
+    }
+    if ($yum_install_status != 0 && !$parsed_before{$file} && !defined($no_build->{$file_name})) {
       $parsed_before{$file} = 1;
       $req->{"$file"} = 1;
-
+      print "\n+Trying to build from spec: $file_name\n\n";
       print TREE "$indent$file_name\n";
 
       # vars to hold version string
@@ -126,7 +152,7 @@ sub parse_req {
 	}
         elsif ($_ =~ /^BuildArch:\s+(.*)$/) {
           $arch_str = $1;
-          print "Setting arch string to $arch_str for $spec_file\n";
+          print "\n+Setting arch string to $arch_str for $spec_file\n\n";
 	}
       }
       close IN;
@@ -138,7 +164,7 @@ sub parse_req {
       $file =~ /SPECS\/(\S+).spec.in$/;
       my $package_name = $1;
       if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
-        print "make SPECS/$package_name.spec SPECS/$package_name.built\n";
+        print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
         my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
 	if ($result) { die "There was an error building $package_name with error code $result\n"; }
@@ -146,12 +172,12 @@ sub parse_req {
           #print "$version_str $id_str $distro_str $arch_str\n\n";
 	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
-              print("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n");
+              print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
 	    }
 	  } else {
 	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
-              print ("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n");
+              print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
 	    }
 	  }
