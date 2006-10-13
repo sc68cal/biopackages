@@ -1,4 +1,4 @@
-#$Id: perl-libwww-perl.spec.in,v 1.9 2006/10/13 00:40:34 bpbuild Exp $
+#$Id: perl-libwww-perl.spec.in,v 1.10 2006/10/13 00:43:58 bpbuild Exp $
 %define _use_internal_dependency_generator 0
 Summary: A Perl interface to the World-Wide Web.
 Name: perl-libwww-perl
@@ -16,7 +16,6 @@ Requires: perl
 Requires: perl(URI)
 Requires: perl(HTML::Parser)
 Requires: perl(HTML::Entities)
-BuildRequires: perl(MIME::Base64)
 BuildRequires: perl(HTML::Entities)
 Provides: perl(Win32), perl(Authen::NTLM)
 
@@ -59,6 +58,9 @@ fi
 %defattr(-,root,root)
 
 $Log: perl-libwww-perl.spec.in,v $
+Revision 1.10  2006/10/13 00:43:58  bpbuild
+removed dep
+
 Revision 1.9  2006/10/13 00:40:34  bpbuild
 removed dep
 
