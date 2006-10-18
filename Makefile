@@ -1,11 +1,9 @@
-#$Id: Makefile,v 1.16 2006/10/18 23:18:19 allenday Exp $
+#$Id: Makefile,v 1.17 2006/10/18 23:57:53 allenday Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
-TIMESTAMP_BEGIN=perl -e '($$f,$$e,$$d,$$c,$$b,$$a)=localtime();print "#rpmbuild begin ".join(":",$$a+1900,$$b,$$c,$$d,$$e,$$f),"\n"'
-TIMESTAMP_END=perl -e '($$f,$$e,$$d,$$c,$$b,$$a)=localtime();print "#rpmbuild end ".join(":",$$a+1900,$$b,$$c,$$d,$$e,$$f),"\n"'
 
 ####################################
 #main build targets
