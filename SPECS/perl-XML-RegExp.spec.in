@@ -1,7 +1,7 @@
-#$Id: perl-XML-RegExp.spec.in,v 1.1 2006/10/23 03:50:02 bpbuild Exp $
+#$Id: perl-XML-RegExp.spec.in,v 1.2 2006/10/23 03:58:53 bpbuild Exp $
 Name:           perl-XML-RegExp
 Version:        0.03
-Release:        {revision}.{distro}
+Release:        %{revision}.%{distro}
 Summary:        Regular expressions for XML tokens
 Group:          Development/Libraries
 License:        GPL or Artistic
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/XML::RegExp.3*
 
 $Log: perl-XML-RegExp.spec.in,v $
+Revision 1.2  2006/10/23 03:58:53  bpbuild
+fixed Release string
+
 Revision 1.1  2006/10/23 03:50:02  bpbuild
 imported from fc5-extras
 
