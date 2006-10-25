@@ -1,4 +1,4 @@
-#$Id: perl-XML-LibXSLT.spec.in,v 1.3 2006/09/21 04:05:29 jmendler Exp $
+#$Id: perl-XML-LibXSLT.spec.in,v 1.4 2006/10/25 19:28:16 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxslt library
@@ -10,7 +10,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-LibXSLT/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-XML-LibXML, libxslt-devel
+BuildRequires: perl, biopackages, perl-XML-LibXML > 1.57, libxslt-devel
 Requires: libxslt
 Source0: XML-LibXSLT-1.57.tar.gz
 
