@@ -1,4 +1,4 @@
-#$Id: perl-GraphViz.spec.in,v 1.1 2006/09/07 02:13:22 jmendler Exp $
+#$Id: perl-GraphViz.spec.in,v 1.2 2006/10/26 00:25:33 bpbuild Exp $
 # Authority: dries
 # Upstream: Leon Brocard <leon$astray,com>
 
@@ -21,7 +21,7 @@ Source: http://www.cpan.org/modules/by-module/GraphViz/GraphViz-%{version}.tar.g
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: perl, graphviz, biopackages
-Requires: graphviz, perl-IPC-Run, perl-Time-HiRes
+Requires: graphviz, perl-IPC-Run, perl-Time-HiRes, perl-Parse-RecDescent, perl-XML-Twig
 
 %description
 This module provides an interface to layout and image generation of
@@ -58,6 +58,9 @@ http://www.research.att.com/sw/tools/graphviz/).
 %{perl_vendorlib}/GraphViz/
 
 $Log: perl-GraphViz.spec.in,v $
+Revision 1.2  2006/10/26 00:25:33  bpbuild
+additional install Requirements
+
 Revision 1.1  2006/09/07 02:13:22  jmendler
 import from testing
 
