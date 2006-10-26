@@ -1,4 +1,4 @@
-#$Id: perl-Class-DBI-Pager.spec.in,v 1.4 2006/10/26 00:01:40 bpbuild Exp $
+#$Id: perl-Class-DBI-Pager.spec.in,v 1.5 2006/10/26 00:03:19 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,7 +12,7 @@ URL: http://search.cpan.org/dist/Class-DBI-Pager/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-Data-Page
 BuildArch: noarch
-Requires: perl-Class-DBI
+Requires: perl-Class-DBI >= 0.90
 
 Source0: Class-DBI-Pager-0.06.tar.gz
 
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Class-DBI-Pager.spec.in,v $
+Revision 1.5  2006/10/26 00:03:19  bpbuild
+requires a specific version
+
 Revision 1.4  2006/10/26 00:01:40  bpbuild
 missing Requires
 
