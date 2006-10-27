@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool-Drosophila_2.spec.in,v 1.1 2006/10/27 23:12:37 allenday Exp $
+#$Id: microarray-normalization-pool-Drosophila_2.spec.in,v 1.2 2006/10/27 23:14:21 allenday Exp $
 %define platform Drosophila_2
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool-%{platform}
@@ -13,7 +13,7 @@ URL: http://www.genome.ucsc.edu
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: biopackages
-
+ 
 %description
 %{platform} Microarrays to be used for quantification/normalization with Bioconductor
 
@@ -44,6 +44,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_B
 %preun 
 
 $Log: microarray-normalization-pool-Drosophila_2.spec.in,v $
+Revision 1.2  2006/10/27 23:14:21  allenday
+noop
+
 Revision 1.1  2006/10/27 23:12:37  allenday
 import
 
