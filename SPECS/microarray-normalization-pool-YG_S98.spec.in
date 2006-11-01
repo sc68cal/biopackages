@@ -1,4 +1,4 @@
-#$Id: microarray-normalization-pool-YG_S98.spec.in,v 1.1 2006/01/09 19:54:54 allenday Exp $
+#$Id: microarray-normalization-pool-YG_S98.spec.in,v 1.2 2006/11/01 21:26:25 fridkis Exp $
 %define platform YG_S98
 Summary: Microarrays to be used for quantification/normalization with Bioconductor
 Name: microarray-normalization-pool-%{platform}
@@ -13,7 +13,7 @@ URL: http://www.genome.ucsc.edu
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: biopackages
-
+ 
 %description
 %{platform} Microarrays to be used for quantification/normalization with Bioconductor
 
@@ -43,7 +43,9 @@ find $RPM_BUILD_ROOT/%{_datadir}/microarray/%{platform} -type f | sed "s@^$RPM_B
 
 %preun 
 
+
 $Log: microarray-normalization-pool-YG_S98.spec.in,v $
-Revision 1.1  2006/01/09 19:54:54  allenday
-import
+Revision 1.2  2006/11/01 21:26:25  fridkis
+just incrementing the version number
+
 
