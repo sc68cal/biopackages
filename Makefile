@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.18 2006/11/14 02:44:21 bpbuild Exp $
+#$Id: Makefile,v 1.19 2006/11/14 02:47:16 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -17,9 +17,6 @@ buildclean ::
 
 sources ::
 	perl -e 'print $$ENV{HOSTNAME}=~ /ucla.edu$$/ ? "make symlink\n" : "make rsync\n"'  | /bin/bash
-
-sources-local ::
-	ln -s /home/bpbuild/SOURCES.{small,large}/* /usr/src/biopackages/SOURCES/
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
