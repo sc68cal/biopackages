@@ -1,4 +1,4 @@
-#$Id: perl-Tree-Simple.spec.in,v 1.4 2006/11/14 21:55:04 bpbuild Exp $
+#$Id: perl-Tree-Simple.spec.in,v 1.5 2006/11/14 21:56:51 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Tree-Simple/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Scalar-Util
+BuildRequires: perl, biopackages
 
 Source0: Tree-Simple-1.16.tar.gz
 
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tree-Simple.spec.in,v $
+Revision 1.5  2006/11/14 21:56:51  bpbuild
+removing build dep as well
+
 Revision 1.4  2006/11/14 21:55:04  bpbuild
 dep conflicts with perl on both fc2 and centos4
 
