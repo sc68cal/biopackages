@@ -1,4 +1,4 @@
-#$Id: perl-DBI.spec.in,v 1.4 2006/09/04 11:22:59 boconnor Exp $
+#$Id: perl-DBI.spec.in,v 1.5 2006/11/14 17:08:15 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,7 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/DBI/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-Win32-ODBC, perl-PlRPC
+Requires: perl-Win32-ODBC, perl-PlRPC, perl-Apache
 Source0: DBI-1.47.tar.gz
 
 %description
@@ -203,6 +203,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBI.spec.in,v $
+Revision 1.5  2006/11/14 17:08:15  bpbuild
+added install dep
+
 Revision 1.4  2006/09/04 11:22:59  boconnor
 Updated deps
 
