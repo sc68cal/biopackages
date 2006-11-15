@@ -1,4 +1,4 @@
-#$Id: perl-Test-WWW-Mechanize.spec.in,v 1.4 2006/07/15 01:55:23 boconnor Exp $
+#$Id: perl-Test-WWW-Mechanize.spec.in,v 1.5 2006/11/15 20:42:38 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -58,7 +58,6 @@ it under the same terms as Perl itself.
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -99,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Test-WWW-Mechanize.spec.in,v $
+Revision 1.5  2006/11/15 20:42:38  bpbuild
+remove make test
+
 Revision 1.4  2006/07/15 01:55:23  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
