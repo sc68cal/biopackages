@@ -1,4 +1,4 @@
-#$Id: perl-Net-SSLeay.spec.in,v 1.10 2006/10/03 07:17:39 allenday Exp $
+#$Id: perl-Net-SSLeay.spec.in,v 1.11 2006/11/17 22:25:07 bpbuild Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Perl extension for using OpenSSL 
@@ -11,7 +11,7 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Net-Dict/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, gcc
 BuildRequires: openssl, openssl-devel
 Requires: openssl
 Source0: Net_SSLeay.pm-%{version}.tar.gz
@@ -22,7 +22,7 @@ README - Net::SSLeay Perl module for using OpenSSL
 
 13.6.2003, Sampo Kellomaki <sampo@symlabs.com>
 Version: 1.16
-$Id: perl-Net-SSLeay.spec.in,v 1.10 2006/10/03 07:17:39 allenday Exp $
+$Id: perl-Net-SSLeay.spec.in,v 1.11 2006/11/17 22:25:07 bpbuild Exp $
 
 1.23: tested against openssl-0.9.6j and openssl-0.9.7b
 ...
@@ -445,6 +445,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Net-SSLeay.spec.in,v $
+Revision 1.11  2006/11/17 22:25:07  bpbuild
+needs gcc
+
 Revision 1.10  2006/10/03 07:17:39  allenday
 patch input
 
