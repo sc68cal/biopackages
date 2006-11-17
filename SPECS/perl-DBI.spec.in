@@ -1,4 +1,4 @@
-#$Id: perl-DBI.spec.in,v 1.7 2006/11/17 00:17:24 bpbuild Exp $
+#$Id: perl-DBI.spec.in,v 1.8 2006/11/17 00:23:56 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -159,6 +159,7 @@ End.
 
 %prep
 %setup -q -n DBI-%{version}
+rm lib/DBI/ProfileDumper/Apache.pm
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -203,6 +204,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBI.spec.in,v $
+Revision 1.8  2006/11/17 00:23:56  bpbuild
+removed Apache.pm
+
 Revision 1.7  2006/11/17 00:17:24  bpbuild
 removed perl-Apache
 
