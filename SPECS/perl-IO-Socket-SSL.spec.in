@@ -1,4 +1,4 @@
-#$Id: perl-IO-Socket-SSL.spec.in,v 1.1 2006/10/03 07:23:43 allenday Exp $
+#$Id: perl-IO-Socket-SSL.spec.in,v 1.2 2006/11/17 22:07:02 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 BuildRequires: perl-Net-SSLeay
 Requires: perl-Net-SSLeay
+BuildArch: noarch
 Source0: IO-Socket-SSL-1.01.tar.gz
 
 %description
@@ -101,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-IO-Socket-SSL.spec.in,v $
+Revision 1.2  2006/11/17 22:07:02  bpbuild
+added noarch
+
 Revision 1.1  2006/10/03 07:23:43  allenday
 import
 
