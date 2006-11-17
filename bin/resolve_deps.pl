@@ -2,7 +2,7 @@
 use strict;
 use Data::Dumper;
 use constant USAGE => <<"UUU";
-$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip> <File-Listing-Packages-To-Not-Yum-Install> <Dep-Tree-Output-File> 
+$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip> <File-Listing-Packages-To-Not-Yum-Install> <Remove-Installed-RPMs[0|1]> <Dep-Tree-Output-File> 
 
 This script starts with a certain package name and attempts to build all the
 required packages that the given package both needs for build requirements and
@@ -14,7 +14,10 @@ UUU
 if (scalar(@ARGV) < 5) { print USAGE; exit(1); }
 
 # The spec file to start with (name without extension)
-my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $dep_tree_file) = @ARGV;
+my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file) = @ARGV;
+
+# a hash to store the names of everything that was either yum installed or build and rpm installed
+my $complete_package_list = {};
 
 # Hashes to store dependency tree
 my $req = {};
@@ -39,7 +42,7 @@ my %parsed_before;
 my $install = 1;
 
 # A file for the dependency tree summary
-open TREE, ">$dep_tree_file" or die;
+open TREE, ">/tmp/foo" or die $!;
 
 # distro string
 my $distro_str = `bp-distro`;
@@ -57,6 +60,12 @@ print "\nMISSING REQS:\n";
 print_req($missing_req); 
 close TREE;
 
+# Complete list
+
+print Dumper($complete_package_list);
+if($remove_installed_rpms) {
+  print "rpm -e ", join(" ", keys(%{$complete_package_list})),"\n";
+}
 
 # Subroutines
 
@@ -96,6 +105,8 @@ sub parse_req {
         }
         close YUM;
         if ($output_txt =~ /Cannot find a package matching/) { $yum_install_status = 1; } 
+        # install was OK
+        else { $complete_package_list->{$file_name} = 1; }
         $yum_installed->{$file_name} = 1;
       }
       else { print "\n+Previously yum installed\n\n"; }
@@ -174,11 +185,13 @@ sub parse_req {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
               print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+              $complete_package_list->{$package_name} = 1;
 	    }
 	  } else {
 	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
               print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+              $complete_package_list->{$package_name} = 1;
 	    }
 	  }
           if ($result) { die "There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }

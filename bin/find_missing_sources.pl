@@ -26,7 +26,7 @@ foreach my $file (@files) {
   foreach my $source (@sources) {
     $source =~ s/\%\{name\}/$name/g;
     $source =~ s/\%\{version\}/$version/g;
-    if (!-e "SOURCES/$source") { print "Probably missing: SOURCES/$source\n"; }
+    if (!-e "SOURCES/$source") { print "Probably missing: $file SOURCES/$source\n"; }
   }
   
   close SPEC;
