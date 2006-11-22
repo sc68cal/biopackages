@@ -1,9 +1,20 @@
-#$Id: Makefile,v 1.19 2006/11/14 02:47:16 bpbuild Exp $
+#$Id: Makefile,v 1.20 2006/11/22 02:39:07 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
+SYNCHOST=neuron.genomics.ctrl.ucla.edu
+
+####################################
+#stuff for initial environment setup
+prep ::
+	echo '' >> ~/.rpmmacros
+	$(RM_I) ~/.rpmmacros
+	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
+	echo 'for d in tmp SETTINGS SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
+	$(MAKE) sources
+	$(MAKE) settings
 
 ####################################
 #main build targets
@@ -16,7 +27,10 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 
 sources ::
-	perl -e 'print $$ENV{HOSTNAME}=~ /ucla.edu$$/ ? "make symlink\n" : "make rsync\n"'  | /bin/bash
+	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "make symlink\n" : print "make rsync\n"' | /bin/bash
+
+settings ::
+	perl -e '(-e "/home/bpbuild/SETTINGS") ? print "make symlink_settings\n" : print "make rsync_settings"' | /bin/bash
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
@@ -57,6 +71,17 @@ specs ::
 	cat $< | $(PERL) bin/in2spec.pl > $@
 
 ####################################
+#synlink/rsync targets to maintain SETTINGS
+#this dir structure also has the logs dir
+symlink_settings ::
+	cd SETTINGS; ln -s /home/bpbuild/SETTINGS/* .; cd ..
+
+rsync_settings : rsync_settings_down rsync_settings_up
+rsync_settings_down ::
+	rsync -avr $(SYNCHOST):/home/bpbuild/SETTINGS/ ./SETTINGS
+rsync_settings_up ::
+	rsync -avr ./SETTINGS/ $(SYNCHOST):/home/bpbuild/SETTINGS
+
 #symlink/rsync targets to maintain SOURCES/
 symlink : symlink_clean symlink_small symlink_large
 symlink_clean : sync_clean
@@ -79,28 +104,16 @@ sync_clean ::
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 rsync_down_large ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large/ ./SOURCES.large
-	cd SOURCES
-	ln -s ../SOURCES.large/* .
-	cd ..
+	rsync -av $(SYNCHOST):/home/bpbuild/SOURCES.large/ ./SOURCES.large
+	cd SOURCES; ln -s ../SOURCES.large/* .;	cd ..
 
 rsync_down_small ::
-	rsync -av neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.small/ ./SOURCES.small
-	cd SOURCES
-	ln -s ../SOURCES.small/* .
-	cd ..
+	rsync -av $(SYNCHOST):/home/bpbuild/SOURCES.small/ ./SOURCES.small
+	cd SOURCES; ln -s ../SOURCES.small/* .; cd ..
 
 rsync_up_large ::
-	rsync -av ./SOURCES.large/ neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.large
+	rsync -av ./SOURCES.large/ $(SYNCHOST):/home/bpbuild/SOURCES.large
 
 rsync_up_small ::
-	rsync -av ./SOURCES.small/ neuron.genomics.ctrl.ucla.edu:/home/bpbuild/SOURCES.small
-
-####################################
-#stuff for initial environment setup
-prep ::
-	echo '' >> ~/.rpmmacros
-	$(RM_I) ~/.rpmmacros
-	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
-	echo 'for d in SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
+	rsync -av ./SOURCES.small/ $(SYNCHOST):/home/bpbuild/SOURCES.small
 
