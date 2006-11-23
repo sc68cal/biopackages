@@ -1,20 +1,61 @@
 #!/usr/bin/perl
 use strict;
 use Data::Dumper;
+use Getopt::Long;
 use constant USAGE => <<"UUU";
-$0 <Spec-BuildArch> <Spec-Name> <File-Listing-Packages-To-Skip> <File-Listing-Packages-To-Not-Yum-Install> <Remove-Installed-RPMs[0|1]> <Dep-Tree-Output-File> 
+
+USAGE:
+
+$0 --spec <Spec-Name-No-Extension> --arch <Spec-BuildArch> --no-build <File-Listing-Packages-To-Skip> --no-yum <File-Listing-Packages-To-Not-Yum-Install> --remove-rpms (optional, default is no) --dep-tree <Dep-Tree-Output-File> 
 
 This script starts with a certain package name and attempts to build all the
 required packages that the given package both needs for build requirements and
 also for install requirements.  At the end of this run, all the packages
 required to build this package are installed.
+
+The following are optional, if not specified $0 will attempt to automatically
+figure out reasonable values according the standard biopackages directory 
+structure. If you're building an individual package you want to provide values
+for all of these.
+
+--arch (defaults to system arch or noarch depending on the package being built)
+--no-build (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/no_build.txt)
+--no-yum (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/yum_no_install.txt)
+--remove-rpms (defaults to false, RPMs are left on the system)
+
 UUU
 
-# Usage
-if (scalar(@ARGV) < 5) { print USAGE; exit(1); }
+# common vars
+my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help);
 
-# The spec file to start with (name without extension)
-my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file) = @ARGV;
+my $arg_count = scalar(@ARGV);
+
+GetOptions ("arch=s"      => \$arch_str_universal,
+            "spec=s"      => \$spec_file,
+            "no-build=s"  => \$no_build_file,
+            "no-yum=s"    => \$no_yum_install_file,
+            "remove-rpms" => \$remove_installed_rpms,
+            "dep-tree=s"  => \$dep_tree_file,
+            "help"        => \$help,
+            );
+
+# Usage
+if ($help or $arg_count == 0) { print USAGE; exit(1); }
+
+# If resolve_deps is being called from the biopackages cluster build process then several
+# options need to be filled in
+my $distro = find_distro();
+$arch_str_universal = find_arch() if (!defined($arch_str_universal));
+$no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_build.txt" if (!defined($no_build_file));
+$no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
+$remove_installed_rpms = 0 if (!defined($remove_installed_rpms));
+$dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
+
+# LEFT OFF HERE, need to add code to bail if this is a noarch and building on an arch
+# FIXME: my getarch code isn't going to work for noarch!
+exit;
+
+
 
 # a hash to store the names of everything that was either yum installed or build and rpm installed
 my $complete_package_list = {};
@@ -237,3 +278,21 @@ sub read_no_build {
   close INPUT;
   return($result);
 }
+
+sub hostname {
+  my $hostname = `hostname`;
+  chomp($hostname);
+  my @tokens = split ".", $hostname;
+  return(\@tokens);
+}
+
+sub find_arch {
+  my $tokens = hostname();
+  return($tokens->[1]);
+}
+
+sub find_distro {
+  my  $tokens = hostname();
+  return($tokens->[0]);
+}
+
