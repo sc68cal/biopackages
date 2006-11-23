@@ -1,10 +1,11 @@
-#$Id: Makefile,v 1.20 2006/11/22 02:39:07 bpbuild Exp $
+#$Id: Makefile,v 1.21 2006/11/23 00:05:32 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
 SYNCHOST=neuron.genomics.ctrl.ucla.edu
+RECURSIVE_BUILD=bin/resolve_deps.pl
 
 ####################################
 #stuff for initial environment setup
@@ -18,6 +19,15 @@ prep ::
 
 ####################################
 #main build targets
+# triggers a .spec and .built file for each spec file on each target platform
+# also summarizes the build status of each to a log file
+cluster_buildall ::
+	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
+
+# creates an HTML output report summarizing the build status of each package based on logs
+cluster_build_report ::
+	echo 'for i in SETTINGS/*; do echo "$$i/\n"; done' | /bin/bash #LEFT OFF HERE
+
 all :: specs
 
 buildall :: specs
@@ -37,6 +47,22 @@ specs ::
 
 ####################################
 #extension rules
+# LEFT OFF HERE
+# rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
+%.rbuilt : %.spec
+	echo '$(RECURSIVE_BUILD) --spec $(subst .spec,,$<)'
+	touch $@
+	#FIXME: change echo to run
+
+# cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
+%.cbuilt : %.spec.in
+	echo 'for i in SETTINGS/*; do echo -e "#!/bin/bash\n\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > $(subst .spec.in,,$<)_$${i#SETTINGS/}.sh; echo "qsub -cwd -o /dev/null -e /dev/null -q $${i#SETTINGS/}.q $(subst .spec.in,,$<)_$${i#SETTINGS/}.sh"; done' | /bin/bash
+	echo 'for i in SETTINGS/*.i386; do file=$${i#SETTINGS/}; file=$${file%.i386}; echo -e "#!/bin/bash\n\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > $(subst .spec.in,,$<)_$$file.noarch.sh; echo "qsub -cwd -o /dev/null -e /dev/null -q $$file.noarch.q $(subst .spec.in,,$<)_$$file.noarch.sh"; done' | /bin/bash
+	touch $@
+	#FIXME: right now assuming everything is arch, need to qsub to noarch when appropriate
+	#FIXME: change the echo qsub to actual call
+	#FIXME: Reroute stderr/out to better log file later
+
 %.built : %.spec
 	perl -e '($$f,$$e,$$d,$$c,$$b,$$a)=localtime();print "#rpmbuild begin ".join(":",$$a+1900,$$b,$$c,$$d,$$e,$$f),"\n"' > $@
 	($(RPMBUILD) -ba $< 2>&1 >> $@ && \
