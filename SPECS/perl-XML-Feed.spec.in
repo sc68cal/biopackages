@@ -1,4 +1,4 @@
-#$Id: perl-XML-Feed.spec.in,v 1.7 2006/11/27 06:45:11 allenday Exp $
+#$Id: perl-XML-Feed.spec.in,v 1.8 2006/11/27 06:46:17 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Syndication feed parser and auto-discovery 
@@ -13,7 +13,7 @@ URL: http://search.cpan.org/dist/XML-Feed/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-HTML-Parser
-Requires: perl-Class-ErrorHandler, perl-Feed-Find, perl-XML-RSS, perl-XML-Atom, perl-DateTime, perl-DateTime-Format-Mail, perl-DateTime-Format-W3CDTF, perl-List-Util
+Requires: perl-Class-ErrorHandler, perl-Feed-Find, perl-XML-RSS, perl-XML-Atom, perl-DateTime, perl-DateTime-Format-Mail, perl-DateTime-Format-W3CDTF
 Source0: XML-Feed-%{version}.tar.gz
 
 %description
