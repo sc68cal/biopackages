@@ -1,9 +1,9 @@
-#$Id: perl-DateTime-Locale.spec.in,v 1.3 2006/11/27 03:54:28 allenday Exp $
+#$Id: perl-DateTime-Locale.spec.in,v 1.4 2006/11/27 03:55:59 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Localization support for DateTime.pm 
-Name: perl-DateTime
+Summary: Localization support for DateTime.pm
+Name: perl-DateTime-Locale
 Version: 0.32
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
@@ -17,13 +17,13 @@ BuildRequires: perl, biopackages
 Requires: perl-Params-Validate
 BuildRequires: perl-Params-Validate, perl-Module-Build
 
-Source0: DateTime-%{version}.tar.gz
+Source0: DateTime-Locale-%{version}.tar.gz
 
 %description
 Localization support for DateTime.pm 
 
 %prep
-%setup -q -n DateTime-%{version}
+%setup -q -n DateTime-Locale-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=$RPM_BUILD_ROOT  < /dev/null
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-Locale.spec.in,v $
+Revision 1.4  2006/11/27 03:55:59  allenday
+pos
+
 Revision 1.3  2006/11/27 03:54:28  allenday
 pos
 
