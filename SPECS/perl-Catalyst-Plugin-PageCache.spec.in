@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-PageCache.spec.in,v 1.6 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-Catalyst-Plugin-PageCache.spec.in,v 1.7 2006/11/27 03:53:04 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -149,7 +149,7 @@ COPYRIGHT
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL destdir=$RPM_BUILD_ROOT  < /dev/null
-make destdir=$RPM_BUILD_ROOT%{_prefix} OPTIMIZE="$RPM_OPT_FLAGS"
+make destdir=$RPM_BUILD_ROOT OPTIMIZE="$RPM_OPT_FLAGS"
 make test
 
 %install
