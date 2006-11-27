@@ -1,10 +1,10 @@
-#$Id: perl-DateTime-Format-Mail.spec.in,v 1.1 2006/11/27 06:13:02 allenday Exp $
+#$Id: perl-DateTime-Format-Mail.spec.in,v 1.2 2006/11/27 06:14:09 allenday Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Convert between DateTime and RFC2822/822 formats 
 Name: perl-DateTime-Format-Mail
-Version: 0.04
+Version: 0.30
 Release: %{revision}.%{distro}
 Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-Format-Mail.spec.in,v $
+Revision 1.2  2006/11/27 06:14:09  allenday
+version
+
 Revision 1.1  2006/11/27 06:13:02  allenday
 import
 
