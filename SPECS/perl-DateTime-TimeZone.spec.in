@@ -1,4 +1,4 @@
-#$Id: perl-DateTime-TimeZone.spec.in,v 1.1 2006/11/27 03:46:12 allenday Exp $
+#$Id: perl-DateTime-TimeZone.spec.in,v 1.2 2006/11/27 03:47:38 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -24,7 +24,7 @@ A date and time object
 %setup -q -n DateTime-TimeZone-%{version}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix} destdir=$RPM_BUILD_ROOT < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
 make test
 
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-TimeZone.spec.in,v $
+Revision 1.2  2006/11/27 03:47:38  allenday
+build.pl
+
 Revision 1.1  2006/11/27 03:46:12  allenday
 import
 
