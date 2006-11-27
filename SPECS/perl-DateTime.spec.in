@@ -1,0 +1,80 @@
+#$Id: perl-DateTime.spec.in,v 1.1 2006/11/27 03:40:07 allenday Exp $
+%define _unpackaged_files_terminate_build 0
+Distribution: Custom
+Vendor: biopackages.net
+Summary: A date and time object 
+Name: perl-DateTime
+Version: 0.35
+Release: %{revision}.%{distro}
+Packager: allenday@jugular.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+Epoch: 0
+URL: http://search.cpan.org/dist/DateTime/
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Requires: perl-DateTime-Locale, perl-DateTime-TimeZone, perl-Params-Validate, perl-Scalar-List-Utils, perl-Time-Local
+BuildRequires: perl-DateTime-Locale, perl-DateTime-TimeZone, perl-Params-Validate, perl-Scalar-List-Utils, perl-Time-Local
+
+Source0: Date-Time-%{version}.tar.gz
+
+%description
+A date and time object 
+
+%prep
+%setup -q -n DateTime-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-DateTime.spec.in,v $
+Revision 1.1  2006/11/27 03:40:07  allenday
+import
+
+Revision 1.6  2006/07/15 01:55:21  boconnor
+I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
+
+Revision 1.5  2006/01/04 22:26:11  allenday
+sync changes log to cvs log
+
