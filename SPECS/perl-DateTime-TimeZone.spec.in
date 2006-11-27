@@ -1,8 +1,8 @@
-#$Id: perl-DateTime-TimeZone.spec.in,v 1.4 2006/11/27 03:50:28 allenday Exp $
+#$Id: perl-DateTime-TimeZone.spec.in,v 1.5 2006/11/27 04:00:31 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: A date and time object 
+Summary: Time zone object base class and factory
 Name: perl-DateTime-TimeZone
 Version: 0.56
 Release: %{revision}.%{distro}
@@ -14,11 +14,12 @@ URL: http://search.cpan.org/dist/DateTime-TimeZone/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-Class-Singleton, perl-DateTime
 
 Source0: DateTime-TimeZone-%{version}.tar.gz
 
 %description
-A date and time object 
+Time zone object base class and factory
 
 %prep
 %setup -q -n DateTime-TimeZone-%{version}
@@ -67,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-TimeZone.spec.in,v $
+Revision 1.5  2006/11/27 04:00:31  allenday
+depcheck
+
 Revision 1.4  2006/11/27 03:50:28  allenday
 build.pl pos
 
