@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.22 2006/11/23 01:14:44 bpbuild Exp $
+#$Id: Makefile,v 1.23 2006/11/27 06:24:08 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -44,6 +44,13 @@ settings ::
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
+
+#triggers recursive build for every package in CVS, for resolve_dep.pl v1.7
+resolve-i386 ::
+	for package in SPECS/*.spec.in ; do bin/resolve_deps.pl i386 ${package/.spec.in/} no_build.txt ; done
+
+resolve-x86_64 ::
+	for package in SPECS/*.spec.in ; do bin/resolve_deps.pl x86_64 ${package/.spec.in/} no_build.txt ; done
 
 ####################################
 #extension rules
