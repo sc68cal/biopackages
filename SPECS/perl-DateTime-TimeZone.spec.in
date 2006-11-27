@@ -1,4 +1,4 @@
-#$Id: perl-DateTime-TimeZone.spec.in,v 1.5 2006/11/27 04:00:31 allenday Exp $
+#$Id: perl-DateTime-TimeZone.spec.in,v 1.6 2006/11/27 04:22:15 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -15,6 +15,8 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl-Class-Singleton, perl-DateTime
+#wtf
+Provides: perl(DateTime::TimeZoneCatalog)
 
 Source0: DateTime-TimeZone-%{version}.tar.gz
 
@@ -68,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-TimeZone.spec.in,v $
+Revision 1.6  2006/11/27 04:22:15  allenday
+provides fixup
+
 Revision 1.5  2006/11/27 04:00:31  allenday
 depcheck
 
