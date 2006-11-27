@@ -1,27 +1,27 @@
-#$Id: perl-Catalyst-Model-XML-Feed.spec.in,v 1.2 2006/11/27 07:25:34 allenday Exp $
+#$Id: perl-NEXT.spec.in,v 1.1 2006/11/27 07:24:04 allenday Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Use RSS/Atom feeds as a Catalyst Model 
-Name: perl-Catalyst-Model-XML-Feed
-Version: 0.02
+Summary: Provide a pseudo-class NEXT (et al) that allows method redispatch 
+Name: perl-NEXT
+Version: 0.60
 Release: %{revision}.%{distro}
 Packager: allenday@sumo.genetics.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
-URL: http://search.cpan.org/dist/Catalyst-Model-XML-Feed/
+URL: http://search.cpan.org/dist/NEXT/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Catalyst, perl-XML-Feed, perl-Class-Accessor
-Requires: perl-Catalyst, perl-XML-Feed, perl-Class-Accessor
+BuildRequires: perl, biopackages, perl-DateTime
+Requires: perl-DateTime
 BuildArch: noarch
 
-Source0: Catalyst-Model-XML-Feed-%{version}.tar.gz
+Source0: NEXT-%{version}.tar.gz
 
 %description
-Use RSS/Atom feeds as a Catalyst Model 
+Provide a pseudo-class NEXT (et al) that allows method redispatch 
 
 %prep
-%setup -q -n Catalyst-Model-XML-Feed-%{version}
+%setup -q -n NEXT-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -65,11 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-Catalyst-Model-XML-Feed.spec.in,v $
-Revision 1.2  2006/11/27 07:25:34  allenday
-import
-
-Revision 1.1  2006/11/27 07:21:23  allenday
+$Log: perl-NEXT.spec.in,v $
+Revision 1.1  2006/11/27 07:24:04  allenday
 import
 
 Revision 1.1  2006/11/27 06:12:47  allenday
