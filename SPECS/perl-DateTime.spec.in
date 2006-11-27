@@ -1,4 +1,4 @@
-#$Id: perl-DateTime.spec.in,v 1.4 2006/11/27 04:13:33 allenday Exp $
+#$Id: perl-DateTime.spec.in,v 1.5 2006/11/27 04:14:56 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -28,7 +28,7 @@ A date and time object
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-make test
+#make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime.spec.in,v $
+Revision 1.5  2006/11/27 04:14:56  allenday
+cannot make test with circular dep!!!
+
 Revision 1.4  2006/11/27 04:13:33  allenday
 depcheck
 
