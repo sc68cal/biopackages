@@ -1,4 +1,4 @@
-#$Id: perl-XML-Atom.spec.in,v 1.1 2006/11/27 06:29:34 allenday Exp $
+#$Id: perl-XML-Atom.spec.in,v 1.2 2006/11/27 06:36:59 allenday Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -12,8 +12,8 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-Atom/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, perl-DateTime
-Requires: perl-Class-Data-Inheritable, perl-XML-LibXML, perl-XML-XPath, perl-DateTime, perl-HTML-Parser, perl-Digest-SHA1
-BuildRequires: perl-Class-Data-Inheritable, perl-XML-LibXML, perl-XML-XPath, perl-DateTime, perl-HTML-Parser, perl-Digest-SHA1
+Requires: perl-Class-Data-Inheritable, perl-XML-LibXML, perl-XML-XPath, perl-DateTime, perl-HTML-Parser, perl-Digest-SHA1, perl-LWP-Authen-Wsse
+BuildRequires: perl-Class-Data-Inheritable, perl-XML-LibXML, perl-XML-XPath, perl-DateTime, perl-HTML-Parser, perl-Digest-SHA1, perl-LWP-Authen-Wsse
 BuildArch: noarch
 
 Source0: XML-Atom-%{version}.tar.gz
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-Atom.spec.in,v $
+Revision 1.2  2006/11/27 06:36:59  allenday
+depcheck
+
 Revision 1.1  2006/11/27 06:29:34  allenday
 depcheck
 
