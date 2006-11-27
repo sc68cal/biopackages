@@ -1,29 +1,27 @@
-#$Id: perl-DateTime.spec.in,v 1.2 2006/11/27 03:41:22 allenday Exp $
+#$Id: perl-DateTime-TimeZone.spec.in,v 1.1 2006/11/27 03:46:12 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: A date and time object 
-Name: perl-DateTime
-Version: 0.35
+Name: perl-DateTime-TimeZone
+Version: 0.56
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
-URL: http://search.cpan.org/dist/DateTime/
+URL: http://search.cpan.org/dist/DateTime-TimeZone/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-DateTime-Locale, perl-DateTime-TimeZone, perl-Params-Validate, perl-Scalar-List-Utils, perl-Time-Local
-BuildRequires: perl-DateTime-Locale, perl-DateTime-TimeZone, perl-Params-Validate, perl-Scalar-List-Utils, perl-Time-Local
 
-Source0: DateTime-%{version}.tar.gz
+Source0: DateTime-TimeZone-%{version}.tar.gz
 
 %description
 A date and time object 
 
 %prep
-%setup -q -n DateTime-%{version}
+%setup -q -n DateTime-TimeZone-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -68,7 +66,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-DateTime.spec.in,v $
+$Log: perl-DateTime-TimeZone.spec.in,v $
+Revision 1.1  2006/11/27 03:46:12  allenday
+import
+
 Revision 1.2  2006/11/27 03:41:22  allenday
 import
 
