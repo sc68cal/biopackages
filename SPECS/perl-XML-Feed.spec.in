@@ -1,4 +1,4 @@
-#$Id: perl-XML-Feed.spec.in,v 1.5 2006/11/27 06:43:36 allenday Exp $
+#$Id: perl-XML-Feed.spec.in,v 1.6 2006/11/27 06:44:33 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Syndication feed parser and auto-discovery 
@@ -24,7 +24,7 @@ Syndication feed parser and auto-discovery
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL --skipdeps PREFIX=$RPM_BUILD_ROOT%{_prefix} 
-make --skipdeps OPTIMIZE="$RPM_OPT_FLAGS"
+make OPTIMIZE="$RPM_OPT_FLAGS"
 make test
 
 %install
