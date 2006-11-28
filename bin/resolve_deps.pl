@@ -48,10 +48,12 @@ my $distro = find_distro();
 $arch_str_universal = find_arch() if (!defined($arch_str_universal));
 $no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_build.txt" if (!defined($no_build_file));
 $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
-$remove_installed_rpms = 0 if (!defined($remove_installed_rpms));
+$remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 
 # FIXME: need to add code to bail if this is a noarch and building on an arch
+
+# TRACKING STRUCTURES
 
 # a hash to store the names of everything that was either yum installed or build and rpm installed
 my $complete_package_list = {};
@@ -85,6 +87,8 @@ open TREE, ">/tmp/foo" or die $!;
 my $distro_str = `bp-distro`;
 chomp($distro_str);
 
+
+# THE PROGRAM STARTS HERE
 
 # The actual process 
 parse_req($spec_file, $req, $missing_req, "");
