@@ -111,9 +111,9 @@ close TREE;
 # i.e. perl.
 # FIXME: explore the possibility of removing only RPMs not already installed on the system
 if($remove_installed_rpms) {
-  my $command = "sudo yum -y remove ", join(" ", keys(%built_before));
+  my $command = "sudo yum -y remove ".join(" ", keys(%built_before));
   print "$command\n";
-  #system($command);
+  system($command);
 }
 
 
@@ -241,7 +241,6 @@ sub parse_req {
       if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
-	print Dumper(%built_before);
         my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
 	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
 
