@@ -106,8 +106,14 @@ close TREE;
 #print Dumper($complete_package_list);
 
 # uninstall RPMs that were installed during the build
+# I'm only removing what was built. An alternative is to remove everything
+# that was yum installed too however this could result in core rpms being removed
+# i.e. perl.
+# FIXME: explore the possibility of removing only RPMs not already installed on the system
 if($remove_installed_rpms) {
-  print "rpm -e ", join(" ", keys(%{$complete_package_list})),"\n";
+  my $command = "sudo yum -y remove ", join(" ", keys(%built_before));
+  print "$command\n";
+  #system($command);
 }
 
 
@@ -136,7 +142,7 @@ sub parse_req {
 
   # if there are no spec.in file by that name then must install via yum
   if (scalar(@files) == 0) {
-    $yum_install_status = yum_install($file_name);
+    $yum_install_status = yum_install($file_name, $indent);
   }
 
   # else if the @files is non-zero then there is (one or more) spec files to be built.
@@ -147,7 +153,7 @@ sub parse_req {
 
     # yum install if there is no spec.in file or it's not in the no_yum_install list
     if (!defined($no_yum_install->{$file_name})) {
-      $yum_install_status = yum_install($file_name);      
+      $yum_install_status = yum_install($file_name, $indent);      
     }
     
     # otherwise there is either a spec file (taken care of below) or it's in the no_yum_install 
@@ -266,7 +272,9 @@ sub parse_req {
 
 # try to yum install
 sub yum_install {
-  my ($file_name) = @_;
+  my ($file_name, $indent) = @_;
+
+  my $yum_install_status = 0;
 
   print "\n+Trying to yum install: $file_name\n\n";
 
@@ -301,6 +309,8 @@ sub yum_install {
   }
   # else the package has already been yum installed
   else { print "\n+Previously yum installed\n\n"; }
+
+  return($yum_install_status);
 }
 
 # check to see if the package is already installed
