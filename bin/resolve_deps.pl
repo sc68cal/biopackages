@@ -278,7 +278,7 @@ sub read_no_build {
 sub hostname {
   my $hostname = `hostname`;
   chomp($hostname);
-  my @tokens = split ".", $hostname;
+  my @tokens = split /\./, $hostname;
   return(\@tokens);
 }
 

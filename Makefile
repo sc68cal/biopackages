@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.24 2006/11/28 00:47:17 bpbuild Exp $
+#$Id: Makefile,v 1.25 2006/11/28 01:12:39 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -57,16 +57,16 @@ resolve-x86_64 ::
 ####################################
 #extension rules
 # rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
+# FIXME: remove buildclean
 %.rbuilt : %.spec
-	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; echo "$(RECURSIVE_BUILD) --spec $$spec"' | /bin/bash
+	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; $(MAKE) buildclean; perl $(RECURSIVE_BUILD) --spec $$spec' | /bin/bash
 	touch $@
 	#FIXME: change echo to run
 
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\nexport arch=$$file\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > $(subst .spec.in,,$<).$$file.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q $(subst .spec.in,,$<).$$file.sh"; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > $(subst .spec.in,,$<).$$file.sh; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q $(subst .spec.in,,$<).$$file.sh; done' | /bin/bash
 	touch $@
-	#FIXME: change the echo qsub to actual call
 
 %.built : %.spec
 	perl -e '($$f,$$e,$$d,$$c,$$b,$$a)=localtime();print "#rpmbuild begin ".join(":",$$a+1900,$$b,$$c,$$d,$$e,$$f),"\n"' > $@
