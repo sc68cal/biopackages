@@ -25,7 +25,7 @@ for all of these.
 
 UUU
 
-# common vars
+# GLOBALS
 my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help);
 
 my $arg_count = scalar(@ARGV);
@@ -39,9 +39,11 @@ GetOptions ("arch=s"      => \$arch_str_universal,
             "help"        => \$help,
             );
 
-# Usage
+# USAGE
 if ($help or $arg_count == 0) { print USAGE; exit(1); }
 
+
+# DEFAULT VALUES
 # If resolve_deps is being called from the biopackages cluster build process then several
 # options need to be filled in
 my $distro = find_distro();
@@ -51,7 +53,6 @@ $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universa
 $remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 
-# FIXME: need to add code to bail if this is a noarch and building on an arch
 
 # TRACKING STRUCTURES
 
@@ -66,12 +67,10 @@ my $missing_req = {};
 my $yum_installed = {};
 
 # keep a list of what not to yum install
-
 my $no_yum_install = read_no_build($no_yum_install_file);
 
 # A list of modules not to build
-my $no_build = {};
-$no_build = read_no_build($no_build_file);
+my $no_build = read_no_build($no_build_file);
 
 # Hashes to store which packages have been previously built
 my %built_before;
@@ -81,7 +80,7 @@ my %parsed_before;
 my $install = 1;
 
 # A file for the dependency tree summary
-open TREE, ">/tmp/foo" or die $!;
+open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: $!";
 
 # distro string
 my $distro_str = `bp-distro`;
@@ -94,21 +93,25 @@ chomp($distro_str);
 parse_req($spec_file, $req, $missing_req, "");
 
 # Done
-print "\nBUILD COMPLETE!\n\n";
+print "\nRESOLVE_DEPS: BUILD COMPLETE!\n\n"; 
 
 # Print out missing requirements
-print "\nMISSING REQS:\n";
+print "\nRESOLVE_DEPS: MISSING REQS:\n";
 print_req($missing_req); 
 close TREE;
 
-# Complete list
+# FIXME: here I need to check to make sure the RPM target was created and, if not, report and error to stderr
 
-print Dumper($complete_package_list);
+# Complete list
+#print Dumper($complete_package_list);
+
+# uninstall RPMs that were installed during the build
 if($remove_installed_rpms) {
   print "rpm -e ", join(" ", keys(%{$complete_package_list})),"\n";
 }
 
-# Subroutines
+
+# SUBROUTINES
 
 # Just prints the contents of a hash
 sub print_req{
@@ -118,50 +121,55 @@ sub print_req{
   }
 }
 
+# THE CENTRAL SUBROUTINE FOR THE PROGRAM
 # parses the requirements for a given spec file and recursively build them
 sub parse_req {
+
+  # the filename is the package to build, req is FIXME, $missing_req is FIXME, $indent is the tabs to indent the dep tree
   my ($file_name, $req, $missing_req, $indent) = @_;
+
+  # all the spec.in files that match the filename (usually just one)
   my @files = glob("SPECS/$file_name.spec.in");
+
+  # this keeps track of whether or not the yum install was successful, 0 is success
+  my $yum_install_status = 0;
+
+  # if there are no spec.in file by that name then must install via yum
+  if (scalar(@files) == 0) {
+    $yum_install_status = yum_install($file_name, $indent);
+  }
+
+  # else if the @files is non-zero then there is (one or more) spec files to be built.
   foreach my $file (@files) {
-    my $yum_install_status = 0;
+    
+    # the yum install status is reset for each spec.in file
+    $yum_install_status = 0;
+
     # yum install if there is no spec.in file or it's not in the no_yum_install list
-    if (!-e $file || !defined($no_yum_install->{$file_name})) {
-      print "\n+Trying to yum install: $file_name\n\n";
-      # only missing if there is no spec file
-      if (!-e $file ) { 
-        $missing_req->{"$file_name"} = 1; 
-      }
-      print TREE "$indent** $file_name **\n";
-      # so there is a dependency that isn't part of the SPEC.in 
-      # so it must be either a system dep (e.g. provided by the distro)
-      # or it's simply not yet imported into the biopackages repo
-      # try to install with yum, it will just fail if it's not available
-      if (!defined $yum_installed->{$file_name}) {
-        $yum_install_status = system "sudo yum -y install $file_name >& /tmp/yum_output.txt";
-        open YUM, "</tmp/yum_output.txt" or die;
-        my $output_txt;
-        while(<YUM>) {
-          chomp;
-          $output_txt .= $_;
-        }
-        close YUM;
-        if ($output_txt =~ /Cannot find a package matching/) { $yum_install_status = 1; } 
-        # install was OK
-        else { $complete_package_list->{$file_name} = 1; }
-        $yum_installed->{$file_name} = 1;
-      }
-      else { print "\n+Previously yum installed\n\n"; }
+    if (!defined($no_yum_install->{$file_name})) {
+      $yum_install_status = yum_install($file_name, $indent);      
     }
+    
     # otherwise there is either a spec file (taken care of below) or it's in the no_yum_install 
     # so essentially the yum failed and the status is non-zero
     else {
      print "\n+Coundn't yum install: $file_name\n\n";
      $yum_install_status = 1;
     }
+
+    # go ahead and try to build the local spec.in file if 1) yum couldn't install, 2) it wasn't built
+    # already, and 3) it's not listed in the no_build file
     if ($yum_install_status != 0 && !$parsed_before{$file} && !defined($no_build->{$file_name})) {
+
+      # prevents recursive loops in the dep tree
       $parsed_before{$file} = 1;
+
+      # FIXME: what is this?
       $req->{"$file"} = 1;
+
       print "\n+Trying to build from spec: $file_name\n\n";
+
+      # print to dep tree
       print TREE "$indent$file_name\n";
 
       # vars to hold version string
@@ -173,8 +181,13 @@ sub parse_req {
       my @deps;
       $file =~ /^(.*).in$/;
       my $spec_file = $1;
-      system("make $spec_file");
-      open IN, "<$spec_file" or die "Can't open file: $spec_file\n";
+
+      # make the spec file
+      my $spec_make_status = system("make $spec_file");
+      if ($spec_make_status) { die "RESOLVE_DEPS FATAL ERROR: There was an error making the spec file $spec_file from spec.in file"; }
+
+      # look at the spec file to extract build/install requirements
+      open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Can't open file: $spec_file\n";
       while (<IN>) {
         chomp;
         if ($_ =~ /^BuildRequires:\s+(.*)$/) {
@@ -208,26 +221,34 @@ sub parse_req {
 	}
       }
       close IN;
+
       # now recursively examine each
       foreach my $dep (@deps) {
         parse_req($dep, $req, $missing_req, "\t$indent");
       }
 
+      # at this point all the deps are built/installed
       $file =~ /SPECS\/(\S+).spec.in$/;
       my $package_name = $1;
+
+      # only attempt a build if this is a valid package and it hasn't been built before
       if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
         my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
-	if ($result) { die "There was an error building $package_name with error code $result\n"; }
+	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
+
+	# at this point the package should be built, if installing go ahead and RPM install it (this program won't work unless install is true)
         if ($install) {
-          #print "$version_str $id_str $distro_str $arch_str\n\n";
+
+	  # these packages are handled differently (no bp-distro name in RPM name)
 	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
               print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n\n");
               $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
               $complete_package_list->{$package_name} = 1;
 	    }
+	  # otherwise the RPM is installed like this
 	  } else {
 	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
               print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
@@ -235,11 +256,55 @@ sub parse_req {
               $complete_package_list->{$package_name} = 1;
 	    }
 	  }
-          if ($result) { die "There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
+	  # check for RPM install errors
+          if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
 	}
       }
     }
   }
+}
+
+# try to yum install
+sub yum_install {
+  my ($file_name, $indent) = @_;
+
+  my $yum_install_status = 0;
+
+  print "\n+Trying to yum install: $file_name\n\n";
+
+  # if yum installing then add to list of missing req FIXME: needed?
+  $missing_req->{"$file_name"} = 1;
+  
+  # printing to dep_tree file with ** to show it's yum installed
+  print TREE "$indent** $file_name **\n";
+  
+  # so there is a dependency that isn't part of the SPEC.in 
+  # so it must be either a system dep (e.g. provided by the distro)
+  # or it's simply not yet imported into the biopackages repo
+  # try to install with yum, it will just fail if it's not available
+  
+  # check to make sure this hasn't been installed previously
+  if (!defined $yum_installed->{$file_name}) {
+    # try to yum install
+    $yum_install_status = system "sudo yum -y install $file_name >& /tmp/yum_output.txt";
+    open YUM, "</tmp/yum_output.txt" or die "RESOLVE_DEPS FATAL ERROR: couldn't open /tmp/yum_output.txt";
+    my $output_txt;
+    while(<YUM>) {
+      chomp;
+	$output_txt .= $_;
+    }
+    close YUM;
+    # check to see if the yum install failed, if it did then yum_install_status gets a non-zero value
+    # FIXME: I think I need to check for other errors too, such as dependency problems
+    if ($output_txt =~ /Cannot find a package matching/) { $yum_install_status = 1; }
+    # else install was OK
+    else { $complete_package_list->{$file_name} = 1; }
+    $yum_installed->{$file_name} = 1;
+  }
+  # else the package has already been yum installed
+  else { print "\n+Previously yum installed\n\n"; }
+
+  return($yum_install_status);
 }
 
 # check to see if the package is already installed
@@ -269,7 +334,7 @@ sub clean_package_names {
 sub read_no_build {
   my ($file) = @_;
   my $result = {};
-  open INPUT, $file or die "Can't read file: $file\n";
+  open INPUT, $file or die "RESOLVE_DEPS FATAL ERROR: Can't read file: $file\n";
   while (<INPUT>) {
     chomp;
     next if (/^#/);
