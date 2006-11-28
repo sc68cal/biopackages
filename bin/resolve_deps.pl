@@ -51,11 +51,7 @@ $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universa
 $remove_installed_rpms = 0 if (!defined($remove_installed_rpms));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 
-# LEFT OFF HERE, need to add code to bail if this is a noarch and building on an arch
-# FIXME: my getarch code isn't going to work for noarch!
-exit;
-
-
+# FIXME: need to add code to bail if this is a noarch and building on an arch
 
 # a hash to store the names of everything that was either yum installed or build and rpm installed
 my $complete_package_list = {};
