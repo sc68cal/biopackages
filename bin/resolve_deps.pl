@@ -136,7 +136,7 @@ sub parse_req {
 
   # if there are no spec.in file by that name then must install via yum
   if (scalar(@files) == 0) {
-    $yum_install_status = yum_install($file_name, $indent);
+    $yum_install_status = yum_install($file_name);
   }
 
   # else if the @files is non-zero then there is (one or more) spec files to be built.
@@ -147,7 +147,7 @@ sub parse_req {
 
     # yum install if there is no spec.in file or it's not in the no_yum_install list
     if (!defined($no_yum_install->{$file_name})) {
-      $yum_install_status = yum_install($file_name, $indent);      
+      $yum_install_status = yum_install($file_name);      
     }
     
     # otherwise there is either a spec file (taken care of below) or it's in the no_yum_install 
@@ -266,9 +266,7 @@ sub parse_req {
 
 # try to yum install
 sub yum_install {
-  my ($file_name, $indent) = @_;
-
-  my $yum_install_status = 0;
+  my ($file_name) = @_;
 
   print "\n+Trying to yum install: $file_name\n\n";
 
@@ -303,8 +301,6 @@ sub yum_install {
   }
   # else the package has already been yum installed
   else { print "\n+Previously yum installed\n\n"; }
-
-  return($yum_install_status);
 }
 
 # check to see if the package is already installed
