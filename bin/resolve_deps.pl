@@ -21,7 +21,7 @@ for all of these.
 --arch (defaults to system arch or noarch depending on the package being built)
 --no-build (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/no_build.txt)
 --no-yum (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/yum_no_install.txt)
---remove-rpms (defaults to false, RPMs are left on the system)
+--remove-rpms (defaults to true, RPMs are removed from the system)
 
 UUU
 
