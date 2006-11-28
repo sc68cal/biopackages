@@ -241,6 +241,7 @@ sub parse_req {
       if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
+	print Dumper(%built_before);
         my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
 	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
 
