@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.28 2006/11/29 00:38:12 bpbuild Exp $
+#$Id: Makefile,v 1.29 2006/11/29 01:00:29 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -15,7 +15,7 @@ RECURSIVE_BUILD=bin/resolve_deps.pl
 #stuff for initial environment setup
 prep ::
 	echo '' >> ~/.rpmmacros
-	$(RM_I) ~/.rpmmacros
+	$(RM_RF) ~/.rpmmacros
 	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
 	echo 'for d in tmp SETTINGS SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
 	$(MAKE) sources
@@ -25,7 +25,11 @@ prep ::
 #main build targets
 # triggers a .spec and .built file for each spec file on each target platform
 # also summarizes the build status of each to a log file
+# FIXME: remove the buildclean after cvs update when in production (don't need to clean every node)
+# FIXME: add individual targets so you can build all/a package on a certain queue
 cluster_buildall ::
+	$(MAKE) buildclean
+	$(MAKE) prep
 	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
@@ -69,8 +73,9 @@ resolve-x86_64 ::
 
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
 # FIXME: remove buildclean, only needed for testing
+# FIXME: remove cvs update/make prep when in production (cluster_buildall already will call this)
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\nmake prep\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
