@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.31 2006/11/29 06:21:35 bpbuild Exp $
+#$Id: Makefile,v 1.32 2006/11/29 06:40:03 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -8,7 +8,7 @@ SYNCHOST=neuron.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
 
 # FIXME:
-
+# * the cvsupdate target may not actually work (no rsh var set? can't login?)
 
 ####################################
 #stuff for initial environment setup
