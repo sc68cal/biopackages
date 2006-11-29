@@ -1,4 +1,4 @@
-#$Id: perl-Time-HiRes.spec.in,v 1.4 2006/09/25 20:31:58 jmendler Exp $
+#$Id: perl-Time-HiRes.spec.in,v 1.5 2006/11/29 23:47:50 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -12,7 +12,7 @@ Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/Time-HiRes/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, gcc
 
 Source0: Time-HiRes-1.83.tar.gz
 
