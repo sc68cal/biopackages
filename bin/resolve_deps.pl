@@ -26,7 +26,7 @@ for all of these.
 UUU
 
 # GLOBALS
-my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help);
+my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help, $verbose);
 
 my $arg_count = scalar(@ARGV);
 
@@ -37,6 +37,7 @@ GetOptions ("arch=s"      => \$arch_str_universal,
             "remove-rpms" => \$remove_installed_rpms,
             "dep-tree=s"  => \$dep_tree_file,
             "help"        => \$help,
+            "verbose"     => \$verbose,
             );
 
 # USAGE
@@ -241,7 +242,9 @@ sub parse_req {
       if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
-        my $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log");
+        my $result;
+        if ($verbose) { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built"); }
+        else { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log"); }
 	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
 
 	# at this point the package should be built, if installing go ahead and RPM install it (this program won't work unless install is true)

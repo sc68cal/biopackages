@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.29 2006/11/29 01:00:29 bpbuild Exp $
+#$Id: Makefile,v 1.30 2006/11/29 01:10:38 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -68,7 +68,7 @@ resolve-x86_64 ::
 #extension rules
 # rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
 %.rbuilt : %.spec
-	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --spec $$spec' | /bin/bash
+	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --spec $$spec' | /bin/bash
 	touch $@
 
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
