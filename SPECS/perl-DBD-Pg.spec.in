@@ -1,4 +1,4 @@
-#$Id: perl-DBD-Pg.spec.in,v 1.6 2006/11/17 00:36:40 bpbuild Exp $
+#$Id: perl-DBD-Pg.spec.in,v 1.7 2006/11/29 23:36:51 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -12,7 +12,7 @@ Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/DBD-Pg/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-DBI, postgresql-devel
+BuildRequires: perl, biopackages, perl-DBI, postgresql-devel, gcc
 Source0: DBD-Pg-%{version}.tar.gz
 BuildArch: noarch
 
@@ -20,7 +20,7 @@ BuildArch: noarch
 
 DBD::Pg  --  the DBI PostgreSQL interface for Perl
 
-# $Id: perl-DBD-Pg.spec.in,v 1.6 2006/11/17 00:36:40 bpbuild Exp $
+# $Id: perl-DBD-Pg.spec.in,v 1.7 2006/11/29 23:36:51 bpbuild Exp $
 
 DESCRIPTION:
 ------------
@@ -328,6 +328,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBD-Pg.spec.in,v $
+Revision 1.7  2006/11/29 23:36:51  bpbuild
+Some changes, added dep
+
 Revision 1.6  2006/11/17 00:36:40  bpbuild
 needs pg_config
 
