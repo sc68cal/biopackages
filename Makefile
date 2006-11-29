@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.26 2006/11/28 03:58:41 bpbuild Exp $
+#$Id: Makefile,v 1.27 2006/11/29 00:03:15 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -6,6 +6,10 @@ RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
 SYNCHOST=neuron.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
+
+# FIXME:
+# * need to clean out old stderr and stdout files otherwise the report code may report old errors
+
 
 ####################################
 #stuff for initial environment setup
@@ -22,6 +26,7 @@ prep ::
 # triggers a .spec and .built file for each spec file on each target platform
 # also summarizes the build status of each to a log file
 cluster_buildall ::
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
 # creates an HTML output report summarizing the build status of each package based on logs
@@ -37,6 +42,7 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 	$(RM_RF) SPECS/*.cbuilt
 	$(RM_RF) SPECS/*.rbuilt
+	$(RM_RF) SPECS/*.sh
 
 sources ::
 	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "make symlink\n" : print "make rsync\n"' | /bin/bash
@@ -49,7 +55,7 @@ specs ::
 
 #triggers recursive build for every package in CVS, for resolve_dep.pl v1.7
 resolve-i386 ::
-	for package in SPECS/*.spec.in ; do bin/resolve_deps.pl i386 ${package/.spec.in/} no_build.txt ; done
+	for package in SPECS/*.spec.in ; do perl bin/resolve_deps.pl i386 ${package/.spec.in/} no_build.txt ; done
 
 resolve-x86_64 ::
 	for package in SPECS/*.spec.in ; do bin/resolve_deps.pl x86_64 ${package/.spec.in/} no_build.txt ; done
@@ -64,7 +70,7 @@ resolve-x86_64 ::
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
 # FIXME: remove buildclean, only needed for testing
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > $(subst .spec.in,,$<).$$file.sh; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q $(subst .spec.in,,$<).$$file.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
