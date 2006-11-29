@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.27 2006/11/29 00:03:15 bpbuild Exp $
+#$Id: Makefile,v 1.28 2006/11/29 00:38:12 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -42,7 +42,7 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 	$(RM_RF) SPECS/*.cbuilt
 	$(RM_RF) SPECS/*.rbuilt
-	$(RM_RF) SPECS/*.sh
+	#$(RM_RF) SPECS/*.sh
 
 sources ::
 	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "make symlink\n" : print "make rsync\n"' | /bin/bash
@@ -70,7 +70,7 @@ resolve-x86_64 ::
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
 # FIXME: remove buildclean, only needed for testing
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
