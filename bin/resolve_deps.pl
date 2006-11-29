@@ -85,7 +85,7 @@ my $install = 1;
 open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: $!";
 
 # distro string
-my $distro_str = `bp-distro`;
+my $distro_str = `/usr/bin/bp-distro`;
 chomp($distro_str);
 
 
