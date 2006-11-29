@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.30 2006/11/29 01:10:38 bpbuild Exp $
+#$Id: Makefile,v 1.31 2006/11/29 06:21:35 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -8,14 +8,11 @@ SYNCHOST=neuron.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
 
 # FIXME:
-# * need to clean out old stderr and stdout files otherwise the report code may report old errors
 
 
 ####################################
 #stuff for initial environment setup
 prep ::
-	echo '' >> ~/.rpmmacros
-	$(RM_RF) ~/.rpmmacros
 	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
 	echo 'for d in tmp SETTINGS SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
 	$(MAKE) sources
@@ -25,17 +22,25 @@ prep ::
 #main build targets
 # triggers a .spec and .built file for each spec file on each target platform
 # also summarizes the build status of each to a log file
-# FIXME: remove the buildclean after cvs update when in production (don't need to clean every node)
 # FIXME: add individual targets so you can build all/a package on a certain queue
 cluster_buildall ::
 	$(MAKE) buildclean
 	$(MAKE) prep
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
+	cvs update
+	$(MAKE) cluster_buildclean
+	$(MAKE) cluster_cvsupdate
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
+cluster_buildclean ::
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
+
+cluster_cvsupdate ::
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
+
 # creates an HTML output report summarizing the build status of each package based on logs
+# FIXME: this needs to be implemented
 cluster_build_report ::
-	echo 'for i in SETTINGS/*; do echo "$$i/\n"; done' | /bin/bash #LEFT OFF HERE
+	echo 'for i in SETTINGS/*; do echo "$$i/\n"; done' | /bin/bash 
 
 all :: specs
 
@@ -46,7 +51,6 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 	$(RM_RF) SPECS/*.cbuilt
 	$(RM_RF) SPECS/*.rbuilt
-	#$(RM_RF) SPECS/*.sh
 
 sources ::
 	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "make symlink\n" : print "make rsync\n"' | /bin/bash
@@ -57,16 +61,10 @@ settings ::
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
 
-#triggers recursive build for every package in CVS, for resolve_dep.pl v1.7
-resolve-i386 ::
-	for package in SPECS/*.spec.in ; do perl bin/resolve_deps.pl i386 ${package/.spec.in/} no_build.txt ; done
-
-resolve-x86_64 ::
-	for package in SPECS/*.spec.in ; do bin/resolve_deps.pl x86_64 ${package/.spec.in/} no_build.txt ; done
-
 ####################################
 #extension rules
 # rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
+# FIXME: probably don't need verbose here
 %.rbuilt : %.spec
 	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --spec $$spec' | /bin/bash
 	touch $@
@@ -75,7 +73,7 @@ resolve-x86_64 ::
 # FIXME: remove buildclean, only needed for testing
 # FIXME: remove cvs update/make prep when in production (cluster_buildall already will call this)
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\nmake prep\n$(MAKE) buildclean\nrm SETTINGS/$$file/LOGS/$$spec.*\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; rm SETTINGS/$$file/LOGS/$$spec.*; echo -e "#!/bin/bash\n\ncvs update\nmake prep\n$(MAKE) buildclean\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
