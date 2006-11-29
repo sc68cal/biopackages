@@ -305,7 +305,7 @@ sub yum_install {
     close YUM;
     # check to see if the yum install failed, if it did then yum_install_status gets a non-zero value
     # FIXME: I think I need to check for other errors too, such as dependency problems
-    if ($output_txt =~ /Cannot find a package matching/) { $yum_install_status = 1; }
+    if ($output_txt =~ /Cannot find a package matching/ || $output_txt =~ /No Match for argument/) { $yum_install_status = 1; }
     # else install was OK
     else { $complete_package_list->{$file_name} = 1; }
     $yum_installed->{$file_name} = 1;
