@@ -25,6 +25,7 @@ for all of these.
 
 UUU
 
+
 # GLOBALS
 my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help, $verbose);
 
