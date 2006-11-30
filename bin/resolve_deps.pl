@@ -15,7 +15,7 @@ required to build this package are installed.
 
 The following are optional, if not specified $0 will attempt to automatically
 figure out reasonable values according the standard biopackages directory 
-structure. If you're building an individual package you want to provide values
+structure. If you are building an individual package you want to provide values
 for all of these.
 
 --arch (defaults to system arch or noarch depending on the package being built)
@@ -55,6 +55,12 @@ $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universa
 $remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 
+# blacklist: packages that should never be built (because they are not real packages
+my $blacklist = {
+  'WITH_ITHREADS'   => 1,
+  'MODULE_COMPAT'   => 1,
+  ' '               => 1,
+}
 
 # TRACKING STRUCTURES
 
@@ -65,7 +71,7 @@ my $complete_package_list = {};
 my $req = {};
 my $missing_req = {};
 
-# keep track of what's been yum installed
+# keep track of what has been yum installed
 my $yum_installed = {};
 
 # keep a list of what not to yum install
@@ -108,7 +114,7 @@ close TREE;
 #print Dumper($complete_package_list);
 
 # uninstall RPMs that were installed during the build
-# I'm only removing what was built. An alternative is to remove everything
+# I am only removing what was built. An alternative is to remove everything
 # that was yum installed too however this could result in core rpms being removed
 # i.e. perl.
 # FIXME: explore the possibility of removing only RPMs not already installed on the system
@@ -136,6 +142,9 @@ sub parse_req {
   # the filename is the package to build, req is FIXME, $missing_req is FIXME, $indent is the tabs to indent the dep tree
   my ($file_name, $req, $missing_req, $indent) = @_;
 
+  # there is a blacklist of "packages" that are not really packages that should just be skipped
+  if (defined($blacklist->{$file_name})) { return }
+
   # all the spec.in files that match the filename (usually just one)
   my @files = glob("SPECS/$file_name.spec.in");
 
@@ -153,20 +162,20 @@ sub parse_req {
     # the yum install status is reset for each spec.in file
     $yum_install_status = 0;
 
-    # yum install if there is no spec.in file or it's not in the no_yum_install list
+    # yum install if there is no spec.in file or it is not in the no_yum_install list
     if (!defined($no_yum_install->{$file_name})) {
       $yum_install_status = yum_install($file_name, $indent);      
     }
     
-    # otherwise there is either a spec file (taken care of below) or it's in the no_yum_install 
+    # otherwise there is either a spec file (taken care of below) or it is in the no_yum_install 
     # so essentially the yum failed and the status is non-zero
     else {
-     print "\n+Coundn't yum install: $file_name\n\n";
+     print "\n+Cound not yum install: $file_name\n\n";
      $yum_install_status = 1;
     }
 
-    # go ahead and try to build the local spec.in file if 1) yum couldn't install, 2) it wasn't built
-    # already, and 3) it's not listed in the no_build file
+    # go ahead and try to build the local spec.in file if 1) yum could not install, 2) it was not built
+    # already, and 3) it is not listed in the no_build file
     if ($yum_install_status != 0 && !$parsed_before{$file} && !defined($no_build->{$file_name})) {
 
       # prevents recursive loops in the dep tree
@@ -191,11 +200,12 @@ sub parse_req {
       my $spec_file = $1;
 
       # make the spec file
+      print STDERR "make $spec_file";
       my $spec_make_status = system("make $spec_file");
       if ($spec_make_status) { die "RESOLVE_DEPS FATAL ERROR: There was an error making the spec file $spec_file from spec.in file"; }
 
       # look at the spec file to extract build/install requirements
-      open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Can't open file: $spec_file\n";
+      open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Cannot open file: $spec_file\n";
       while (<IN>) {
         chomp;
         if ($_ =~ /^BuildRequires:\s+(.*)$/) {
@@ -239,8 +249,8 @@ sub parse_req {
       $file =~ /SPECS\/(\S+).spec.in$/;
       my $package_name = $1;
 
-      # only attempt a build if this is a valid package and it hasn't been built before
-      if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " $package_name !~ "WITH_ITHREADS" && !$built_before{$package_name}) {
+      # only attempt a build if this is a valid package and it has not been built before
+      if (!defined($blacklist->{$package_name}) && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
         my $result;
@@ -248,7 +258,7 @@ sub parse_req {
         else { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log"); }
 	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
 
-	# at this point the package should be built, if installing go ahead and RPM install it (this program won't work unless install is true)
+	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
         if ($install) {
 
 	  # these packages are handled differently (no bp-distro name in RPM name)
@@ -291,19 +301,19 @@ sub yum_install {
   # if yum installing then add to list of missing req FIXME: needed?
   $missing_req->{"$file_name"} = 1;
   
-  # printing to dep_tree file with ** to show it's yum installed
+  # printing to dep_tree file with ** to show it is yum installed
   print TREE "$indent** $file_name **\n";
   
-  # so there is a dependency that isn't part of the SPEC.in 
+  # so there is a dependency that is not part of the SPEC.in 
   # so it must be either a system dep (e.g. provided by the distro)
-  # or it's simply not yet imported into the biopackages repo
-  # try to install with yum, it will just fail if it's not available
+  # or it is simply not yet imported into the biopackages repo
+  # try to install with yum, it will just fail if it is not available
   
-  # check to make sure this hasn't been installed previously
+  # check to make sure this has not been installed previously
   if (!defined $yum_installed->{$file_name}) {
     # try to yum install
     $yum_install_status = system "sudo yum -y install $file_name >& /tmp/yum_output.txt";
-    open YUM, "</tmp/yum_output.txt" or die "RESOLVE_DEPS FATAL ERROR: couldn't open /tmp/yum_output.txt";
+    open YUM, "</tmp/yum_output.txt" or die "RESOLVE_DEPS FATAL ERROR: could not open /tmp/yum_output.txt";
     my $output_txt;
     while(<YUM>) {
       chomp;
@@ -350,7 +360,7 @@ sub clean_package_names {
 sub read_no_build {
   my ($file) = @_;
   my $result = {};
-  open INPUT, $file or die "RESOLVE_DEPS FATAL ERROR: Can't read file: $file\n";
+  open INPUT, $file or die "RESOLVE_DEPS FATAL ERROR: Cannot read file: $file\n";
   while (<INPUT>) {
     chomp;
     next if (/^#/);
