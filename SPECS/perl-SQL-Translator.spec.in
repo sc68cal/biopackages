@@ -1,4 +1,4 @@
-#$Id: perl-SQL-Translator.spec.in,v 1.2 2006/09/07 23:38:33 boconnor Exp $
+#$Id: perl-SQL-Translator.spec.in,v 1.3 2006/11/30 01:25:14 bpbuild Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: manipulate structured data definitions (SQL and more)
@@ -15,7 +15,7 @@ BuildRequires: perl, biopackages
 BuildRequires: perl-Module-Build, perl-Test-Exception, perl-Test-Differences
 Requires: perl-Class-Base, perl-Parse-RecDescent, perl-Test-Exception, perl-Test-Differences, perl-Template-Toolkit
 Requires: perl-Spreadsheet-ParseExcel, perl-Text-RecordParser, perl-GraphViz
-Requires: perl-IO-stringy, perl-Class-MakeMethods
+Requires: perl-IO-stringy, perl-Class-MakeMethods, perl-YAML
 
 #WTF?
 Provides: perl(:)
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-SQL-Translator.spec.in,v $
+Revision 1.3  2006/11/30 01:25:14  bpbuild
+Added dep
+
 Revision 1.2  2006/09/07 23:38:33  boconnor
 Updates to deps
 
