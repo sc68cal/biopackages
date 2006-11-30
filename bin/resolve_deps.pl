@@ -60,7 +60,7 @@ my $blacklist = {
   'WITH_ITHREADS'   => 1,
   'MODULE_COMPAT'   => 1,
   ' '               => 1,
-}
+};
 
 # TRACKING STRUCTURES
 
