@@ -1,4 +1,4 @@
-#$Id: perl-Log-Log4perl.spec.in,v 1.4 2006/09/11 17:25:14 jmendler Exp $
+#$Id: perl-Log-Log4perl.spec.in,v 1.5 2006/11/30 00:07:23 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Log4j implementation for Perl
@@ -12,7 +12,7 @@ URL: http://search.cpan.org/dist/Log-Log4perl/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 BuildArch: noarch
-Requires: perl-Log-Dispatch, perl-Log-Dispatch-FileRotate, perl-IPC-Shareable
+Requires: perl-Log-Dispatch, perl-Log-Dispatch-FileRotate, perl-IPC-Shareable, perl-XML-DOM
 Provides: perl(RRDs)
 
 Source0: Log-Log4perl-0.51.tar.gz
@@ -1910,6 +1910,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Log-Log4perl.spec.in,v $
+Revision 1.5  2006/11/30 00:07:23  bpbuild
+Added dep
+
 Revision 1.4  2006/09/11 17:25:14  jmendler
 noarch
 
