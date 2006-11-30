@@ -240,7 +240,7 @@ sub parse_req {
       my $package_name = $1;
 
       # only attempt a build if this is a valid package and it hasn't been built before
-      if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " && $package_name !~ "WITH_ITHREADS" && !$built_before{$package_name}) {
+      if ($package_name !~ "MODULE_COMPAT" && $package_name !~ " " $package_name !~ "WITH_ITHREADS" && !$built_before{$package_name}) {
         print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
         $built_before{$package_name} = 1;
         my $result;
