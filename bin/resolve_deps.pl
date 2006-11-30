@@ -256,8 +256,8 @@ sub parse_req {
 	    if (!already_installed("$package_name-$version_str-$id_str")) {
               # now check to see if the RPM is there, if not then this build failed!!
               die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
-              print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm\n\n");
-              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+              print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
+              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
               $complete_package_list->{$package_name} = 1;
 	    }
 
@@ -266,8 +266,8 @@ sub parse_req {
 	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
               # now check to see if the RPM is there, if not then this build failed!!
               die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
-              print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
-              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+              print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
+              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
               $complete_package_list->{$package_name} = 1;
 	    }
 	  }
