@@ -1,4 +1,4 @@
-#$Id: perl-GD.spec.in,v 1.7 2006/11/30 01:50:45 bpbuild Exp $
+#$Id: perl-GD.spec.in,v 1.8 2006/11/30 02:55:27 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gd Graphics Library
@@ -13,7 +13,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 BuildRequires: gd >= 2.0.28, gd-devel >= 2.0.28, libpng-devel, freetype-devel, libjpeg-devel, fontconfig-devel
 %{ifdistro_release centos 4}BuildRequires: xorg-x11-deprecated-libs-devel
-Requires: gd >= 2.0.28
 Source0: GD-2.19.tar.gz
 
 %description
@@ -452,6 +451,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-GD.spec.in,v $
+Revision 1.8  2006/11/30 02:55:27  bpbuild
+Added dep
+
 Revision 1.7  2006/11/30 01:50:45  bpbuild
 Added dep
 
