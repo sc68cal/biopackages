@@ -146,9 +146,11 @@ sub parse_req {
   my $continue = 1;
   foreach my $key (keys %{$blacklist}) {
     if ($file_name =~ /$key/i) { $continue = 0; print "Bogus package request: $file_name $continue\n"; }
+# LEFT OFF HERE
   }
 
   if ($continue) {
+print "I'm continuing with $file_name $continue.\n";
     # all the spec.in files that match the filename (usually just one)
     my @files = glob("SPECS/$file_name.spec.in");
   
