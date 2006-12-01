@@ -143,9 +143,9 @@ sub parse_req {
   my ($file_name, $req, $missing_req, $indent) = @_;
 
   # there is a blacklist of "packages" that are not really packages that should just be skipped
-  print "+!!!!!!!!!!!!!!!!!!!!!!!+++++++++++++ $file_name\n";
-  print Dumper($blacklist);
-  if (defined($blacklist->{$file_name})) { print "HERE!!!  $file_name\n"; return; }
+  foreach my $key (keys %{$blacklist}) {
+    if ($file_name =~ /$key/i) { print "Bogus package request: $file_name\n"; return(); }
+  }
 
   # all the spec.in files that match the filename (usually just one)
   my @files = glob("SPECS/$file_name.spec.in");
