@@ -145,7 +145,7 @@ sub parse_req {
   # there is a blacklist of "packages" that are not really packages that should just be skipped
   my $continue = 1;
   foreach my $key (keys %{$blacklist}) {
-    if ($file_name =~ /$key/i) { print "Bogus package request: $file_name\n"; $continue = 0; }
+    if ($file_name =~ /$key/i) { $continue = 0; print "Bogus package request: $file_name $continue\n"; }
   }
 
   if ($continue) {
