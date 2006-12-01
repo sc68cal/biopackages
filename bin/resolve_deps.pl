@@ -143,151 +143,153 @@ sub parse_req {
   my ($file_name, $req, $missing_req, $indent) = @_;
 
   # there is a blacklist of "packages" that are not really packages that should just be skipped
+  my $continue = 1;
   foreach my $key (keys %{$blacklist}) {
-    if ($file_name =~ /$key/i) { print "Bogus package request: $file_name\n"; return(); }
-  }
-print "Still not returning!\n";
-
-  # all the spec.in files that match the filename (usually just one)
-  my @files = glob("SPECS/$file_name.spec.in");
-
-  # this keeps track of whether or not the yum install was successful, 0 is success
-  my $yum_install_status = 0;
-
-  # if there are no spec.in file by that name then must install via yum
-  if (scalar(@files) == 0) {
-    $yum_install_status = yum_install($file_name, $indent);
+    if ($file_name =~ /$key/i) { print "Bogus package request: $file_name\n"; $continue = 0; }
   }
 
-  # else if the @files is non-zero then there is (one or more) spec files to be built.
-  foreach my $file (@files) {
-    
-    # the yum install status is reset for each spec.in file
-    $yum_install_status = 0;
-
-    # yum install if there is no spec.in file or it is not in the no_yum_install list
-    if (!defined($no_yum_install->{$file_name})) {
-      $yum_install_status = yum_install($file_name, $indent);      
+  if ($continue) {
+    # all the spec.in files that match the filename (usually just one)
+    my @files = glob("SPECS/$file_name.spec.in");
+  
+    # this keeps track of whether or not the yum install was successful, 0 is success
+    my $yum_install_status = 0;
+  
+    # if there are no spec.in file by that name then must install via yum
+    if (scalar(@files) == 0) {
+      $yum_install_status = yum_install($file_name, $indent);
     }
-    
-    # otherwise there is either a spec file (taken care of below) or it is in the no_yum_install 
-    # so essentially the yum failed and the status is non-zero
-    else {
-     print "\n+Cound not yum install: $file_name\n\n";
-     $yum_install_status = 1;
-    }
-
-    # go ahead and try to build the local spec.in file if 1) yum could not install, 2) it was not built
-    # already, and 3) it is not listed in the no_build file
-    if ($yum_install_status != 0 && !$parsed_before{$file} && !defined($no_build->{$file_name})) {
-
-      # prevents recursive loops in the dep tree
-      $parsed_before{$file} = 1;
-
-      # FIXME: what is this?
-      $req->{"$file"} = 1;
-
-      print "\n+Trying to build from spec: $file_name\n\n";
-
-      # print to dep tree
-      print TREE "$indent$file_name\n";
-
-      # vars to hold version string
-      my $id_str = "";
-      my $version_str = "";
-
-      my $arch_str = $arch_str_universal;
+  
+    # else if the @files is non-zero then there is (one or more) spec files to be built.
+    foreach my $file (@files) {
       
-      my @deps;
-      $file =~ /^(.*).in$/;
-      my $spec_file = $1;
-
-      # make the spec file
-      print STDERR "make $spec_file";
-      my $spec_make_status = system("make $spec_file");
-      if ($spec_make_status) { die "RESOLVE_DEPS FATAL ERROR: There was an error making the spec file $spec_file from spec.in file"; }
-
-      # look at the spec file to extract build/install requirements
-      open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Cannot open file: $spec_file\n";
-      while (<IN>) {
-        chomp;
-        if ($_ =~ /^BuildRequires:\s+(.*)$/) {
-          my @tokens = split ", ", $1;
-	  foreach my $token (@tokens) {
-	    $token = clean_package_names($token);
-            # there are some crufty entries with %{} in the spec files
-	    push @deps, $token if ($token !~ /%/); 
-	  }
-	}
-        elsif ($_ =~ /^Requires:\s+(.*)$/) {
-          my @tokens = split ", ", $1;
-	  foreach my $token (@tokens) {
-	    $token = clean_package_names($token);
-            # there are some crufty entries with %{} in the spec files
-	    push @deps, $token if ($token !~ /%/);
-	  }
-	}
-	elsif ($_ =~ /^Version:\s+(.*)$/) {
-          $version_str = $1;
-	}
-	elsif ($_ =~ /^Release:\s+([\d\.]*)/) {
-	  $id_str = $1;
-	  if ($id_str =~ /^(.*)\.$/) {
-            $id_str = $1;
-	  }
-	}
-        elsif ($_ =~ /^BuildArch:\s+(.*)$/) {
-          $arch_str = $1;
-          print "\n+Setting arch string to $arch_str for $spec_file\n\n";
-	}
+      # the yum install status is reset for each spec.in file
+      $yum_install_status = 0;
+  
+      # yum install if there is no spec.in file or it is not in the no_yum_install list
+      if (!defined($no_yum_install->{$file_name})) {
+        $yum_install_status = yum_install($file_name, $indent);      
       }
-      close IN;
-
-      # now recursively examine each
-      foreach my $dep (@deps) {
-        parse_req($dep, $req, $missing_req, "\t$indent");
+      
+      # otherwise there is either a spec file (taken care of below) or it is in the no_yum_install 
+      # so essentially the yum failed and the status is non-zero
+      else {
+       print "\n+Cound not yum install: $file_name\n\n";
+       $yum_install_status = 1;
       }
-
-      # at this point all the deps are built/installed
-      $file =~ /SPECS\/(\S+).spec.in$/;
-      my $package_name = $1;
-
-      # only attempt a build if this is a valid package and it has not been built before
-      if (!defined($blacklist->{$package_name}) && !$built_before{$package_name}) {
-        print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
-        $built_before{$package_name} = 1;
-        my $result;
-        if ($verbose) { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built"); }
-        else { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log"); }
-	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
-
-	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
-        if ($install) {
-
-	  # these packages are handled differently (no bp-distro name in RPM name)
-	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
-	    if (!already_installed("$package_name-$version_str-$id_str")) {
-              # now check to see if the RPM is there, if not then this build failed!!
-              die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
-              print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
-              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
-              $complete_package_list->{$package_name} = 1;
-	    }
-
-	  # otherwise the RPM is installed like this
-	  } else {
-	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
-              # now check to see if the RPM is there, if not then this build failed!!
-              die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
-              print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
-              $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
-              $complete_package_list->{$package_name} = 1;
-	    }
-	  }
-
-	  # check for RPM install errors
-          if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
-	}
+  
+      # go ahead and try to build the local spec.in file if 1) yum could not install, 2) it was not built
+      # already, and 3) it is not listed in the no_build file
+      if ($yum_install_status != 0 && !$parsed_before{$file} && !defined($no_build->{$file_name})) {
+  
+        # prevents recursive loops in the dep tree
+        $parsed_before{$file} = 1;
+  
+        # FIXME: what is this?
+        $req->{"$file"} = 1;
+  
+        print "\n+Trying to build from spec: $file_name\n\n";
+  
+        # print to dep tree
+        print TREE "$indent$file_name\n";
+  
+        # vars to hold version string
+        my $id_str = "";
+        my $version_str = "";
+  
+        my $arch_str = $arch_str_universal;
+        
+        my @deps;
+        $file =~ /^(.*).in$/;
+        my $spec_file = $1;
+  
+        # make the spec file
+        print STDERR "make $spec_file";
+        my $spec_make_status = system("make $spec_file");
+        if ($spec_make_status) { die "RESOLVE_DEPS FATAL ERROR: There was an error making the spec file $spec_file from spec.in file"; }
+  
+        # look at the spec file to extract build/install requirements
+        open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Cannot open file: $spec_file\n";
+        while (<IN>) {
+          chomp;
+          if ($_ =~ /^BuildRequires:\s+(.*)$/) {
+            my @tokens = split ", ", $1;
+  	  foreach my $token (@tokens) {
+  	    $token = clean_package_names($token);
+              # there are some crufty entries with %{} in the spec files
+  	    push @deps, $token if ($token !~ /%/); 
+  	  }
+  	}
+          elsif ($_ =~ /^Requires:\s+(.*)$/) {
+            my @tokens = split ", ", $1;
+  	  foreach my $token (@tokens) {
+  	    $token = clean_package_names($token);
+              # there are some crufty entries with %{} in the spec files
+  	    push @deps, $token if ($token !~ /%/);
+  	  }
+  	}
+  	elsif ($_ =~ /^Version:\s+(.*)$/) {
+            $version_str = $1;
+  	}
+  	elsif ($_ =~ /^Release:\s+([\d\.]*)/) {
+  	  $id_str = $1;
+  	  if ($id_str =~ /^(.*)\.$/) {
+              $id_str = $1;
+  	  }
+  	}
+          elsif ($_ =~ /^BuildArch:\s+(.*)$/) {
+            $arch_str = $1;
+            print "\n+Setting arch string to $arch_str for $spec_file\n\n";
+  	}
+        }
+        close IN;
+  
+        # now recursively examine each
+        foreach my $dep (@deps) {
+          parse_req($dep, $req, $missing_req, "\t$indent");
+        }
+  
+        # at this point all the deps are built/installed
+        $file =~ /SPECS\/(\S+).spec.in$/;
+        my $package_name = $1;
+  
+        # only attempt a build if this is a valid package and it has not been built before
+        if (!defined($blacklist->{$package_name}) && !$built_before{$package_name}) {
+          print "\n+make SPECS/$package_name.spec SPECS/$package_name.built\n\n";
+          $built_before{$package_name} = 1;
+          my $result;
+          if ($verbose) { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built"); }
+          else { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log"); }
+  	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
+  
+  	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
+          if ($install) {
+  
+  	  # these packages are handled differently (no bp-distro name in RPM name)
+  	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
+  	    if (!already_installed("$package_name-$version_str-$id_str")) {
+                # now check to see if the RPM is there, if not then this build failed!!
+                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+                print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
+                $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
+                $complete_package_list->{$package_name} = 1;
+  	    }
+  
+  	  # otherwise the RPM is installed like this
+  	  } else {
+  	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
+                # now check to see if the RPM is there, if not then this build failed!!
+                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+                print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
+                $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
+                $complete_package_list->{$package_name} = 1;
+  	    }
+  	  }
+  
+  	  # check for RPM install errors
+            if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
+  	}
+        }
       }
     }
   }
