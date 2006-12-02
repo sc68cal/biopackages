@@ -219,7 +219,7 @@ sub parse_req {
         open IN, "<$spec_file" or die "RESOLVE_DEPS FATAL ERROR: Cannot open file: $spec_file\n";
         while (<IN>) {
           chomp;
-          if ($_ =~ /^BuildRequires:\s+(.*)$/) {
+          if ($_ =~ /BuildRequires:\s+(.*)$/) {
             my @tokens = split ", ", $1;
   	  foreach my $token (@tokens) {
   	    $token = clean_package_names($token);
@@ -227,7 +227,7 @@ sub parse_req {
   	    push @deps, $token if ($token !~ /%/); 
   	  }
   	}
-          elsif ($_ =~ /^Requires:\s+(.*)$/) {
+          elsif ($_ =~ /Requires:\s+(.*)$/) {
             my @tokens = split ", ", $1;
   	  foreach my $token (@tokens) {
   	    $token = clean_package_names($token);
