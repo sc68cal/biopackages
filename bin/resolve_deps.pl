@@ -22,12 +22,13 @@ for all of these.
 --no-build (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/no_build.txt)
 --no-yum (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/yum_no_install.txt)
 --remove-rpms (defaults to true, RPMs are removed from the system)
+--rpm-base (defaults to /usr/src/biopackages/SETTINGS/<distro>.<arch>/clean_rpm_list.txt)
 
 UUU
 
 
 # GLOBALS
-my ($arch_str_universal, $spec_file, $no_build_file, $no_deps_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help, $verbose);
+my ($arch_str_universal, $spec_file, $no_build_file, $no_deps_file, $no_yum_install_file, $remove_installed_rpms, $base_rpm_list, $dep_tree_file, $help, $verbose);
 
 my $arg_count = scalar(@ARGV);
 
@@ -37,6 +38,7 @@ GetOptions ("arch=s"      => \$arch_str_universal,
             "no-deps=s"   => \$no_deps_file,
             "no-yum=s"    => \$no_yum_install_file,
             "remove-rpms" => \$remove_installed_rpms,
+            "rpm-base"    => \$base_rpm_list,
             "dep-tree=s"  => \$dep_tree_file,
             "help"        => \$help,
             "verbose"     => \$verbose,
@@ -55,6 +57,7 @@ $no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_b
 $no_deps_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_deps.txt" if (!defined($no_deps_file));
 $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
 $remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
+$base_rpm_list = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/clean_rpm_list.txt" if (!defined($base_rpm_list));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 
 # blacklist: packages that should never be built (because they are not real packages
@@ -126,9 +129,11 @@ close TREE;
 # i.e. perl.
 # FIXME: explore the possibility of removing only RPMs not already installed on the system
 if($remove_installed_rpms) {
-  my $command = "sudo yum -y remove ".join(" ", keys(%built_before));
+  $base_rpms = read_no_build($base_rpm_list);
+  my $rpms_now = get_new_rpms($base_rpms);
+  my $command = "sudo rpm -e ".join(" ", keys(%built_before));
   print "$command\n";
-  system($command);
+  #system($command);
 }
 
 
@@ -374,6 +379,18 @@ sub clean_package_names {
   }
   else { $name = $raw_name; }
   return($name)
+}
+
+sub get_new_rpms {
+  my ($base_rpms) = @_;
+  system("rpm -qa > /tmp/rpm_list.txt");
+  my $current_rpms = read_no_build("/tmp/rpm_list.txt");
+  my $new_rpms = {};
+  foreach my $rpm (keys %{$curren_rpms}) {
+    if (!defined($base_rpms->{$rpm})) { $new_rpms->{$rpm} = 1; }
+  }
+  print Dumper($new_rpms);
+  return($new_rpms);
 }
 
 sub read_no_build {
