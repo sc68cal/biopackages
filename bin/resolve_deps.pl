@@ -101,8 +101,10 @@ my $install = 1;
 open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: $!";
 
 # distro string
-my $distro_str = `/usr/bin/bp-distro`;
-chomp($distro_str);
+my $distro_str;
+open IN, "/usr/bin/bp-distro | " or die;
+while (<IN>) { chomp; $distro_str = $_; last; }
+close IN;
 
 
 # THE PROGRAM STARTS HERE
@@ -133,7 +135,7 @@ if($remove_installed_rpms) {
   my $rpms_now = get_new_rpms($base_rpms);
   my $command = "sudo rpm -e ".join(" ", keys(%built_before));
   print "$command\n";
-  #system($command);
+  system($command);
 }
 
 
@@ -360,7 +362,13 @@ sub yum_install {
 # check to see if the package is already installed
 sub already_installed {
   my ($package_name) = @_;
-  my @query_result = `rpm -qa | grep $package_name`;
+  my @query_result;
+  open IN, "rpm -qa | grep $package_name | " or die;
+  while(<IN>) {
+    chomp;
+    push @query_result, $_;
+  }
+  close IN;
   return(scalar(@query_result));
 }
 
@@ -407,8 +415,10 @@ sub read_no_build {
 }
 
 sub hostname {
-  my $hostname = `hostname`;
-  chomp($hostname);
+  my $hostname;
+  open IN, "hostname | " or die;
+  while (<IN>) { chomp; $hostname = $_; last; }
+  close IN;
   my @tokens = split /\./, $hostname;
   return(\@tokens);
 }
