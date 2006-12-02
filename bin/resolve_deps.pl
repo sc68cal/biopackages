@@ -58,6 +58,7 @@ $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_
 # blacklist: packages that should never be built (because they are not real packages
 my $blacklist = {
   'WITH_ITHREADS'   => 1,
+  'WITH_THREADS'    => 1,
   'MODULE_COMPAT'   => 1,
   ' '               => 1,
 };
@@ -139,18 +140,21 @@ sub print_req{
 # parses the requirements for a given spec file and recursively build them
 sub parse_req {
 
+
+
   # the filename is the package to build, req is FIXME, $missing_req is FIXME, $indent is the tabs to indent the dep tree
   my ($file_name, $req, $missing_req, $indent) = @_;
+
+  print "+Calling parse_req on $file_name.\n";
 
   # there is a blacklist of "packages" that are not really packages that should just be skipped
   my $continue = 1;
   foreach my $key (keys %{$blacklist}) {
-    if ($file_name =~ /$key/i) { $continue = 0; print "Bogus package request: $file_name $continue\n"; }
-# LEFT OFF HERE
+    if ($file_name =~ /$key/i) { $continue = 0; print "+Bogus package request, ignoring: $file_name\n"; }
   }
 
   if ($continue) {
-print "I'm continuing with $file_name $continue.\n";
+
     # all the spec.in files that match the filename (usually just one)
     my @files = glob("SPECS/$file_name.spec.in");
   
