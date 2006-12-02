@@ -397,7 +397,6 @@ sub get_new_rpms {
   foreach my $rpm (keys %{$current_rpms}) {
     if (!defined($base_rpms->{$rpm})) { $new_rpms->{$rpm} = 1; }
   }
-  print Dumper($new_rpms);
   return($new_rpms);
 }
 
