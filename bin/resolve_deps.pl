@@ -133,7 +133,7 @@ close TREE;
 if($remove_installed_rpms) {
   my $base_rpms = read_no_build($base_rpm_list);
   my $rpms_now = get_new_rpms($base_rpms);
-  my $command = "sudo rpm -e ".join(" ", keys(%built_before));
+  my $command = "sudo rpm -e ".join(" ", keys(%{$rpms_now}));
   print "$command\n";
   system($command);
 }
