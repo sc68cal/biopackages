@@ -27,13 +27,14 @@ UUU
 
 
 # GLOBALS
-my ($arch_str_universal, $spec_file, $no_build_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help, $verbose);
+my ($arch_str_universal, $spec_file, $no_build_file, $no_deps_file, $no_yum_install_file, $remove_installed_rpms, $dep_tree_file, $help, $verbose);
 
 my $arg_count = scalar(@ARGV);
 
 GetOptions ("arch=s"      => \$arch_str_universal,
             "spec=s"      => \$spec_file,
             "no-build=s"  => \$no_build_file,
+            "no-deps=s"   => \$no_deps_file,
             "no-yum=s"    => \$no_yum_install_file,
             "remove-rpms" => \$remove_installed_rpms,
             "dep-tree=s"  => \$dep_tree_file,
@@ -51,6 +52,7 @@ if ($help or $arg_count == 0) { print USAGE; exit(1); }
 my $distro = find_distro();
 $arch_str_universal = find_arch() if (!defined($arch_str_universal));
 $no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_build.txt" if (!defined($no_build_file));
+$no_deps_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_deps.txt" if (!defined($no_deps_file));
 $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
 $remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
@@ -78,6 +80,9 @@ my $yum_installed = {};
 
 # keep a list of what not to yum install
 my $no_yum_install = read_no_build($no_yum_install_file);
+
+# a list of packages that have circular deps and need to be forced if RPM installed
+my $no_deps_install = read_no_build($no_deps_file);
 
 # A list of modules not to build
 my $no_build = read_no_build($no_build_file);
@@ -140,8 +145,6 @@ sub print_req{
 # THE CENTRAL SUBROUTINE FOR THE PROGRAM
 # parses the requirements for a given spec file and recursively build them
 sub parse_req {
-
-
 
   # the filename is the package to build, req is FIXME, $missing_req is FIXME, $indent is the tabs to indent the dep tree
   my ($file_name, $req, $missing_req, $indent) = @_;
@@ -272,13 +275,17 @@ sub parse_req {
   	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
           if ($install) {
   
+          #nodeps, a small number of packages need force installs because of circular deps
+          my $nodeps_string = "";
+          if (defined($no_deps_install->{$package_name})) { $nodeps_string = "--nodeps"; }
+
   	  # these packages are handled differently (no bp-distro name in RPM name)
   	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
   	    if (!already_installed("$package_name-$version_str-$id_str")) {
                 # now check to see if the RPM is there, if not then this build failed!!
                 die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
-                print("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
-                $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
+                print("\n+sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
+                $result = system("sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
                 $complete_package_list->{$package_name} = 1;
   	    }
   
@@ -287,8 +294,8 @@ sub parse_req {
   	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
                 # now check to see if the RPM is there, if not then this build failed!!
                 die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
-                print ("\n+sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
-                $result = system("sudo rpm -Uvh --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
+                print ("\n+sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
+                $result = system("sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
                 $complete_package_list->{$package_name} = 1;
   	    }
   	  }
