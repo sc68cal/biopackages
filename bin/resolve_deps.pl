@@ -129,7 +129,7 @@ close TREE;
 # i.e. perl.
 # FIXME: explore the possibility of removing only RPMs not already installed on the system
 if($remove_installed_rpms) {
-  $base_rpms = read_no_build($base_rpm_list);
+  my $base_rpms = read_no_build($base_rpm_list);
   my $rpms_now = get_new_rpms($base_rpms);
   my $command = "sudo rpm -e ".join(" ", keys(%built_before));
   print "$command\n";
@@ -386,7 +386,7 @@ sub get_new_rpms {
   system("rpm -qa > /tmp/rpm_list.txt");
   my $current_rpms = read_no_build("/tmp/rpm_list.txt");
   my $new_rpms = {};
-  foreach my $rpm (keys %{$curren_rpms}) {
+  foreach my $rpm (keys %{$current_rpms}) {
     if (!defined($base_rpms->{$rpm})) { $new_rpms->{$rpm} = 1; }
   }
   print Dumper($new_rpms);
