@@ -59,6 +59,7 @@ $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_
 my $blacklist = {
   'WITH_ITHREADS'   => 1,
   'WITH_THREADS'    => 1,
+  'WITH_LARGEFILES' => 1,
   'MODULE_COMPAT'   => 1,
   ' '               => 1,
 };
