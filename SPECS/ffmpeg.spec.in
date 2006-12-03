@@ -1,7 +1,7 @@
-#$Id: ffmpeg.spec.in,v 1.17 2006/08/21 02:14:25 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.18 2006/12/03 23:22:30 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
-Version: 6036
+Version: 7218
 Epoch: 0
 Release: %{revision}.%{distro}
 Source0: ffmpeg-%{version}.tar.gz
@@ -32,7 +32,8 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}/ffmpeg/libavutil
 mkdir libavcodec/amr;
 pushd libavcodec/amr;
 unzip %{SOURCE1}; unzip *.zip; popd;
-perl -pi -e 's/pedantic-errors/DMMS_IO/' libavcodec/amr/makefile
+perl -pi -e 's/pedantic-errors/DMMS_IO -fPIC/' libavcodec/amr/makefile
+perl -pi -e 's/&& defined\(i386\)//' libavcodec/amr/typedefs.h
 mkdir libavcodec/amrwb_float;
 pushd libavcodec/amrwb_float;
 unzip %{SOURCE2}; unzip 26204-510_ANSI-C_source_code.zip; popd;
@@ -44,6 +45,7 @@ unzip %{SOURCE2}; unzip 26204-510_ANSI-C_source_code.zip; popd;
 
 ./configure \
   --prefix=$RPM_BUILD_ROOT/usr \
+  --extra-cflags="-fPIC" \
   --enable-shared \
   --enable-mp3lame \
   --enable-libogg \
@@ -89,6 +91,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.18  2006/12/03 23:22:30  allenday
+fPIC for 64b
+
 Revision 1.17  2006/08/21 02:14:25  allenday
 amr functionality via 3gpp zips and patches
 
