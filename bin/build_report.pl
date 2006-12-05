@@ -60,8 +60,8 @@ foreach my $distro (@distros) {
 
 #print Dumper $data;
 
-if ($format eq 'html') { open OUT, ">$output/report.html" or die "Can't open output file: $output/index.html"; }
-else { open OUT, ">$output/report.txt" or die "Can't open output file: $output/index.txt"; }
+if ($format eq 'html') { open OUT, ">$output/index.html" or die "Can't open output file: $output/index.html"; }
+else { open OUT, ">$output/report.txt" or die "Can't open output file: $output/report.txt"; }
 
 if ($format eq 'html') {
 print OUT <<"UUU";
