@@ -72,6 +72,19 @@ print OUT <<"UUU";
 <table border="1">
 UUU
 
+foreach my $distro (@distros) {
+  print "<tr><td><b>$distro</b></td>";
+  print "<td><a href='SETTINGS/$distro/no_build.txt'>no_build.txt</a></td>";
+  print "<td><a href='SETTINGS/$distro/no_deps.txt'>no_deps.txt</a></td>";
+  print "<td><a href='SETTINGS/$distro/yum_no_install.txt'>yum_no_install.txt</a></td>";
+  print "<td><a href='SETTINGS/$distro/clean_rpm_list.txt'>clean_rpm_list.txt</a></td></tr>";
+}
+
+print OUT <<"UUU";
+</table>
+<table border="1">
+UUU
+
   my $first = 1;
   foreach my $package (keys %{$data}) {
     if ($first) {
