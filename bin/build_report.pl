@@ -73,11 +73,13 @@ print OUT <<"UUU";
 UUU
 
 foreach my $distro (@distros) {
-  print "<tr><td><b>$distro</b></td>";
-  print "<td><a href='SETTINGS/$distro/no_build.txt'>no_build.txt</a></td>";
-  print "<td><a href='SETTINGS/$distro/no_deps.txt'>no_deps.txt</a></td>";
-  print "<td><a href='SETTINGS/$distro/yum_no_install.txt'>yum_no_install.txt</a></td>";
-  print "<td><a href='SETTINGS/$distro/clean_rpm_list.txt'>clean_rpm_list.txt</a></td></tr>";
+  $distro =~ /^.*\/([^\/]+)$/;
+  my $distro_name = $1;
+  print OUT "<tr><td><b>$distro_name</b></td>";
+  print OUT "<td><a href='SETTINGS/$distro_name/no_build.txt'>no_build.txt</a></td>";
+  print OUT "<td><a href='SETTINGS/$distro_name/no_deps.txt'>no_deps.txt</a></td>";
+  print OUT "<td><a href='SETTINGS/$distro_name/yum_no_install.txt'>yum_no_install.txt</a></td>";
+  print OUT "<td><a href='SETTINGS/$distro_name/clean_rpm_list.txt'>clean_rpm_list.txt</a></td></tr>";
 }
 
 print OUT <<"UUU";

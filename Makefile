@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.36 2006/12/05 19:22:16 bpbuild Exp $
+#$Id: Makefile,v 1.37 2006/12/05 23:44:06 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -46,7 +46,7 @@ cluster_report ::
 	sudo mkdir -p /var/www/html/biopackages_report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /var/www/html/biopackages_report
-	sudo ln -s /usr/src/SETTINGS /var/www/html/biopackages_report/SETTINGS
+	sudo ln -s /usr/src/biopackages/SETTINGS /var/www/html/biopackages_report/SETTINGS
 
 all :: specs
 
