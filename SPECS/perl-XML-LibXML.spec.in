@@ -1,4 +1,4 @@
-#$Id: perl-XML-LibXML.spec.in,v 1.6 2006/12/02 03:48:46 bpbuild Exp $
+#$Id: perl-XML-LibXML.spec.in,v 1.7 2006/12/05 08:24:26 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxml2 xml parsing and DOM library
@@ -14,7 +14,7 @@ BuildArch: noarch
 BuildRequires: perl, biopackages, perl-XML-SAX, perl-XML-LibXML-Common
 Requires: libxml2-devel
 Source0: XML-LibXML-1.58.tar.gz
-Patch0: perl-XML-LibXML-1.58.install.patch 
+Patch0: perl-XML-LibXML-1.58.install.2.patch 
 
 %description
 INTRODUCTION
@@ -308,6 +308,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-LibXML.spec.in,v $
+Revision 1.7  2006/12/05 08:24:26  bpbuild
+testing
+
 Revision 1.6  2006/12/02 03:48:46  bpbuild
 updates to deps
 
