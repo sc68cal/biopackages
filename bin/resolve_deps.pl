@@ -221,7 +221,7 @@ sub parse_req {
         my $spec_file = $1;
   
         # make the spec file
-        print STDERR "make $spec_file";
+        print STDERR "make $spec_file\n";
         my $spec_make_status = system("make $spec_file");
         if ($spec_make_status) { die "RESOLVE_DEPS FATAL ERROR: There was an error making the spec file $spec_file from spec.in file"; }
   
