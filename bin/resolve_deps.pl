@@ -350,7 +350,14 @@ sub yum_install {
     # FIXME: I think I need to check for other errors too, such as dependency problems
     if ($output_txt =~ /Cannot find a package matching/ || $output_txt =~ /No Match for argument/) { $yum_install_status = 1; }
     # else install was OK
-    else { $complete_package_list->{$file_name} = 1; }
+    else {
+      $complete_package_list->{$file_name} = 1; 
+      # if this condition is true then the package being build was yum
+      # installed, so log a message that the build report program can trap
+      if ($filename eq $spec_file) {
+        print STDERR "RESOLVE_DEPS PACKAGE YUM INSTALLED\n";
+      }
+    }
     $yum_installed->{$file_name} = 1;
   }
   # else the package has already been yum installed
