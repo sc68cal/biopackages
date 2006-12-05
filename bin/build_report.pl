@@ -60,8 +60,11 @@ foreach my $distro (@distros) {
 
 #print Dumper $data;
 
+if ($format eq 'html') { open OUT, ">$output/report.html" or die "Can't open output file: $output/index.html"; }
+else { open OUT, ">$output/report.txt" or die "Can't open output file: $output/index.txt"; }
+
 if ($format eq 'html') {
-print <<"UUU";
+print OUT <<"UUU";
 <html>
 <table border="1">
 UUU
@@ -69,18 +72,18 @@ UUU
   my $first = 1;
   foreach my $package (keys %{$data}) {
     if ($first) {
-      print "<tr><td> </td><td>";
-      print join "</td><td>", sort keys %{$data->{$package}};
-      print "</td></tr>\n";
+      print OUT "<tr><td> </td><td>";
+      print OUT join "</td><td>", sort keys %{$data->{$package}};
+      print OUT "</td></tr>\n";
       $first = 0;
     }
-    print "<tr><td>";
-    print "$package</td><td>";
-    print join "</td><td>", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
-    print "</td></tr>\n";
+    print OUT "<tr><td>";
+    print OUT "$package</td><td>";
+    print OUT join "</td><td>", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
+    print OUT "</td></tr>\n";
   }
 
-print <<"UUU";
+print OUT <<"UUU";
 </table>
 </html>
 UUU
@@ -89,13 +92,16 @@ UUU
   my $first = 1;
   foreach my $package (keys %{$data}) {
     if ($first) {
-      print "\t";
-      print join "\t", sort keys %{$data->{$package}};
-      print "\n";
+      print OUT "\t";
+      print OUT join "\t", sort keys %{$data->{$package}};
+      print OUT "\n";
       $first = 0;
     }
-    print "$package\t";
-    print join "\t", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
-    print "\n";
+    print OUT "$package\t";
+    print OUT join "\t", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
+    print OUT "\n";
   }
 }
+
+close OUT;
+

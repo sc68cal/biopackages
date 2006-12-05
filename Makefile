@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.32 2006/11/29 06:40:03 bpbuild Exp $
+#$Id: Makefile,v 1.33 2006/12/05 05:12:48 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -32,15 +32,18 @@ cluster_buildall ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
 cluster_buildclean ::
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
 
 cluster_cvsupdate ::
-	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n" > SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; qsub -cwd -o SETTINGS/$$file/LOGS/buildall_initialize.stdout -e SETTINGS/$$file/LOGS/buildall_initialize.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/buildall_initialize.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/*; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/bash\n\ncvs update\n" > SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_cvsupdate.stdout -e SETTINGS/$$file/LOGS/cluster_cvsupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; done' | /bin/bash
 
 # creates an HTML output report summarizing the build status of each package based on logs
 # FIXME: this needs to be implemented
 cluster_build_report ::
 	echo 'for i in SETTINGS/*; do echo "$$i/\n"; done' | /bin/bash 
+
+cluster_report ::
+	perl --dir SETTINGS --outdir REPORTS --format html
 
 all :: specs
 
