@@ -46,12 +46,15 @@ foreach my $distro (@distros) {
     while(<LOG>) {
       chomp;
       if ($_ =~ /RESOLVE_DEPS FATAL ERROR/) { $errors = 1; }
+      if ($_ =~ /RESOLVE_DEPS PACKAGE YUM INSTALLED/) { $errors = -1; }
     }
     close LOG;
-    if ($errors) {
+    if ($errors == 1) {
       $data->{$package}{$distro_name} = "<img src='red.gif' height='25' width='25'>";
-    } else {
+    } elsif ($errors == 0) {
       $data->{$package}{$distro_name} = "<img src='green.gif' height='25' width='25'>";
+    } elsif ($errors == -1) {
+      $data->{$package}{$distro_name} = "yum";
     }
   }
 }

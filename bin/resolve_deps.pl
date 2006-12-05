@@ -354,7 +354,7 @@ sub yum_install {
       $complete_package_list->{$file_name} = 1; 
       # if this condition is true then the package being build was yum
       # installed, so log a message that the build report program can trap
-      if ($filename eq $spec_file) {
+      if ($file_name eq $spec_file) {
         print STDERR "RESOLVE_DEPS PACKAGE YUM INSTALLED\n";
       }
     }
