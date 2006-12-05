@@ -1,4 +1,4 @@
-#$Id: perl-XML-LibXML.spec.in,v 1.7 2006/12/05 08:24:26 bpbuild Exp $
+#$Id: perl-XML-LibXML.spec.in,v 1.8 2006/12/05 08:28:28 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxml2 xml parsing and DOM library
@@ -301,6 +301,10 @@ if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
     exit 1
 fi
 
+%post
+perl -MXML::SAX -e "XML::SAX->add_parser(q(XML::LibXML::SAX::Parser))->save_parsers()"
+perl -MXML::SAX -e "XML::SAX->add_parser(q(XML::LibXML::SAX))->save_parsers()"
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -308,6 +312,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-LibXML.spec.in,v $
+Revision 1.8  2006/12/05 08:28:28  bpbuild
+testing
+
 Revision 1.7  2006/12/05 08:24:26  bpbuild
 testing
 
