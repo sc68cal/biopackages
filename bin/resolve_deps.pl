@@ -109,6 +109,9 @@ close IN;
 
 # THE PROGRAM STARTS HERE
 
+# fail if on the no_build list
+if (defined $no_build->{$spec_file}) { print STDERR "RESOLVE_DEPS FATAL ERROR: this package $spec is on the no_build list\n"; }
+
 # The actual process 
 parse_req($spec_file, $req, $missing_req, "");
 
