@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.37 2006/12/05 23:44:06 bpbuild Exp $
+#$Id: Makefile,v 1.38 2006/12/06 00:23:38 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -119,7 +119,7 @@ specs ::
 #synlink/rsync targets to maintain SETTINGS
 #this dir structure also has the logs dir
 symlink_settings ::
-	cd SETTINGS; ln -s /home/bpbuild/SETTINGS/* .; cd ..
+	#cd SETTINGS; ln -s /home/bpbuild/SETTINGS/* .; cd ..
 
 rsync_settings : rsync_settings_down rsync_settings_up
 rsync_settings_down ::
