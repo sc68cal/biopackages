@@ -50,9 +50,9 @@ foreach my $distro (@distros) {
     }
     close LOG;
     if ($errors == 1) {
-      $data->{$package}{$distro_name} = "<img src='red.gif' height='25' width='25'>";
+      $data->{$package}{$distro_name} = "<img src='red.gif' height='25' width='25'> [<a href='SETTINGS/$distro_name/LOGS/$package.stdout'>o</a>] [<a href='SETTINGS/$distro_name/LOGS/$package.stderr'>e</a>] [<a href='SETTINGS/$distro_name/DEP_TREES/$package.deptree'>d</a>]";
     } elsif ($errors == 0) {
-      $data->{$package}{$distro_name} = "<img src='green.gif' height='25' width='25'>";
+      $data->{$package}{$distro_name} = "<img src='green.gif' height='25' width='25'> [<a href='SETTINGS/$distro_name/LOGS/$package.stdout'>o</a>] [<a href='SETTINGS/$distro_name/LOGS/$package.stderr'>e</a>] [<a href='SETTINGS/$distro_name/DEP_TREES/$package.deptree'>d</a>]";
     } elsif ($errors == -1) {
       $data->{$package}{$distro_name} = "yum";
     }
