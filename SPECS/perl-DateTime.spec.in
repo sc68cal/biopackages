@@ -1,4 +1,4 @@
-#$Id: perl-DateTime.spec.in,v 1.7 2006/11/27 04:22:15 allenday Exp $
+#$Id: perl-DateTime.spec.in,v 1.8 2006/12/13 03:03:48 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/DateTime/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-DateTime-Locale, perl-Params-Validate
+Requires: perl-DateTime-Locale, perl-Params-Validate, perl-DateTime-TimeZone
 BuildRequires: perl-DateTime-Locale, perl-Params-Validate
 #wtf
 Provides: perl(DateTimePPExtra)
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime.spec.in,v $
+Revision 1.8  2006/12/13 03:03:48  bpbuild
+dep
+
 Revision 1.7  2006/11/27 04:22:15  allenday
 provides fixup
 
