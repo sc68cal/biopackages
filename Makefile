@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.40 2006/12/19 22:15:48 bpbuild Exp $
+#$Id: Makefile,v 1.41 2006/12/19 22:18:44 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -17,7 +17,6 @@ prep ::
 	echo 'for d in tmp SETTINGS SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
 	$(MAKE) sources
 	$(MAKE) settings
-	$(MAKE) symlink_settings
 
 ####################################
 #main build targets
