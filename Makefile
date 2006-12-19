@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.39 2006/12/07 18:59:20 bpbuild Exp $
+#$Id: Makefile,v 1.40 2006/12/19 22:15:48 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -17,6 +17,7 @@ prep ::
 	echo 'for d in tmp SETTINGS SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
 	$(MAKE) sources
 	$(MAKE) settings
+	$(MAKE) symlink_settings
 
 ####################################
 #main build targets
@@ -119,7 +120,8 @@ specs ::
 #synlink/rsync targets to maintain SETTINGS
 #this dir structure also has the logs dir
 symlink_settings ::
-	#cd SETTINGS; ln -s /home/bpbuild/SETTINGS/* .; cd ..
+	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -s /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
+
 
 rsync_settings : rsync_settings_down rsync_settings_up
 rsync_settings_down ::
