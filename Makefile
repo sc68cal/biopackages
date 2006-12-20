@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.42 2006/12/20 02:30:58 bpbuild Exp $
+#$Id: Makefile,v 1.43 2006/12/20 03:45:25 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -120,7 +120,10 @@ specs ::
 #this dir structure also has the logs dir
 symlink_settings ::
 	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -s /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
-
+#
+#FIXME: finish following statment to symlink RPMS and SRPMS to Shared Storage as part of symlink_settings target (JMM)
+#       echo 'for n in SRPMS RPMS/{i386,noarch,x86_64} ; do unlink $n ; done' | /bin/bash
+#       echo 'if [ "$$(hostname|cut -d . -f 1)" = "fc2" ] ; then ln -s /net/biopackages/testing/fedora/2/SRPMS SRPMS && ln -s /net/biopackages/testing/fedora/2/i386 RPMS/i386 && ln -s /net/biopackages/testing/fedora/2/noarch RPMS/noarch && ln -s /net/biopackages/testing/fedora/2/x86_64 RPMS/x86_64 ; elif [ "$$(hostname|cut -d . -f 1)" = "fc5" ] ; then ln -s /net/biopackages/testing/fedora/5/SRPMS SRPMS && ln -s /net/biopackages/testing/fedora/5/i386 RPMS/i386 && ln -s /net/biopackages/testing/fedora/5/noarch RPMS/noarch && ln -s /net/biopackages/testing/fedora/5/x86_64 RPMS/x86_64 ; elif [ "$$(hostname|cut -d . -f 1)" = "centos4" ] ; then ln -s /net/biopackages/testing/centos/4/SRPMS SRPMS && ln -s /net/biopackages/testing/centos/4/i386 RPMS/i386 && ln -s /net/biopackages/testing/centos/4/noarch RPMS/noarch && ln -s /net/biopackages/testing/centos/4/x86_64 RPMS/x86_64 ; else echo "WARNING: CANNOT RESOLVE YOUR HOSTNAME" && echo "BUILT YOUR RPMS & SRPMS WILL NOT BE WRITTEN TO SHARED STORAGE" ; fi ' | /bin/bash
 
 rsync_settings : rsync_settings_down rsync_settings_up
 rsync_settings_down ::
