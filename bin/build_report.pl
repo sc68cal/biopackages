@@ -20,6 +20,8 @@ my ($dir, $outdir, $format, $help);
 
 my $data = {};
 
+my @distro_names;
+
 my $arg_count = scalar(@ARGV);
 
 GetOptions ("dir=s"       => \$dir,
@@ -31,7 +33,7 @@ GetOptions ("dir=s"       => \$dir,
 # USAGE
 if ($help or $arg_count == 0) { print USAGE; exit(1); }
 
-my @distros = glob("$dir/*");
+my @distros = glob("$dir/*.*");
 
 foreach my $distro (@distros) {
   $distro =~ /^.*\/([^\/]+)$/;
@@ -75,6 +77,7 @@ UUU
 foreach my $distro (@distros) {
   $distro =~ /^.*\/([^\/]+)$/;
   my $distro_name = $1;
+  push @distro_names, $distro_name;
   print OUT "<tr><td><b>$distro_name</b></td>";
   print OUT "<td><a href='SETTINGS/$distro_name/no_build.txt'>no_build.txt</a></td>";
   print OUT "<td><a href='SETTINGS/$distro_name/no_deps.txt'>no_deps.txt</a></td>";
@@ -91,13 +94,13 @@ UUU
   foreach my $package (keys %{$data}) {
     if ($first) {
       print OUT "<tr><td> </td><td>";
-      print OUT join "</td><td>", sort keys %{$data->{$package}};
+      print OUT join "</td><td>", sort @distro_names;
       print OUT "</td></tr>\n";
       $first = 0;
     }
     print OUT "<tr><td>";
     print OUT "$package</td><td>";
-    print OUT join "</td><td>", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
+    print OUT join "</td><td>", map { $data->{$package}{$_} } sort @distro_names;
     print OUT "</td></tr>\n";
   }
 
@@ -111,12 +114,12 @@ UUU
   foreach my $package (keys %{$data}) {
     if ($first) {
       print OUT "\t";
-      print OUT join "\t", sort keys %{$data->{$package}};
+      print OUT join "\t", sort @distro_names;
       print OUT "\n";
       $first = 0;
     }
     print OUT "$package\t";
-    print OUT join "\t", map { $data->{$package}{$_} } sort keys %{$data->{$package}};
+    print OUT join "\t", map { $data->{$package}{$_} } sort @distro_names;
     print OUT "\n";
   }
 }
