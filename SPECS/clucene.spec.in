@@ -1,0 +1,103 @@
+#$Id: clucene.spec.in,v 1.1 2006/12/22 05:05:17 bpbuild Exp $
+Summary: A C++ port of Lucene
+Name: clucene
+Version: 0.9.16a
+Release: %{revision}.%{distro}
+License: LGPL
+Group: Development/System
+URL: http://www.sourceforge.net/projects/clucene
+#Source: http://easynews.dl.sf.net/clucene/clucene-core-%{version}.tar.bz2
+Source: %{name}-core-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-root
+Patch:    %{name}-core-%{version}.patch
+BuildRequires: automake
+
+%description
+CLucene is a C++ port of Lucene.
+It is a high-performance, full-featured text search 
+engine written in C++. CLucene is faster than lucene
+as it is written in C++
+
+%package core
+Summary: Core clucene module
+Group: Development/System
+Provides: clucene
+
+%description core
+The core clucene module
+
+%package core-devel
+Summary: Headers for developing programs that will use %{name}
+Group: Development/Libraries
+Requires: %{name}-core = %{version}-%{release}
+
+%description core-devel
+This package contains the static libraries and header files needed for
+developing with clucene
+
+%prep
+%setup -q -n clucene-core-%{version}
+%patch -p1
+
+%build
+%configure --disable-static
+make %{?_smp_mflags}
+
+# Run the tests
+%check
+make check
+										
+%install
+rm -rf %{buildroot}
+make DESTDIR=%{buildroot} install
+
+#Hope upstream will correct this problem in the next release
+mv %{buildroot}%{_libdir}/CLucene/clucene-config.h  %{buildroot}%{_includedir}/CLucene/
+rm -rf %{buildroot}%{_libdir}/CLucene
+
+#Package the docs
+mkdir -p %{buildroot}%{_datadir}/%{name}/doc
+cp -pr doc/*.htm doc/*.jpg %{buildroot}%{_datadir}/%{name}/doc
+
+rm -rf %{buildroot}%{_libdir}/*.la
+
+%clean
+rm -rf %{buildroot}
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files core
+%defattr(-, root, root, -)
+%doc AUTHORS COPYING HACKING README REQUESTS
+%{_libdir}/*.so.*
+
+%files core-devel
+%defattr(-, root, root, -)
+%{_includedir}/CLucene/
+%{_includedir}/CLucene.h
+%{_libdir}/*.so
+%{_datadir}/%{name}/
+
+# Log from FC5 spec
+#* Thu Dec 07 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.16a-1
+#- Name the built package clucene-core to conform to upstream naming
+#- Update to latest stable release 
+#- Run make check during build
+#
+#* Mon Nov 20 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-3
+#- Don't package APACHE.license since we've LGPL instead 
+#- Package documentation in devel subpackage
+#
+#* Mon Nov 13 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-2
+#- Fix a bunch of issues with the spec (#215258)
+#- Moved the header file away from lib dir
+#
+#* Sat Nov 04 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-1
+#- Initial packaging for Fedora Extras
+
+$Log: clucene.spec.in,v $
+Revision 1.1  2006/12/22 05:05:17  bpbuild
+Adding clucene backport from FC5 but patched to work (better) with Turnkey.  A stock clucene would also work provided there aren't more than a couple thousand features to be searched
+
