@@ -95,7 +95,7 @@ my %built_before;
 my %parsed_before;
 
 # Should this program install build requirements?
-my $install = 1;
+my $install = 0;
 
 # A file for the dependency tree summary
 open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: $!";
@@ -113,7 +113,7 @@ close IN;
 if (defined $no_build->{$spec_file}) { print STDERR "RESOLVE_DEPS FATAL ERROR: this package $spec_file is on the no_build list\n"; }
 
 # The actual process 
-parse_req($spec_file, $req, $missing_req, "");
+parse_req($spec_file, $req, $missing_req, "", $install);
 
 # Done
 print "\nRESOLVE_DEPS: BUILD COMPLETE!\n\n"; 
@@ -157,7 +157,7 @@ sub print_req{
 sub parse_req {
 
   # the filename is the package to build, req is FIXME, $missing_req is FIXME, $indent is the tabs to indent the dep tree
-  my ($file_name, $req, $missing_req, $indent) = @_;
+  my ($file_name, $req, $missing_req, $indent, $install_deps) = @_;
 
   print "+Calling parse_req on $file_name.\n";
 
@@ -266,7 +266,7 @@ sub parse_req {
   
         # now recursively examine each
         foreach my $dep (@deps) {
-          parse_req($dep, $req, $missing_req, "\t$indent");
+          parse_req($dep, $req, $missing_req, "\t$indent", 1);
         }
   
         # at this point all the deps are built/installed
@@ -283,7 +283,7 @@ sub parse_req {
   	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
   
   	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
-          if ($install) {
+          if ($install_deps) {
   
           #nodeps, a small number of packages need force installs because of circular deps
           my $nodeps_string = "";
