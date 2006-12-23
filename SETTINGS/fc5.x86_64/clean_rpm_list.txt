@@ -311,9 +311,7 @@ perl-Test-Differences-0.47-2.fc5
 perl-Pod-POM-0.17-5.fc5
 perl-AppConfig-1.63-1.fc5
 perl-Text-Reform-1.11-5.fc5
-perl-Template-Toolkit-2.15-1.fc5
 perl-Carp-Clan-5.3-1.2
-perl-Spreadsheet-WriteExcel-2.17-1.fc5
 perl-Unicode-Map-0.112-7.fc5
 perl-Bit-Vector-6.4-2.2.2
 perl-Text-RecordParser-0.08-1.2.bp.fc5
@@ -437,4 +435,5 @@ xorg-x11-xfs-1.0.1-4
 biopackages
 biopackages
 usr-local-bin-perl
-perl-Module-Install-0.63-1.fc5
+m4-1.4.4-1.2.1
+gettext-0.14.5-3
