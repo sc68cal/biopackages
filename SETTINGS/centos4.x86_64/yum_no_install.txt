@@ -40,3 +40,4 @@ perl-libwww-perl
 mod_perl
 clucene-core-devel
 clucene-core
+clucene

@@ -38,3 +38,4 @@ ucsc
 udunits
 clucene-core-devel
 clucene-core
+clucene
