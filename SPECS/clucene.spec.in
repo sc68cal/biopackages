@@ -1,4 +1,4 @@
-#$Id: clucene.spec.in,v 1.1 2006/12/22 05:05:17 bpbuild Exp $
+#$Id: clucene.spec.in,v 1.2 2006/12/23 01:47:33 bpbuild Exp $
 Summary: A C++ port of Lucene
 Name: clucene
 Version: 0.9.16a
@@ -10,7 +10,7 @@ URL: http://www.sourceforge.net/projects/clucene
 Source: %{name}-core-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-root
 Patch:    %{name}-core-%{version}.patch
-BuildRequires: automake
+BuildRequires: automake, libtool, autoconf 
 
 %description
 CLucene is a C++ port of Lucene.
@@ -98,6 +98,9 @@ rm -rf %{buildroot}
 #- Initial packaging for Fedora Extras
 
 $Log: clucene.spec.in,v $
+Revision 1.2  2006/12/23 01:47:33  bpbuild
+Updated deps
+
 Revision 1.1  2006/12/22 05:05:17  bpbuild
 Adding clucene backport from FC5 but patched to work (better) with Turnkey.  A stock clucene would also work provided there aren't more than a couple thousand features to be searched
 
