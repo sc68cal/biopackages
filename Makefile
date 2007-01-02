@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.47 2006/12/22 01:27:21 bpbuild Exp $
+#$Id: Makefile,v 1.48 2007/01/02 21:24:06 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -37,12 +37,11 @@ cluster_buildclean ::
 cluster_cvsupdate ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsetenv CVS_RSH ssh\ncvs update\n" > SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_cvsupdate.stdout -e SETTINGS/$$file/LOGS/cluster_cvsupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; done' | /bin/bash
 
-# creates an HTML output report summarizing the build status of each package based on logs
-# FIXME: this needs to be implemented
-cluster_build_report ::
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do echo "$$i/\n"; done' | /bin/bash 
+cluster_prep ::
+	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
 
-cluster_report ::
+# creates an HTML output report summarizing the build status of each package based on logs
+report ::
 	sudo mkdir -p /var/www/html/biopackages_report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /var/www/html/biopackages_report
