@@ -293,7 +293,7 @@ sub parse_req {
   	  if ($package_name =~ /biopackages/ || $package_name =~ /macosx-release/ || $package_name =~ /usr-local-bin-perl/) {
   	    if (!already_installed("$package_name-$version_str-$id_str")) {
                 # now check to see if the RPM is there, if not then this build failed!!
-                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm");
+                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$arch_str.rpm is not there!!" if (!file_exists("RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm"));
                 print("\n+sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm\n\n");
                 $result = system("sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$arch_str.rpm");
                 $complete_package_list->{$package_name} = 1;
@@ -303,7 +303,7 @@ sub parse_req {
   	  } else {
   	    if (!already_installed("$package_name-$version_str-$id_str.$distro_str")) {
                 # now check to see if the RPM is there, if not then this build failed!!
-                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!-e "RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm");
+                die "RESOLVE_DEPS FATAL ERROR: RPM file RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm is not there!!" if (!file_exists("RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm"));
                 print ("\n+sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm\n\n");
                 $result = system("sudo rpm -Uvh $nodeps_string --oldpackage RPMS/$arch_str/$package_name*-$version_str-$id_str.$distro_str.$arch_str.rpm");
                 $complete_package_list->{$package_name} = 1;
@@ -317,6 +317,13 @@ sub parse_req {
       }
     }
   }
+}
+
+# checks if an RPM is there
+sub file_exists {
+  my ($file_glob) = @_;
+  my @files = glob($file_glob);
+  return(scalar(@files) > 0);
 }
 
 # try to yum install
