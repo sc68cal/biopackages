@@ -1,4 +1,4 @@
-#$Id: clucene.spec.in,v 1.5 2007/01/02 20:11:32 bpbuild Exp $
+#$Id: clucene.spec.in,v 1.6 2007/01/02 20:34:12 bpbuild Exp $
 Summary: A C++ port of Lucene
 Name: clucene
 Version: 0.9.16a
@@ -78,6 +78,7 @@ rm -rf %{buildroot}
 %{_includedir}/CLucene/
 %{_includedir}/CLucene.h
 %{_libdir}/*.so
+%{_libdir}/*.a
 %{_datadir}/%{name}/
 
 # Log from FC5 spec
@@ -98,6 +99,9 @@ rm -rf %{buildroot}
 #- Initial packaging for Fedora Extras
 
 $Log: clucene.spec.in,v $
+Revision 1.6  2007/01/02 20:34:12  bpbuild
+Changes to spec file
+
 Revision 1.5  2007/01/02 20:11:32  bpbuild
 Changed the way resolve_deps checks for RPMs. Also small spec changes.
 

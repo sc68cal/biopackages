@@ -1,10 +1,10 @@
-#$Id: turnkey.spec.in,v 1.14 2006/09/13 17:39:24 boconnor Exp $
+#$Id: turnkey.spec.in,v 1.15 2007/01/02 20:34:12 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
-Version: 1
+Version: 1.1
 Epoch: 2
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
@@ -16,7 +16,7 @@ BuildArch: noarch
 BuildRequires: perl, biopackages
 Requires: httpd, mod_perl >= 2.0.1
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
-Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML
+Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.15  2007/01/02 20:34:12  bpbuild
+Changes to spec file
+
 Revision 1.14  2006/09/13 17:39:24  boconnor
 Now that I've consolidated RPM versions for the deps it seems as though this patch is required for FC2.
 
