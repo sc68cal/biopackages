@@ -1,4 +1,4 @@
-#$Id: AmiGO.spec.in,v 1.3 2006/07/15 01:55:18 boconnor Exp $
+#$Id: AmiGO.spec.in,v 1.4 2007/01/03 05:21:36 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
@@ -24,6 +24,8 @@ Provides: perl(WebReports::BlastRunner)
 Source0: amigo.tar.gz
 #this patch allows browsing of a db that stores multiple ontologies
 Patch0: Session.pm.patch
+# this patch creates a new "theme" that let's you embed a AmiGO page within another page
+Patch1: amigo.patch
 
 %description
 AmiGO - Browse OBO ontologies stored in Chado
@@ -31,6 +33,7 @@ AmiGO - Browse OBO ontologies stored in Chado
 %prep
 %setup -qc %{name}-%{version}
 %patch0 -p1
+%patch1 -p0
 
 %build
 #find . -type d -name CVS -exec rm -rf {} \;
@@ -148,8 +151,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-%changelog
-* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-2
-- patch allows browsing of a db that stores multiple ontologies
-* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-1
-- New specfile
+#* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-2
+#- patch allows browsing of a db that stores multiple ontologies
+#* Wed Jun 29 2005 Allen Day <allenday@ucla.edu> - 2.0-1
+#- New specfile
+
+$Log: AmiGO.spec.in,v $
+Revision 1.4  2007/01/03 05:21:36  bpbuild
+Updated the Amigo spec.in file to include an embeddable theme
+
