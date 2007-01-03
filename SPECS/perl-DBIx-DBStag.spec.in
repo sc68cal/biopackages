@@ -1,4 +1,4 @@
-#$Id: perl-DBIx-DBStag.spec.in,v 1.4 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-DBIx-DBStag.spec.in,v 1.5 2007/01/03 21:15:16 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -12,7 +12,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/DBIx-DBStag/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, postgresql-server, postgresql,
+BuildRequires: perl, biopackages, postgresql-server, postgresql
 BuildRequires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent
 Requires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent, perl-Data-Stag
 
