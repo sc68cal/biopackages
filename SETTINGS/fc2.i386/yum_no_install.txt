@@ -25,7 +25,7 @@ perl-Net-SSLeay
 perl-PDL
 perl-Storable
 #perl-XML-DOM
-#perl-XML-LibXML
+perl-XML-LibXML
 #perl-XML-SAX
 pgplot
 primer3
