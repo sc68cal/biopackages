@@ -39,3 +39,5 @@ udunits
 clucene-core-devel
 clucene-core
 clucene
+perl-DBD-Pg
+perl-DBI
