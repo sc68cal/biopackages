@@ -1,0 +1,42 @@
+#$Id: chado-schema.spec.in,v 1.1 2007/01/04 02:39:50 bpbuild Exp $
+%define gmod_root /var/lib/gmod
+
+Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project.
+Name: chado-schema
+Version: 0.003
+Epoch: 0
+Release: %{revision}.%{distro}
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Brian O'Connor <boconnor@ucla.edu>
+URL: http://www.gmod.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+
+Source0: gmod-%{version}.tar.gz
+
+%description
+Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project. 
+This package only contains the schema.
+
+%prep
+%setup -n %{name}-%{version}
+
+%build
+
+%install
+mkdir -p %{buildroot}%{gmod_root}
+install -m 444 modules $RPM_BUILD_ROOT%{gmod_root}
+find $RPM_BUILD_ROOT%{gmod_root} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+$Log: chado-schema.spec.in,v $
+Revision 1.1  2007/01/04 02:39:50  bpbuild
+Added new chado-schema spec file
+
+
