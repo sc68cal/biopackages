@@ -1,4 +1,4 @@
-#$Id: AmiGO.spec.in,v 1.5 2007/01/04 00:32:41 bpbuild Exp $
+#$Id: AmiGO.spec.in,v 1.6 2007/01/04 00:56:07 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
@@ -84,7 +84,7 @@ cat<<EOF>$RPM_BUILD_ROOT/var/www/cgi-bin/amigo/config.pl
 # Docroot
 \$ENV{GO_HTML_DIR}="/var/www/html/amigo/";
 # Docroot URL
-\$ENV{GO_HTML_URL}="http://localhost/amigo";
+\$ENV{GO_HTML_URL}="http://\$ENV{HOSTNAME}/amigo";
 
 # Absolute location of your cgi-bin
 \$ENV{GO_CGI_ROOT}="/var/www/cgi-bin/amigo/";
@@ -182,6 +182,9 @@ rm -rf $RPM_BUILD_ROOT
 #- New specfile
 
 $Log: AmiGO.spec.in,v $
+Revision 1.6  2007/01/04 00:56:07  bpbuild
+Updates
+
 Revision 1.5  2007/01/04 00:32:41  bpbuild
 Updates to the AmiGO spec file
 
