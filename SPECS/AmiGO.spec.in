@@ -1,4 +1,4 @@
-#$Id: AmiGO.spec.in,v 1.4 2007/01/03 05:21:36 bpbuild Exp $
+#$Id: AmiGO.spec.in,v 1.5 2007/01/04 00:32:41 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
@@ -145,6 +145,31 @@ mkdir /var/www/html/amigo/tmp_images
 chmod 777 /var/www/cgi-bin/amigo/sessions
 chmod 777 /var/www/html/amigo/tmp_images
 
+# Alters the chado DB to include a common root node for the 
+# GO ontology, making it possible to render in AmiGO.
+# FIXME: This may affect other users of the GO ontology if they
+# depend on the structure in the stock database. A better way to do
+# this may be to alter the godb views instead.
+echo "insert into cv (name, definition) values ('GeneOntology', ''); \
+insert into dbxref (db_id, accession, description) values ((select db_id from db where name = 'GO'), 'GO', 'a fake node to connect multi-rooted GO ontologies'); \
+insert into cvterm (cv_id, dbxref_id, name, is_obsolete, is_relationshiptype) values ((select cv_id from cv where name = 'GeneOntology'), (select dbxref_id from dbxref where accession = 'GO'), 'root', 0, 0); \
+update cvterm set cv_id = (select cv_id from cv where name = 'GeneOntology') where cv_id in (select cv_id from cv where name in ('biological_process', 'molecular_function', 'cellular_component')); \
+insert into cvterm_relationship (type_id, subject_id, object_id) values ((select cvterm_id from cvterm where name = 'is_a'), (select cvterm_id from cvterm where name = 'biological_process' and cv_id in (select cv_id from cv where name = 'GeneOntology')), (select cvterm_id from cvterm where name = 'root')); \
+insert into cvterm_relationship (type_id, subject_id, object_id) values ((select cvterm_id from cvterm where name = 'is_a'), (select cvterm_id from cvterm where name = 'molecular_function' and cv_id in (select cv_id from cv where name = 'GeneOntology')), (select cvterm_id from cvterm where name = 'root')); \
+insert into cvterm_relationship (type_id, subject_id, object_id) values ((select cvterm_id from cvterm where name = 'is_a'), (select cvterm_id from cvterm where name = 'cellular_component' and cv_id in (select cv_id from cv where name = 'GeneOntology')), (select cvterm_id from cvterm where name = 'root')); \
+Delete from godb.go_acc; \
+INSERT INTO godb.go_acc SELECT * FROM godb.v_go_acc; \
+Delete from godb.dbxref; \
+INSERT INTO godb.dbxref SELECT * FROM godb.v_dbxref; \
+Delete from godb.db; \
+INSERT INTO godb.db SELECT * FROM godb.v_db; \
+Delete from godb.term; \
+INSERT INTO godb.term SELECT * FROM godb.v_term; \
+Delete from godb.term2term; \
+INSERT INTO godb.term2term SELECT * FROM godb.v_term2term; \
+UPDATE godb.term SET is_root = 1 WHERE id IN (SELECT cvterm_id FROM public.cvterm WHERE cvterm_id NOT IN (SELECT DISTINCT subject_id FROM public.cvterm_relationship) AND is_obsolete = 0 AND is_relationshiptype = 0); \
+" | sudo su postgres -c "psql chado"
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -157,6 +182,9 @@ rm -rf $RPM_BUILD_ROOT
 #- New specfile
 
 $Log: AmiGO.spec.in,v $
+Revision 1.5  2007/01/04 00:32:41  bpbuild
+Updates to the AmiGO spec file
+
 Revision 1.4  2007/01/03 05:21:36  bpbuild
 Updated the Amigo spec.in file to include an embeddable theme
 
