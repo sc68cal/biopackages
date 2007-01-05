@@ -1,4 +1,4 @@
-#$Id: perl-Apache-ParseFormData.spec.in,v 1.5 2007/01/05 01:09:01 bpbuild Exp $
+#$Id: perl-Apache-ParseFormData.spec.in,v 1.6 2007/01/05 01:17:04 bpbuild Exp $
 Epoch: 2
 Distribution: Custom
 Vendor: biopackages.net
@@ -12,7 +12,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/Apache-ParseFormData/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
-Requires: , mod_perl >= 2.0.0
+Requires: mod_perl >= 2.0.0
 BuildRequires: perl, biopackages 
 
 Patch0: Apache-ParseFormData-%{version}.mp2.patch
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache-ParseFormData.spec.in,v $
+Revision 1.6  2007/01/05 01:17:04  bpbuild
+Updated deps
+
 Revision 1.5  2007/01/05 01:09:01  bpbuild
 Updated deps
 
