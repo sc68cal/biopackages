@@ -280,7 +280,7 @@ sub parse_req {
           my $result;
           if ($verbose) { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built"); }
           else { $result = system("make SPECS/$package_name.spec SPECS/$package_name.built >& $package_name.log"); }
-  	if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
+  	if ($result != 0 && $result != 512) { die "RESOLVE_DEPS FATAL ERROR: There was an error building $package_name with error code $result\n"; }
   
   	# at this point the package should be built, if installing go ahead and RPM install it (this program will not work unless install is true)
           if ($install_deps) {
@@ -311,7 +311,7 @@ sub parse_req {
   	  }
   
   	  # check for RPM install errors
-            if ($result) { die "RESOLVE_DEPS FATAL ERROR: There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
+            if ($result != 0 && $result != 512) { die "RESOLVE_DEPS FATAL ERROR: There was an error RPM RPMS/$arch_str/$package_name-$version_str-$id_str.$distro_str.$arch_str.rpm with error code $result\n"; }
   	}
         }
       }
