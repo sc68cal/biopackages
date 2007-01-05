@@ -41,3 +41,4 @@ clucene-core
 clucene
 perl-DBD-Pg
 perl-DBI
+mod_perl
