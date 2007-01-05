@@ -1,4 +1,4 @@
-#$Id: perl-Apache2-SOAP.spec.in,v 1.1 2007/01/02 20:28:53 bpbuild Exp $
+#$Id: perl-Apache2-SOAP.spec.in,v 1.2 2007/01/05 10:55:37 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -10,9 +10,11 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/~rkobes/Apache2-SOAP-0.72/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-SOAP-Lite
+BuildRequires: perl, biopackages, perl-SOAP-Lite, httpd, httpd-devel
+BuildRequires: mod_perl >= 2.0.1
 BuildArch: noarch
-Requires: perl, perl-SOAP-Lite, mod_perl >= 2.0.1
+Requires: perl, perl-SOAP-Lite, httpd, httpd-devel
+Requires: mod_perl >= 2.0.1
 
 Source0: Apache2-SOAP-%{version}.tar.gz
 
@@ -102,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Apache2-SOAP.spec.in,v $
+Revision 1.2  2007/01/05 10:55:37  bpbuild
+Updated deps
+
 Revision 1.1  2007/01/02 20:28:53  bpbuild
 added new turnkey dep spec file
 
