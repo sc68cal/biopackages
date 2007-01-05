@@ -1,4 +1,4 @@
-#$Id: clucene.spec.in,v 1.6 2007/01/02 20:34:12 bpbuild Exp $
+#$Id: clucene.spec.in,v 1.7 2007/01/05 09:26:41 bpbuild Exp $
 Summary: A C++ port of Lucene
 Name: clucene
 Version: 0.9.16a
@@ -40,6 +40,7 @@ developing with clucene
 %patch -p1
 
 %build
+./autogen.sh
 %configure --disable-debug --prefix=/usr --exec-prefix=/usr --enable-ascii
 make %{?_smp_mflags}
 
@@ -99,6 +100,9 @@ rm -rf %{buildroot}
 #- Initial packaging for Fedora Extras
 
 $Log: clucene.spec.in,v $
+Revision 1.7  2007/01/05 09:26:41  bpbuild
+update spec
+
 Revision 1.6  2007/01/02 20:34:12  bpbuild
 Changes to spec file
 
