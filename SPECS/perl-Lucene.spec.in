@@ -1,4 +1,4 @@
-#$Id: perl-Lucene.spec.in,v 1.1 2006/12/22 06:27:48 bpbuild Exp $
+#$Id: perl-Lucene.spec.in,v 1.2 2007/01/05 02:49:43 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl wrapper for c-lucene search engine
@@ -15,7 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, clucene, biopackages
 Requires: perl, clucene
 
-Source0: %{name}-%{version}.tar.gz
+Source0: Lucene-%{version}.tar.gz
 
 %description
 Lucene
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Lucene.spec.in,v $
+Revision 1.2  2007/01/05 02:49:43  bpbuild
+Updated perl-lucene spec file
+
 Revision 1.1  2006/12/22 06:27:48  bpbuild
 fixes for report generator, new spec.in files
 
