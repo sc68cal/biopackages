@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.2 2006/07/15 01:55:21 boconnor Exp $
+#$Id: gbrowse.spec.in,v 1.3 2007/01/05 11:24:17 bpbuild Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.62
@@ -28,7 +28,7 @@ rm -rf $RPM_BUILD_ROOT
 %patch2 -p1
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL \
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL --SELINUX=1 \
   PREFIX=$RPM_BUILD_ROOT \
   LIB=$RPM_BUILD_ROOT%{perl_sitelib} \
   INSTALLSITEMAN3DIR=$RPM_BUILD_ROOT%{_datadir} \
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.3  2007/01/05 11:24:17  bpbuild
+SELinux
+
 Revision 1.2  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
