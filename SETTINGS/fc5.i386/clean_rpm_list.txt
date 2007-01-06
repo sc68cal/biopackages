@@ -103,7 +103,6 @@ libpng-devel-1.2.8-2.2.1
 libXdmcp-devel-1.0.0-2.2
 gd-devel-2.0.33-6.2
 perl-XML-NamespaceSupport-1.09-1.2
-fedora-package-config-apt-5-4
 libgcc-4.1.0-3
 filesystem-2.3.7-1.2.1
 tzdata-2006b-1
