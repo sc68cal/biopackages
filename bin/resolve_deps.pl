@@ -28,7 +28,7 @@ UUU
 
 
 # GLOBALS
-my ($arch_str_universal, $spec_file, $no_build_file, $no_deps_file, $no_yum_install_file, $remove_installed_rpms, $base_rpm_list, $dep_tree_file, $help, $verbose);
+my ($arch_str_universal, $spec_file, $no_build_file, $no_deps_file, $no_yum_install_file, $remove_installed_rpms, $base_rpm_list, $dep_tree_file, $help, $verbose, $mapping_file);
 
 my $arg_count = scalar(@ARGV);
 
@@ -42,6 +42,7 @@ GetOptions ("arch=s"      => \$arch_str_universal,
             "dep-tree=s"  => \$dep_tree_file,
             "help"        => \$help,
             "verbose"     => \$verbose,
+            "map"         => \$mapping_file,
             );
 
 # USAGE
@@ -59,6 +60,7 @@ $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universa
 $remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $base_rpm_list = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/clean_rpm_list.txt" if (!defined($base_rpm_list));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
+$mapping_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/package_name_mapping.txt" if (!defined($mapping_file));
 
 # blacklist: packages that should never be built (because they are not real packages
 my $blacklist = {
@@ -105,6 +107,9 @@ my $distro_str;
 open IN, "/usr/bin/bp-distro | " or die;
 while (<IN>) { chomp; $distro_str = $_; last; }
 close IN;
+
+# This stuct keeps tack of name mapping, this program can't ha
+my $package_name_mapper = parse_name_mapper($mapping_file);
 
 
 # THE PROGRAM STARTS HERE
@@ -160,6 +165,9 @@ sub parse_req {
   my ($file_name, $req, $missing_req, $indent, $install_deps) = @_;
 
   print "+Calling parse_req on $file_name.\n";
+
+  # FIXME: some package deps may be subpackages, so rename it to the base name
+  if (defined $package_name_mapper->{$file_name}) { $file_name = $package_name_mapper->{$file_name}; }
 
   # there is a blacklist of "packages" that are not really packages that should just be skipped
   my $continue = 1;
@@ -317,6 +325,21 @@ sub parse_req {
       }
     }
   }
+}
+
+# parse the file that maps from subpackage name to main package name
+sub parse_name_mapper {
+  my ($mapping_file) = @_;
+  my $result = {};
+  open INPUT, $mapping_file or die "RESOLVE_DEPS FATAL ERROR: Cannot read mapping_file: $mapping_file\n";
+  while (<INPUT>) {
+    chomp;
+    next if (/^#/);
+    my @tokens = split /\t/;
+    $result->{$tokens[0]} = $tokens[1];
+  }
+  close INPUT;
+  return($result);  
 }
 
 # checks if an RPM is there
