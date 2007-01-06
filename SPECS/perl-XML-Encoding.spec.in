@@ -1,7 +1,4 @@
-#$Log: perl-XML-Encoding.spec.in,v $
-#Revision 1.1  2007/01/06 00:38:48  boconnor
-#Import
-#
+#$Id: perl-XML-Encoding.spec.in,v 1.2 2007/01/06 00:46:11 boconnor Exp $
 
 %define _use_internal_dependency_generator 0
 
@@ -74,6 +71,9 @@ fi
 #- Newly introduced for Foomatic.
 
 $Log: perl-XML-Encoding.spec.in,v $
+Revision 1.2  2007/01/06 00:46:11  boconnor
+Import
+
 Revision 1.1  2007/01/06 00:38:48  boconnor
 Import
 
