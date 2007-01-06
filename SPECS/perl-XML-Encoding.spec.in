@@ -1,0 +1,79 @@
+#$Log: perl-XML-Encoding.spec.in,v $
+#Revision 1.1  2007/01/06 00:38:48  boconnor
+#Import
+#
+
+%define _use_internal_dependency_generator 0
+
+%define module	XML-Encoding
+Summary: A module for parsing encoded map XML files.
+Name: perl-%{module}
+Version: 1.01
+Release: %{revision}.%{distro}
+License: distributable
+Group: System Environment/Libraries
+Source0: %{module}-%{version}.tar.gz
+Url: http://www.cpan.org
+BuildRoot: %{_tmppath}/%{name}-buildroot/
+Requires: perl >= 5.6.0
+BuildArch: noarch
+
+BuildRequires: perl-XML-Parser
+
+%description
+This module, which is built as a subclass of XML::Parser, provides a
+parser for encoding map files, which are XML files. The file
+maps/encmap.dtd in the distribution describes the structure of these
+files.
+
+%prep
+%setup -q -n %{module}-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr INSTALLDIRS=vendor
+make
+make test
+
+%clean 
+rm -rf $RPM_BUILD_ROOT
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -v {} \;
+
+find $RPM_BUILD_ROOT/usr -type f -print | 
+        sed "s@^$RPM_BUILD_ROOT@@g" | 
+        grep -v perllocal.pod | 
+        grep -v "\.packlist" > XML-Encoding-%{version}-filelist
+if [ "$(cat XML-Encoding-%{version}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit -1
+fi
+
+%files -f XML-Encoding-%{version}-filelist
+%defattr(-,root,root)
+
+# Changelog from import
+#* Fri Apr 23 2004 Chip Turner <cturner@redhat.com> 1.01-24
+#- bump
+#
+#* Tue Aug  6 2002 Chip Turner <cturner@redhat.com>
+#- automated release bump and build
+#
+#* Wed Jan 09 2002 Tim Powers <timp@redhat.com>
+#- automated rebuild
+#
+#* Thu Jul 18 2001 Crutcher Dunnavant <crutcher@redhat.com> 1.01-2
+#- imported from mandrake. tweaked man path.
+#
+#* Mon Jun 18 2001 Till Kamppeter <till@mandrakesoft.com> 1.01-1mdk
+#- Newly introduced for Foomatic.
+
+$Log: perl-XML-Encoding.spec.in,v $
+Revision 1.1  2007/01/06 00:38:48  boconnor
+Import
+
