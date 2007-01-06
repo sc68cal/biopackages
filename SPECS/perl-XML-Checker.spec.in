@@ -1,0 +1,86 @@
+#$Id: perl-XML-Checker.spec.in,v 1.1 2007/01/06 01:15:13 bpbuild Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: XML, The Perl Way
+Name: perl-XML-Checker
+Version: 0.13
+Release: %{revision}.%{distro} 
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/~tjmather/XML-Checker-0.13
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires: perl, biopackages
+
+Source0: XML-Checker-0.13.tar.gz
+
+%description
+			Perl module: XML-Checker
+
+Copyright (c) 1999,2000 Enno Derksen
+All rights reserved.
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+For bug reports or suggestions send email to tjmather@tjmather.com
+
+============= XML::Checker =====================================================
+
+The XML::Checker Perl module contains several classes:
+
+XML::Checker         - contains the XML::Checker class that is used by the others
+XML::Checker::Parser - an XML::Parser that validates at parse time
+XML::DOM::ValParser  - an XML::DOM::Parser that validates at parse time
+
+
+%prep
+%setup -q -n XML-Checker-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-XML-Checker.spec.in,v $
+Revision 1.1  2007/01/06 01:15:13  bpbuild
+Import
+
+
