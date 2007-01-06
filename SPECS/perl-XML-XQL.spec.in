@@ -1,0 +1,98 @@
+#$Id: perl-XML-XQL.spec.in,v 1.1 2007/01/06 01:51:43 bpbuild Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unknown
+Name: perl-XML-XQL
+Version: 0.68
+Release: %{revision}.%{distro}
+Packager: boconnor@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/~tjmather/XML-XQL-0.68/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+BuildArch: noarch
+Source0: XML-XQL-0.68.tar.gz
+
+%description
+			Perl module: XML-XQL
+
+Copyright (c) 1999,2000 Enno Derksen
+All rights reserved.
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+The XML::XQL module is alpha code.
+
+For bug reports or suggestions send email to tjmather@tjmather.com
+
+============= XML::XQL =========================================================
+
+This is a Perl extension that allows you to perform XQL queries on XML
+object trees. Currently only the XML::DOM module is supported, but
+other implementations, like XML::Grove, may soon follow.
+
+See the XML::XQL and XML::XQL::Tutorial man pages that come with this 
+distribution. See the XQL specification for more details,
+it's at: http://www.w3.org/TandS/QL/QL98/pp/xql.html
+Look at the test cases in the 't' directory for examples.
+
+Check out xql.pl, which is a nice command line utility for performing XQL 
+queries on XML documents and formatting the results in several ways.
+
+XML::XQL needs the following modules to be installed: XML::DOM, XML::Parser,
+Parse::Yapp (I use 0.16) and Date::Manip (I use 5.33). All can be found at CPAN.
+
+See the To-do list at the top of XQL.pm for all open issues. 
+
+
+%prep
+%setup -q -n XML-XQL-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-XML-XQL.spec.in,v $
+Revision 1.1  2007/01/06 01:51:43  bpbuild
+Updated deps
+
+
