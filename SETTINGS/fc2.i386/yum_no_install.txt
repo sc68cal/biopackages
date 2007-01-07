@@ -6,7 +6,6 @@ drupal
 faad2
 gbrowse
 id3lib
-mysql
 ncbi
 netcdf
 obo-core
