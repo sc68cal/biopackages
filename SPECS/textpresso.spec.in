@@ -1,4 +1,4 @@
-#$Id: textpresso.spec.in,v 1.7 2007/01/06 01:51:43 bpbuild Exp $
+#$Id: textpresso.spec.in,v 1.8 2007/01/07 07:41:53 bpbuild Exp $
 Summary: A text mining system for scientific literature
 Name: textpresso
 Version: 1.0.0
@@ -17,7 +17,8 @@ URL: http://www.textpresso.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
 Requires: perl, perl-bioperl >= 1.5, perl-MailTools, perl-PDF-Create, httpd, perl-XML-Checker
-%{ifdistro_release fedora 2}Requires: perl-libxml-enno
+# perl-libxml-enno
+%{ifdistro_release fedora 2}Requires: perl-XML-DOM, perl-XML-XQL
 %{ifdistro_release fedora 5}Requires: perl-XML-DOM, perl-XML-XQL
 BuildRequires: perl, biopackages
 Patch0: textpresso-1.0.0-path.patch
@@ -125,6 +126,9 @@ find /var/www/html/textpresso    -type f -exec perl -p -i -e "s/____HOSTNAME____
 #- rc3: Added patch for textpresso_inject_pdf script that loads PDFs to
 #  database.  Also required chmod on database and web dirs
 $Log: textpresso.spec.in,v $
+Revision 1.8  2007/01/07 07:41:53  bpbuild
+updates
+
 Revision 1.7  2007/01/06 01:51:43  bpbuild
 Updated deps
 
