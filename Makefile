@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.48 2007/01/02 21:24:06 bpbuild Exp $
+#$Id: Makefile,v 1.49 2007/01/08 07:37:39 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -65,6 +65,7 @@ settings ::
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
+
 
 ####################################
 #extension rules
