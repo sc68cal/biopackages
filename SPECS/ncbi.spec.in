@@ -1,4 +1,4 @@
-#$Id: ncbi.spec.in,v 1.2 2007/01/08 10:37:31 bpbuild Exp $
+#$Id: ncbi.spec.in,v 1.3 2007/01/08 12:04:13 bpbuild Exp $
 # ----------------------------------------------------------------------------
 #
 #  NCBI 
@@ -13,7 +13,8 @@ Vendor: biopackages.net
 Group:     Applications/BioInformatics
 License:   Public Domain
 URL:       http://www.ncbi.nlm.nih.gov/BLAST/
-Source0:   ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/ncbi.tar.gz
+Source0:   ncbi.tar.gz
+# ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/ncbi.tar.gz
 Patch0:    ncbi.patch
 Patch1:    ncbi-gcc.patch
 Patch2:    ncbi-X11R6-lib64.patch
@@ -39,14 +40,13 @@ The NCBI Toolkit static libraries and header files
 
 %prep
 %setup -q -n ncbi
-%patch0 -p1
-%patch1 -p1
-%patch2 -p2
-%patch3 -p1
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p2
+#%patch3 -p1
 
 %build
-cd ..
-./ncbi/make/makedis.csh
+cd ..; ./ncbi/make/makedis.csh
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -57,7 +57,7 @@ install -m 755 bin/* $DESTDIR
 
 DESTDIR=$RPM_BUILD_ROOT/%{_libdir}
 install -m 755 -d $DESTDIR
-install -m 755 lib/*.so $DESTDIR
+#install -m 755 lib/*.so $DESTDIR
 install -m 644 lib/*.a $DESTDIR
 install -m 644 lib/ncbithr.o $DESTDIR
 
@@ -98,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{_libdir}/lib*so
+#%{_libdir}/lib*so
 %{_datadir}/%{name}
 %{localbindir}/*
 %config %{_sysconfdir}/profile.d/*
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/*
 
 $Log: ncbi.spec.in,v $
+Revision 1.3  2007/01/08 12:04:13  bpbuild
+Finally, this compiles on FC5. Required updating the source package to the most recent one.
+
 Revision 1.2  2007/01/08 10:37:31  bpbuild
 Testing
 
