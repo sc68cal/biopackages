@@ -1,4 +1,4 @@
-#$Id: blastGraphic.spec.in,v 1.3 2006/09/08 00:31:22 jmendler Exp $
+#$Id: blastGraphic.spec.in,v 1.4 2007/01/08 01:59:47 bpbuild Exp $
 Summary: blastGraphic
 Name: blastGraphic
 Version: 0.01
@@ -10,9 +10,10 @@ URL: http://www.gmod.org/blastGraphic.shtml
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
-#Requires: genome-Cel-blast, genome-Dme-blast, genome-Dps-blast
-#Requires: genome-Hsa-blast, genome-Mmu-blast, genome-Rno-blast
-#Requires: genome-Sce-blast
+# These were removed by someone --BO 1/7/07
+# genome-Cel-blast, genome-Dme-blast, genome-Dps-blast
+# genome-Hsa-blast, genome-Mmu-blast, genome-Rno-blast
+# genome-Sce-blast
 Source: blastGraphic-%{version}.tar.gz
 Patch: blastGraphic-%{version}.patch
 BuildArch: noarch
@@ -204,6 +205,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS DISCLAIMER README VERSION sample_query_sequence
 
 $Log: blastGraphic.spec.in,v $
+Revision 1.4  2007/01/08 01:59:47  bpbuild
+Updated deps
+
 Revision 1.3  2006/09/08 00:31:22  jmendler
 changed to noarch
 
