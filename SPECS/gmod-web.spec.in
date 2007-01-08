@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.19 2007/01/08 08:07:42 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.20 2007/01/08 08:37:55 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -80,7 +80,8 @@ The Wiki web application demo for turnkey.
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 # index cvterms
-perl scripts/gmodweb_indexer_by_db.pl 'http://humerus.ctrl.ucla.edu/Sce/CVS/db/Cvterm' /www/gmod-web-Sce/lucene NA cvterm localhost 5432 chado-Sce-S228C 0
+mkdir -p /var/www/gmod-web-demo/lucene
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/GmodWeb/db/Cvterm" /var/www/gmod-web-demo/lucene NA cvterm localhost 5432 chado 1
 /etc/init.d/httpd restart
 
 %post Sce
@@ -88,6 +89,10 @@ cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformatics/gbrowse.conf/chado-Sce-S228C.conf
 ln -s /usr/share/genome/Sce/%{Sce_version}/* /var/www/Sce/%{Sce_version}/html/files/
+# index features & cvterms
+mkdir -p /var/www/Sce/%{Sce_version}/lucene
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Sce/%{Sce_version}/db/Feature" /var/www/Sce/%{Sce_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Sce-%{Sce_version} 1
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Sce/%{Sce_version}/db/Cvterm" /var/www/Sce/%{Sce_version}/lucene NA cvterm localhost 5432 chado-Sce-%{Sce_version} 0
 /etc/init.d/httpd restart
 
 %post Hsa
@@ -95,6 +100,10 @@ cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa/%{Hsa_version}/html/files/
+# index features & cvterms
+mkdir -p /var/www/Hsa/%{Hsa_version}/lucene
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Hsa/%{Hsa_version}/db/Feature" /var/www/Hsa/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Hsa/%{Hsa_version}/db/Cvterm" /var/www/Hsa/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
 /etc/init.d/httpd restart
 
 %post Hsa-normal-tissue
@@ -102,6 +111,10 @@ cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/files/
+# index features & cvterms
+mkdir -p /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/HsaNormalTissue/%{Hsa_version}/db/Feature" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
+%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/HsaNormalTissue/%{Hsa_version}/db/Cvterm" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
 /etc/init.d/httpd restart
 
 %postun
@@ -148,6 +161,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.20  2007/01/08 08:37:55  bpbuild
+updates
+
 Revision 1.19  2007/01/08 08:07:42  bpbuild
 Updates
 
