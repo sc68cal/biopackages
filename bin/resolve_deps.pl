@@ -57,7 +57,8 @@ $arch_str_universal = find_arch() if (!defined($arch_str_universal));
 $no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_build.txt" if (!defined($no_build_file));
 $no_deps_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_deps.txt" if (!defined($no_deps_file));
 $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
-$remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
+# FIXME: I temp changed this to 0, should be 1!!!
+$remove_installed_rpms = 0 if (!defined($remove_installed_rpms));
 $base_rpm_list = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/clean_rpm_list.txt" if (!defined($base_rpm_list));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 $mapping_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/package_name_mapping.txt" if (!defined($mapping_file));
