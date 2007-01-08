@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.17 2007/01/08 06:20:05 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.18 2007/01/08 09:49:59 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -16,7 +16,7 @@ BuildArch: noarch
 BuildRequires: perl, biopackages
 Requires: httpd, mod_perl >= 2.0.1
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
-Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
+Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.18  2007/01/08 09:49:59  bpbuild
+Updated deps
+
 Revision 1.17  2007/01/08 06:20:05  bpbuild
 First attempt at updating the Turnkey RPM to 1.1 release.
 
