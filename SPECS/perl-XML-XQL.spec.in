@@ -1,4 +1,4 @@
-#$Id: perl-XML-XQL.spec.in,v 1.1 2007/01/06 01:51:43 bpbuild Exp $
+#$Id: perl-XML-XQL.spec.in,v 1.2 2007/01/08 01:50:26 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,6 +11,7 @@ Group: Development/Libraries
 URL: http://search.cpan.org/~tjmather/XML-XQL-0.68/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
+Requires: perl-Parse-Yapp
 BuildArch: noarch
 Source0: XML-XQL-0.68.tar.gz
 
@@ -92,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-XQL.spec.in,v $
+Revision 1.2  2007/01/08 01:50:26  bpbuild
+Updated deps
+
 Revision 1.1  2007/01/06 01:51:43  bpbuild
 Updated deps
 
