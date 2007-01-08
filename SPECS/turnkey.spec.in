@@ -1,10 +1,10 @@
-#$Id: turnkey.spec.in,v 1.16 2007/01/03 05:21:36 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.17 2007/01/08 06:20:05 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
-Version: 1
+Version: 1.1
 Epoch: 2
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
@@ -20,7 +20,7 @@ Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Cl
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 
 Source0: Turnkey-%{version}.tar.gz
-Patch0: Turnkey-%{version}-disconnect.patch
+#Patch0: Turnkey-%{version}-disconnect.patch
 
 %description
 The Turnkey project makes it easy to quickly convert a database schema file into a mod_perl database.
@@ -33,7 +33,7 @@ The Turnkey project makes it easy to quickly convert a database schema file into
 #distro_str=%{distro}
 #if [ ${distro_str:0:9} == "bp.centos" ]; then
 #echo "Detected CentOS, patching and removing disconnect call in model objects"
-%patch -p1
+#%patch -p1
 #else
 #echo "Not applying Centos patch"
 #fi
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.17  2007/01/08 06:20:05  bpbuild
+First attempt at updating the Turnkey RPM to 1.1 release.
+
 Revision 1.16  2007/01/03 05:21:36  bpbuild
 Updated the Amigo spec.in file to include an embeddable theme
 
