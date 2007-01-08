@@ -1,6 +1,6 @@
 genome-Sce-nib	genome-Sce
 genome-Sce-blast	genome-Sce
-genome-Hsa-nib  genome-Hsa
-genome-Hsa-blast        genome-Hsa
+genome-Hsa-nib	genome-Hsa
+genome-Hsa-blast	genome-Hsa
 blastGraphic-Sce	blastGraphic
 blastGraphic-Hsa	blastGraphic
