@@ -1,4 +1,4 @@
-#$Id: ncbi.spec.in,v 1.1 2006/08/19 00:29:42 allenday Exp $
+#$Id: ncbi.spec.in,v 1.2 2007/01/08 10:37:31 bpbuild Exp $
 # ----------------------------------------------------------------------------
 #
 #  NCBI 
@@ -17,6 +17,7 @@ Source0:   ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/ncbi.tar.gz
 Patch0:    ncbi.patch
 Patch1:    ncbi-gcc.patch
 Patch2:    ncbi-X11R6-lib64.patch
+Patch3:    ncbi_2.patch
 BuildRequires: biopackages
 BuildRoot: %{_tmppath}/%{name}
 
@@ -41,6 +42,7 @@ The NCBI Toolkit static libraries and header files
 %patch0 -p1
 %patch1 -p1
 %patch2 -p2
+%patch3 -p1
 
 %build
 cd ..
@@ -110,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/*
 
 $Log: ncbi.spec.in,v $
+Revision 1.2  2007/01/08 10:37:31  bpbuild
+Testing
+
 Revision 1.1  2006/08/19 00:29:42  allenday
 import
 
