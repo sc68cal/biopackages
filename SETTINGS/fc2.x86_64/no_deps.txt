@@ -1,1 +1,4 @@
+perl-YAML
+perl-Test-Base
+perl-Module-Install
 turnkey
