@@ -1,4 +1,4 @@
-#$Id: graphviz.spec.in,v 1.7 2007/01/10 08:28:42 bpbuild Exp $
+#$Id: graphviz.spec.in,v 1.8 2007/01/10 17:08:12 bpbuild Exp $
 # graphviz.spec.  Generated from graphviz.spec.in by configure.
 
 Summary:        Graph Visualization Tools
@@ -109,7 +109,7 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 #%{_libdir}/%{name}/libtk*.so.*.*.*
 %{_libdir}/%{name}/pkgIndex.tcl
 %{_datadir}/%{name}/demo
-#%{_mandir}/mann/* 
+%{_mandir}/mann/* 
 
 %files devel
 %defattr(-,root,root)
@@ -133,6 +133,9 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %__rm -rf "$RPM_BUILD_ROOT"
 
 $Log: graphviz.spec.in,v $
+Revision 1.8  2007/01/10 17:08:12  bpbuild
+Updated to remove problem with unpackaged files
+
 Revision 1.7  2007/01/10 08:28:42  bpbuild
 I don't know why this wasn't caught on the i386 platforms
 
