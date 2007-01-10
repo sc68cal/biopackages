@@ -242,7 +242,7 @@ sub parse_req {
         while (<IN>) {
           chomp;
           if ($_ =~ /BuildRequires:\s+(.*)$/) {
-            my @tokens = split ", ", $1;
+            my @tokens = split /[, ]/, $1;
   	  foreach my $token (@tokens) {
   	    $token = clean_package_names($token);
               # there are some crufty entries with %{} in the spec files
@@ -250,7 +250,7 @@ sub parse_req {
   	  }
   	}
           elsif ($_ =~ /Requires:\s+(.*)$/) {
-            my @tokens = split ", ", $1;
+            my @tokens = split /[, ]/, $1;
   	  foreach my $token (@tokens) {
   	    $token = clean_package_names($token);
               # there are some crufty entries with %{} in the spec files
