@@ -1,4 +1,4 @@
-#$Id: graphviz.spec.in,v 1.5 2007/01/10 07:49:07 bpbuild Exp $
+#$Id: graphviz.spec.in,v 1.6 2007/01/10 08:17:20 bpbuild Exp $
 # graphviz.spec.  Generated from graphviz.spec.in by configure.
 
 Summary:        Graph Visualization Tools
@@ -18,15 +18,9 @@ Vendor:         biopackages.net
 
 BuildRequires: biopackages
 BuildRequires: tcl, tk, expat, expat-devel, libjpeg, libjpeg-devel, libpng, libpng-devel, zlib, zlib-devel
-%{?fc3:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, xorg-x11-devel}
-%{?fc2:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
-%{?fc1:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
-%{?el3:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
-%{?rh9:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
-%{?rh8:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
-%{?rh7:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
-%{?el2:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
-%{?rh6:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
+%{ifdistro_release fedora 5}BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, xorg-x11-devel
+%{ifdistro_release fedora 2}BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel
+%{ifdistro_release centos 4}BuildRequires: freetype >= 2, freetype-devel, XFree86-devel
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix:         %{_prefix}
@@ -141,6 +135,9 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %__rm -rf "$RPM_BUILD_ROOT"
 
 $Log: graphviz.spec.in,v $
+Revision 1.6  2007/01/10 08:17:20  bpbuild
+I don't know why this wasn't caught on the i386 platforms
+
 Revision 1.5  2007/01/10 07:49:07  bpbuild
 Undoing the change to split and modifying spec so it uses commas between requires
 
