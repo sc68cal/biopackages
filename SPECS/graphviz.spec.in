@@ -1,4 +1,4 @@
-#$Id: graphviz.spec.in,v 1.3 2007/01/10 06:48:40 bpbuild Exp $
+#$Id: graphviz.spec.in,v 1.4 2007/01/10 07:17:37 bpbuild Exp $
 # graphviz.spec.  Generated from graphviz.spec.in by configure.
 
 Summary:        Graph Visualization Tools
@@ -56,7 +56,7 @@ Group:		Development/Libraries
 Summary:	Development tools for using the %{name} libraries.
 Requires:	%{name} = %{version}-%{release} %{name}-tcl = %{version}-%{release}
 # The following doesn't work on RH9 or RHE where there is no tcl-devel
-#tcl-devel tk-devel
+#tcl-devel, tk-devel
 
 %description devel
 The %{name}-devel package contains the header files
@@ -141,6 +141,9 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %__rm -rf "$RPM_BUILD_ROOT"
 
 $Log: graphviz.spec.in,v $
+Revision 1.4  2007/01/10 07:17:37  bpbuild
+Updated deps, these were already removed from graphviz
+
 Revision 1.3  2007/01/10 06:48:40  bpbuild
 Updated deps, these were already removed from graphviz
 
