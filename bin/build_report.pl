@@ -82,7 +82,8 @@ foreach my $distro (@distros) {
   print OUT "<td><a href='SETTINGS/$distro_name/no_build.txt'>no_build.txt</a></td>";
   print OUT "<td><a href='SETTINGS/$distro_name/no_deps.txt'>no_deps.txt</a></td>";
   print OUT "<td><a href='SETTINGS/$distro_name/yum_no_install.txt'>yum_no_install.txt</a></td>";
-  print OUT "<td><a href='SETTINGS/$distro_name/clean_rpm_list.txt'>clean_rpm_list.txt</a></td></tr>";
+  print OUT "<td><a href='SETTINGS/$distro_name/clean_rpm_list.txt'>clean_rpm_list.txt</a></td>";
+  print OUT "<td><a href='SETTINGS/$distro_name/package_name_mapping.txt'>package_name_mapping.txt</a></td></tr>"; 
 }
 
 print OUT <<"UUU";
