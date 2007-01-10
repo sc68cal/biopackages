@@ -1,4 +1,4 @@
-#$Id: graphviz.spec.in,v 1.4 2007/01/10 07:17:37 bpbuild Exp $
+#$Id: graphviz.spec.in,v 1.5 2007/01/10 07:49:07 bpbuild Exp $
 # graphviz.spec.  Generated from graphviz.spec.in by configure.
 
 Summary:        Graph Visualization Tools
@@ -17,16 +17,16 @@ Vendor:         biopackages.net
 # neededforbuild  expat freetype2 freetype2-devel gcc libjpeg libpng-devel-packages tcl tcl-devel tk tk-devel x-devel-packages
 
 BuildRequires: biopackages
-BuildRequires: tcl tk expat expat-devel libjpeg libjpeg-devel libpng libpng-devel zlib zlib-devel
-%{?fc3:BuildRequires: freetype >= 2 freetype-devel fontconfig fontconfig-devel tcl-devel tk-devel xorg-x11-devel} 
-%{?fc2:BuildRequires: freetype >= 2 freetype-devel fontconfig fontconfig-devel tcl-devel tk-devel XFree86-devel}
-%{?fc1:BuildRequires: freetype >= 2 freetype-devel fontconfig fontconfig-devel tcl-devel tk-devel XFree86-devel}
-%{?el3:BuildRequires: freetype >= 2 freetype-devel fontconfig fontconfig-devel tcl-devel tk-devel XFree86-devel}
-%{?rh9:BuildRequires: freetype >= 2 freetype-devel XFree86-devel}
-%{?rh8:BuildRequires: freetype >= 2 freetype-devel XFree86-devel}
-%{?rh7:BuildRequires: freetype >= 2 freetype-devel XFree86-devel}
-%{?el2:BuildRequires: freetype >= 2 freetype-devel XFree86-devel}
-%{?rh6:BuildRequires: freetype >= 2 freetype-devel XFree86-devel}
+BuildRequires: tcl, tk, expat, expat-devel, libjpeg, libjpeg-devel, libpng, libpng-devel, zlib, zlib-devel
+%{?fc3:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, xorg-x11-devel}
+%{?fc2:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
+%{?fc1:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
+%{?el3:BuildRequires: freetype >= 2, freetype-devel, fontconfig, fontconfig-devel, tcl-devel, tk-devel, XFree86-devel}
+%{?rh9:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
+%{?rh8:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
+%{?rh7:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
+%{?el2:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
+%{?rh6:BuildRequires: freetype >= 2, freetype-devel, XFree86-devel}
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix:         %{_prefix}
@@ -54,7 +54,7 @@ for version %{version} of the %{name} tools.
 %package devel
 Group:		Development/Libraries
 Summary:	Development tools for using the %{name} libraries.
-Requires:	%{name} = %{version}-%{release} %{name}-tcl = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}, %{name}-tcl = %{version}-%{release}
 # The following doesn't work on RH9 or RHE where there is no tcl-devel
 #tcl-devel, tk-devel
 
@@ -141,6 +141,9 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %__rm -rf "$RPM_BUILD_ROOT"
 
 $Log: graphviz.spec.in,v $
+Revision 1.5  2007/01/10 07:49:07  bpbuild
+Undoing the change to split and modifying spec so it uses commas between requires
+
 Revision 1.4  2007/01/10 07:17:37  bpbuild
 Updated deps, these were already removed from graphviz
 
