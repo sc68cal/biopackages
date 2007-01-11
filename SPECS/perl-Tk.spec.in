@@ -1,4 +1,4 @@
-#$Id: perl-Tk.spec.in,v 1.10 2007/01/11 04:00:38 bpbuild Exp $
+#$Id: perl-Tk.spec.in,v 1.11 2007/01/11 09:01:48 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -11,7 +11,7 @@ Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/Tk/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, gcc, xorg-x11-libs, glibc-devel, libjpeg-devel, libpng-devel, zlib-devel
+BuildRequires: perl, biopackages, gcc, xorg-x11-libs, xorg-x11-devel, glibc-devel, libjpeg-devel, libpng-devel, zlib-devel
 Requires: xorg-x11-libs, glibc, libjpeg, libpng, zlib
 #FIXME: Where do you get these!?!? Not on CPAN.
 Provides: perl(Tk::LabRadio), perl(Tk::TextReindex)
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Tk.spec.in,v $
+Revision 1.11  2007/01/11 09:01:48  bpbuild
+Update deps
+
 Revision 1.10  2007/01/11 04:00:38  bpbuild
 Changed these from noarch to arch and filled in the dep tree more completely. These were built on x86_64 and I realized when installing on i386 that they were not noarch.
 
