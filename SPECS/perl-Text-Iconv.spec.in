@@ -1,4 +1,4 @@
-#$Id: perl-Text-Iconv.spec.in,v 1.2 2006/09/11 18:04:12 jmendler Exp $
+#$Id: perl-Text-Iconv.spec.in,v 1.3 2007/01/11 04:00:38 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl interface to iconv() codeset conversion function
@@ -10,8 +10,8 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-Iconv/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
-BuildArch: noarch
+BuildRequires: perl, biopackages, gcc, glibc-devel
+Requires: glibc
 Source0: Text-Iconv-1.4.tar.gz
 
 %description
@@ -164,6 +164,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Text-Iconv.spec.in,v $
+Revision 1.3  2007/01/11 04:00:38  bpbuild
+Changed these from noarch to arch and filled in the dep tree more completely. These were built on x86_64 and I realized when installing on i386 that they were not noarch.
+
 Revision 1.2  2006/09/11 18:04:12  jmendler
 noarch
 

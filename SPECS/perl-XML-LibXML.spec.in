@@ -1,4 +1,4 @@
-#$Id: perl-XML-LibXML.spec.in,v 1.8 2006/12/05 08:28:28 bpbuild Exp $
+#$Id: perl-XML-LibXML.spec.in,v 1.9 2007/01/11 04:00:38 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Interface to Gnome libxml2 xml parsing and DOM library
@@ -10,9 +10,8 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/XML-LibXML/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildArch: noarch
-BuildRequires: perl, biopackages, perl-XML-SAX, perl-XML-LibXML-Common
-Requires: libxml2-devel
+BuildRequires: perl, biopackages, perl-XML-SAX, perl-XML-LibXML-Common, glibc-devel, libxml2-devel, zlib-devel
+Requires: libxml2-devel, glibc, libxml2, zlib, perl-XML-SAX, perl-XML-LibXML-Common
 Source0: XML-LibXML-1.58.tar.gz
 Patch0: perl-XML-LibXML-1.58.install.2.patch 
 
@@ -312,6 +311,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-XML-LibXML.spec.in,v $
+Revision 1.9  2007/01/11 04:00:38  bpbuild
+Changed these from noarch to arch and filled in the dep tree more completely. These were built on x86_64 and I realized when installing on i386 that they were not noarch.
+
 Revision 1.8  2006/12/05 08:28:28  bpbuild
 testing
 

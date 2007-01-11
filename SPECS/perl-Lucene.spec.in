@@ -1,4 +1,4 @@
-#$Id: perl-Lucene.spec.in,v 1.4 2007/01/05 10:40:46 bpbuild Exp $
+#$Id: perl-Lucene.spec.in,v 1.5 2007/01/11 04:00:38 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl wrapper for c-lucene search engine
@@ -10,10 +10,9 @@ License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/~tbusch/Lucene-0.02/
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, clucene, biopackages
-Requires: perl, clucene
+BuildRequires: perl, clucene, biopackages, clucene-core-devel, gcc, libstdc++-devel, glibc-devel, libgcc
+Requires: perl, clucene, glibc, clucene-core, libgcc, libstdc++
 
 Source0: Lucene-%{version}.tar.gz
 
@@ -97,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Lucene.spec.in,v $
+Revision 1.5  2007/01/11 04:00:38  bpbuild
+Changed these from noarch to arch and filled in the dep tree more completely. These were built on x86_64 and I realized when installing on i386 that they were not noarch.
+
 Revision 1.4  2007/01/05 10:40:46  bpbuild
 Updated version number
 
