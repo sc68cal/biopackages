@@ -1,4 +1,4 @@
-#$Id: chado-Hsa.spec.in,v 1.2 2006/09/06 16:45:04 jmendler Exp $
+#$Id: chado-Hsa.spec.in,v 1.3 2007/01/12 02:26:05 bpbuild Exp $
 %define gmod_root /var/lib/gmod
 %define org Hsa
 %define orgCommonName human
@@ -21,7 +21,7 @@ Requires: postgresql-AffxSeq, postgresql-devel, postgresql-libs, postgresql-serv
 Requires: perl-DBD-Pg, perl-DBI, perl-Class-DBI, perl-Class-DBI-Pager, perl-bioperl, perl-XML-Simple
 Requires: perl-Term-ProgressBar, perl-Template-Toolkit, perl-Log-Log4perl, perl-Module-Build
 Requires: perl-Class-Accessor, perl-Class-Accessor-Chained
-Requires: obo-core, obo-extra, perl-go-perl >= 0.02-3
+Requires: obo-core, obo-extra, perl-go-perl >= 0.02
 Requires: genome-%{org}-nib = %{orgVersion}
 BuildRequires: postgresql-AffxSeq, perl-Template-Toolkit, perl-Log-Log4perl, perl-Class-DBI, perl-Class-DBI-Pager, postgresql >= 7.3
 BuildRequires: perl-Class-DBI-Pg, perl-Term-ProgressBar
@@ -185,6 +185,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Hsa.spec.in,v $
+Revision 1.3  2007/01/12 02:26:05  bpbuild
+Modification to chado.spec.in, updated dep for new version number format
+
 Revision 1.2  2006/09/06 16:45:04  jmendler
 fixed Release string
 
