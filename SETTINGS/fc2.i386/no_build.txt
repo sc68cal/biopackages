@@ -1,8 +1,8 @@
 postgresql-devel
 chado-Hsa
 chado-Mmu
-chado
-chado-Sce
+#chado
+#chado-Sce
 httpd-mmn
 gd-devel
 # I added these below because they have really large src files and should just
