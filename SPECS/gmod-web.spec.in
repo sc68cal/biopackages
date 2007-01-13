@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.21 2007/01/09 04:23:39 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.22 2007/01/13 00:10:09 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -79,6 +79,16 @@ The Wiki web application demo for turnkey.
 %post
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# this ensures the DB has been initialized
+/etc/init.d/postgresql restart
+# the changes below are to allow GMODWeb to connect to the local database over TCP/IP
+# for postgres on FC2 & CentOS4
+perl -p -i -e 's!#tcpip_socket = false!tcpip_socket = true!' /var/lib/pgsql/data/postgresql.conf
+perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.255   trust!host    all         all         127.0.0.1         255.255.255.255   trust!' /var/lib/pgsql/data/pg_hba.conf
+# for postgres on FC5
+perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
+# this ensures the access restriction changes have been lifted
+/etc/init.d/postgresql restart
 # index cvterms
 mkdir -p /var/www/gmod-web-demo/lucene
 %{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/GmodWeb/db/Cvterm" /var/www/gmod-web-demo/lucene NA cvterm localhost 5432 chado 1
@@ -87,6 +97,16 @@ mkdir -p /var/www/gmod-web-demo/lucene
 %post Sce
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# this ensures the DB has been initialized
+/etc/init.d/postgresql restart
+# the changes below are to allow GMODWeb to connect to the local database over TCP/IP
+# for postgres on FC2 & CentOS4
+perl -p -i -e 's!#tcpip_socket = false!tcpip_socket = true!' /var/lib/pgsql/data/postgresql.conf
+perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.255   trust!host    all         all         127.0.0.1         255.255.255.255   trust!' /var/lib/pgsql/data/pg_hba.conf
+# for postgres on FC5
+perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
+# this ensures the access restriction changes have been lifted
+/etc/init.d/postgresql restart
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformatics/gbrowse.conf/chado-Sce-S228C.conf
 ln -s /usr/share/genome/Sce/%{Sce_version}/* /var/www/Sce/%{Sce_version}/html/files/
 # index features & cvterms
@@ -98,6 +118,16 @@ mkdir -p /var/www/Sce/%{Sce_version}/lucene
 %post Hsa
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# this ensures the DB has been initialized
+/etc/init.d/postgresql restart
+# the changes below are to allow GMODWeb to connect to the local database over TCP/IP
+# for postgres on FC2 & CentOS4
+perl -p -i -e 's!#tcpip_socket = false!tcpip_socket = true!' /var/lib/pgsql/data/postgresql.conf
+perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.255   trust!host    all         all         127.0.0.1         255.255.255.255   trust!' /var/lib/pgsql/data/pg_hba.conf
+# for postgres on FC5
+perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
+# this ensures the access restriction changes have been lifted
+/etc/init.d/postgresql restart
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa/%{Hsa_version}/html/files/
 # index features & cvterms
@@ -109,6 +139,16 @@ mkdir -p /var/www/Hsa/%{Hsa_version}/lucene
 %post Hsa-normal-tissue
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# this ensures the DB has been initialized
+/etc/init.d/postgresql restart
+# the changes below are to allow GMODWeb to connect to the local database over TCP/IP
+# for postgres on FC2 & CentOS4
+perl -p -i -e 's!#tcpip_socket = false!tcpip_socket = true!' /var/lib/pgsql/data/postgresql.conf
+perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.255   trust!host    all         all         127.0.0.1         255.255.255.255   trust!' /var/lib/pgsql/data/pg_hba.conf
+# for postgres on FC5
+perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
+# this ensures the access restriction changes have been lifted
+/etc/init.d/postgresql restart
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/files/
 # index features & cvterms
@@ -161,6 +201,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.22  2007/01/13 00:10:09  bpbuild
+I added script to update the postgres settings on a new install so that the GMODWeb application can connect to the underlying database.
+
 Revision 1.21  2007/01/09 04:23:39  bpbuild
 Update deps
 
