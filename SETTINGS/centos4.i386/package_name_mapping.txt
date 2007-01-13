@@ -4,3 +4,5 @@ genome-Hsa-nib	genome-Hsa
 genome-Hsa-blast	genome-Hsa
 blastGraphic-Sce	blastGraphic
 blastGraphic-Hsa	blastGraphic
+clucene-core-devel	clucene
+clucene-core	clucene
