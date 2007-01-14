@@ -1,10 +1,10 @@
-#$Id: gmod-web.spec.in,v 1.22 2007/01/13 00:10:09 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.23 2007/01/14 06:14:29 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
-Version: 1
+Version: 1.1
 Epoch: 1
 Release: %{revision}.%{distro}
 Source0: Turnkey-%{version}.tar.gz
@@ -17,7 +17,7 @@ BuildArch: noarch
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
 Requires: httpd, mod_perl >= 2.0.1
-Requires: gbrowse, textpresso, AmiGO, chado
+Requires: gbrowse, textpresso, AmiGO, chado, turnkey
 BuildRequires: perl, biopackages, turnkey, chado-schema
 Provides: perl(TurnkeyGmodWeb::Atom::AutoAtom), perl(TurnkeyGmodWeb::Model::AutoDBI)
 
@@ -30,7 +30,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Sce, gbrowse, textpresso, AmiGO, genome-Sce-nib, genome-Sce, blastGraphic-Sce, genome-Sce-blast
+Requires: chado-Sce, gbrowse, textpresso, AmiGO, genome-Sce-nib, genome-Sce, blastGraphic-Sce, genome-Sce-blast, turnkey
 BuildRequires: turnkey, perl, biopackages, chado-schema
 Provides: perl(TurnkeySceS228C::Atom::AutoAtom), perl(TurnkeySceS228C::Model::AutoDBI)
 
@@ -43,7 +43,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Hsa, gbrowse, textpresso, AmiGO, genome-Hsa-nib, genome-Hsa, blastGraphic-Hsa, genome-Hsa-blast 
+Requires: chado-Hsa, gbrowse, textpresso, AmiGO, genome-Hsa-nib, genome-Hsa, blastGraphic-Hsa, genome-Hsa-blast, turnkey 
 BuildRequires: turnkey, perl, biopackages, chado-schema
 Provides: perl(TurnkeyHsa17::Atom::AutoAtom), perl(TurnkeyHsa17::Model::AutoDBI)
 
@@ -57,7 +57,7 @@ Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
 Requires: httpd, mod_perl >= 2.0.1
-Requires: chado-Hsa, gbrowse, textpresso, AmiGO
+Requires: chado-Hsa, gbrowse, textpresso, AmiGO, turnkey
 #gmod-web-Hsa-normal-tissue-probeset-barcharts
 BuildRequires: turnkey, perl, biopackages, chado-schema
 Provides: perl(TurnkeyHsa17NormalTissue::Atom::AutoAtom), perl(TurnkeyHsa17NormalTissue::Model::AutoDBI)
@@ -79,6 +79,8 @@ The Wiki web application demo for turnkey.
 %post
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/gmod-web-demo/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# the cache dir needs to be owned by apache
+chown apache:apache /var/www/gmod-web-demo/cache_root
 # this ensures the DB has been initialized
 /etc/init.d/postgresql restart
 # the changes below are to allow GMODWeb to connect to the local database over TCP/IP
@@ -97,6 +99,8 @@ mkdir -p /var/www/gmod-web-demo/lucene
 %post Sce
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Sce/%{Sce_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# the cache dir needs to be owned by apache
+chown apache:apache /var/www/Sce/%{Sce_version}/cache_root
 # this ensures the DB has been initialized
 /etc/init.d/postgresql restart
 # the changes below are to allow GMODWeb to connect to the local database over TCP/IP
@@ -118,6 +122,8 @@ mkdir -p /var/www/Sce/%{Sce_version}/lucene
 %post Hsa
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# the cache dir needs to be owned by apache
+chown apache:apache /var/www/Hsa/%{Hsa_version}/cache_root
 # this ensures the DB has been initialized
 /etc/init.d/postgresql restart
 # the changes below are to allow GMODWeb to connect to the local database over TCP/IP
@@ -139,6 +145,8 @@ mkdir -p /var/www/Hsa/%{Hsa_version}/lucene
 %post Hsa-normal-tissue
 cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.rpmsave
 echo 'Include /var/www/Hsa-Normal-Tissue/%{Hsa_version}/conf/httpd.conf' >> /etc/httpd/conf/httpd.conf
+# the cache dir needs to be owned by apache
+chown apache:apache /var/www/Hsa-Normal-Tissue/%{Hsa_version}/cache_root
 # this ensures the DB has been initialized
 /etc/init.d/postgresql restart
 # the changes below are to allow GMODWeb to connect to the local database over TCP/IP
@@ -201,6 +209,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.23  2007/01/14 06:14:29  bpbuild
+Updated spec for 1.1 release
+
 Revision 1.22  2007/01/13 00:10:09  bpbuild
 I added script to update the postgres settings on a new install so that the GMODWeb application can connect to the underlying database.
 
