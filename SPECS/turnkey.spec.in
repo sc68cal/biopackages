@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.19 2007/01/14 07:55:34 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.20 2007/01/14 10:09:00 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -18,6 +18,8 @@ Requires: httpd, mod_perl >= 2.0.1
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
 Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
+# need to remove all this mod_perl 1 stuff from the codebase
+Provides: perl(Apache::Const), perl(Apache::RequestIO), perl(Apache::RequestRec), perl(Apache::RequestUtil)
 
 Source0: Turnkey-%{version}.tar.gz
 #Patch0: Turnkey-%{version}-disconnect.patch
@@ -86,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.20  2007/01/14 10:09:00  bpbuild
+Updates to supress uneeded errors for dep resolution in yum
+
 Revision 1.19  2007/01/14 07:55:34  bpbuild
 Updated turnkey, these are changes to the source file that include bug fixes for 1.2 release. Some new files all for gmod web demos
 
