@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.23 2007/01/14 06:14:29 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.24 2007/01/14 07:43:55 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -91,6 +91,8 @@ perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.
 perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
 # this ensures the access restriction changes have been lifted
 /etc/init.d/postgresql restart
+# index sample articles
+/usr/bin/textpresso_inject_pdf /var/www/gmod-web-demo/html/articles/GO_nature_genetics_2000.pdf
 # index cvterms
 mkdir -p /var/www/gmod-web-demo/lucene
 %{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/GmodWeb/db/Cvterm" /var/www/gmod-web-demo/lucene NA cvterm localhost 5432 chado 1
@@ -111,6 +113,9 @@ perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.
 perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
 # this ensures the access restriction changes have been lifted
 /etc/init.d/postgresql restart
+# index sample articles
+/usr/bin/textpresso_inject_pdf /var/www/Sce/%{Sce_version}/html/articles/GO_nature_genetics_2000.pdf
+/usr/bin/textpresso_inject_pdf /var/www/Sce/%{Sce_version}/html/articles/genetic_and_physical_maps_of_Saccharomyces_cerevisiae.pdf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformatics/gbrowse.conf/chado-Sce-S228C.conf
 ln -s /usr/share/genome/Sce/%{Sce_version}/* /var/www/Sce/%{Sce_version}/html/files/
 # index features & cvterms
@@ -134,6 +139,10 @@ perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.
 perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
 # this ensures the access restriction changes have been lifted
 /etc/init.d/postgresql restart
+# index sample articles
+/usr/bin/textpresso_inject_pdf /var/www/Hsa/%{Hsa_version}/html/articles/GO_nature_genetics_2000.pdf
+/usr/bin/textpresso_inject_pdf /var/www/Hsa/%{Hsa_version}/html/articles/a_physical_map_of_the_human_genome.pdf
+/usr/bin/textpresso_inject_pdf /var/www/Hsa/%{Hsa_version}/html/articles/the_sequence_of_the_human_genome.pdf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa/%{Hsa_version}/html/files/
 # index features & cvterms
@@ -157,6 +166,10 @@ perl -p -i -e 's!#host    all         all         127.0.0.1         255.255.255.
 perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sameuser!host    all         all         127.0.0.1/32          trust!' /var/lib/pgsql/data/pg_hba.conf
 # this ensures the access restriction changes have been lifted
 /etc/init.d/postgresql restart
+# index sample articles
+/usr/bin/textpresso_inject_pdf /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/articles/GO_nature_genetics_2000.pdf
+/usr/bin/textpresso_inject_pdf /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/articles/a_physical_map_of_the_human_genome.pdf
+/usr/bin/textpresso_inject_pdf /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/articles/the_sequence_of_the_human_genome.pdf
 cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/gbrowse.conf/chado-Hsa-17.conf
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/files/
 # index features & cvterms
@@ -209,6 +222,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.24  2007/01/14 07:43:55  bpbuild
+Updated for next release, gmodweb sites include some sample artilces for textpresso
+
 Revision 1.23  2007/01/14 06:14:29  bpbuild
 Updated spec for 1.1 release
 
