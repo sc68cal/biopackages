@@ -1,4 +1,4 @@
-#$Id: AmiGO.spec.in,v 1.7 2007/01/04 01:42:32 bpbuild Exp $
+#$Id: AmiGO.spec.in,v 1.8 2007/01/15 05:31:44 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
@@ -84,9 +84,7 @@ cat<<EOF>$RPM_BUILD_ROOT/var/www/cgi-bin/amigo/config.pl
 # Docroot
 \$ENV{GO_HTML_DIR}="/var/www/html/amigo/";
 # Docroot URL
-my \$hostname = `hostname`;
-chomp \$hostname;
-\$ENV{GO_HTML_URL}="http://\$hostname/amigo";
+\$ENV{GO_HTML_URL}="/amigo";
 
 # Absolute location of your cgi-bin
 \$ENV{GO_CGI_ROOT}="/var/www/cgi-bin/amigo/";
@@ -184,6 +182,9 @@ rm -rf $RPM_BUILD_ROOT
 #- New specfile
 
 $Log: AmiGO.spec.in,v $
+Revision 1.8  2007/01/15 05:31:44  bpbuild
+Don't set hostname on build machine
+
 Revision 1.7  2007/01/04 01:42:32  bpbuild
 Change to the way hostname is determined for AmiGO
 
