@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.24 2007/01/14 07:43:55 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.25 2007/01/15 00:45:53 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -95,7 +95,7 @@ perl -p -i -e 's!host    all         all         127.0.0.1/32          ident sam
 /usr/bin/textpresso_inject_pdf /var/www/gmod-web-demo/html/articles/GO_nature_genetics_2000.pdf
 # index cvterms
 mkdir -p /var/www/gmod-web-demo/lucene
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/GmodWeb/db/Cvterm" /var/www/gmod-web-demo/lucene NA cvterm localhost 5432 chado 1
+%{_bindir}/gmodweb_indexer_by_db "/GmodWeb/db/Cvterm" /var/www/gmod-web-demo/lucene NA cvterm localhost 5432 chado 1
 /etc/init.d/httpd restart
 
 %post Sce
@@ -120,8 +120,8 @@ cp /usr/share/doc/turnkey-%{version}/conf/chado-Sce-S228C.conf /etc/bioinformati
 ln -s /usr/share/genome/Sce/%{Sce_version}/* /var/www/Sce/%{Sce_version}/html/files/
 # index features & cvterms
 mkdir -p /var/www/Sce/%{Sce_version}/lucene
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Sce/%{Sce_version}/db/Feature" /var/www/Sce/%{Sce_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Sce-%{Sce_version} 1
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Sce/%{Sce_version}/db/Cvterm" /var/www/Sce/%{Sce_version}/lucene NA cvterm localhost 5432 chado-Sce-%{Sce_version} 0
+%{_bindir}/gmodweb_indexer_by_db "/Sce/%{Sce_version}/db/Feature" /var/www/Sce/%{Sce_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Sce-%{Sce_version} 1
+%{_bindir}/gmodweb_indexer_by_db "/Sce/%{Sce_version}/db/Cvterm" /var/www/Sce/%{Sce_version}/lucene NA cvterm localhost 5432 chado-Sce-%{Sce_version} 0
 /etc/init.d/httpd restart
 
 %post Hsa
@@ -147,8 +147,8 @@ cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa/%{Hsa_version}/html/files/
 # index features & cvterms
 mkdir -p /var/www/Hsa/%{Hsa_version}/lucene
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Hsa/%{Hsa_version}/db/Feature" /var/www/Hsa/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/Hsa/%{Hsa_version}/db/Cvterm" /var/www/Hsa/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
+%{_bindir}/gmodweb_indexer_by_db "/Hsa/%{Hsa_version}/db/Feature" /var/www/Hsa/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
+%{_bindir}/gmodweb_indexer_by_db "/Hsa/%{Hsa_version}/db/Cvterm" /var/www/Hsa/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
 /etc/init.d/httpd restart
 
 %post Hsa-normal-tissue
@@ -174,8 +174,8 @@ cp /usr/share/doc/turnkey-%{version}/conf/chado-Hsa-17.conf /etc/bioinformatics/
 ln -s /usr/share/genome/Hsa/%{Hsa_version}/* /var/www/Hsa-Normal-Tissue/%{Hsa_version}/html/files/
 # index features & cvterms
 mkdir -p /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/HsaNormalTissue/%{Hsa_version}/db/Feature" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
-%{_bindir}/gmodweb_indexer_by_db "http://$HOSTNAME/HsaNormalTissue/%{Hsa_version}/db/Cvterm" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
+%{_bindir}/gmodweb_indexer_by_db "/HsaNormalTissue/%{Hsa_version}/db/Feature" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene 10159,9689,9813 feature localhost 5432 chado-Hsa-%{Hsa_version} 1
+%{_bindir}/gmodweb_indexer_by_db "/HsaNormalTissue/%{Hsa_version}/db/Cvterm" /var/www/Hsa-Normal-Tissue/%{Hsa_version}/lucene NA cvterm localhost 5432 chado-Hsa-%{Hsa_version} 0
 /etc/init.d/httpd restart
 
 %postun
@@ -222,6 +222,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.25  2007/01/15 00:45:53  bpbuild
+This fixes a problem where, on a clean install box, the hostname is localhost so search results have localhost hardcoded into their URLs.
+
 Revision 1.24  2007/01/14 07:43:55  bpbuild
 Updated for next release, gmodweb sites include some sample artilces for textpresso
 
