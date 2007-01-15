@@ -1,10 +1,10 @@
-#$Id: gmod-web.spec.in,v 1.25 2007/01/15 00:45:53 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.26 2007/01/15 18:48:09 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
-Version: 1.1
+Version: 1.2
 Epoch: 1
 Release: %{revision}.%{distro}
 Source0: Turnkey-%{version}.tar.gz
@@ -222,6 +222,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.26  2007/01/15 18:48:09  bpbuild
+Incremented the version number for Turnkey, 1.2 release includes bug fixes with the gmodweb demos.
+
 Revision 1.25  2007/01/15 00:45:53  bpbuild
 This fixes a problem where, on a clean install box, the hostname is localhost so search results have localhost hardcoded into their URLs.
 

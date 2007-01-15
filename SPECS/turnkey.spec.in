@@ -1,10 +1,10 @@
-#$Id: turnkey.spec.in,v 1.20 2007/01/14 10:09:00 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.21 2007/01/15 18:48:09 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Turnkey generates a mod_perl website from a database schema file.
 Name: turnkey
-Version: 1.1
+Version: 1.2
 Epoch: 2
 Release: %{revision}.%{distro}
 Packager: boconnor@ucla.edu
@@ -88,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.21  2007/01/15 18:48:09  bpbuild
+Incremented the version number for Turnkey, 1.2 release includes bug fixes with the gmodweb demos.
+
 Revision 1.20  2007/01/14 10:09:00  bpbuild
 Updates to supress uneeded errors for dep resolution in yum
 
