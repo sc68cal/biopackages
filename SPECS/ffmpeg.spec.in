@@ -1,4 +1,4 @@
-#$Id: ffmpeg.spec.in,v 1.18 2006/12/03 23:22:30 allenday Exp $
+#$Id: ffmpeg.spec.in,v 1.19 2007/01/23 00:42:08 allenday Exp $
 Summary: ffmpeg
 Name: ffmpeg
 Version: 7218
@@ -13,8 +13,8 @@ Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.ffmpeg.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
-Requires: lame, libogg, libvorbis, faac faad2, a52dec, imlib2
-BuildRequires: perl, biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel
+Requires: lame, libogg, libvorbis, faac, faad2, a52dec, imlib2, x264
+BuildRequires: perl, biopackages, gcc, lame-devel, libogg-devel, libvorbis-devel, faac-devel, faad2-devel, a52dec-devel, imlib2-devel, x264-devel
 Provides: libavcodec.so, libavformat.so, libavutil.so
 
 %description
@@ -91,6 +91,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %preun 
 
 $Log: ffmpeg.spec.in,v $
+Revision 1.19  2007/01/23 00:42:08  allenday
+depcheck
+
 Revision 1.18  2006/12/03 23:22:30  allenday
 fPIC for 64b
 
