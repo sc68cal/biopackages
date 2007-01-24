@@ -1,7 +1,7 @@
-#$Id: postgresql-AffxSeq.spec.in,v 1.4 2006/09/10 10:21:10 boconnor Exp $
+#$Id: postgresql-AffxSeq.spec.in,v 1.5 2007/01/24 06:23:26 bpbuild Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
-Version: 1.00
+Version: 1.01
 Release: %{revision}.%{distro}
 License: BSD
 Group: Applications/Databases
@@ -104,6 +104,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.5  2007/01/24 06:23:26  bpbuild
+Kinda a hack here.  I ran into the problem that the chado RPMs had, when they were last built, hardcoded version strings in them.  This isn't a big deal however, those version strings included the release string from the previous biopackages naming standard.  So to get the old RPMs to work (which we need to until we have time to create updated 0.05 versions) I needed to increment the version strings. I added and entry to the wiki RPM to do list to fix this in the near future.
+
 Revision 1.4  2006/09/10 10:21:10  boconnor
 Temp removing patch, will add back in once I get the patch file off my Mac
 

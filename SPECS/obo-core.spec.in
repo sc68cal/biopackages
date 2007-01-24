@@ -1,7 +1,7 @@
-#$Id: obo-core.spec.in,v 1.1 2006/07/18 05:18:21 boconnor Exp $
+#$Id: obo-core.spec.in,v 1.2 2007/01/24 06:23:26 bpbuild Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
-Version: 1.0.0
+Version: 1.0.1
 Epoch: 0
 Release: %{revision}.%{distro}
 # mkdir SOURCES/obo-core-1.0.0 ; cd SOURCES/obo-core-1.0.0
@@ -43,9 +43,9 @@ Release: %{revision}.%{distro}
 #Source: Development_Cel    http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/developmental/animal_development/worm/worm_development.ontology?rev=HEAD
 #Source: Development_Cel    http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/developmental/animal_development/worm/worm_development.definitions?rev=HEAD
 #Source: GrossAnatomy_Dre   http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/anatomy/gross_anatomy/animal_gross_anatomy/zebrafish/zebrafish_anatomy.ontology?rev=HEAD
-Source0: %{name}-%{version}.tar.gz
-Patch0: %{name}-%{version}-EMAP.patch
-Patch1: %{name}-%{version}-MA.patch
+Source0: %{name}-1.0.0.tar.gz
+Patch0: %{name}-1.0.0-EMAP.patch
+Patch1: %{name}-1.0.0-MA.patch
 
 License: Custom
 Group: Bioinformatics/Ontologies
@@ -125,6 +125,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.2  2007/01/24 06:23:26  bpbuild
+Kinda a hack here.  I ran into the problem that the chado RPMs had, when they were last built, hardcoded version strings in them.  This isn't a big deal however, those version strings included the release string from the previous biopackages naming standard.  So to get the old RPMs to work (which we need to until we have time to create updated 0.05 versions) I needed to increment the version strings. I added and entry to the wiki RPM to do list to fix this in the near future.
+
 Revision 1.1  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
