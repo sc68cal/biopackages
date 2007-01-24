@@ -1,10 +1,10 @@
-#$Id: perl-go-perl.spec.in,v 1.4 2007/01/24 06:23:26 bpbuild Exp $
+#$Id: perl-go-perl.spec.in,v 1.5 2007/01/24 06:45:16 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: GO Perl
 Name: perl-go-perl
-Version: 0.03
-Release: %{revision}.%{distro} 
+Version: 0.02
+Release: 4.%{distro} 
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.xsl
 
 $Log: perl-go-perl.spec.in,v $
+Revision 1.5  2007/01/24 06:45:16  bpbuild
+Version string
+
 Revision 1.4  2007/01/24 06:23:26  bpbuild
 Kinda a hack here.  I ran into the problem that the chado RPMs had, when they were last built, hardcoded version strings in them.  This isn't a big deal however, those version strings included the release string from the previous biopackages naming standard.  So to get the old RPMs to work (which we need to until we have time to create updated 0.05 versions) I needed to increment the version strings. I added and entry to the wiki RPM to do list to fix this in the near future.
 
