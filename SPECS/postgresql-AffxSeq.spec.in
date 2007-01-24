@@ -1,8 +1,8 @@
-#$Id: postgresql-AffxSeq.spec.in,v 1.6 2007/01/24 06:45:16 bpbuild Exp $
+#$Id: postgresql-AffxSeq.spec.in,v 1.7 2007/01/24 06:57:42 bpbuild Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
 Version: 1.00
-Release: 4.%{distro}
+Release: 3.20050411.%{distro}
 License: BSD
 Group: Applications/Databases
 Vendor: Affymetrix, Inc.
@@ -104,6 +104,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.7  2007/01/24 06:57:42  bpbuild
+Version string
+
 Revision 1.6  2007/01/24 06:45:16  bpbuild
 Version string
 
