@@ -1,9 +1,9 @@
-#$Id: obo-core.spec.in,v 1.3 2007/01/24 06:38:09 bpbuild Exp $
+#$Id: obo-core.spec.in,v 1.4 2007/01/24 06:43:43 bpbuild Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
-Version: 1.0.1
+Version: 1.0.0
 Epoch: 0
-Release: %{revision}.%{distro}
+Release: 4.%{distro}
 # mkdir SOURCES/obo-core-1.0.0 ; cd SOURCES/obo-core-1.0.0
 #cat ../../SPECS/obo-core.spec | grep -E '^#Source' | ( while read crap dir url; do mkdir $dir; cd $dir ; wget "$url" ; d=`ls -1 *HEAD`; if [[ -n $d ]] ; then mv $d ${d/\?rev=HEAD/} ; fi ; cd .. ; done )
 #Source: GrossAnatomy_Ath   http://cvs.sourceforge.net/viewcvs.py/*checkout*/obo/obo/ontology/anatomy/gross_anatomy/plant_gross_anatomy/Arabidopsis/Attic/arabidopsis_anatomy.ontology?rev=HEAD
@@ -125,6 +125,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.4  2007/01/24 06:43:43  bpbuild
+Version string
+
 Revision 1.3  2007/01/24 06:38:09  bpbuild
 Version string
 
