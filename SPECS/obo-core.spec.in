@@ -1,4 +1,4 @@
-#$Id: obo-core.spec.in,v 1.2 2007/01/24 06:23:26 bpbuild Exp $
+#$Id: obo-core.spec.in,v 1.3 2007/01/24 06:38:09 bpbuild Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
 Version: 1.0.1
@@ -51,7 +51,7 @@ License: Custom
 Group: Bioinformatics/Ontologies
 Packager: Allen Day <allenday@ucla.edu>
 URL: http://obo.sf.net
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-1.0.0-%{release}-root-%(%{__id_u} -n)
 #Icon: 
 BuildArch: noarch
 BuildRequires: biopackages
@@ -125,6 +125,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.3  2007/01/24 06:38:09  bpbuild
+Version string
+
 Revision 1.2  2007/01/24 06:23:26  bpbuild
 Kinda a hack here.  I ran into the problem that the chado RPMs had, when they were last built, hardcoded version strings in them.  This isn't a big deal however, those version strings included the release string from the previous biopackages naming standard.  So to get the old RPMs to work (which we need to until we have time to create updated 0.05 versions) I needed to increment the version strings. I added and entry to the wiki RPM to do list to fix this in the near future.
 
