@@ -39,3 +39,4 @@ clucene-core-devel
 clucene-core
 clucene
 mod_perl
+perl-DBD-Pg
