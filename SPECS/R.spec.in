@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.4 2007/01/26 01:36:44 bpbuild Exp $
+#$Id: R.spec.in,v 1.5 2007/01/26 01:41:28 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -15,8 +15,8 @@ Icon: logosm-trans.gif
 Provides: R-base, R-recommended
 Obsoletes: R-base, R-recommended
 Requires: %__perl 
-BuildRequires: tk-devel tetex-latex readline-devel pcre-devel libjpeg-devel
-BuildRequires: zlib-devel bzip2-devel blas libglade-devel
+BuildRequires: tk-devel, tetex-latex, readline-devel, pcre-devel, libjpeg-devel
+BuildRequires: zlib-devel, bzip2-devel, blas, libglade-devel
 BuildRequires: biopackages
 BuildRequires: xpdf, gcc-g77, gcc-c++, gcc
 
@@ -120,6 +120,9 @@ if [ $1 = 0 ]; then
 fi
 
 $Log: R.spec.in,v $
+Revision 1.5  2007/01/26 01:41:28  bpbuild
+Updated deps
+
 Revision 1.4  2007/01/26 01:36:44  bpbuild
 Updated R spec version number
 
