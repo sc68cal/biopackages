@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.27 2007/01/25 00:36:45 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.28 2007/01/26 23:21:16 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -15,7 +15,7 @@ URL: http://turnkey.sf.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: gbrowse, textpresso, AmiGO, chado, turnkey
 BuildRequires: perl, biopackages, turnkey, chado-schema
@@ -28,7 +28,7 @@ GMOD Web demos for various databases.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Sce RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Sce, gbrowse, textpresso, AmiGO, genome-Sce-nib, genome-Sce, blastGraphic-Sce, genome-Sce-blast, turnkey
 BuildRequires: turnkey, perl, biopackages, chado-schema
@@ -41,7 +41,7 @@ The Wiki web application demo for turnkey.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Hsa RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Hsa, gbrowse, textpresso, AmiGO, genome-Hsa-nib, genome-Hsa, blastGraphic-Hsa, genome-Hsa-blast, turnkey 
 BuildRequires: turnkey, perl, biopackages, chado-schema
@@ -55,7 +55,7 @@ The Wiki web application demo for turnkey.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Hsa RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Hsa, gbrowse, textpresso, AmiGO, turnkey
 #gmod-web-Hsa-normal-tissue-probeset-barcharts
@@ -222,6 +222,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.28  2007/01/26 23:21:16  bpbuild
+Updated deps
+
 Revision 1.27  2007/01/25 00:36:45  bpbuild
 Added version requirement so our patched version of class-dbi-pg will be used.
 
