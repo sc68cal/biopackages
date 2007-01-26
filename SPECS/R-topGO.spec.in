@@ -1,0 +1,46 @@
+#$Id: R-topGO.spec.in,v 1.1 2007/01/26 01:25:45 bpbuild Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Brian O'Connor <boconnor@ucla.edu>
+Version: 0.9.7
+Release: %{revision}.%{distro}
+Name: R-topGO
+Summary: topGO
+Group: Applications/Engineering
+License: GPL
+Source0: topGO_%{version}.tar.gz
+Requires: R >= 2.4.0, R-R.utils
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, R-R.utils, biopackages
+
+%description
+topGO package provides tools for testing GO terms while accounting for the
+topology of the GO graph. Different test statistics and different methods for
+eliminating local similarities and dependencies between GO terms can be
+implemented and applied.
+
+%prep
+%setup -n topGO
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-topGO.spec.in,v $
+Revision 1.1  2007/01/26 01:25:45  bpbuild
+Import of topGO
+
+
