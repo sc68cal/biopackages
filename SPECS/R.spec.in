@@ -1,12 +1,12 @@
-#$Id: R.spec.in,v 1.3 2006/03/02 01:26:43 allenday Exp $
+#$Id: R.spec.in,v 1.4 2007/01/26 01:36:44 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 2.2.0
+Version: 2.4.0
 Release: %{revision}.%{distro}
 Summary: A language for data analysis and graphics
 Name: R
-Source0: ftp://cran.r-project.org/pub/R/src/base/R-%{version}.tar.gz
+Source0: R-%{version}.tar.gz
 Patch0: R-LANG.patch
 License: GPL
 URL: http://www.r-project.org
@@ -120,6 +120,9 @@ if [ $1 = 0 ]; then
 fi
 
 $Log: R.spec.in,v $
+Revision 1.4  2007/01/26 01:36:44  bpbuild
+Updated R spec version number
+
 Revision 1.3  2006/03/02 01:26:43  allenday
 update to 2.2.0
 
