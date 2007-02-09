@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.50 2007/02/08 23:48:46 bpbuild Exp $
+#$Id: Makefile,v 1.51 2007/02/09 00:05:24 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -24,10 +24,18 @@ prep ::
 # also summarizes the build status of each to a log file
 # FIXME: add individual targets so you can build all/a package on a certain queue
 cluster_buildall ::
+	#buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed
+	#prep/cvs update: locally on neuron
+	#cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes
+	#cluster_prep: makes sure all sources directories are set up on cluster nodes
+	#cluster_cvsupdate: cvs update all cluster nodes
+	#last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
+	###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs.
 	$(MAKE) buildclean
 	$(MAKE) prep
 	cvs update
 	$(MAKE) cluster_buildclean
+	$(MAKE) cluster_prep
 	$(MAKE) cluster_cvsupdate
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
@@ -75,11 +83,12 @@ specs ::
 	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --spec $$spec' | /bin/bash
 	touch $@
 
+#
 # cbuilt is a qsub script that is called to produce a .spec and .built file on each platform
-# FIXME: remove buildclean, only needed for testing
-# FIXME: remove cvs update/make prep when in production (cluster_buildall already will call this)
+#
+# NOTE: If doing an individual 'make .cbuilt' you should manually do a 'make cluster_cvsupdate' before, because all the automatic cvs updates are done by the 'make cluster_buildall' 
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; rm SETTINGS/$$file/LOGS/$$spec.*; echo -e "#!/bin/csh\n\nsetenv CVS_RSH ssh\ncvs update\n$(MAKE) prep\n$(MAKE) buildclean\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; rm SETTINGS/$$file/LOGS/$$spec.*; echo -e "#!/bin/csh\n\nsetenv CVS_RSH ssh\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
@@ -116,7 +125,7 @@ specs ::
 	cat $< | $(PERL) bin/in2spec.pl > $@
 
 ####################################
-#synlink/rsync targets to maintain SETTINGS
+#symlink/rsync targets to maintain SETTINGS
 #this dir structure also has the logs dir
 symlink_settings ::
 	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -s /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
