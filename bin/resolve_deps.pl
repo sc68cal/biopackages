@@ -6,7 +6,7 @@ use constant USAGE => <<"UUU";
 
 USAGE:
 
-$0 --spec <Spec-Name-No-Extension> --arch <Spec-BuildArch> --no-build <File-Listing-Packages-To-Skip> --no-yum <File-Listing-Packages-To-Not-Yum-Install> --remove-rpms (optional, default is no) --dep-tree <Dep-Tree-Output-File> 
+$0 --spec <Spec-Name-No-Extension> --arch <Spec-BuildArch> --no-build <File-Listing-Packages-To-Skip> --no-yum <File-Listing-Packages-To-Not-Yum-Install> --remove-rpms (optional, default is true) --dep-tree <Dep-Tree-Output-File> 
 
 This script starts with a certain package name and attempts to build all the
 required packages that the given package both needs for build requirements and
@@ -58,7 +58,7 @@ $no_build_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_b
 $no_deps_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/no_deps.txt" if (!defined($no_deps_file));
 $no_yum_install_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/yum_no_install.txt" if (!defined($no_yum_install_file));
 # FIXME: I temp changed this to 0, should be 1!!!
-$remove_installed_rpms = 0 if (!defined($remove_installed_rpms));
+$remove_installed_rpms = 1 if (!defined($remove_installed_rpms));
 $base_rpm_list = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/clean_rpm_list.txt" if (!defined($base_rpm_list));
 $dep_tree_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/DEP_TREES/$spec_file.deptree" if (!defined($dep_tree_file));
 $mapping_file = "/usr/src/biopackages/SETTINGS/$distro.$arch_str_universal/package_name_mapping.txt" if (!defined($mapping_file));
