@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.51 2007/02/09 00:05:24 bpbuild Exp $
+#$Id: Makefile,v 1.52 2007/02/09 03:33:47 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -24,13 +24,13 @@ prep ::
 # also summarizes the build status of each to a log file
 # FIXME: add individual targets so you can build all/a package on a certain queue
 cluster_buildall ::
-	#buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed
-	#prep/cvs update: locally on neuron
-	#cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes
-	#cluster_prep: makes sure all sources directories are set up on cluster nodes
-	#cluster_cvsupdate: cvs update all cluster nodes
-	#last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
-	###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs.
+#buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed
+#prep/cvs update: locally on neuron
+#cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes
+#cluster_prep: makes sure all sources directories are set up on cluster nodes
+#cluster_cvsupdate: cvs update all cluster nodes
+#last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
+###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs.
 	$(MAKE) buildclean
 	$(MAKE) prep
 	cvs update
