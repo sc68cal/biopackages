@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.52 2007/02/09 03:33:47 bpbuild Exp $
+#$Id: Makefile,v 1.53 2007/02/09 03:41:28 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -128,7 +128,7 @@ specs ::
 #symlink/rsync targets to maintain SETTINGS
 #this dir structure also has the logs dir
 symlink_settings ::
-	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -s /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
+	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -sf /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
 #
 #FIXME: finish following statment to symlink RPMS and SRPMS to Shared Storage as part of symlink_settings target (JMM)
 #       echo 'for n in SRPMS RPMS/{i386,noarch,x86_64} ; do unlink $n ; done' | /bin/bash
