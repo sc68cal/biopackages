@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.54 2007/02/12 20:06:05 bpbuild Exp $
+#$Id: Makefile,v 1.55 2007/02/12 20:19:55 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -50,10 +50,10 @@ cluster_prep ::
 
 # creates an HTML output report summarizing the build status of each package based on logs
 report ::
-	sudo mkdir /biopackages/report
+	mkdir -p /biopackages/report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
-	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
-	cd /biopackages/report/; sudo cp -Rf /usr/src/biopackages/SETTINGS .
+	cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
+	cd /biopackages/report/; cp -Rf /usr/src/biopackages/SETTINGS .
 
 all :: specs
 
