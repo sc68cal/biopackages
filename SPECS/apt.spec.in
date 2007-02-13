@@ -1,4 +1,4 @@
-#$Id: apt.spec.in,v 1.1 2006/05/23 20:18:16 boconnor Exp $
+#$Id: apt.spec.in,v 1.2 2007/02/13 18:23:45 bpbuild Exp $
 Name: APT
 Epoch: 1
 Version: 1.4.0
@@ -43,8 +43,18 @@ make
 cd ./sdk
 #export sdk_install_prefix=$RPM_BUILD_ROOT
 #make install
+#
+# hardcode the arch for now - change later
+#
+%ifarch i386
 cp ./output/i386-intel-linux/bin/* $RPM_BUILD_ROOT/%{_bindir}
 cp ./output/i386-intel-linux/lib/*.a $RPM_BUILD_ROOT/%{_libdir}
+%endif
+%ifarch x86_64
+cp ./output/amd64-amd-linux/bin/* $RPM_BUILD_ROOT/%{_bindir}
+cp ./output/amd64-amd-linux/lib/*.a $RPM_BUILD_ROOT/%{_libdir}
+%endif
+
 # .a is archive
 # .o is intermediate file
 # really need to install .so, ask Allen how to do this
@@ -69,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/*
 
 #$Log: apt.spec.in,v $
+#Revision 1.2  2007/02/13 18:23:45  bpbuild
+#hardcoded for 64 bit
+#
 #Revision 1.1  2006/05/23 20:18:16  boconnor
 #Added spec for apt.
 #
