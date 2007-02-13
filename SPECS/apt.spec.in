@@ -1,5 +1,5 @@
-#$Id: apt.spec.in,v 1.2 2007/02/13 18:23:45 bpbuild Exp $
-Name: APT
+#$Id: apt.spec.in,v 1.3 2007/02/13 18:32:38 bpbuild Exp $
+Name: apt
 Epoch: 1
 Version: 1.4.0
 Release: %{revision}.%{distro}
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/*
 
 #$Log: apt.spec.in,v $
+#Revision 1.3  2007/02/13 18:32:38  bpbuild
+#change case of name
+#
 #Revision 1.2  2007/02/13 18:23:45  bpbuild
 #hardcoded for 64 bit
 #
