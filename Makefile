@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.58 2007/02/18 22:15:26 bpbuild Exp $
+#$Id: Makefile,v 1.59 2007/02/18 22:56:55 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -30,7 +30,7 @@ cluster_buildall ::
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
-###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs. Next run 'make headers' to make yum headers for all biopackages.
+###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make cluster_postbuild' to generate reports, make yum headers and fix ownership.
 	$(MAKE) buildclean
 	$(MAKE) prep
 	cvs update
@@ -48,6 +48,9 @@ cluster_cvsupdate ::
 cluster_prep ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
 
+# after a cluster_buildall finishes, 'make cluster_postbuild' to generate reports and the rest of the repository
+cluster_postbuild :: report repo
+
 # creates an HTML output report summarizing the build status of each package based on logs
 ## FIXME: first line is a temporary fix cause make prep causes too many levels of symlinks
 report ::
@@ -57,10 +60,17 @@ report ::
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
 	sudo rsync -rL /usr/src/biopackages/SETTINGS /biopackages/report/
 
+# perform all actions related to generation and cleanliness of yum repository
+repo : repo_headers repo_permissions
+
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
-headers ::
+repo_headers ::
 	sudo make -C /biopackages all
+
+# make root own everything in the repository
+repo_permissions ::
+	sudo chown -Rf root:root /biopackages
 
 all :: specs
 
