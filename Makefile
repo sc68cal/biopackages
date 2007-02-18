@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.56 2007/02/12 21:06:54 bpbuild Exp $
+#$Id: Makefile,v 1.57 2007/02/18 22:06:53 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -30,7 +30,7 @@ cluster_buildall ::
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
-###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs.
+###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make report' to generate reports from finished build logs. Next run 'make headers' to make yum headers for all biopackages.
 	$(MAKE) buildclean
 	$(MAKE) prep
 	cvs update
@@ -54,6 +54,11 @@ report ::
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
 	sudo rsync -rL /usr/src/biopackages/SETTINGS /biopackages/report/
+
+# creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
+## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
+headers ::
+	sudo make -C /biopackages all
 
 all :: specs
 
