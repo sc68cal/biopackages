@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.57 2007/02/18 22:06:53 bpbuild Exp $
+#$Id: Makefile,v 1.58 2007/02/18 22:15:26 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -49,7 +49,9 @@ cluster_prep ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
 
 # creates an HTML output report summarizing the build status of each package based on logs
+## FIXME: first line is a temporary fix cause make prep causes too many levels of symlinks
 report ::
+	rm -Rf /usr/src/biopackages/SETTINGS/*/{SCRIPTS/SCRIPTS,LOGS/LOGS,DEP_TREES/DEP_TREES}
 	sudo mkdir -p /biopackages/report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
@@ -132,6 +134,7 @@ specs ::
 ####################################
 #symlink/rsync targets to maintain SETTINGS
 #this dir structure also has the logs dir
+## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
 symlink_settings ::
 	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -sf /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
 #
