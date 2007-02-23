@@ -1,0 +1,101 @@
+#$Id: R-Bioconductor.spec.in,v 1.1 2007/02/23 22:35:58 bpbuild Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.6
+Release: %{revision}.%{distro}
+
+%define pkg Bioconductor
+%define __spec__install_post exit 0
+
+Name: R-%{pkg}
+Summary: R-package: %{pkg}
+Group: Applications/Engineering
+License: GPL
+URL: http://www.bioconductor.org
+BuildRoot: /var/tmp/R-%{pkg}
+
+Source0: http://www.bioconductor.org/getBioC.R
+Source1: http://www.bioconductor.org/repository/devel/vignette/Bioconductor.pdf
+Patch0: R-bioconductor-1.5.getBioC.patch
+Requires: R >= 2.0.0
+Requires: usr-local-bin-perl
+BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
+
+%description
+bioconductor - R libraries for microarray analysis and visualization.
+
+
+%prep
+%setup -T -c
+cp %{SOURCE0} .
+cp %{SOURCE1} .
+ls -1
+#%patch0 -p0
+
+%build
+#
+export R_PACKAGE_NAME=${RPM_PACKAGE_NAME##R-}
+rm -rf ${RPM_BUILD_ROOT}
+mkdir --parents ${RPM_BUILD_ROOT}/usr/lib/R/library
+#echo 'source("http://www.bioconductor.org/getBioC.R")' > installbioC.R
+echo "source('getBioC.R')" > installbioC.R
+
+#for i in affy cdna default exprs prog graph widgets database annotation analyses externalData proteomics arrayCGH ; do
+for i in affy cdna default exprs prog graph widgets database annotation analyses externalData proteomics arrayCGH; do
+  echo "getBioC(libName=\"$i\",destdir=\"${RPM_BUILD_ROOT}/%{_libdir}/R/library\");" >> installbioC.R;
+done;
+for i in `wget -q -O - http://www.bioconductor.org/data/specific.html | perl -ne 'm!<td>(\S+?)\s*</td>!;print "$1\n" if $1' | sort | uniq | grep -vw m`; do
+  echo "getBioC(pkgs=\"$i\",destdir=\"${RPM_BUILD_ROOT}/%{_libdir}/R/library\");" >> installbioC.R;
+done;
+for i in `wget -q -O - http://www.bioconductor.org/packages/bioc/stable/src/contrib/html | perl -ne 'm!<a.+?>\s*(\S+?)</a>!;print "$1\n" if $1' | sort | uniq`; do
+#  echo "getBioC(libName=\"$i\",destdir=\"${RPM_BUILD_ROOT}/%{_libdir}/R/library\");" >> installbioC.R;
+  echo "getBioC(pkgs=\"$i\",destdir=\"${RPM_BUILD_ROOT}/%{_libdir}/R/library\");" >> installbioC.R;
+done;
+
+R CMD BATCH --no-restore installbioC.R
+
+chmod 666 ${RPM_BUILD_ROOT}/%{_libdir}/R/library;
+chmod 666 ${RPM_BUILD_ROOT}/%{_libdir}/R/library/liblisting.Rda;
+
+# Some people leave object files in the source, which are not
+# replaced. This removes them.
+#
+rm -f ${R_PACKAGE_NAME}/src/*.o
+rm -f ${R_PACKAGE_NAME}/src/*.so
+
+# Install it. You need R-base installed on your build machine for this
+#
+
+# Doc files. There is no standard here, so we assume anything not in
+# one of the standard directories is documentation.
+#
+mkdir doc
+for docfile in `ls ${R_PACKAGE_NAME}`; do
+   case $docfile in
+      INDEX) ;;
+      TITLE) ;;
+      R) ;;
+      man) ;;
+      src) ;;
+      src-c) ;;      #deprecated
+      data) ;;
+      exec) ;;
+      *) cp --recursive ${R_PACKAGE_NAME}/${docfile} doc/;;
+   esac
+done
+rm -f ${RPM_BUILD_ROOT}/usr/lib/R/library/R.css
+#Create file list
+#
+echo "%attr(-, root, root) /usr/lib/R/library/*" > rpm-files
+ls doc | sed "s@^@%attr(-,root,root) %doc doc/&@" >> rpm-files
+%files -f rpm-files
+%doc *.pdf
+%clean
+rm -rf ${RPM_BUILD_ROOT}/usr/lib/R/library/${R_PACKAGE_NAME}
+rm -rf ${RPM_BUILD_ROOT}/${RPM_DOC_DIR}/${RPM_PACKAGE_NAME}-${RPM_PACKAGE_VERSION}
+
+$Log: R-Bioconductor.spec.in,v $
+Revision 1.1  2007/02/23 22:35:58  bpbuild
+import from testing
+
