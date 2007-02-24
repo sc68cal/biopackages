@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.59 2007/02/18 22:56:55 bpbuild Exp $
+#$Id: Makefile,v 1.60 2007/02/24 05:25:29 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -59,6 +59,12 @@ report ::
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
 	sudo rsync -rL /usr/src/biopackages/SETTINGS /biopackages/report/
+
+# migrate all packages from testing into stable and make new headers for all repositories.
+migrate :: 
+	cd /biopackages/testing 
+	for i in {{centos/4,fedora/{1,2,3,4,5}}}/*/*.rpm ; do mv -vf $i /biopackages/stable/$i ; done 
+	$(MAKE) repo
 
 # perform all actions related to generation and cleanliness of yum repository
 repo : repo_headers repo_permissions
