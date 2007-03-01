@@ -1,4 +1,4 @@
-#$Id: genome-Sce.spec.in,v 1.5 2006/08/30 02:38:03 allenday Exp $
+#$Id: genome-Sce.spec.in,v 1.6 2007/03/01 19:43:56 bpbuild Exp $
 Summary: S. cerevisiae genome sequence in FASTA format from SGD S228C (Oct 1 2003) release.
 Name: genome-Sce
 Version: S228C
@@ -116,13 +116,16 @@ find %{buildroot}%{_datadir}/blast -type f | sed "s@^%{buildroot}@%dir @g" >> %{
 
 %preun 
 
-%post ePCR
-fahash -b %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 %{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
+#%post ePCR
+#fahash -b %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash -w 12 -f3 %{_datadir}/genome/Sce/%{version}/ePCR/chrall.famap
 
-%preun ePCR
-rm -f %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
+#%preun ePCR
+#rm -f %{_datadir}/genome/Sce/%{version}/ePCR/chrall.fahash
 
 $Log: genome-Sce.spec.in,v $
+Revision 1.6  2007/03/01 19:43:56  bpbuild
+post/preun fails on centos4.x86_64, testing without it
+
 Revision 1.5  2006/08/30 02:38:03  allenday
 cannot do fahash in rpm build -- moved to %post and %preun :(
 
