@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.63 2007/03/01 19:01:58 bpbuild Exp $
+#$Id: Makefile,v 1.64 2007/03/06 16:28:41 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -49,6 +49,7 @@ cluster_prep ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
 
 # after a cluster_buildall finishes, 'make cluster_postbuild' to generate reports and the rest of the repository
+## FIXME: ultimately should report, migrate, repo 
 cluster_postbuild :: report repo
 
 # creates an HTML output report summarizing the build status of each package based on logs
@@ -74,7 +75,7 @@ repo : repo_headers repo_permissions
 repo_headers ::
 	sudo make -C /biopackages all
 
-# make root own everything in the repository
+# make root own everything in the repository, except for testing
 repo_permissions ::
 	sudo chown -Rf root:root /biopackages
 	sudo chown -Rf bpbuild:bpbuild /biopackages/testing
