@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.7 2007/03/08 07:38:25 bpbuild Exp $
+#$Id: R.spec.in,v 1.8 2007/03/08 07:56:38 bpbuild Exp $
 Vendor: biopackages.net
 Name: R
 Version: 2.4.0
@@ -9,7 +9,9 @@ Source0: R-%{version}.tar.gz
 License: GPL
 Group: Applications/Engineering
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: gcc-g77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
 BuildRequires: gcc-c++, tetex-latex, texinfo
 BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 BuildRequires: tcl-devel, tk-devel
@@ -73,7 +75,10 @@ Summary: files for development of R packages.
 Group: Applications/Engineering
 Requires: R = %{version}
 # You need all the BuildRequires for the development version
-Requires: gcc-c++, gcc-g77, tetex-latex, texinfo 
+%{ifdistro_release fedora 2}Requires: gcc-g77
+%{ifdistro_release fedora 5}Requires: gcc-gfortran
+%{ifdistro_release centos 4}Requires: gcc-gfortran
+Requires: gcc-c++, tetex-latex, texinfo 
 Requires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 Requires: libSM-devel, libX11-devel, libICE-devel, libXt-devel
 Requires: tcl-devel, tk-devel
@@ -400,6 +405,9 @@ fi
 #- Built 1.8.1
 
 $Log: R.spec.in,v $
+Revision 1.8  2007/03/08 07:56:38  bpbuild
+ifdistro gcc-g77
+
 Revision 1.7  2007/03/08 07:38:25  bpbuild
  testing gcc-g77 vs gcc-gfortran
 
