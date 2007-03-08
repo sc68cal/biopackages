@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.6 2007/01/26 20:58:43 bpbuild Exp $
+#$Id: R.spec.in,v 1.7 2007/03/08 07:38:25 bpbuild Exp $
 Vendor: biopackages.net
 Name: R
 Version: 2.4.0
@@ -9,7 +9,7 @@ Source0: R-%{version}.tar.gz
 License: GPL
 Group: Applications/Engineering
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: gcc-gfortran
+BuildRequires: gcc-g77
 BuildRequires: gcc-c++, tetex-latex, texinfo
 BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 BuildRequires: tcl-devel, tk-devel
@@ -73,7 +73,7 @@ Summary: files for development of R packages.
 Group: Applications/Engineering
 Requires: R = %{version}
 # You need all the BuildRequires for the development version
-Requires: gcc-c++, gcc-gfortran, tetex-latex, texinfo 
+Requires: gcc-c++, gcc-g77, tetex-latex, texinfo 
 Requires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 Requires: libSM-devel, libX11-devel, libICE-devel, libXt-devel
 Requires: tcl-devel, tk-devel
@@ -400,6 +400,9 @@ fi
 #- Built 1.8.1
 
 $Log: R.spec.in,v $
+Revision 1.7  2007/03/08 07:38:25  bpbuild
+ testing gcc-g77 vs gcc-gfortran
+
 Revision 1.6  2007/01/26 20:58:43  bpbuild
 Import of spec from fc5
 
