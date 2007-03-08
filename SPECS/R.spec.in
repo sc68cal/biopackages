@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.8 2007/03/08 07:56:38 bpbuild Exp $
+#$Id: R.spec.in,v 1.9 2007/03/08 07:59:47 bpbuild Exp $
 Vendor: biopackages.net
 Name: R
 Version: 2.4.0
@@ -11,7 +11,7 @@ Group: Applications/Engineering
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 BuildRequires: gcc-c++, tetex-latex, texinfo
 BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 BuildRequires: tcl-devel, tk-devel
@@ -77,7 +77,7 @@ Requires: R = %{version}
 # You need all the BuildRequires for the development version
 %{ifdistro_release fedora 2}Requires: gcc-g77
 %{ifdistro_release fedora 5}Requires: gcc-gfortran
-%{ifdistro_release centos 4}Requires: gcc-gfortran
+%{ifdistro_release centos 4}Requires: gcc-g77
 Requires: gcc-c++, tetex-latex, texinfo 
 Requires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 Requires: libSM-devel, libX11-devel, libICE-devel, libXt-devel
@@ -405,6 +405,9 @@ fi
 #- Built 1.8.1
 
 $Log: R.spec.in,v $
+Revision 1.9  2007/03/08 07:59:47  bpbuild
+centos4 uses gcc-g77
+
 Revision 1.8  2007/03/08 07:56:38  bpbuild
 ifdistro gcc-g77
 
