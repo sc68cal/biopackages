@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.9 2007/03/08 07:59:47 bpbuild Exp $
+#$Id: R.spec.in,v 1.10 2007/03/09 19:44:21 bpbuild Exp $
 Vendor: biopackages.net
 Name: R
 Version: 2.4.0
@@ -9,6 +9,10 @@ Source0: R-%{version}.tar.gz
 License: GPL
 Group: Applications/Engineering
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+=======
+BuildRequires: gcc-g77
+=======
 %{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
 %{ifdistro_release centos 4}BuildRequires: gcc-g77
@@ -405,6 +409,9 @@ fi
 #- Built 1.8.1
 
 $Log: R.spec.in,v $
+Revision 1.10  2007/03/09 19:44:21  bpbuild
+cleanup
+
 Revision 1.9  2007/03/08 07:59:47  bpbuild
 centos4 uses gcc-g77
 
