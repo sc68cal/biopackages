@@ -1,0 +1,42 @@
+#$Id: R-R.cache.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.1.4
+Release: %{revision}.%{distro}
+Name: R-R.cache
+Summary: R.cache: Fast and light-weight caching of objects.
+License: GPL
+URL: http://www.braju.com/R/
+Source0: R.cache_0.1.4.tar.gz
+Requires: R >= 2.4.0, R-R.oo, R-R.utils
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, biopackages
+
+%description
+Fast and light-weight caching of objects. Methods for caching arbitrary R objects on persistent media. Objects can be loaded and saved stratified on a set of hashing objects.
+
+%prep
+%setup -n R.cache
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
+* Tue Mar 13 2007 allenday allenday 0.1.4-1.1
+- new file

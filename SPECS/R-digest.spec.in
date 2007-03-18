@@ -1,0 +1,42 @@
+#$Id: R-digest.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 0.2.3
+Release: %{revision}.%{distro}
+Name: R-digest
+Summary: The digest package provides functions for the creation of 'hash' digests of arbitrary R objects using the md5, sha-1 and crc32 algorithms permitting easy comparison of R language objects.
+License: GPL
+URL: http://cran.r-project.org
+Source0: digest_0.2.3.tar.gz
+Requires: R >= 2.4.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, gcc, biopackages
+
+%description
+The digest package provides functions for the creation of 'hash' digests of arbitrary R objects using the md5, sha-1 and crc32 algorithms permitting easy comparison of R language objects. The md5 algorithm by Ron Rivest is specified in RFC 1321, the SHA-1 algorithm is specified in FIPS-180-1 and the crc32 algorithm is described in ftp://ftp.rocksoft.com/cliens/rocksoft/papers/crc_v3.txt. For md5 and sha-1, this packages uses two small standalone C implementations that were provided by by Christophe Devine. For crc32, code from the zlib library is used. . Please note that this package is not meant to be used for cryptographic purposes for which more comprehensive (and widely tested) libraries such as OpenSSL should be used.
+
+%prep
+%setup -n digest
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
+* Tue Mar 13 2007 allenday allenday 0.1.4-1.1
+- new file

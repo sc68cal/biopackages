@@ -1,0 +1,42 @@
+#$Id: R-affy.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.12.2
+Release: %{revision}.%{distro}
+Name: R-affy
+Summary: The package contains functions for exploratory oligonucleotide array analysis.
+License: GPL
+URL: http://www.bioconductor.org
+Source0: affy_1.12.2.tar.gz
+Requires: R >= 2.4.0, R-Biobase, R-affyio
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, R-Biobase, R-affyio, gcc, biopackages
+
+%description
+The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
+
+%prep
+%setup -n affy
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
+* Tue Mar 13 2007 allenday allenday 0.1.4-1.1
+- new file

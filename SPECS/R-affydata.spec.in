@@ -1,0 +1,42 @@
+#$Id: R-affydata.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.12.2
+Release: %{revision}.%{distro}
+Name: R-affydata
+Summary: Example datasets of a slightly large size. They represent 'real world examples', unlike the artificial examples included in the package affy.
+License: GPL
+URL: http://www.bioconductor.org
+Source0: affydata_1.10.0.tar.gz
+Requires: R >= 2.4.0, R-affy
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, R-affy, gcc, biopackages
+
+%description
+Example datasets of a slightly large size. They represent 'real world examples', unlike the artificial examples included in the package affy.
+
+%prep
+%setup -n affydata
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
+* Tue Mar 13 2007 allenday allenday 0.1.4-1.1
+- new file
