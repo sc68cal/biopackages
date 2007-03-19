@@ -1,8 +1,8 @@
-#$Id: R-genefilter.spec.in,v 1.2 2007/03/19 05:58:05 bpbuild Exp $
+#$Id: R-genefilter.spec.in,v 1.3 2007/03/19 05:59:56 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.13.10
+Version: 1.12.0
 Release: %{revision}.%{distro}
 Name: R-genefilter
 Summary: Some basic functions for filtering genes
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-genefilter.spec.in,v $
+Revision 1.3  2007/03/19 05:59:56  bpbuild
+version decrement
+
 Revision 1.2  2007/03/19 05:58:05  bpbuild
 import
 
