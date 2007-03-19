@@ -1,4 +1,4 @@
-#$Id: R-geneplotter.spec.in,v 1.1 2007/03/19 06:10:14 bpbuild Exp $
+#$Id: R-geneplotter.spec.in,v 1.2 2007/03/19 06:12:04 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -10,9 +10,9 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
 Source0: geneplotter_%{version}.tar.gz
-Requires: R >= 2.0.0, R-Biobase, R-annotate
+Requires: R >= 2.0.0, R-Biobase, R-annotate, R-RColorBrewer
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-Biobase, R-annotate, gcc, biopackages
+BuildRequires: R >= 2.0.0, R-Biobase, R-annotate, R-RColorBrewer, gcc, biopackages
 
 %description
 Some basic functions for plotting genetic data
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-geneplotter.spec.in,v $
+Revision 1.2  2007/03/19 06:12:04  bpbuild
+import
+
 Revision 1.1  2007/03/19 06:10:14  bpbuild
 import
 
