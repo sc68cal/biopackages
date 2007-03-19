@@ -1,24 +1,24 @@
-#$Id: R-genefilter.spec.in,v 1.2 2007/03/19 05:58:05 bpbuild Exp $
+#$Id: R-AnnotationDbi.spec.in,v 1.1 2007/03/19 05:53:23 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.13.10
+Version: 0.0.50
 Release: %{revision}.%{distro}
-Name: R-genefilter
-Summary: Some basic functions for filtering genes
+Name: R-AnnotationDbi
+Summary: Annotation Database Interface
 Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
-Source0: genefilter_%{version}.tar.gz
-Requires: R >= 2.0.0, R-Biobase
+Source0: AnnotationDbi_%{version}.tar.gz
+Requires: R >= 2.0.0, R-Biobase, R-RSQLite
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-Biobase, gcc, biopackages
+BuildRequires: R >= 2.0.0, R-Biobase, R-RSQLite, gcc, biopackages
 
 %description
-genefilter: methods for filtering genes from microarray experiments
+Provides user interface and database connection code for annotation data packages using SQLite data storage.
 
 %prep
-%setup -n genefilter
+%setup -n AnnotationDbi
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
@@ -39,7 +39,7 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
-$Log: R-genefilter.spec.in,v $
-Revision 1.2  2007/03/19 05:58:05  bpbuild
+$Log: R-AnnotationDbi.spec.in,v $
+Revision 1.1  2007/03/19 05:53:23  bpbuild
 import
 
