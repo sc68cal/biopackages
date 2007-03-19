@@ -1,0 +1,45 @@
+#$Id: R-xtable.spec.in,v 1.1 2007/03/19 06:18:11 bpbuild Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.4.3
+Release: %{revision}.%{distro}
+Name: R-xtable
+Summary: xtable: Export tables to LaTeX or HTML
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: xtable_1.4-3.tar.gz
+Requires: R >= 2.0.0, R-Biobase
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, R-Biobase, gcc, biopackages
+
+%description
+Coerce data to LaTeX and HTML tables
+
+%prep
+%setup -n xtable
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-xtable.spec.in,v $
+Revision 1.1  2007/03/19 06:18:11  bpbuild
+import
+
