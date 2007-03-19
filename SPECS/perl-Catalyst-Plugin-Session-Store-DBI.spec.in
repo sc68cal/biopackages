@@ -1,10 +1,10 @@
-#$Id: perl-Catalyst-Plugin-Session-Store-DBI.spec.in,v 1.1 2007/03/19 02:06:05 bpbuild Exp $
+#$Id: perl-Catalyst-Plugin-Session-Store-DBI.spec.in,v 1.2 2007/03/19 02:06:59 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Catalyst::Plugin::Session::Store::DBI - Store your sessions in a database
 Name: perl-Catalyst-Plugin-Session-Store-DBI
-Version: 0.07
+Version: 0.08
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst-Plugin-Session-Store-DBI.spec.in,v $
+Revision 1.2  2007/03/19 02:06:59  bpbuild
+new catalyst session backend
+
 Revision 1.1  2007/03/19 02:06:05  bpbuild
 new catalyst session backend
 
