@@ -1,8 +1,8 @@
-#$Id: R-Biobase.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+#$Id: R-Biobase.spec.in,v 1.2 2007/03/19 06:21:36 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.12.2
+Version: 1.13.41
 Release: %{revision}.%{distro}
 Name: R-Biobase
 Summary: Biobase: Base functions for Bioconductor
