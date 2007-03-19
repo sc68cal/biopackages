@@ -1,4 +1,4 @@
-#$Id: R-RSQLite.spec.in,v 1.2 2007/03/19 05:46:56 bpbuild Exp $
+#$Id: R-RSQLite.spec.in,v 1.1 2007/03/19 05:46:13 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,7 +9,7 @@ Summary: RSQLite: SQLite interface for R
 Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
-Source0: RSQLite_0.1-12.tar.gz
+Source0: RSQLite_0.4.20.tar.gz
 Requires: R >= 2.0.0, R-DBI >= 0.1.11
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.0.0, R-DBI >= 0.1.11, gcc, biopackages
@@ -40,9 +40,6 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RSQLite.spec.in,v $
-Revision 1.2  2007/03/19 05:46:56  bpbuild
-import
-
 Revision 1.1  2007/03/19 05:46:13  bpbuild
 import
 
