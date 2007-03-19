@@ -1,0 +1,45 @@
+#$Id: R-geneplotter.spec.in,v 1.1 2007/03/19 06:10:14 bpbuild Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.13.7
+Release: %{revision}.%{distro}
+Name: R-geneplotter
+Summary: Grapics related functions for Bioconductor
+Group: Applications/Engineering
+License: GPL
+URL: http://www.r-project.org
+Source0: geneplotter_%{version}.tar.gz
+Requires: R >= 2.0.0, R-Biobase, R-annotate
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, R-Biobase, R-annotate, gcc, biopackages
+
+%description
+Some basic functions for plotting genetic data
+
+%prep
+%setup -n geneplotter
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+cp %{SOURCE0} .
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-geneplotter.spec.in,v $
+Revision 1.1  2007/03/19 06:10:14  bpbuild
+import
+
