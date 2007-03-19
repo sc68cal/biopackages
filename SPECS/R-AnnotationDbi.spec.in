@@ -1,4 +1,4 @@
-#$Id: R-AnnotationDbi.spec.in,v 1.1 2007/03/19 05:53:23 bpbuild Exp $
+#$Id: R-AnnotationDbi.spec.in,v 1.2 2007/03/19 05:55:37 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -10,9 +10,9 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
 Source0: AnnotationDbi_%{version}.tar.gz
-Requires: R >= 2.0.0, R-Biobase, R-RSQLite
+Requires: R >= 2.5.0, R-Biobase, R-RSQLite
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-Biobase, R-RSQLite, gcc, biopackages
+BuildRequires: R >= 2.5.0, R-Biobase, R-RSQLite, gcc, biopackages
 
 %description
 Provides user interface and database connection code for annotation data packages using SQLite data storage.
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-AnnotationDbi.spec.in,v $
+Revision 1.2  2007/03/19 05:55:37  bpbuild
+cant build this yet
+
 Revision 1.1  2007/03/19 05:53:23  bpbuild
 import
 
