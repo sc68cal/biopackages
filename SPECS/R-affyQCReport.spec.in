@@ -1,0 +1,43 @@
+#$Id: R-affyQCReport.spec.in,v 1.1 2007/03/19 02:33:42 bpbuild Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.13.16
+Release: %{revision}.%{distro}
+Name: R-affyQCReport
+Summary: QC Report Generation for affyBatch objects
+License: GPL
+URL: http://www.bioconductor.org
+Source0: affyQCReport_1.13.16.tar.gz
+Requires: R >= 2.4.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.4.0, gcc, biopackages
+
+%description
+This package creates a QC report for an AffyBatch object. The report is intended to allow the user to quickly assess the quality of a set of arrays in an AffyBatch object.
+
+%prep
+%setup -n affyQCReport
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: R-affyQCReport.spec.in,v $
+Revision 1.1  2007/03/19 02:33:42  bpbuild
+import QC package
+
