@@ -1,4 +1,4 @@
-#$Id: celsius-database.spec.in,v 1.3 2007/03/22 22:49:12 bpbuild Exp $
+#$Id: celsius-database.spec.in,v 1.4 2007/03/23 00:16:03 bpbuild Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, database component
 Name: celsius-database
 Version: 1.0
@@ -33,8 +33,8 @@ sudo su postgres -c "zcat %{SOURCE0} | psql $tmp_celsius 2>&1" 2>&1 > /dev/null;
 #######################
 #DUMP AND DROP DATABASE
 #######################
-sudo su postgres -c "pg_dump -O $tmp_celsius" | gzip > %{name}-%{version}.sql.gz
-sudo su postgres -c "dropdb   $tmp_celsius"
+sudo su postgres -c "pg_dump $tmp_celsius" | gzip > %{name}-%{version}.sql.gz
+sudo su postgres -c "dropdb  $tmp_celsius"
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
@@ -63,6 +63,9 @@ sudo su postgres -c 'dropdb celsius-%{version}';
 true;
 
 $Log: celsius-database.spec.in,v $
+Revision 1.4  2007/03/23 00:16:03  bpbuild
+preserve ownership
+
 Revision 1.3  2007/03/22 22:49:12  bpbuild
 bugfix
 
