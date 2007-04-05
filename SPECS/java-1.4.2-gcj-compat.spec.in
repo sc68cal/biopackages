@@ -1,0 +1,670 @@
+#$Id: java-1.4.2-gcj-compat.spec.in,v 1.1 2007/04/05 23:02:55 bpbuild Exp $
+%define section		free
+
+%{!?custom:	%define custom 0}
+%{!?gcjprefix: 	%define gcjprefix %{nil}}
+%{!?origin:	%{expand: %%define origin gcj%{gccsuffix}}}
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%define gccsuffix	%{nil}
+%define gccsoversion	6
+%define priority	1420
+%define	javaver		1.4.2
+%define buildver	0
+# the version-release string for the gcj rpms we require
+%define gccver		4.0.0-0.42
+%define jgcver		1.0.68
+
+%define cname           java-%{javaver}-%{origin}
+
+%define	sdklnk		java-%{javaver}-%{origin}
+%define	jrelnk		jre-%{javaver}-%{origin}
+%define	sdkdir		%{cname}-%{version}
+%define	jredir		%{sdkdir}/jre
+%define sdkbindir	%{_jvmdir}/%{sdklnk}/bin
+%define jrebindir	%{_jvmdir}/%{jrelnk}/bin
+%define jvmjardir       %{_jvmjardir}/%{cname}-%{version}
+
+# %define plugindir       %{_libdir}/mozilla/plugins
+
+Name:		java-%{javaver}-%{origin}-compat
+Version:	%{javaver}.%{buildver}
+Release: 	%{revision}.{distro}
+Epoch:		0
+Summary:	JPackage runtime scripts for GCJ
+
+Group:		Development/Languages
+License:	GPL
+URL:		ftp://sources.redhat.com/pub/rhug/java-gcj-compat
+Source0:        java-gcj-compat-%{jgcver}.tar.gz
+Source1:	eclipse-ecj-3.1.0_fc-12.jar
+Source2:	ecj.sh.in
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	jpackage-utils >= 0:1.5, sed
+BuildRequires:	gcc%{gccsuffix}-java >= %{gccver}
+BuildRequires:	gjdoc
+BuildRequires:	libgcj%{gccsuffix}-src >= %{gccver}
+BuildRequires:	eclipse-ecj
+Requires:	libgcj%{gccsuffix} >= %{gccver}
+Requires:	gjdoc
+Requires:	zip
+Requires:	jpackage-utils >= 0:1.6.6-1jpp_1rh
+Requires(post): jpackage-utils >= 0:1.6.6-1jpp_1rh
+Requires(postun): jpackage-utils >= 0:1.6.6-1jpp_1rh
+Requires(post): libgcj%{gccsuffix} >= %{gccver}
+Requires(postun): libgcj%{gccsuffix} >= %{gccver}
+# work around 208913
+Requires:	%{_bindir}/gij%{gccsuffix}
+Requires(post): %{_bindir}/gij%{gccsuffix}
+Requires(postun): %{_bindir}/gij%{gccsuffix}
+Requires:	%{_bindir}/gcj-dbtool%{gccsuffix}
+Requires(post): %{_bindir}/gcj-dbtool%{gccsuffix}
+Requires(postun): %{_bindir}/gcj-dbtool%{gccsuffix}
+Provides:	jre-%{javaver}-%{origin} = %{epoch}:%{version}-%{release}
+Provides:	jre-%{origin} = %{epoch}:%{version}-%{release}
+Provides:	jre-%{javaver}, java-%{javaver}, jre = %{javaver}
+Provides:	java-%{origin} = %{epoch}:%{version}-%{release}
+Provides:	java = %{javaver}
+Provides:	jaxp_parser_impl
+Provides:	jndi, jdbc-stdext = 0:2.0, jaas, jsse
+Provides:	java-gcj-compat = %{jgcver}
+# SASL and JCE are provided by libgcj.
+Provides:	java-sasl
+Provides:	jce
+Obsoletes:	java-1.4.2-gcj4-compat <= 1.4.2.0-4jpp_2rh
+Obsoletes:	java-1.4.2-gcj-compat-plugin <= 1.4.2.0-40jpp.104
+PreReq:		chkconfig
+
+%description
+This package installs directory structures, shell scripts and symbolic
+links to simulate a JPackage-compatible runtime environment with GCJ.
+
+%package devel
+Summary:	JPackage development scripts for GCJ
+Group:		Development/Tools
+Requires:	/usr/sbin/update-alternatives
+Provides:       java-sdk-%{javaver}-%{origin} = %{epoch}:%{version}
+Provides:	java-sdk-%{javaver}
+Provides:       java-sdk-%{origin} = %{epoch}:%{version}
+Provides:	java-sdk = %{javaver}
+Provides:       java-%{javaver}-devel
+Provides:	java-devel-%{origin} = %{epoch}:%{version}
+Provides:       java-devel = %{javaver}
+Provides:	java-gcj-compat-devel = %{jgcver}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	eclipse-ecj
+Requires:	python
+Requires:	gcc%{gccsuffix}-java >= %{gccver}
+Requires(post): gcc%{gccsuffix}-java >= %{gccver}
+Requires(postun): gcc%{gccsuffix}-java >= %{gccver}
+# workaround for 202007
+Requires(post): libgcj%{gccsuffix}-devel >= %{gccver}
+Requires(postun): libgcj%{gccsuffix}-devel >= %{gccver}
+Obsoletes:	java-1.4.2-gcj4-compat-devel <= 1.4.2.0-4jpp_2rh
+
+%description devel
+This package installs directory structures, shell scripts and symbolic
+links to simulate a JPackage-compatible development environment with
+GCJ.
+
+%package src
+Summary:	Source files for libgcj
+Group:		Development/Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgcj%{gccsuffix}-src >= %{gccver}
+Requires(post): gcc%{gccsuffix}-java >= %{gccver}
+Requires(postun): gcc%{gccsuffix}-java >= %{gccver}
+# workaround for 202007
+Requires(post): libgcj%{gccsuffix}-devel >= %{gccver}
+Requires(postun): libgcj%{gccsuffix}-devel >= %{gccver}
+
+%description src
+This package installs a versionless src.zip symlink that points to a
+specific version of the libgcj sources.
+
+%package javadoc
+Summary:	API documentation for libgcj
+Group:		Development/Documentation
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Provides:	java-javadoc = %{epoch}:%{version}-%{release}
+Provides:	java-%{javaver}-javadoc = %{epoch}:%{version}-%{release}
+
+%description javadoc
+This package installs Javadoc API documentation for libgcj.
+
+# %package plugin
+# Summary:	Web browser plugin that handles applets
+# Group:		Applications/Internet
+# Provides:       java-plugin = %{javaver}, java-%{javaver}-plugin = %{version}
+# Requires:	%{name} = %{epoch}:%{version}-%{release}
+# Requires:       %{_sbindir}/update-alternatives
+# Requires:	libgcj%{gccsuffix} >= %{gccver}
+# Requires(post):       %{_sbindir}/update-alternatives
+# Requires(postun):     %{_sbindir}/update-alternatives
+# Requires(post): libgcj%{gccsuffix} >= %{gccver}
+# Requires(postun): libgcj%{gccsuffix} >= %{gccver}
+# Requires:	%{plugindir}
+
+# %description plugin
+# This package installs gcjwebplugin, a Mozilla plugin for applets.
+
+%prep
+%setup -q -n java-gcj-compat-%{jgcver}
+
+%build
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+%configure --disable-symlinks --with-arch-directory=%{_arch} \
+  --with-os-directory=linux \
+%if %{custom}
+  --with-origin-name=%{origin} \
+%endif
+  --with-classpath-security=%{_prefix}/lib/security/classpath.security \
+  --with-security-directory=%{_sysconfdir}/java/security/security.d
+make
+
+%if %{custom}
+cp -a %{SOURCE1} eclipse-ecj-%{cname}.jar
+sed 's:@JAVADIR@:%{_javadir}:g' < %{SOURCE2} > ecj-1
+sed 's:eclipse-ecj.jar:eclipse-ecj-%{cname}.jar:g' < ecj-1 > ecj-2
+LIBGCJ_JAR="%{gcj_prefix}/share/java/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar"
+sed "s,compiler.batch.Main,compiler.batch.Main -bootclasspath $LIBGCJ_JAR,g" < ecj-2 > ecj-%{cname}
+%endif
+
+# the python compiler encodes the source file's timestamp in the .pyc
+# and .pyo headers.  since aotcompile.py is generated by configure,
+# its timestamp will differ from build to build.  this causes multilib
+# conflicts.  we work around this by setting aotcompile.py's timestamp
+# to equal aotcompile.py.in's timestamp. (205216)
+touch --reference=aotcompile.py.in aotcompile.py
+
+%install
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+rm -rf $RPM_BUILD_ROOT
+
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%if %{custom}
+rm -f $RPM_BUILD_ROOT%{_bindir}/aot-compile-rpm
+rm -f $RPM_BUILD_ROOT%{_bindir}/rebuild-gcj-db
+rm -f $RPM_BUILD_ROOT%{_bindir}/aot-compile
+rm -f $RPM_BUILD_ROOT%{python_sitelib}/aotcompile.py*
+rm -f $RPM_BUILD_ROOT%{python_sitelib}/classfile.py*
+%endif
+
+%if %{custom}
+ln -sf %{_bindir}/ecj-%{cname} $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir}/bin/javac
+%endif
+
+# extensions handling
+install -dm 755 $RPM_BUILD_ROOT%{jvmjardir}
+pushd $RPM_BUILD_ROOT%{jvmjardir}
+   ln -s %{_jvmdir}/%{jredir}/lib/jaas.jar jaas-%{version}.jar
+   ln -s %{_jvmdir}/%{jredir}/lib/jdbc-stdext.jar jdbc-stdext-%{version}.jar
+   ln -s %{_jvmdir}/%{jredir}/lib/jndi.jar jndi-%{version}.jar
+   ln -s %{_jvmdir}/%{jredir}/lib/jsse.jar jsse-%{version}.jar
+   for jar in *-%{version}.jar ; do
+     ln -sf ${jar} $(echo $jar | sed "s|-%{version}.jar|-%{javaver}.jar|g")
+     ln -sf ${jar} $(echo $jar | sed "s|-%{version}.jar|.jar|g")
+   done
+popd
+
+# security directories
+install -dm 755 $RPM_BUILD_ROOT%{_jvmdir}/%{jredir}/lib/security
+
+# default security provider, provided by libgcj
+install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d
+%if ! %{custom}
+touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/1000-gnu.java.security.provider.Gnu
+touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/1001-gnu.javax.crypto.jce.GnuCrypto
+touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/1002-gnu.javax.crypto.jce.GnuSasl
+touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/1003-gnu.javax.net.ssl.provider.Jessie
+touch $RPM_BUILD_ROOT%{_sysconfdir}/java/security/security.d/1004-gnu.javax.security.auth.callback.GnuCallbacks
+%endif
+
+# versionless symlinks
+pushd $RPM_BUILD_ROOT%{_jvmdir}
+   ln -s %{jredir} %{jrelnk}
+   ln -s %{sdkdir} %{sdklnk}
+popd
+
+pushd $RPM_BUILD_ROOT%{_jvmjardir}
+   ln -s %{sdkdir} %{jrelnk}
+   ln -s %{sdkdir} %{sdklnk}
+popd
+
+# generate file lists
+find $RPM_BUILD_ROOT%{_jvmdir}/%{jredir} -type d \
+  | sed 's|'$RPM_BUILD_ROOT'|%dir |' >  %{name}-%{version}-all.files
+find $RPM_BUILD_ROOT%{_jvmdir}/%{jredir} -type f -o -type l \
+  | sed 's|'$RPM_BUILD_ROOT'||'      >> %{name}-%{version}-all.files
+
+cat %{name}-%{version}-all.files \
+  > %{name}-%{version}.files
+
+find $RPM_BUILD_ROOT%{_jvmdir}/%{sdkdir}/bin -type f -o -type l \
+  | sed "s|^$RPM_BUILD_ROOT||"      > %{name}-%{version}-sdk-bin.files
+
+# classmap database directory
+install -dm 755 $RPM_BUILD_ROOT%{_libdir}/gcj
+
+%if %{custom}
+mkdir -p $RPM_BUILD_ROOT%{_javadir}
+install -m644 eclipse-ecj-%{cname}.jar $RPM_BUILD_ROOT%{_javadir}
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+install -m755 ecj-%{cname} $RPM_BUILD_ROOT%{_bindir}
+%endif
+
+# build and install api documentation
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+touch $RPM_BUILD_ROOT%{_javadocdir}/{%{name},java}
+mkdir docsbuild
+pushd docsbuild
+# work around ppc64 file system corruption
+  if unzip -tq /usr/share/java/src-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.zip
+  then
+    fastjar xvf /usr/share/java/src-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.zip
+    rm -rf gnu
+    find ./ -name \*.java | xargs -n 1 dirname | sort | uniq | sed -e "s/\.\///" | sed -e "s/\//\./" | \
+      sed -e "s/\//\./" | sed -e "s/\//\./" | sed -e "s/\//\./" | sed -e "s/\//\./" | \
+      xargs gjdoc -d $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version} -encoding UTF-8 -breakiterator -licensetext \
+        -linksource -splitindex -doctitle "GNU libgcj `gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`" \
+        -windowtitle "GNU libgcj `gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'` Documentation"
+    # work around apparent gjdoc/libgcj rounding error that causes a
+    # multilib conflict in Double.html
+    sed -i 's/2.147483647/2.147483648/g' $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/java/lang/Double.html
+  else
+    touch $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}/package-list
+  fi
+popd
+
+%ifarch x86_64
+ln -sf %{_jvmdir}/%{jredir}/lib/%{_arch} \
+  $RPM_BUILD_ROOT%{_jvmdir}/%{jredir}/lib/amd64
+%endif
+
+# install libjvm.so directories
+mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{jredir}/lib/%{_arch}/client
+mkdir -p $RPM_BUILD_ROOT%{_jvmdir}/%{jredir}/lib/%{_arch}/server
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+update-alternatives \
+  --install %{_bindir}/java java %{jrebindir}/java %{priority} \
+  --slave %{_jvmdir}/jre          jre          %{_jvmdir}/%{jrelnk} \
+  --slave %{_jvmjardir}/jre       jre_exports  %{_jvmjardir}/%{jrelnk} \
+  --slave %{_bindir}/keytool      keytool      %{jrebindir}/keytool \
+  --slave %{_bindir}/rmiregistry  rmiregistry  %{jrebindir}/rmiregistry
+
+update-alternatives \
+  --install %{_jvmdir}/jre-%{origin} \
+      jre_%{origin} %{_jvmdir}/%{jrelnk} %{priority} \
+  --slave %{_jvmjardir}/jre-%{origin} \
+      jre_%{origin}_exports %{_jvmjardir}/%{jrelnk}
+
+update-alternatives \
+  --install %{_jvmdir}/jre-%{javaver} \
+      jre_%{javaver} %{_jvmdir}/%{jrelnk} %{priority} \
+  --slave %{_jvmjardir}/jre-%{javaver} \
+      jre_%{javaver}_exports %{_jvmjardir}/%{jrelnk}
+
+# rt.jar
+ln -sf \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/rt.jar
+
+# jaas.jar
+ln -sf \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/jaas.jar
+
+# jsse.jar
+ln -sf \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/jsse.jar
+
+# jdbc-stdext.jar
+ln -sf \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/jdbc-stdext.jar
+
+# jndi.jar
+ln -sf \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/jndi.jar
+
+# java.security
+ln -sf \
+  %{_prefix}/lib/security/classpath.security \
+  %{_jvmdir}/%{cname}-%{version}/jre/lib/security/java.security
+
+if [ -x %{_bindir}/rebuild-security-providers ]
+then
+  %{_bindir}/rebuild-security-providers
+fi
+
+%if %{custom}
+# jaxp_parser_impl
+update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
+  jaxp_parser_impl \
+  %{gcj_prefix}/share/java/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar 20
+%else
+# jaxp_parser_impl
+update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
+  jaxp_parser_impl \
+  %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar 20
+%endif
+
+if [ -x %{_bindir}/rebuild-gcj-db ]
+then
+  %{_bindir}/rebuild-gcj-db
+fi
+{
+  # libjawt.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjawt.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/libjawt.so
+
+  # libjvm.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjvm.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/client/libjvm.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjvm.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/server/libjvm.so
+} || :
+
+%post devel
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+update-alternatives \
+  --install %{_bindir}/javac javac %{sdkbindir}/javac %{priority} \
+  --slave %{_jvmdir}/java     java_sdk          %{_jvmdir}/%{sdklnk} \
+  --slave %{_jvmjardir}/java  java_sdk_exports  %{_jvmjardir}/%{sdklnk} \
+  --slave %{_bindir}/javadoc  javadoc           %{sdkbindir}/javadoc \
+  --slave %{_bindir}/javah    javah             %{sdkbindir}/javah \
+  --slave %{_bindir}/jar      jar               %{sdkbindir}/jar \
+  --slave %{_bindir}/jarsigner jarsigner        %{sdkbindir}/jarsigner \
+  --slave %{_bindir}/appletviewer appletviewer  %{sdkbindir}/appletviewer \
+  --slave %{_bindir}/rmic     rmic              %{sdkbindir}/rmic
+
+update-alternatives \
+  --install %{_jvmdir}/java-%{origin} \
+      java_sdk_%{origin} %{_jvmdir}/%{sdklnk} %{priority} \
+  --slave %{_jvmjardir}/java-%{origin} \
+      java_sdk_%{origin}_exports %{_jvmjardir}/%{sdklnk}
+
+update-alternatives \
+  --install %{_jvmdir}/java-%{javaver} \
+      java_sdk_%{javaver} %{_jvmdir}/%{sdklnk} %{priority} \
+  --slave %{_jvmjardir}/java-%{javaver} \
+      java_sdk_%{javaver}_exports %{_jvmjardir}/%{sdklnk}
+
+# jni.h
+ln -sf \
+  `gcj%{gccsuffix} -print-file-name=include/jni.h` \
+  %{_jvmdir}/%{cname}-%{version}/include/jni.h
+
+# jni_md.h
+ln -sf \
+  `gcj%{gccsuffix} -print-file-name=include/jni_md.h` \
+  %{_jvmdir}/%{cname}-%{version}/include/linux/jni_md.h
+
+# jawt.h
+ln -sf \
+  `gcj%{gccsuffix} -print-file-name=include/jawt.h` \
+  %{_jvmdir}/%{cname}-%{version}/include/jawt.h
+
+# jawt_md.h
+ln -sf \
+  `gcj%{gccsuffix} -print-file-name=include/jawt_md.h` \
+  %{_jvmdir}/%{cname}-%{version}/include/linux/jawt_md.h
+
+%post src
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+# src.zip
+ln -sf \
+  %{_javadir}/src-`gcj%{gccsuffix} --version | head -n 1 | awk '{ print $3 }'`.zip \
+  %{_jvmdir}/%{cname}-%{version}/src.zip
+
+%post javadoc
+{
+  rm -f %{_javadocdir}/%{name} %{_javadocdir}/java
+  ln -sf %{name}-%{version} %{_javadocdir}/%{name}
+  ln -sf %{name}-%{version} %{_javadocdir}/java
+} || :
+
+# %post plugin
+
+#   update-alternatives --install %{plugindir}/libjavaplugin.so \
+#     libjavaplugin.so %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libgcjwebplugin.so %{priority}
+
+%postun
+if [ $1 -eq 0 ] ; then
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+   update-alternatives --remove java %{jrebindir}/java
+   update-alternatives --remove jre_%{origin}  %{_jvmdir}/%{jrelnk}
+   update-alternatives --remove jre_%{javaver} %{_jvmdir}/%{jrelnk}
+%if %{custom}
+   update-alternatives --remove jaxp_parser_impl \
+     %{gcj_prefix}/share/java/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar
+%else
+   update-alternatives --remove jaxp_parser_impl \
+     %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar
+%endif
+fi
+
+if [ -x %{_bindir}/rebuild-security-providers ]
+then
+  %{_bindir}/rebuild-security-providers
+fi
+
+if [ -x %{_bindir}/rebuild-gcj-db ]
+then
+  %{_bindir}/rebuild-gcj-db
+fi
+
+%postun devel
+if [ $1 -eq 0 ] ; then
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+   update-alternatives --remove javac %{sdkbindir}/javac
+   update-alternatives --remove java_sdk_%{origin}  %{_jvmdir}/%{sdklnk}
+   update-alternatives --remove java_sdk_%{javaver} %{_jvmdir}/%{sdklnk}
+fi
+
+# %postun plugin
+# if [ $1 -eq 0 ] ; then
+#    update-alternatives --remove libjavaplugin.so %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libgcjwebplugin.so
+# fi
+
+%triggerin -- libgcj%{gccsuffix} > %{gccver}
+{
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+  # rt.jar
+  ln -sf \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+    %{_jvmdir}/%{cname}-%{version}/jre/lib/rt.jar
+
+  # jaas.jar
+  ln -sf \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+    %{_jvmdir}/%{cname}-%{version}/jre/lib/jaas.jar
+
+  # jsse.jar
+  ln -sf \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+    %{_jvmdir}/%{cname}-%{version}/jre/lib/jsse.jar
+
+  # jdbc-stdext.jar
+  ln -sf \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+    %{_jvmdir}/%{cname}-%{version}/jre/lib/jdbc-stdext.jar
+
+  # jndi.jar
+  ln -sf \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar \
+    %{_jvmdir}/%{cname}-%{version}/jre/lib/jndi.jar
+
+%if %{custom}
+  # jaxp_parser_impl
+  update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
+    jaxp_parser_impl \
+    %{gcj_prefix}/share/java/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar 20
+%else
+  # jaxp_parser_impl
+  update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
+    jaxp_parser_impl \
+    %{_javadir}/libgcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`.jar 20
+%endif
+
+  # libjawt.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjawt.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/libjawt.so
+
+  # libjvm.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjvm.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/client/libjvm.so
+  ln -sf %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libjvm.so \
+    %{_jvmdir}/%{jredir}/lib/%{_arch}/server/libjvm.so
+
+} || :
+
+# gcc-java requires libgcj-devel which provides jni.h
+%triggerin devel -- gcc%{gccsuffix}-java > %{gccver}
+{
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+  # jni.h
+  ln -sf \
+    `gcj%{gccsuffix} -print-file-name=include/jni.h` \
+    %{_jvmdir}/%{cname}-%{version}/include/jni.h
+
+  # jni_md.h
+  ln -sf \
+    `gcj%{gccsuffix} -print-file-name=include/jni_md.h` \
+    %{_jvmdir}/%{cname}-%{version}/include/jni_md.h
+
+  # jawt.h
+  ln -sf \
+    `gcj%{gccsuffix} -print-file-name=include/jawt.h` \
+    %{_jvmdir}/%{cname}-%{version}/include/jawt.h
+
+  # jawt_md.h
+  ln -sf \
+    `gcj%{gccsuffix} -print-file-name=include/jawt_md.h` \
+    %{_jvmdir}/%{cname}-%{version}/include/linux/jawt_md.h
+} || :
+
+%triggerin src -- libgcj%{gccsuffix}-src >= %{gccver}
+{
+
+%if %{custom}
+export PATH=%{gcj_prefix}/bin:$PATH
+%endif
+
+  ln -sf \
+    %{_javadir}/src-`gcj%{gccsuffix} --version | head -n 1 | awk '{ print $3 }'`.zip \
+    %{_jvmdir}/%{cname}-%{version}/src.zip
+} || :
+
+# %triggerin plugin -- libgcj%{gccsuffix} > %{gccver}
+# {
+
+# %if %{custom}
+# export PATH=%{gcj_prefix}/bin:$PATH
+# %endif
+
+#   # plugin
+#   update-alternatives --install %{plugindir}/libjavaplugin.so \
+#     libjavaplugin.so %{_libdir}/gcj-`gij%{gccsuffix} --version | head -n 2 | tail -n 1 | awk '{ print $5 }'`/libgcjwebplugin.so %{priority}
+# } || :
+
+%files -f %{name}-%{version}.files
+%defattr(-,root,root,-)
+%dir %{_libdir}/gcj
+%doc
+%dir %{_jvmdir}/%{sdkdir}
+%dir %{jvmjardir}
+%if ! %{custom}
+%{_bindir}/rebuild-gcj-db
+%endif
+%{jvmjardir}/*.jar
+%{_jvmdir}/%{jrelnk}
+%{_jvmjardir}/%{jrelnk}
+# %{_jvmprivdir}/*
+%if ! %{custom}
+%{_sysconfdir}/java/security/security.d/1000-gnu.java.security.provider.Gnu
+%{_sysconfdir}/java/security/security.d/1001-gnu.javax.crypto.jce.GnuCrypto
+%{_sysconfdir}/java/security/security.d/1002-gnu.javax.crypto.jce.GnuSasl
+%{_sysconfdir}/java/security/security.d/1003-gnu.javax.net.ssl.provider.Jessie
+%{_sysconfdir}/java/security/security.d/1004-gnu.javax.security.auth.callback.GnuCallbacks
+%endif
+%ifarch x86_64
+%{_jvmdir}/%{jredir}/lib/amd64
+%endif
+%{_jvmdir}/%{jredir}/lib/%{_arch}/client
+%{_jvmdir}/%{jredir}/lib/%{_arch}/server
+
+%files devel -f %{name}-%{version}-sdk-bin.files
+%defattr(-,root,root)
+%doc
+%dir %{_jvmdir}/%{sdkdir}/bin
+%if ! %{custom}
+%{_bindir}/aot-compile
+%{_bindir}/aot-compile-rpm
+%{python_sitelib}/aotcompile.py*
+%{python_sitelib}/classfile.py*
+%endif
+%{_jvmdir}/%{sdkdir}/lib
+%{_jvmdir}/%{sdkdir}/include
+%{_jvmdir}/%{sdklnk}
+%{_jvmjardir}/%{sdklnk}
+%if %{custom}
+%{_bindir}/ecj-%{cname}
+%{_javadir}/eclipse-ecj-%{cname}.jar
+%endif
+
+%files src
+%defattr(-,root,root)
+
+%files javadoc
+%defattr(-,root,root)
+%doc %{_javadocdir}/%{name}-%{version}
+%ghost %doc %{_javadocdir}/%{name}
+%ghost %doc %{_javadocdir}/java
+
+# %files plugin
+# %defattr(-,root,root)
+
+$Log: java-1.4.2-gcj-compat.spec.in,v $
+Revision 1.1  2007/04/05 23:02:55  bpbuild
+import from fc6 extras
+
