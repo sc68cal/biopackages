@@ -1,4 +1,4 @@
-#$Id: affyfile.spec.in,v 1.9 2006/09/26 23:09:45 boconnor Exp $
+#$Id: affyfile.spec.in,v 1.10 2007/04/05 23:24:47 bpbuild Exp $
 Name: affyfile
 Epoch: 1
 Version: 2
@@ -45,7 +45,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}
 mkdir -p $RPM_BUILD_ROOT/%{_includedir}
 
 %build
-make
+CFLAGS=-fPIC CPPFLAGS=-fPIC make
 
 %install
 install -m 444 *.so $RPM_BUILD_ROOT/%{_libdir}/
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 $Log: affyfile.spec.in,v $
+Revision 1.10  2007/04/05 23:24:47  bpbuild
+fixes for 64b compiles
+
 Revision 1.9  2006/09/26 23:09:45  boconnor
 I had these changes on my laptop and I'm checking them in, someone revert if they aren't current
 
