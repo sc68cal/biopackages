@@ -1,4 +1,4 @@
-glibc-devel
+#glibc-devel
 postgresql-devel
 chado-Hsa
 chado-Mmu

@@ -35,8 +35,8 @@ textpresso
 turnkey
 ucsc
 udunits
-perl-libwww-perl
-mod_perl
+#perl-libwww-perl
+#mod_perl
 clucene-core-devel
 clucene-core
 clucene
