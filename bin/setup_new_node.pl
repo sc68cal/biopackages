@@ -143,8 +143,10 @@ baseurl=http://mirrors.kernel.org/fedora/core/$releasever/$basearch/os/
 END
 
 # install bootstrap packages
-system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/biopackages-1.0.1-1.14.noarch.rpm");
+system("sudo yum -y install cvs perl-DateManip");
 system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
+system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/");
+system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/biopackages-1.0.1-1.14.noarch.rpm");
 
 # time server
 print "FIXME: need to install and configure ntp!\n";
@@ -152,14 +154,18 @@ print "FIXME: need to install and configure ntp!\n";
 # setup cvs biopackages dir
 system("chown bpbuild:bpbuild /usr/src");
 system("chmod 775 /usr/src");
-system('su bpbuild; export CVS_RSH=ssh; cd /usr/src; cvs -z3 -d:ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep');
+system('export CVS_RSH=ssh; cd /usr/src; su bpbuild -c \'cvs -z3 -d:ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages\'; cd /usr/src/biopackages; make prep');
 
 # make symlinks
+# FIXME: make prep shouldn't create these!
+system("rm -rf /usr/src/biopackages/RPMS/*");
 system("for n in i386 noarch x86_64; do ln -s /net/biopackages/testing/$distro/$version/\$n /usr/src/biopackages/RPMS/\$n; done");
+# FIXME: shouldn't be created
+system("rm -rf /usr/src/biopackages/SRPMS");
 system("ln -s /net/biopackages/testing/$distro/$version/SRPMS/ /usr/src/biopackages/SRPMS");
 
 # create a list of RPMs installed on the base system
-system("rpm -qa > /home/bpbuild/SETTINGS/$dabb.$arch/clean_rpm_list.txt");
+system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
 
 # done
 print("Setup is complete, reboot the system and take a snapshot\n");
