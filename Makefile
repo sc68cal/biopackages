@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.68 2007/04/10 03:59:43 bpbuild Exp $
+#$Id: Makefile,v 1.69 2007/04/10 07:37:14 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -26,21 +26,27 @@ prep ::
 # also summarizes the build status of each to a log file
 # FIXME: add individual targets so you can build all/a package on a certain queue
 cluster_buildall ::
+#cluster_buildprep: prepares cluster for building
+#last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
+###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make cluster_postbuild' to generate reports, make yum headers and fix ownership.
+	$(MAKE) cluster_buildprep
+	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
+
+cluster_buildprep ::
+##Prepares the cluster for building -- either for cluster_buildall or make %.cbuilt's
 #buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed
 #prep/cvs update: locally on neuron
 #cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
-###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make cluster_postbuild' to generate reports, make yum headers and fix ownership.
-	$(MAKE) buildclean
-	$(MAKE) prep
-	cvs update
-	$(MAKE) cluster_buildclean
-	$(MAKE) cluster_prep
-	$(MAKE) cluster_cvsupdate
-	$(MAKE) cluster_yumupdate
-	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
+        $(MAKE) buildclean
+        $(MAKE) prep
+        cvs update
+        $(MAKE) cluster_buildclean
+        $(MAKE) cluster_prep
+        $(MAKE) cluster_cvsupdate
+        $(MAKE) cluster_yumupdate
 
 cluster_buildclean ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
