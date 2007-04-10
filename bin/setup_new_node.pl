@@ -4,6 +4,14 @@
 # before the process can be automatic. This process assumes the network has
 # been setup already.
 
+# TO DO:
+# * the following RPMs for RPMForge should be installed (on the correct VM)
+# ** (fc2 doesn't recognize this, so you have to hardcode in yum.conf w/o mirror list) http://ftp.belnet.be/packages/dries.ulyssis.org/fedora/fc2/i386/RPMS.dries/rpmforge-release-0.2-2.1.fc2.rf.i386.rpm
+# ** fc2.x86_64: http://ftp.belnet.be/packages/dries.ulyssis.org/fedora/fc2/i386/RPMS.dries/rpmforge-release-0.2-2.1.fc2.rf.x86_64.rpm doesn't work (broken URL) so configure it from the fc2.i386 yum.conf, disable sig check.
+# 
+#
+# * add in passwd set for bpbuild user
+
 use strict;
 
 my ($distro, $dabb, $version, $arch);
@@ -190,3 +198,60 @@ sub rl {
   return $value;
 }
 
+
+# FIXME: these need to be used to update yum.conf on each platform
+# the other mirror seems to be ftp.belnet.be
+
+my $fc2_i386_yum = <<END;
+[rpmforge]
+name = Fedora Core 2 - i386 - RPMforge.net - dag
+baseurl = http://apt.sw.be/fedora/2/en/\$basearch/dag/
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
+
+my $fc_x86_64_yum = <<END;
+[rpmforge]
+name = Fedora Core 2 - x86_64 - RPMforge.net - dag
+baseurl = http://apt.sw.be/fedora/2/en/\$basearch/dag/
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
+
+my $fc5_i386_yum = <<END;
+[rpmforge]
+name = Fedora Core 5 - i386 - RPMforge.net - dries
+baseurl = http://apt.sw.be/fedora/5/en/\$basearch/dries/RPMS
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
+
+my $fc5_x86_64_yum = <<END;
+[rpmforge]
+name = Fedora Core 5 - x86_64 - RPMforge.net - dries
+baseurl = http://apt.sw.be/fedora/5/en/\$basearch/dries/RPMS
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
+
+my $centos4_i386_yum = <<END;
+[rpmforge]
+name = Centos 4 - i386 - RPMforge.net - dag
+baseurl = http://apt.sw.be/redhat/el4/en/\$basearch/dag/
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
+
+my $centos4_x86_64_yum = <<END;
+[rpmforge]
+name = Centos 4 - x86_64 - RPMforge.net - dag
+baseurl = http://apt.sw.be/redhat/el4/en/\$basearch/dag/
+enabled = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+gpgcheck = 0
+END
