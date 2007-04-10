@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.14 2006/10/11 22:22:14 bpbuild Exp $
+#$Id: biopackages.spec.in,v 1.15 2007/04/10 06:52:32 bpbuild Exp $
 Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
 Name: biopackages
 Version: 1.0.1
@@ -11,7 +11,7 @@ Source0: %{name}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: perl-DateManip
-Requires: bash, usr-local-bin-perl, perl-DateManip
+Requires: bash, usr-local-bin-perl, perl-DateManip, rpm-build
 
 #%package server
 #Summary: Files for running a biopackages apt and yum server
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 #/usr/bin/bp-update
 
 $Log: biopackages.spec.in,v $
+Revision 1.15  2007/04/10 06:52:32  bpbuild
+I have a feeling there will be a lot more deps added here once we get down to clean base installs when the VMs are reimaged.
+
 Revision 1.14  2006/10/11 22:22:14  bpbuild
 Changes to deps
 
