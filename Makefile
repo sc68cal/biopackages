@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.72 2007/04/10 08:24:19 bpbuild Exp $
+#$Id: Makefile,v 1.73 2007/04/10 21:31:10 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -40,6 +40,7 @@ cluster_buildprep ::
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
+###FIXME: submit various cluster prep steps with higher priority than default given to build jobs, or atleast give build jobs lower priority. Do this to force buildprep to be done before any building
 	$(MAKE) buildclean
 	$(MAKE) prep
 	cvs update
