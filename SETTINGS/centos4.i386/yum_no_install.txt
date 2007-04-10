@@ -28,7 +28,6 @@ perl-Storable
 #perl-XML-SAX
 pgplot
 primer3
-R
 R-RCurl
 rrdtool
 textpresso
