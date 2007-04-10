@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.66 2007/04/09 21:40:28 bpbuild Exp $
+#$Id: Makefile,v 1.67 2007/04/10 00:18:16 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -39,6 +39,7 @@ cluster_buildall ::
 	$(MAKE) cluster_buildclean
 	$(MAKE) cluster_prep
 	$(MAKE) cluster_cvsupdate
+        $(MAKE) cluster_yumupdate
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
 cluster_buildclean ::
@@ -49,6 +50,9 @@ cluster_cvsupdate ::
 
 cluster_prep ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
+
+cluster_yumupdate ::
+	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsudo yum -y update\n" > SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_yumupdate.stdout -e SETTINGS/$$file/LOGS/cluster_yumupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; done' | /bin/bash
 
 # after a cluster_buildall finishes, 'make cluster_postbuild' to generate reports and the rest of the repository
 ## FIXME: ultimately should report, migrate, repo. At this time take 'make repo' step out of migrate target 
