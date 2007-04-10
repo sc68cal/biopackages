@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.69 2007/04/10 07:37:14 bpbuild Exp $
+#$Id: Makefile,v 1.70 2007/04/10 07:39:14 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -40,13 +40,13 @@ cluster_buildprep ::
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
-        $(MAKE) buildclean
-        $(MAKE) prep
-        cvs update
-        $(MAKE) cluster_buildclean
-        $(MAKE) cluster_prep
-        $(MAKE) cluster_cvsupdate
-        $(MAKE) cluster_yumupdate
+	$(MAKE) buildclean
+	$(MAKE) prep
+	cvs update
+	$(MAKE) cluster_buildclean
+	$(MAKE) cluster_prep
+	$(MAKE) cluster_cvsupdate
+	$(MAKE) cluster_yumupdate
 
 cluster_buildclean ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
