@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.70 2007/04/10 07:39:14 bpbuild Exp $
+#$Id: Makefile,v 1.71 2007/04/10 08:03:50 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -62,7 +62,7 @@ cluster_yumupdate ::
 
 # after a cluster_buildall finishes, 'make cluster_postbuild' to generate reports and the rest of the repository
 ## FIXME: ultimately should report, migrate, repo. At this time take 'make repo' step out of migrate target 
-cluster_postbuild :: report repo
+cluster_postbuild :: report migrate repo
 
 # creates an HTML output report summarizing the build status of each package based on logs
 ## FIXME: first line is a temporary fix cause make prep causes too many levels of symlinks
