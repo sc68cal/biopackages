@@ -5,11 +5,7 @@
 # been setup already.
 
 # TO DO:
-# * the following RPMs for RPMForge should be installed (on the correct VM)
-# ** (fc2 doesn't recognize this, so you have to hardcode in yum.conf w/o mirror list) http://ftp.belnet.be/packages/dries.ulyssis.org/fedora/fc2/i386/RPMS.dries/rpmforge-release-0.2-2.1.fc2.rf.i386.rpm
-# ** fc2.x86_64: http://ftp.belnet.be/packages/dries.ulyssis.org/fedora/fc2/i386/RPMS.dries/rpmforge-release-0.2-2.1.fc2.rf.x86_64.rpm doesn't work (broken URL) so configure it from the fc2.i386 yum.conf, disable sig check.
-# 
-#
+# * yum.conf for RPMForge should be configured, see the end of this script for the strings
 # * add in passwd set for bpbuild user
 
 use strict;
