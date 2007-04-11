@@ -230,3 +230,4 @@ mdadm-1.5.0-3
 system-config-network-tui-1.3.16-1
 usr-local-bin-perl-1.0-1.3
 perl-DateManip-5.42a-1
+rpm-build-4.3.1-0.3
