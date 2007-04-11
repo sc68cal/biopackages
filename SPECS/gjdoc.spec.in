@@ -1,0 +1,85 @@
+#$Id: gjdoc.spec.in,v 1.1 2007/04/11 21:51:24 bpbuild Exp $
+%define gcj_support 1
+
+Name: gjdoc
+Version: 0.7.7
+Release: %{revision}.%{distro}
+URL: http://savannah.gnu.org/projects/classpath/
+License: GPL
+Summary: GNU Javadoc
+Group: Development/Tools
+
+Source0: ftp://ftp.gnu.org/gnu/classpath/gjdoc-%{version}.tar.gz
+Patch0: %{name}-fix-control-z.patch
+Patch1: %{name}-rm-timestamp.patch
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildPrereq: gcc-java >= 4.0.0-8
+BuildPrereq: antlr
+BuildRequires: java-devel
+Requires: libgcj >= 4.0.0-8
+Requires: antlr
+
+%description
+A documentation generation system for "javadoc"-style comments.
+
+%prep
+%setup -q -n %{name}-%{version}
+%patch0 -p1
+%patch1 -p0
+
+%build
+export JAVAC=/usr/bin/javac
+%configure --disable-native
+sed -i 's/^pic_flag=\"\"/pic_flag=\"\ \-fPIC\"/' libtool 
+sed -i 's/^compiler_c_o=\"no\"/compiler_c_o=\"yes\"/' libtool 
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+%makeinstall
+
+pushd $RPM_BUILD_ROOT%{_javadir}
+ln -sf com-sun-javadoc-%{version}.jar \
+ $RPM_BUILD_ROOT%{_javadir}/com-sun-javadoc.jar
+ln -sf com-sun-tools-doclets-Taglet-%{version}.jar \
+ $RPM_BUILD_ROOT%{_javadir}/com-sun-tools-doclets-Taglet.jar
+ln -sf gnu-classpath-tools-gjdoc-%{version}.jar \
+ $RPM_BUILD_ROOT%{_javadir}/gnu-classpath-tools-gjdoc.jar
+popd
+
+if [ -e $RPM_BUILD_ROOT%{_datadir}/info/dir ]
+then
+  rm -rf $RPM_BUILD_ROOT%{_datadir}/info/dir
+fi
+
+%if %{gcj_support}
+aot-compile-rpm 
+%endif
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%if %{gcj_support}
+%post -p %{_bindir}/rebuild-gcj-db
+%postun -p %{_bindir}/rebuild-gcj-db
+%endif
+
+$Log: gjdoc.spec.in,v $
+Revision 1.1  2007/04/11 21:51:24  bpbuild
+import from FC6
+
+
+%files
+%defattr(-,root,root)
+%{_bindir}/gjdoc
+%{_javadir}/com-sun-javadoc*.jar
+%{_javadir}/com-sun-tools-doclets-Taglet*.jar
+%{_javadir}/gnu-classpath-tools-gjdoc*.jar
+%if %{gcj_support}
+%{_libdir}/gcj/%{name}
+%endif
+%doc %{_infodir}/gjdoc.info.gz
+%doc %{_mandir}/man1/gjdoc.1.gz
+%doc README
