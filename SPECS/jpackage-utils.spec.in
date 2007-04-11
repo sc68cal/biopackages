@@ -1,4 +1,4 @@
-#$Id: jpackage-utils.spec.in,v 1.1 2007/04/11 20:33:09 bpbuild Exp $
+#$Id: jpackage-utils.spec.in,v 1.2 2007/04/11 20:44:16 bpbuild Exp $
 # Copyright (c) 2000-2006, JPackage Project
 # All rights reserved.
 #
@@ -46,12 +46,9 @@ Group:          Utilities
 # Vendor:         JPackage Project
 # Distribution:   JPackage
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
 BuildArch:      noarch
 AutoReqProv:    no
-BuildRequires:  %{__awk}, %{__grep}
-Requires:       /bin/egrep, /bin/sed, /usr/bin/perl
-Requires:       /bin/bash
+Requires:	perl 
 
 %description
 Utilities for the JPackage Project <http://www.jpackage.org/>:
@@ -259,6 +256,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 $Log: jpackage-utils.spec.in,v $
+Revision 1.2  2007/04/11 20:44:16  bpbuild
+removed reqs that are built in to core OS
+
 Revision 1.1  2007/04/11 20:33:09  bpbuild
 imported from fc6 updates
 
