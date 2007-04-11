@@ -1,4 +1,4 @@
-#$Id: gjdoc.spec.in,v 1.1 2007/04/11 21:51:24 bpbuild Exp $
+#$Id: gjdoc.spec.in,v 1.2 2007/04/11 22:11:15 bpbuild Exp $
 %define gcj_support 1
 
 Name: gjdoc
@@ -16,7 +16,7 @@ Patch1: %{name}-rm-timestamp.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildPrereq: gcc-java >= 4.0.0-8
 BuildPrereq: antlr
-BuildRequires: java-devel
+BuildRequires: java-1.4.2-gcj-compat-devel
 Requires: libgcj >= 4.0.0-8
 Requires: antlr
 
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 $Log: gjdoc.spec.in,v $
+Revision 1.2  2007/04/11 22:11:15  bpbuild
+trying to switch java-devel build req to java-1.4.2-gcj-compat-devel
+
 Revision 1.1  2007/04/11 21:51:24  bpbuild
 import from FC6
 
