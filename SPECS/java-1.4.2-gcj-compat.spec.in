@@ -1,4 +1,4 @@
-#$Id: java-1.4.2-gcj-compat.spec.in,v 1.1 2007/04/05 23:02:55 bpbuild Exp $
+#$Id: java-1.4.2-gcj-compat.spec.in,v 1.2 2007/04/11 22:04:38 bpbuild Exp $
 %define section		free
 
 %{!?custom:	%define custom 0}
@@ -41,7 +41,6 @@ Source2:	ecj.sh.in
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	jpackage-utils >= 0:1.5, sed
 BuildRequires:	gcc%{gccsuffix}-java >= %{gccver}
-BuildRequires:	gjdoc
 BuildRequires:	libgcj%{gccsuffix}-src >= %{gccver}
 BuildRequires:	eclipse-ecj
 Requires:	libgcj%{gccsuffix} >= %{gccver}
@@ -665,6 +664,9 @@ export PATH=%{gcj_prefix}/bin:$PATH
 # %defattr(-,root,root)
 
 $Log: java-1.4.2-gcj-compat.spec.in,v $
+Revision 1.2  2007/04/11 22:04:38  bpbuild
+trying to remove gjdocs buildreq
+
 Revision 1.1  2007/04/05 23:02:55  bpbuild
 import from fc6 extras
 
