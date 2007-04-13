@@ -1,4 +1,4 @@
-# $Id: R.spec.in,v 1.13 2007/04/05 22:52:10 bpbuild Exp $
+# $Id: R.spec.in,v 1.14 2007/04/13 00:40:22 bpbuild Exp $
 
 Summary: Language for data analysis and graphics
 Name: R
@@ -19,7 +19,6 @@ BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 BuildRequires: tcl-devel, tk-devel
 BuildRequires: xorg-x11-devel
 BuildRequires: blas >= 3.0, pcre-devel, zlib-devel
-BuildRequires: java-1.4.2-gcj-compat
 Requires: ggv, cups, firefox
 
 ### These are the submodules that R provides. Sometimes R modules say they
@@ -182,6 +181,9 @@ export R_PRINTCMD="lpr"
 %{_libdir}/libRmath.a
 
 $Log: R.spec.in,v $
+Revision 1.14  2007/04/13 00:40:22  bpbuild
+ testing without java
+
 Revision 1.13  2007/04/05 22:52:10  bpbuild
 xorg replaces XFree86
 
