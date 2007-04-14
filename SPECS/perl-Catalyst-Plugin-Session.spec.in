@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Session.spec.in,v 1.4 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-Catalyst-Plugin-Session.spec.in,v 1.5 2007/04/14 20:55:41 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Catalyst-Plugin-Session/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Test-Deep, perl-Object-Signature
+BuildRequires: perl, biopackages, perl-Test-Deep, perl-Object-Signature, perl-Catalyst, perl-Test-Exception, perl-Test-MockObject
 Requires: perl-Test-Deep, perl-Object-Signature
 
 Source0: Catalyst-Plugin-Session-0.05.tar.gz
