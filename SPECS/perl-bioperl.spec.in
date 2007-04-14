@@ -1,4 +1,4 @@
-#$Id: perl-bioperl.spec.in,v 1.8 2006/09/10 08:31:03 boconnor Exp $
+#$Id: perl-bioperl.spec.in,v 1.9 2007/04/14 00:52:42 boconnor Exp $
 Summary: bioperl Perl module
 Name: perl-bioperl
 Version: 1.5
@@ -11,7 +11,10 @@ URL: http://search.cpan.org/dist/bioperl/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Requires: perl-Cache-Cache, perl-Class-AutoClass, perl-Data-Stag, perl-Error, perl-Graph
+Requires: perl-Cache-Cache, perl-Data-Stag, perl-Error, perl-Graph
+%{ifdistro_release fedora 2}Requires: perl-Class-AutoClass
+%{ifdistro_release fedora 5}Requires: perl-AutoClass 
+%{ifdistro_release centos 4}Requires: perl-Class-AutoClass
 Requires: perl-IO-String, perl-SOAP-Lite, perl-SVG, perl-SVG-Graph, perl-Text-Shellwords, perl-Tree-DAG_Node
 Requires: perl-WWW-Mechanize, perl-XML-DOM-XPath, perl-XML-SAX-Writer, perl-XML-Writer
 Requires: perl-Ace, perl-Clone
