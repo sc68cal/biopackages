@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Session-Store-Memcached.spec.in,v 1.1 2007/04/12 23:58:22 allenday Exp $
+#$Id: perl-Catalyst-Plugin-Session-Store-Memcached.spec.in,v 1.2 2007/04/14 20:53:37 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,8 +13,10 @@ Epoch: 0
 URL: http://search.cpan.org/~nuffin/Catalyst-Plugin-Session-Store-Memcached-0.02/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, memcached, perl-Cache-Memcached-Managed, perl-Catalyst-Plugin-Session
-Requires: perl, memcached, perl-Cache-Memcached-Managed, perl-Catalyst-Plugin-Session
+BuildRequires: perl, biopackages, memcached, perl-Cache-Memcached-Managed, perl-Catalyst-Plugin-Session, perl-Catalyst, perl-Test-Exception, perl-Test-MockObject
+Requires: perl, memcached, perl-Cache-Memcached-Managed, perl-Catalyst-Plugin-Session, perl-Catalyst
+Warning: prerequisite Test::MockObject 1.01 not found.
+
 
 Source0: Catalyst-Plugin-Session-Store-Memcached-%{version}.tar.gz
 
@@ -68,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst-Plugin-Session-Store-Memcached.spec.in,v $
+Revision 1.2  2007/04/14 20:53:37  bpbuild
+depcheck
+
 Revision 1.1  2007/04/12 23:58:22  allenday
 import memcached specs
 
