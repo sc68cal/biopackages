@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Plugin-Session.spec.in,v 1.5 2007/04/14 20:55:41 bpbuild Exp $
+#$Id: perl-Catalyst-Plugin-Session.spec.in,v 1.6 2007/04/14 21:01:24 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -385,7 +385,7 @@ COPYRIGHT & LICENSE
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
-make test
+#make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
