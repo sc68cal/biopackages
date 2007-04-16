@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Model-DBI.spec.in,v 1.1 2007/04/16 07:35:38 boconnor Exp $
+#$Id: perl-Catalyst-Model-DBI.spec.in,v 1.2 2007/04/16 08:13:11 boconnor Exp $
 
 %define	module	Catalyst-Model-DBI
 %define name	perl-%{module}
@@ -17,9 +17,9 @@ License:	Artistic/GPL
 Group:		Development/Perl
 URL:		http://search.cpan.org/dist/%{module}/
 Source:		%{module}-%{version}.tar.gz
-%if %{mdkversion} < 1010
-BuildRequires:	perl-devel >= 5.8.1
-%endif
+#%if %{mdkversion} < 1010
+#BuildRequires:	perl-devel >= 5.8.1
+#%endif
 BuildRequires:	perl(Catalyst) >= 5.0
 BuildRequires:	perl(DBI)
 BuildArch:	noarch
@@ -33,21 +33,49 @@ simple wrapper for DBI.
 %setup -q -n %{module}-%{version}
 
 %build
-%__perl Makefile.PL INSTALLDIRS=vendor
-%make
+#%__perl Makefile.PL INSTALLDIRS=vendor
+#make
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
 
-%check
-%__make test
+#%check
+#make test
 
 %install
 rm -rf %{buildroot}
-%makeinstall_std
+#makeinstall_std
+make install
 
-%files
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
-%doc README Changes
-%{perl_vendorlib}/%{modprefix}
-%{_mandir}/*/*
+#%doc README Changes
+#%{perl_sitelib}/%{modprefix}
+#%{_mandir}/*/*
 
 %clean
 rm -rf %{buildroot}
@@ -76,6 +104,9 @@ rm -rf %{buildroot}
 # - First Mandriva package, from Scott Ryan 
 
 $Log: perl-Catalyst-Model-DBI.spec.in,v $
+Revision 1.2  2007/04/16 08:13:11  boconnor
+Updated the spec.in for this package.
+
 Revision 1.1  2007/04/16 07:35:38  boconnor
 Initial import
 
