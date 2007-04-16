@@ -1,0 +1,82 @@
+#$Id: perl-Catalyst-Model-DBI.spec.in,v 1.1 2007/04/16 07:35:38 boconnor Exp $
+
+%define	module	Catalyst-Model-DBI
+%define name	perl-%{module}
+%define	modprefix Catalyst
+
+%define version 0.15
+
+%define	rel	1
+%define release %mkrel %{rel}
+
+Summary:	Catalyst DBI Model Class
+Name:		%{name}
+Version:	%{version}
+Release: %{revision}.%{distro}
+License:	Artistic/GPL
+Group:		Development/Perl
+URL:		http://search.cpan.org/dist/%{module}/
+Source:		%{module}-%{version}.tar.gz
+%if %{mdkversion} < 1010
+BuildRequires:	perl-devel >= 5.8.1
+%endif
+BuildRequires:	perl(Catalyst) >= 5.0
+BuildRequires:	perl(DBI)
+BuildArch:	noarch
+Buildroot:	%{_tmppath}/%{name}-root
+
+%description
+This is the DBI model class for Catalyst. It is nothing more than a
+simple wrapper for DBI.
+
+%prep
+%setup -q -n %{module}-%{version}
+
+%build
+%__perl Makefile.PL INSTALLDIRS=vendor
+%make
+
+%check
+%__make test
+
+%install
+rm -rf %{buildroot}
+%makeinstall_std
+
+%files
+%defattr(-,root,root)
+%doc README Changes
+%{perl_vendorlib}/%{modprefix}
+%{_mandir}/*/*
+
+%clean
+rm -rf %{buildroot}
+
+
+# %changelog
+# * Sun Jan 28 2007 Buchan Milne <bgmilne@mandriva.org> 0.15-1mdv2007.0
+# + Revision: 114646
+# - New version 0.15
+# 
+#   + Guillaume Rousse <guillomovitch@mandriva.org>
+#     - Import perl-Catalyst-Model-DBI
+# 
+# 
+# 
+# * Mon Jun 26 2006 Scott Karns <scottk@mandriva.org> 0.14-1mdv2007.0
+# - Version 0.14
+# 
+# * Wed May 31 2006 Scott Karns <scottk@mandriva.org> 0.13-1mdv2007.0
+# - Version 0.13
+# 
+# * Tue May 30 2006 Scott Karns <scottk@mandriva.org> 0.12-1mdv2007.0
+# - Version 0.12
+# 
+# * Fri Mar 17 2006 Buchan Milne <bgmilne@mandriva.org> 0.11-1mdk
+# - First Mandriva package, from Scott Ryan 
+
+$Log: perl-Catalyst-Model-DBI.spec.in,v $
+Revision 1.1  2007/04/16 07:35:38  boconnor
+Initial import
+
+
