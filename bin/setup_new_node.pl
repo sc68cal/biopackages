@@ -85,9 +85,8 @@ $arch = rl("i386");
 
 # YUM
 # everything needs yum configured
-print "FIXME: extras needs to be installed, add check for FC2 (only w/o extras?). RPMForge needs to be installed.\n";
 system("cp /etc/yum.conf /etc/yum.conf.distro");
-my $contents = $yum_settings->{"$dabb$version\_$arch"}
+my $contents = $yum_settings->{"$dabb$version\_$arch"};
 if($vmtype eq 'test')  {
 $contents .= <<'END';
 [biopackages-stable]
@@ -98,6 +97,7 @@ baseurl=http://yum.biopackages.net/biopackages/stable/fedora/$releasever/$basear
 name=BioPackages (Stable) for Fedora Core $releasever - noarch
 baseurl=http://yum.biopackages.net/biopackages/stable/fedora/$releasever/noarch/
 END
+}
 printfile(">/etc/yum.conf", $contents);
 
 if ($vmtype eq 'build' || $vmtype eq 'dev') {
