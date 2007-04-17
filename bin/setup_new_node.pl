@@ -88,14 +88,14 @@ $arch = rl("i386");
 system("cp /etc/yum.conf /etc/yum.conf.distro");
 my $contents = $yum_settings->{"$dabb$version\_$arch"};
 if($vmtype eq 'test')  {
-$contents .= <<'END';
+$contents .= <<END;
 [biopackages-stable]
-name=BioPackages (Stable) for Fedora Core $releasever - $basearch
-baseurl=http://yum.biopackages.net/biopackages/stable/fedora/$releasever/$basearch/
+name=BioPackages (Stable) for Fedora Core \$releasever - \$basearch
+baseurl=http://yum.biopackages.net/biopackages/stable/$distro/\$releasever/\$basearch/
 
 [biopackages-stable-noarch]
-name=BioPackages (Stable) for Fedora Core $releasever - noarch
-baseurl=http://yum.biopackages.net/biopackages/stable/fedora/$releasever/noarch/
+name=BioPackages (Stable) for Fedora Core \$releasever - noarch
+baseurl=http://yum.biopackages.net/biopackages/stable/$distro/\$releasever/noarch/
 END
 }
 printfile(">/etc/yum.conf", $contents);
