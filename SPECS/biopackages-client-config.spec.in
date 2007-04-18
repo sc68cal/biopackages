@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.1 2007/04/18 18:57:07 boconnor Exp $
+#$Id: biopackages-client-config.spec.in,v 1.2 2007/04/18 19:30:50 boconnor Exp $
 
 Summary: A package for clients using Biopackages. 
 Name: biopackages-client-config
@@ -8,7 +8,11 @@ License: GPL
 Group: System Environment/Base
 Source0: GPL
 Source1: BIOPACKAGES-RPM-GPG-KEY
-Source2: biopackages.repo
+# going to need to do ifdistro_release when adding in rpmforge because
+# the URLs differ from release to release of the same distro (I think)
+%{ifdistro fedora}Source2: biopackages-fedora.repo
+%{ifdistro centos}Source2: biopackages-centos.repo
+%{ifdistro darwin}Source2: biopackages-darwin.repo
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 
@@ -44,8 +48,11 @@ used to sign them.
 # Import Freshrpms.net gpg key if needed
 rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
     rpm --import %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+# FC2 doesn't support external repo files!
+%{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages.repo >> /etc/yum.conf
 # We don't want a possible error to leave the previous package installed
 exit 0
+
 
 
 %files
@@ -65,6 +72,9 @@ exit 0
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.2  2007/04/18 19:30:50  boconnor
+Updated to conf RPM
+
 Revision 1.1  2007/04/18 18:57:07  boconnor
 Import of client yum config package with gpg key based on fresh RPM package.
 
