@@ -1,0 +1,71 @@
+#$Id: biopackages-client-config.spec.in,v 1.1 2007/04/18 18:57:07 boconnor Exp $
+
+Summary: A package for clients using Biopackages. 
+Name: biopackages-client-config
+Version: 1.0
+Release: %{revision}.%{distro}
+License: GPL
+Group: System Environment/Base
+Source0: GPL
+Source1: BIOPACKAGES-RPM-GPG-KEY
+Source2: biopackages.repo
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+
+%description
+Biopackages client config file. This package contains yum configuration to
+use the biopackages.net provided rpm packages, as well as the public gpg key
+used to sign them.
+
+
+%prep
+
+
+%build
+
+
+%install
+%{__rm} -rf %{buildroot}
+# Install license to be included in the docs and gpg key as pubkey
+%{__cp} -a %{SOURCE0} %{SOURCE1} .
+# Install gpg public key
+%{__install} -D -p -m 0644 %{SOURCE1} \
+    %{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+# Install yum repo file
+%{__install} -D -p -m 0644 %{SOURCE2} \
+    %{buildroot}%{_sysconfdir}/yum.repos.d/biopackages.repo
+
+
+%clean
+%{__rm} -rf %{buildroot}
+
+
+%post
+# Import Freshrpms.net gpg key if needed
+rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+# We don't want a possible error to leave the previous package installed
+exit 0
+
+
+%files
+%defattr(-, root, root, 0755)
+%doc GPL
+%pubkey BIOPACKAGES-RPM-GPG-KEY
+%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+%config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages.repo
+
+
+# old changelog
+# * Tue Jun 28 2005 Matthias Saou <http://freshrpms.net/> 1.1-1
+# - Put gpg public key in /etc/pki/rpm-gpg and add gpgkey line to yum file.
+# 
+# * Wed Nov 10 2004 Matthias Saou <http://freshrpms.net/> 1-1
+# - Initial RPM release, inspired by fedora-release.
+# - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
+
+$Log: biopackages-client-config.spec.in,v $
+Revision 1.1  2007/04/18 18:57:07  boconnor
+Import of client yum config package with gpg key based on fresh RPM package.
+
+
