@@ -434,5 +434,5 @@ libFS-1.0.0-2.2
 xorg-x11-xfs-1.0.1-4
 m4-1.4.4-1.2.1
 gettext-0.14.5-3
-biopackages-1.0.1-1.14
+biopackages-1.0.1-1.16
 usr-local-bin-perl-1.0-1.3
