@@ -92,7 +92,7 @@ print OUT <<"UUU";
 UUU
 
   my $first = 1;
-  foreach my $package (keys %{$data}) {
+  foreach my $package (sort keys %{$data}) {
     if ($first) {
       print OUT "<tr><td> </td><td>";
       print OUT join "</td><td>", sort @distro_names;
@@ -112,7 +112,7 @@ UUU
 
 } else {
   my $first = 1;
-  foreach my $package (keys %{$data}) {
+  foreach my $package (sort keys %{$data}) {
     if ($first) {
       print OUT "\t";
       print OUT join "\t", sort @distro_names;
