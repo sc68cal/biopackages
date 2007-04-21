@@ -1,4 +1,4 @@
-#$Id: perl-bioperl-run.spec.in,v 1.6 2006/09/09 05:56:30 jmendler Exp $
+#$Id: perl-bioperl-run.spec.in,v 1.7 2007/04/21 22:59:37 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Bioperl wrapper toolkit
@@ -12,13 +12,13 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/bioperl-run/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl, biopackages, perl-DBI, perl-XML-Twig
 Requires: perl-bioperl
 Source0: bioperl-run-1.4.tar.gz
 BuildArch: noarch
 
 %description
-$Id: perl-bioperl-run.spec.in,v 1.6 2006/09/09 05:56:30 jmendler Exp $
+$Id: perl-bioperl-run.spec.in,v 1.7 2007/04/21 22:59:37 bpbuild Exp $
 
 
 o Version
