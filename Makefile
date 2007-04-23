@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.77 2007/04/23 01:43:35 bpbuild Exp $
+#$Id: Makefile,v 1.78 2007/04/23 01:57:56 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -47,7 +47,6 @@ cluster_buildprep ::
 	$(MAKE) cluster_buildclean
 	$(MAKE) cluster_prep
 	$(MAKE) cluster_cvsupdate
-	$(MAKE) cluster_yumupdate
 
 cluster_buildclean ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -p 5 -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
