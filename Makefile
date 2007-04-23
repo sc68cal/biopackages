@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.76 2007/04/11 18:53:18 bpbuild Exp $
+#$Id: Makefile,v 1.77 2007/04/23 01:43:35 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -72,7 +72,7 @@ report ::
 	sudo mkdir -p /biopackages/report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
-	sudo rsync -rvL /usr/src/biopackages/SETTINGS /biopackages/report/
+	sudo rsync -rvL --progress /usr/src/biopackages/SETTINGS /biopackages/report/
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 migrate :: 
