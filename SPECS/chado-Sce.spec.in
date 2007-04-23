@@ -1,4 +1,4 @@
-#$Id: chado-Sce.spec.in,v 1.3 2007/01/12 02:26:05 bpbuild Exp $
+#$Id: chado-Sce.spec.in,v 1.4 2007/04/23 06:30:13 bpbuild Exp $
 %define gmod_root /var/lib/gmod
 %define org Sce
 %define orgCommonName yeast
@@ -52,6 +52,8 @@ fi ;
 tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
 
 sudo /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 sudo su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
 sudo su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
 sudo su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
@@ -96,6 +98,8 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 
 %post
 /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion} || exit 1';
 
 #echo "[1/4] Creating PostgreSQL database 'chado-%{org}-%{orgVersion}' as user 'postgres'";
@@ -115,10 +119,15 @@ true ;
 
 %preun
 /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Sce.spec.in,v $
+Revision 1.4  2007/04/23 06:30:13  bpbuild
+In the future, these RPMs will wait after starting postgres so, on a firstime postgres install, the server will start before a db create is tried (without this fix there was failure on one test server).
+
 Revision 1.3  2007/01/12 02:26:05  bpbuild
 Modification to chado.spec.in, updated dep for new version number format
 

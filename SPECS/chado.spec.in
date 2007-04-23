@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.5 2007/01/12 02:26:05 bpbuild Exp $
+#$Id: chado.spec.in,v 1.6 2007/04/23 06:30:14 bpbuild Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -71,6 +71,8 @@ find . -type f -name cx-genbank2chaos.pl -exec rm {} \;
 tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
 
 sudo /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 sudo su postgres -c "createdb $tmp_chado";
 sudo su postgres -c "createlang plpgsql $tmp_chado";
 #Creating tables, functions, views, triggers, rules, etc for database
@@ -210,6 +212,8 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 
 %post
 /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 su postgres -c 'dropdb chado || exit 1';
 
 #Creating PostgreSQL database 'chado' as user 'postgres'
@@ -226,6 +230,8 @@ true ;
 
 %preun
 /etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
 su postgres -c 'dropdb chado';
 true;
 
