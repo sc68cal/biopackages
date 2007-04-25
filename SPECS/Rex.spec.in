@@ -1,0 +1,46 @@
+#$Id: Rex.spec.in,v 1.1 2007/04/25 05:58:13 allenday Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Allen Day <allenday@ucla.edu>
+Version: 1.0.0
+Release: %{revision}.%{distro}
+Name: Rex
+Summary: R shebang scripts (#!/usr/bin/Rex)
+Group: Applications/Engineering
+License: GPL
+URL: http://search.cpan.org/~allenday
+Source0: %{name}-%{version}.tar.gz
+Requires: R >= 2.0.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.0.0, biopackages
+
+%description
+R shebang scripts (#!/usr/bin/Rex)
+
+%prep
+%setup -n %{name}
+mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+make;
+
+cp Rex ${RPM_BUILD_ROOT}%{_bindir}
+cp eg/hist ${RPM_BUILD_ROOT}%{_bindir}
+cp eg/sample ${RPM_BUILD_ROOT}%{_bindir}
+cp eg/sum ${RPM_BUILD_ROOT}%{_bindir}
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+$Log: Rex.spec.in,v $
+Revision 1.1  2007/04/25 05:58:13  allenday
+nice one
+
