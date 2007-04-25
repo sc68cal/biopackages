@@ -1,4 +1,4 @@
-#$Id: Rex.spec.in,v 1.2 2007/04/25 06:01:05 allenday Exp $
+#$Id: Rex.spec.in,v 1.3 2007/04/25 06:05:41 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -29,7 +29,7 @@ make;
 cp Rex ${RPM_BUILD_ROOT}%{_bindir}
 cp eg/hist ${RPM_BUILD_ROOT}%{_bindir}
 cp eg/sample ${RPM_BUILD_ROOT}%{_bindir}
-cp eg/sum ${RPM_BUILD_ROOT}%{_bindir}
+cp eg/sum ${RPM_BUILD_ROOT}%{_bindir}/total
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f | sed "s@^%{buildroot}@@g" > %{name}-%{versi
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: Rex.spec.in,v $
+Revision 1.3  2007/04/25 06:05:41  allenday
+resolve install conflict
+
 Revision 1.2  2007/04/25 06:01:05  allenday
 depcheck
 
