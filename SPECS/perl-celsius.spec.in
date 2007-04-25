@@ -1,0 +1,66 @@
+#$Id: perl-celsius.spec.in,v 1.1 2007/04/25 21:15:55 allenday Exp $
+Summary: Celsius Affymetrix microarray data warehousing system, perl webserver component
+Name: perl-celsius
+Version: 0.01
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: Celsius-%{version}.tar.gz
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.sf.net/projects/celsius
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires:      Rex, celsius-database, mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Class-DBI, perl-XML-DOM-XPath, perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error, perl-celsius-config
+BuildRequires:                        mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Class-DBI, perl-XML-DOM-XPath, perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error
+
+%description
+Celsius Affymetrix microarray data warehousing system, perl webserver component
+
+%package config
+Summary: configuration files for Celsius webserver and ETL components
+Group: Databases/Bioinformatics
+BuildArch: noarch
+
+%description config
+configuration files for Celsius webserver and ETL components
+
+%prep
+%setup -n Celsius-%{version}
+mkdir -p $RPM_BUILD_ROOT/etc
+
+%build
+/usr/bin/perl Makefile.PL destdir=$RPM_BUILD_ROOT
+make;
+make test;
+
+%install
+make install;
+cp celsius.conf $RPM_BUILD_ROOT/etc/
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f | grep  -E 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-config-filelist
+
+cat %{name}-%{version}-%{release}-config-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%files config -f %{name}-%{version}-%{release}-config-filelist
+%defattr(-,root,root)
+
+%doc
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+
+%preun
+
+$Log: perl-celsius.spec.in,v $
+Revision 1.1  2007/04/25 21:15:55  allenday
+config files for celsius etl and webserver
+
