@@ -1,8 +1,8 @@
-#$Id: Rex.spec.in,v 1.1 2007/04/25 05:58:13 allenday Exp $
+#$Id: Rex.spec.in,v 1.2 2007/04/25 06:01:05 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.0.0
+Version: 1.0
 Release: %{revision}.%{distro}
 Name: Rex
 Summary: R shebang scripts (#!/usr/bin/Rex)
@@ -18,7 +18,7 @@ BuildRequires: R >= 2.0.0, biopackages
 R shebang scripts (#!/usr/bin/Rex)
 
 %prep
-%setup -n %{name}
+%setup -q
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
 
 %build
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f | sed "s@^%{buildroot}@@g" > %{name}-%{versi
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: Rex.spec.in,v $
+Revision 1.2  2007/04/25 06:01:05  allenday
+depcheck
+
 Revision 1.1  2007/04/25 05:58:13  allenday
 nice one
 
