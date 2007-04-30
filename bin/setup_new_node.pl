@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 # A simple script to setup a new build host.  This will need to be modified
 # before the process can be automatic. This process assumes the network has
