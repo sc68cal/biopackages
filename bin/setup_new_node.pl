@@ -140,19 +140,6 @@ if ($vmtype eq 'build' || $vmtype eq 'dev') {
   10.67.183.100   nucleus.i
   164.67.183.100  nucleus.genomics.ctrl.ucla.edu      nucleus
   
-  # VMWare Virtual Machines
-  10.67.183.229   fc5.i386.das2 # a temp host for testing
-  10.67.183.230   fc5.i386.testing # a temp host for testing
-  10.67.183.231   fc2.i386.testing # a temp host for testing
-  10.67.183.232   centos4-i386    centos4.i386
-  10.67.183.233   centos4-x86_64  centos4.x86_64
-  10.67.183.234   fc2-i386    fc2.i386
-  10.67.183.235   fc2-x86_64  fc2.x86_64
-  10.67.183.236   fc5-i386    fc5.i386
-  10.67.183.237   fc5-x86_64  fc5.x86_64
-  10.67.183.238   fc6-i386    fc6.i386
-  10.67.183.239   fc6-x86_64  fc6.x86_64
-  
   #
   10.67.183.240   nexus.genomics.ctrl.ucla.edu        nexus  nexus.i
   10.67.183.248   axis.genomics.ctrl.ucla.edu     axis axis.i
@@ -163,7 +150,7 @@ END
   printfile("/etc/hosts", $contents);
   
   # resolve
-  system("mv /etc/resolve.conf /etc/resolve.conf.distro");
+  system("mv /etc/resolv.conf /etc/resolv.conf.distro");
   $contents = <<END;
   search genomics.ctrl.ucla.edu
   nameserver 10.67.183.1
