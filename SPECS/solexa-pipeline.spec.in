@@ -1,0 +1,54 @@
+#$Id: solexa-pipeline.spec.in,v 1.1 2007/05/02 05:49:19 boconnor Exp $
+Summary: Solexa Pipeline
+Name: solexa-pipeline
+Version: 0.2.2.3
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: SolexaPipeline-%{version}.tar.gz
+
+License: Solexa Public Source License
+Group: Bioinformatics
+Packager: Brian O'Connor <boconnor@ucla.edu>
+URL: http://www.solexa.com/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: biopackages
+
+%description
+This module contains the source code for the Solexa data analysis
+pipeline. All software in this module is copyrighted by Solexa Ltd. as
+(C) Solexa 2006, and licensed under the conditions laid out in the
+agreement that you signed. Any source code files or ancillary files
+containing this copyright notice are deemed to be covered by the
+'Solexa Public Source License', as stipulated within that license
+agreement and are bound by the terms therein.
+
+The documentation (in html form) can be found in the directory docs/.
+A good place to start is the introduction in "Pipeline
+documentation.html".  The installation is described in "Pipeline
+documentation.html". A quick-start guide is given by "Pipeline usage".
+
+%prep
+%setup -q 
+rm -rf ${RPM_BUILD_ROOT};
+
+%build
+make
+
+%install
+make install
+
+%files
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: solexa-pipeline.spec.in,v $
+Revision 1.1  2007/05/02 05:49:19  boconnor
+New spec file for the solexa pipeline.
+
+
