@@ -226,7 +226,6 @@ END
   # install bootstrap packages
   system("sudo yum -y install cvs perl-DateManip");
   system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
-  system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/");
   system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/biopackages-1.0.1-1.14.noarch.rpm");
 
 }
