@@ -40,3 +40,5 @@ clucene
 mod_perl
 perl-DBD-Pg
 perl-DBI
+fftw3-devel
+fftw3

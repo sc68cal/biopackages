@@ -42,3 +42,5 @@ perl-DBI
 mod_perl
 # gd-2.0.28 is needed so build it
 gd
+fftw3-devel
+fftw3
