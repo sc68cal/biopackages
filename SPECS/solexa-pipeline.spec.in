@@ -1,10 +1,10 @@
-#$Id: solexa-pipeline.spec.in,v 1.1 2007/05/02 05:49:19 boconnor Exp $
+#$Id: solexa-pipeline.spec.in,v 1.2 2007/05/02 08:27:07 boconnor Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 0.2.2.3
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: SolexaPipeline-%{version}.tar.gz
+Source0: %{name}-%{version}.tar.gz
 
 License: Solexa Public Source License
 Group: Bioinformatics
@@ -28,17 +28,25 @@ documentation.html".  The installation is described in "Pipeline
 documentation.html". A quick-start guide is given by "Pipeline usage".
 
 %prep
+rm -rf ${RPM_BUILD_ROOT}
 %setup -q 
-rm -rf ${RPM_BUILD_ROOT};
+mkdir -p ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
+echo "HERE FOO: ${RPM_BUILD_ROOT}/usr/local"
 
 %build
 make
+make install
+cp -R Bustard CommonUtils Eland Firecrest Gerald Goat MathUtils Misc PhageAlign QCalibration README.txt ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%{version}-%{release}-filelist
+
 
 %install
-make install
-
-%files
-%defattr(-,root,root)
+#make install
+#echo "FOO: ${RPM_BUILD_ROOT} ${BUILD_ROOT}"
+#%files
+#%defattr(-,root,root)
+%files -f %{name}-%{version}-%{release}-filelist
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
@@ -48,6 +56,9 @@ make install
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.2  2007/05/02 08:27:07  boconnor
+This is closer to a working spec file for the solexa pipeline, need to add in docs but they have spaces in their names.
+
 Revision 1.1  2007/05/02 05:49:19  boconnor
 New spec file for the solexa pipeline.
 
