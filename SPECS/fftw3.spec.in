@@ -1,6 +1,7 @@
-# $Id: fftw3.spec.in,v 1.1 2007/05/02 01:04:53 boconnor Exp $
+# $Id: fftw3.spec.in,v 1.2 2007/05/02 01:05:32 boconnor Exp $
 
 %define real_name fftw
+
 
 Summary: Fast Fourier Transform library
 Name: fftw3
@@ -100,6 +101,9 @@ you will need to install %{name}-devel.
 # - Initial package. (using DAR)
 
 $Log: fftw3.spec.in,v $
+Revision 1.2  2007/05/02 01:05:32  boconnor
+Import of fftw3 from RPMForge.  I had to import this because the Solexa pipeline requires version 3 (we had an old version 2 in Biopackages already) and it also requires it's compiled with the --enable-single option.  I added that to Dag's version and incremented the version string.
+
 Revision 1.1  2007/05/02 01:04:53  boconnor
 Import of fftw3 from RPMForge.  I had to import this because the Solexa pipeline requires version 3 (we had an old version 2 in Biopackages already) and it also requires it's compiled with the --enable-single option.  I added that to Dag's version and incremented the version string.
 
