@@ -7,3 +7,4 @@ blastGraphic-Hsa	blastGraphic
 clucene-core-devel	clucene
 clucene-core	clucene
 java-devel      java-1.4.2-gcj-compat
+fftw3-devel	fftw3
