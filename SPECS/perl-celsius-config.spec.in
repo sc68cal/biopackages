@@ -1,0 +1,55 @@
+#$Id: perl-celsius-config.spec.in,v 1.1 2007/05/07 21:48:11 allenday Exp $
+Summary: Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
+Name: perl-celsius-config
+Version: 0.01
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: Celsius-%{version}.tar.gz
+Source1: celsius.conf
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.sf.net/projects/celsius
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: perl
+BuildRequires: perl
+
+%description
+Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
+
+%prep
+%setup -n Celsius-Config-%{version}
+mkdir -p $RPM_BUILD_ROOT/etc
+
+%build
+/usr/bin/perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+make;
+make test;
+
+%install
+make install;
+cp celsius.conf $RPM_BUILD_ROOT/etc/
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+cat %{name}-%{version}-%{release}-config-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%doc
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+
+%preun
+
+$Log: perl-celsius-config.spec.in,v $
+Revision 1.1  2007/05/07 21:48:11  allenday
+import
+
