@@ -1,4 +1,4 @@
-#$Id: perl-celsius-config.spec.in,v 1.5 2007/05/07 21:53:18 allenday Exp $
+#$Id: perl-celsius-config.spec.in,v 1.6 2007/05/07 21:54:29 allenday Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
 Name: perl-celsius-config
 Version: 0.01
@@ -32,7 +32,7 @@ cp %{SOURCE1} $RPM_BUILD_ROOT/etc/
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
-find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROO
 %preun
 
 $Log: perl-celsius-config.spec.in,v $
+Revision 1.6  2007/05/07 21:54:29  allenday
+bad filter
+
 Revision 1.5  2007/05/07 21:53:18  allenday
 syntax
 
