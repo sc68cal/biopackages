@@ -1,4 +1,4 @@
-#$Id: celsius-etl.spec.in,v 1.1 2007/05/07 22:59:57 allenday Exp $
+#$Id: celsius-etl.spec.in,v 1.2 2007/05/07 23:00:41 allenday Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, ETL component
 Name: celsius-etl
 Version: 0.06
@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: R, perl, make, celtools, perl-celsius-config, affyapt, R-affy, R-gcrma, R-plier, R-vsn, R-affyQCReport, R-affyPLM, R-aroma.affymetrix >= 0.4.9, microarray-cdf-HuEx-1_0-st-v2, R-huex10stv2cdf
 #BuildRequires:
+
 
 %description
 Celsius Affymetrix microarray data warehousing system, ETL component
@@ -44,6 +45,9 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 %preun
 
 $Log: celsius-etl.spec.in,v $
+Revision 1.2  2007/05/07 23:00:41  allenday
+version bump
+
 Revision 1.1  2007/05/07 22:59:57  allenday
 import
 
