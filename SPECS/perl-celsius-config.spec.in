@@ -1,4 +1,4 @@
-#$Id: perl-celsius-config.spec.in,v 1.6 2007/05/07 21:54:29 allenday Exp $
+#$Id: perl-celsius-config.spec.in,v 1.7 2007/05/07 22:02:41 allenday Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
 Name: perl-celsius-config
 Version: 0.01
@@ -23,7 +23,7 @@ Celsius Affymetrix microarray data warehousing system, configuration access for 
 mkdir -p $RPM_BUILD_ROOT/etc
 
 %build
-/usr/bin/perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+/usr/bin/perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}
 make;
 
 %install
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 %preun
 
 $Log: perl-celsius-config.spec.in,v $
+Revision 1.7  2007/05/07 22:02:41  allenday
+bad prefix
+
 Revision 1.6  2007/05/07 21:54:29  allenday
 bad filter
 
