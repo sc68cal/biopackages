@@ -1,10 +1,10 @@
-#$Id: perl-celsius-config.spec.in,v 1.1 2007/05/07 21:48:11 allenday Exp $
+#$Id: perl-celsius-config.spec.in,v 1.2 2007/05/07 21:50:24 allenday Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
 Name: perl-celsius-config
 Version: 0.01
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: Celsius-%{version}.tar.gz
+Source0: Celsius-Config-%{version}.tar.gz
 Source1: celsius.conf
 License: GPL
 Group: Databases/Bioinformatics
@@ -50,6 +50,9 @@ cat %{name}-%{version}-%{release}-config-filelist
 %preun
 
 $Log: perl-celsius-config.spec.in,v $
+Revision 1.2  2007/05/07 21:50:24  allenday
+naming error
+
 Revision 1.1  2007/05/07 21:48:11  allenday
 import
 
