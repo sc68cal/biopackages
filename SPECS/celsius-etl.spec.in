@@ -1,0 +1,49 @@
+#$Id: celsius-etl.spec.in,v 1.1 2007/05/07 22:59:57 allenday Exp $
+Summary: Celsius Affymetrix microarray data warehousing system, ETL component
+Name: celsius-etl
+Version: 0.06
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.tar.gz
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.sf.net/projects/celsius
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: R, perl, make, celtools, perl-celsius-config, affyapt, R-affy, R-gcrma, R-plier, R-vsn, R-affyQCReport, R-affyPLM, R-aroma.affymetrix >= 0.4.9, microarray-cdf-HuEx-1_0-st-v2, R-huex10stv2cdf
+#BuildRequires:
+
+%description
+Celsius Affymetrix microarray data warehousing system, ETL component
+
+%prep
+%setup -n %{name}-%{version}
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/celsius
+
+%build
+
+%install
+find script -type f -exec cp {} $RPM_BUILD_ROOT%{_prefix}/lib/celsius/ \;
+cp Makefile $RPM_BUILD_ROOT%{_prefix}/lib/celsius/
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%doc
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+
+%preun
+
+$Log: celsius-etl.spec.in,v $
+Revision 1.1  2007/05/07 22:59:57  allenday
+import
+
