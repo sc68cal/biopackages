@@ -1,4 +1,4 @@
-#$Id: perl-celsius.spec.in,v 1.1 2007/04/25 21:15:55 allenday Exp $
+#$Id: perl-celsius.spec.in,v 1.2 2007/05/07 22:49:43 allenday Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, perl webserver component
 Name: perl-celsius
 Version: 0.01
@@ -17,17 +17,8 @@ BuildRequires:                        mod_perl, perl-DBIx-ContextualFetch, perl-
 %description
 Celsius Affymetrix microarray data warehousing system, perl webserver component
 
-%package config
-Summary: configuration files for Celsius webserver and ETL components
-Group: Databases/Bioinformatics
-BuildArch: noarch
-
-%description config
-configuration files for Celsius webserver and ETL components
-
 %prep
 %setup -n Celsius-%{version}
-mkdir -p $RPM_BUILD_ROOT/etc
 
 %build
 /usr/bin/perl Makefile.PL destdir=$RPM_BUILD_ROOT
@@ -36,19 +27,12 @@ make test;
 
 %install
 make install;
-cp celsius.conf $RPM_BUILD_ROOT/etc/
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
-find $RPM_BUILD_ROOT -type f | grep  -E 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-config-filelist
-
-cat %{name}-%{version}-%{release}-config-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
-%defattr(-,root,root)
-
-%files config -f %{name}-%{version}-%{release}-config-filelist
 %defattr(-,root,root)
 
 %doc
@@ -61,6 +45,9 @@ cat %{name}-%{version}-%{release}-config-filelist
 %preun
 
 $Log: perl-celsius.spec.in,v $
+Revision 1.2  2007/05/07 22:49:43  allenday
+config in its own package now
+
 Revision 1.1  2007/04/25 21:15:55  allenday
 config files for celsius etl and webserver
 
