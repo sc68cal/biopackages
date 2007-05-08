@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.79 2007/05/08 21:05:13 bpbuild Exp $
+#$Id: Makefile,v 1.80 2007/05/08 21:19:30 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -75,7 +75,6 @@ report ::
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 migrate :: 
-#	for i in {centos/4,fedora/{1,2,3,4,5}}/*/*.rpm ; do sudo mv -vf /biopackages/testing/$$i /biopackages/stable/$$i ; done
 	for i in /biopackages/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 	$(MAKE) repo
 
