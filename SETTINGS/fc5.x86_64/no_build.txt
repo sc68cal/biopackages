@@ -1,11 +1,9 @@
 httpd-mmn
-postgresql-devel
 chado-Hsa
 chado-Mmu
 chado
 chado-Sce
 gd-devel
-postgresql
 # I added these below because they have really large src files and should just
 # be built by hand
 microarray-normalization-pool-Mapping250K_Sty 
