@@ -1,4 +1,4 @@
-#$Id: postgresql.spec.in,v 1.2 2007/05/09 02:09:46 bpbuild Exp $
+#$Id: postgresql.spec.in,v 1.3 2007/05/09 02:11:27 bpbuild Exp $
 # Conventions for PostgreSQL Global Development Group RPM releases:
 
 # Official PostgreSQL Development Group RPMS have a PGDG after the release number.
@@ -114,8 +114,8 @@ Patch5: pgtcl-no-rpath.patch
 Patch6: postgresql-perl-rpath.patch
 Patch7: pgtcl-quote.patch
 
-BuildRequires: perl glibc-devel bison flex autoconf
-Requires: /sbin/ldconfig initscripts
+BuildRequires: perl, glibc-devel, bison, flex, autoconf
+Requires: /sbin/ldconfig, initscripts
 
 %if %python
 BuildRequires: python-devel
@@ -145,7 +145,7 @@ BuildRequires: gettext >= 0.10.35
 %endif
 
 %if %xml
-BuildRequires: libxml2-devel libxslt-devel
+BuildRequires: libxml2-devel, libxslt-devel
 %endif
 
 %if %pam
@@ -192,8 +192,8 @@ PostgreSQL server.
 %package server
 Summary: The programs needed to create and run a PostgreSQL server.
 Group: Applications/Databases
-Requires: /usr/sbin/useradd /sbin/chkconfig 
-Requires: postgresql = %{version}-%{release} libpq.so
+Requires: /usr/sbin/useradd, /sbin/chkconfig 
+Requires: postgresql = %{version}-%{release}, libpq.so
 Obsoletes: rh-postgresql-server
 
 %description server
@@ -281,7 +281,7 @@ and its documentation.
 Summary: Development module for Python code to access a PostgreSQL DB.
 Group: Applications/Databases
 Requires: libpq.so
-Requires: python mx
+Requires: python, mx
 Obsoletes: rh-postgresql-python
 
 %description python
@@ -829,6 +829,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 $Log: postgresql.spec.in,v $
+Revision 1.3  2007/05/09 02:11:27  bpbuild
+syntax of rpm
+
 Revision 1.2  2007/05/09 02:09:46  bpbuild
 fix syntax of rpm
 
