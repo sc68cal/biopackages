@@ -1,4 +1,4 @@
-#$Id: postgresql.spec.in,v 1.1 2007/05/09 00:31:29 bpbuild Exp $
+#$Id: postgresql.spec.in,v 1.2 2007/05/09 02:09:46 bpbuild Exp $
 # Conventions for PostgreSQL Global Development Group RPM releases:
 
 # Official PostgreSQL Development Group RPMS have a PGDG after the release number.
@@ -114,42 +114,42 @@ Patch5: pgtcl-no-rpath.patch
 Patch6: postgresql-perl-rpath.patch
 Patch7: pgtcl-quote.patch
 
-Buildrequires: perl glibc-devel bison flex autoconf
-Prereq: /sbin/ldconfig initscripts
+BuildRequires: perl glibc-devel bison flex autoconf
+Requires: /sbin/ldconfig initscripts
 
 %if %python
-BuildPrereq: python-devel
+BuildRequires: python-devel
 %endif
 
 %if %tcl || %pltcl
-BuildPrereq: tcl
+BuildRequires: tcl
 %if %tcldevel
-Buildrequires: tcl-devel
+BuildRequires: tcl-devel
 %endif
 %endif
 
-BuildPrereq: readline-devel
-BuildPrereq: zlib-devel >= 1.0.4
+BuildRequires: readline-devel
+BuildRequires: zlib-devel >= 1.0.4
 
 %if %ssl
-BuildPrereq: openssl-devel
+BuildRequires: openssl-devel
 %endif
 
 %if %kerberos
-BuildPrereq: krb5-devel
-BuildPrereq: e2fsprogs-devel
+BuildRequires: krb5-devel
+BuildRequires: e2fsprogs-devel
 %endif
 
 %if %nls
-BuildPrereq: gettext >= 0.10.35
+BuildRequires: gettext >= 0.10.35
 %endif
 
 %if %xml
-BuildPrereq: libxml2-devel libxslt-devel
+BuildRequires: libxml2-devel libxslt-devel
 %endif
 
 %if %pam
-BuildPrereq: pam-devel
+BuildRequires: pam-devel
 %endif
 
 Obsoletes: postgresql-clients
@@ -192,8 +192,8 @@ PostgreSQL server.
 %package server
 Summary: The programs needed to create and run a PostgreSQL server.
 Group: Applications/Databases
-Prereq: /usr/sbin/useradd /sbin/chkconfig 
-Prereq: postgresql = %{version}-%{release} libpq.so
+Requires: /usr/sbin/useradd /sbin/chkconfig 
+Requires: postgresql = %{version}-%{release} libpq.so
 Obsoletes: rh-postgresql-server
 
 %description server
@@ -211,7 +211,7 @@ to install the postgresql package.
 %package docs
 Summary: Extra documentation for PostgreSQL
 Group: Applications/Databases
-Prereq: postgresql = %{version}-%{release}
+Requires: postgresql = %{version}-%{release}
 Obsoletes: rh-postgresql-docs
 
 %description docs
@@ -223,7 +223,7 @@ the FAQ, and source files for the PostgreSQL tutorial.
 %package contrib
 Summary: Contributed source and binaries distributed with PostgreSQL
 Group: Applications/Databases
-Prereq: postgresql = %{version}-%{release}
+Requires: postgresql = %{version}-%{release}
 Obsoletes: rh-postgresql-contrib
 
 %description contrib
@@ -234,7 +234,7 @@ included in the PostgreSQL distribution.
 %package devel
 Summary: PostgreSQL development header files and libraries.
 Group: Development/Libraries
-Prereq: postgresql = %{version}-%{release}
+Requires: postgresql = %{version}-%{release}
 Requires: postgresql-libs = %{version}-%{release}
 Obsoletes: rh-postgresql-devel
 
@@ -829,6 +829,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 $Log: postgresql.spec.in,v $
+Revision 1.2  2007/05/09 02:09:46  bpbuild
+fix syntax of rpm
+
 Revision 1.1  2007/05/09 00:31:29  bpbuild
 backport from fc6
 
