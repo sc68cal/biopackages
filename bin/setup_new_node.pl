@@ -10,7 +10,7 @@
 
 use strict;
 
-my ($vmtype, $distro, $dabb, $version, $arch, $yum_settings);
+my ($vmtype, $distro, $dabb, $version, $arch, $yum_settings, $answer);
 
 # yum data
 # FIXME: these need to be used to update yum.conf on each platform
@@ -164,7 +164,7 @@ END
   $contents.="  ".$ipaddress."   ".`hostname`;
   printfile("/etc/hosts", $contents);
   # resolve
-  system("mv /etc/resolv.conf /etc/resolv.conf.distro");
+  system("cp /etc/resolv.conf /etc/resolv.conf.distro");
   $contents = <<END;
   search genomics.ctrl.ucla.edu
   nameserver 10.67.183.1
@@ -212,38 +212,94 @@ END
   printfile(">/etc/services", $contents);
   
   # FIXME:  on neuron: qconf -ah centos4.x86_64
-  print "FIXME:  on neuron: qconf -ah centos4.x86_64\n";
+  print "FIXME:  on neuron: qconf -ah centos4.x86_64.\nEnter yes when ready.\n";
+  $answer = rl("yes");
   
   system("cd /gridware/sge; export SGE_ROOT=/gridware/sge; ./install_execd");
   
   print "FIXME: remove node from being an administrative host on SGE\n";
-  print "FIXME: [root@neuron]# qconf -dh centos4.i386.JMM\n";
+  print 'FIXME: [root@neuron]# qconf -dh centos4.i386.JMM\nEner yes when ready.\n';
+  $answer = rl("yes");
   
   # time server
-  print "FIXME: need to install and configure ntp!\n";
-  
+  system("yum install ntp");
+  my $contents = <<END;
+  # Prohibit general access to this service.
+  restrict default ignore
+ 
+  # Permit all access over the loopback interface, only read from tick and nucleus.
+  # Allow 10.67.183.0/24 subnet to be clients.
+  restrict        127.0.0.1
+  restrict        164.67.62.194   mask 255.255.255.255    nomodify notrap noquery
+  restrict        164.67.183.100  mask 255.255.255.255    nomodify notrap noquery
+  restrict        10.67.183.0     mask 255.255.255.0      notrust nomodify notrap
+  server          nucleus.genomics.ctrl.ucla.edu          prefer
+  server          tick.ucla.edu
+  #server         0.pool.ntp.org
+  #server         1.pool.ntp.org
+  #server         2.pool.ntp.org
+ 
+  # --- GENERAL CONFIGURATION ---
+  # Undisciplined Local Clock. This is a fake driver intended for backup
+  # and when no outside source of synchronized time is available. The
+  # default stratum is usually 3, but in this case we elect to use stratum
+  # 0. Since the server line does not have the prefer keyword, this driver
+  # is never used for synchronization, unless no other other
+  # synchronization source is available. In case the local host is
+  # controlled by some external source, such as an external oscillator or
+  # another protocol, the prefer keyword would cause the local host to
+  # disregard all other synchronization sources, unless the kernel
+  # modifications are in use and declare an unsynchronized condition.
+  server  127.127.1.0     # local clock
+  fudge   127.127.1.0 stratum 10
+
+  # Drift file.  Put this in a directory which the daemon can write to.
+  # No symbolic links allowed, either, since the daemon updates the file
+  # by creating a temporary in the same directory and then rename()'ing
+  # it to the file.
+  driftfile /var/lib/ntp/drift
+  broadcastdelay  0.008
+
+  # Authentication delay.  If you use, or plan to use someday, the
+  # authentication facility you should make the programs in the auth_stuff
+  # directory and figure out what this number should be on your machine.
+  authenticate yes
+
+  # Keys file.  If you want to diddle your server at run time, make a
+  # keys file (mode 600 for sure) and define the key number to be
+  # used for making requests.
+  #
+  # PLEASE DO NOT USE THE DEFAULT VALUES HERE. Pick your own, or remote
+  # systems might be able to reset your clock at will. Note also that
+  # ntpd is started with a -A flag, disabling authentication, that
+  # will have to be removed as well.
+  keys            /etc/ntp/keys
+END
+  printfile("/etc/ntp.conf", $contents);
+  system("/etc/init.d/ntpd start");
+  system("chkconfig --level 5 ntpd on");
+
   # setup cvs biopackages dir
   system("chown bpbuild:bpbuild /usr/src");
   system("chmod 775 /usr/src");
   system("mkdir -p /usr/src/biopackages/RPMS");
-  system("cp /etc/resolv.conf.distro /etc/resolv.conf");
   system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages\'; cd /usr/src/biopackages; make prep');
 
   # make symlinks
   # FIXME: make prep shouldn't create these!
   system("rm -rf /usr/src/biopackages/RPMS/*");
-  system("for n in i386 noarch x86_64; do ln -s /net/biopackages/testing/$distro/$version/\$n /usr/src/biopackages/RPMS/\$n; done");
+  system("for n in i386 noarch x86_64; do ln -s /net/biopackages/stable/$distro/$version/\$n /usr/src/biopackages/RPMS/\$n; done");
   # FIXME: shouldn't be created
   system("rm -rf /usr/src/biopackages/SRPMS");
-  system("ln -s /net/biopackages/testing/$distro/$version/SRPMS/ /usr/src/biopackages/SRPMS");
+  system("ln -s /net/biopackages/stable/$distro/$version/SRPMS/ /usr/src/biopackages/SRPMS");
   
   # create a list of RPMs installed on the base system
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
   
   # install bootstrap packages
   system("sudo yum -y install cvs perl-DateManip");
-  system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
-  system("rpm -Uvh http://yum.biopackages.net/biopackages/testing/fedora/5/noarch/biopackages-1.0.1-1.14.noarch.rpm");
+  system("rpm -Uvh http://yum.biopackages.net/biopackages/stable/$distro/$version/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
+  system("rpm -Uvh http://yum.biopackages.net/biopackages/stable/$distro/$version/noarch/biopackages-1.0.1-1.14.noarch.rpm");
 
 }
 
@@ -269,6 +325,3 @@ sub rl {
   if ($value eq "" && $default ne "") { return $default; }
   return $value;
 }
-
-
-
