@@ -147,8 +147,22 @@ if ($vmtype eq 'build' || $vmtype eq 'dev') {
   10.67.183.250   ulna.genomics.ctrl.ucla.edu     ulna ulna.i
   10.67.183.251   radius.genomics.ctrl.ucla.edu       radius radius.i das.i
 END
+  my @ifconfig;
+  my $line;
+  my @E;
+  my @F;
+  my $ipaddress;
+  @ifconfig=split(/\n/,`ifconfig`);
+  foreach $line (@ifconfig){
+    if($line =~ /inet addr:/){
+      @E=split(/:/,$line);
+      @F=split(/ /,$E[1]);
+      $ipaddress=$F[0];
+      last;
+    }
+  }
+  $contents.="  ".$ipaddress."   ".`hostname`;
   printfile("/etc/hosts", $contents);
-  
   # resolve
   system("mv /etc/resolv.conf /etc/resolv.conf.distro");
   $contents = <<END;
@@ -202,7 +216,8 @@ END
   
   system("cd /gridware/sge; export SGE_ROOT=/gridware/sge; ./install_execd");
   
-  print "FIXME: remove centos4.x86_64 from being an administrative host on SGE\n";
+  print "FIXME: remove node from being an administrative host on SGE\n";
+  print "FIXME: [root@neuron]# qconf -dh centos4.i386.JMM\n";
   
   # time server
   print "FIXME: need to install and configure ntp!\n";
@@ -210,8 +225,10 @@ END
   # setup cvs biopackages dir
   system("chown bpbuild:bpbuild /usr/src");
   system("chmod 775 /usr/src");
-  system('export CVS_RSH=ssh; cd /usr/src; su bpbuild -c \'cvs -z3 -d:ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages\'; cd /usr/src/biopackages; make prep');
-  
+  system("mkdir -p /usr/src/biopackages/RPMS");
+  system("cp /etc/resolv.conf.distro /etc/resolv.conf");
+  system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages\'; cd /usr/src/biopackages; make prep');
+
   # make symlinks
   # FIXME: make prep shouldn't create these!
   system("rm -rf /usr/src/biopackages/RPMS/*");
