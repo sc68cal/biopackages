@@ -27,6 +27,7 @@ perl-Storable
 #perl-XML-LibXML
 #perl-XML-SAX
 pgplot
+postgresql
 primer3
 R-RCurl
 rrdtool
