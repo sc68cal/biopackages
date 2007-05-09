@@ -1,4 +1,4 @@
-#$Id: postgresql-R.spec.in,v 1.1 2007/03/22 02:10:26 allenday Exp $
+#$Id: postgresql-R.spec.in,v 1.2 2007/05/09 00:09:22 allenday Exp $
 Summary: PostgreSQL client programs and libraries.
 Name: postgresql-R
 Version: 0.6.2alpha
@@ -48,8 +48,8 @@ ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0
 ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
 install -m 444 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
-mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
-echo %{_libdir}/R > $RPM_BUILD_ROOT/etc/ld.so.conf.d/R-%{_arch}.conf
+#mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
+#echo %{_libdir}/R > $RPM_BUILD_ROOT/etc/ld.so.conf.d/R-%{_arch}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,9 +63,12 @@ ldconfig;
 %defattr(-,root,root)
 %{_libdir}/pgsql/*
 %{_datadir}/pgsql/contrib/*
-/etc/ld.so.conf.d/*
+#/etc/ld.so.conf.d/*
 
 $Log: postgresql-R.spec.in,v $
+Revision 1.2  2007/05/09 00:09:22  allenday
+dropping ldconfig file, provided by R 2.5.0 now
+
 Revision 1.1  2007/03/22 02:10:26  allenday
 import
 
