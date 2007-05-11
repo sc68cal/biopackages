@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline.spec.in,v 1.4 2007/05/11 22:24:18 boconnor Exp $
+#$Id: solexa-pipeline.spec.in,v 1.5 2007/05/11 23:58:58 boconnor Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 0.2.2.5
@@ -30,7 +30,7 @@ documentation.html". A quick-start guide is given by "Pipeline usage".
 
 %prep
 rm -rf ${RPM_BUILD_ROOT}
-%setup -q 
+%setup -q -n SolexaPipeline-0.2.2.5
 mkdir -p ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
 echo "HERE FOO: ${RPM_BUILD_ROOT}/usr/local"
 
@@ -57,6 +57,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.5  2007/05/11 23:58:58  boconnor
+Updated solexa pipeline
+
 Revision 1.4  2007/05/11 22:24:18  boconnor
 Incremented version number
 
