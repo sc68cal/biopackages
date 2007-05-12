@@ -1,4 +1,4 @@
-#$Id: AmiGO.spec.in,v 1.8 2007/01/15 05:31:44 bpbuild Exp $
+#$Id: AmiGO.spec.in,v 1.9 2007/05/12 02:36:21 boconnor Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: AmiGO - Browse OBO ontologies stored in Chado
@@ -26,6 +26,7 @@ Source0: amigo.tar.gz
 Patch0: Session.pm.patch
 # this patch creates a new "theme" that let's you embed a AmiGO page within another page
 Patch1: amigo.patch
+Patch2: amigo_2.patch
 
 %description
 AmiGO - Browse OBO ontologies stored in Chado
@@ -34,6 +35,7 @@ AmiGO - Browse OBO ontologies stored in Chado
 %setup -qc %{name}-%{version}
 %patch0 -p1
 %patch1 -p0
+%patch2 -p0
 
 %build
 #find . -type d -name CVS -exec rm -rf {} \;
@@ -182,6 +184,9 @@ rm -rf $RPM_BUILD_ROOT
 #- New specfile
 
 $Log: AmiGO.spec.in,v $
+Revision 1.9  2007/05/12 02:36:21  boconnor
+Updated AmiGO spec for use with new patch
+
 Revision 1.8  2007/01/15 05:31:44  bpbuild
 Don't set hostname on build machine
 
