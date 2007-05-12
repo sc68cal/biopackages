@@ -1,10 +1,10 @@
-#$Id: solexa-pipeline.spec.in,v 1.5 2007/05/11 23:58:58 boconnor Exp $
+#$Id: solexa-pipeline.spec.in,v 1.6 2007/05/12 00:01:48 boconnor Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 0.2.2.5
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: %{name}-%{version}.tar.gz
+Source0: SolexaPipeline-0.2.2.5.tar.gz
 
 License: Solexa Public Source License
 Group: Bioinformatics
@@ -57,6 +57,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.6  2007/05/12 00:01:48  boconnor
+Updated solexa pipeline
+
 Revision 1.5  2007/05/11 23:58:58  boconnor
 Updated solexa pipeline
 
