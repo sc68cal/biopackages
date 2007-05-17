@@ -1,4 +1,4 @@
-#$Id: R-affyPLM.spec.in,v 1.2 2007/05/17 23:51:07 allenday Exp $
+#$Id: R-affyPLM.spec.in,v 1.3 2007/05/17 23:51:52 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,7 +9,7 @@ Name: R-affyPLM
 Summary: Methods for fitting probe-level models.
 License: GPL
 URL: http://www.bioconductor.org
-Source0: affyPLM_1.11.13.tar.gz
+Source0: affyPLM_%{version}.tar.gz
 #Requires: R >= 2.4.0, R-Biobase, R-affy, R-affyio, R-affydata, R-gcrma
 Requires: R >= 2.2.0, R-Bioconductor
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
