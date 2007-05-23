@@ -1,63 +1,125 @@
-#$Id: R.spec.in,v 1.15 2007/04/16 22:38:48 bpbuild Exp $
-# Authority: dag
+#$Id: R.spec.in,v 1.16 2007/05/23 00:58:38 bpbuild Exp $
+#Query the RPM database to find which release we are running.
+################################################################
 
-Summary: Language for data analysis and graphics
+#Try to keep all platform-specific definitions up here instead of putting
+#them in the body of the spec file.
+
+%if %(rpmquery fedora-release | grep -cv 'not installed$')
+    #Fedora Core - http://fedora.redhat.com
+    %define VER %(rpmquery --qf '%{VERSION}' fedora-release)
+    %define DISTTAG fc
+    %if %{VER} >= 3
+      %define RBROWSER firefox
+    %endif
+    %if %{VER} >= 4
+      %define GCC4 1
+      %define RPDFVIEWER evince
+    %endif
+    %if %{VER} >= 5
+      %define XORG 1
+    %endif
+    %if %{VER} >= 6
+      %define LINUXOPT 1
+      %define TEXINFOSPLIT 1 
+    %endif
+%endif
+
+%if %(rpmquery redhat-release | grep -v 'not installed$' | egrep -c -e '-[0-9](Client|Desktop|Server|[AEW]S)')
+    #Red Hat Enterprise Linux - http://www.redhat.com
+    %define VER %(rpmquery --qf '%{VERSION}' redhat-release | tr -cd [[:digit:]])	
+    %define DISTTAG rh
+    %if %{VER} >= 5
+      %define XORG 1
+      %define GCC4 1
+      %define RPDFVIEWER evince
+      %define LINUXOPT 1
+      %define TEXINFOSPLIT 1 
+    %endif
+%endif
+
+%if %(rpmquery centos-release | grep -v 'not installed$' | grep -c -e '-[0-9]-[0-9].[0-9]')
+    #CENTOS Linux - http://www.centos.org/ and ROCKS-Linux Cluster Installation
+    %define VER %(rpmquery --qf '%{VERSION}' centos-release)	
+    %define DISTTAG centos.
+%endif
+
+%if %(rpmquery sl-release | grep -cv 'not installed$')
+    #Scientific Linux. A RHEL work-alike -  http://www.scientificlinux.org
+    # note nasty use of \\. here grr!
+    %define VER %(rpmquery --qf '%{VERSION}' sl-release | sed 's/\\.//g')
+    %define DISTTAG SL
+%endif
+
+################################################################
+
+%if 0%{?GCC4}
+   %define FORTRAN gfortran
+%else
+   %define FORTRAN g77
+%endif
+
+%if 0%{?XORG}
+   %define X11DEV libXmu-devel libXt-devel
+%else
+   %define X11DEV XFree86-devel
+%endif
+
+%if 0%{?TEXINFOSPLIT}
+   %define TEXINFO texinfo texinfo-tex
+%else
+   %define TEXINFO texinfo
+%endif
+
+%if 0%{?LINUXOPT}
+#Optimization flags for recent linux systems: see appendix B.3.3 of R-admin
+   %define CFLAGS '-O3 -g -std=gnu99'
+   %define CXXFLAGS '-O3 -g'
+   %define FFLAGS '-O2 -g' 
+   %define LDFLAGS '-Bdirect,--hash-stype=both,-Wl,-O1'
+%else
+#Standard optimization flags for linux: see appendix A.1 of R-admin
+   %define CFLAGS '-O2 -g -std=gnu99'
+   %define CXXFLAGS '-O2 -g'
+   %define FFLAGS '-O2 -g'
+   %define LDFLAGS '-Wl,-O1'
+%endif
+
+################################################################
+#Query the RPM database to determine if an up-to-date version of 
+#texinfo/makeinfo is available
+
+%if %( x=$(rpmquery --qf '%{VERSION}' texinfo); if ((! $?)); then echo "$x" | { IFS=.; read maj min rest; echo $((maj*100+min>=407)); } ; else echo 0; fi )
+	# assume makeinfo is up to date (cf. configure), since texinfo is up to date
+	%define INFO 1
+%endif
+
+################################################################
+
+%define REL 2
+Summary: A language for data analysis and graphics
 Name: R
-Version: 2.4.1
+Version: 2.5.0
+Epoch: 2
 Release: %{revision}.%{distro}
+Source0: ftp://cran.r-project.org/pub/R/src/base/R-2/R-%{version}.tar.gz
+Patch0: R-%{version}-fedora.patch
 License: GPL
 Group: Applications/Engineering
-URL: http://www.r-project.org/
-
-Packager: Dag Wieers <dag@wieers.com>
-Vendor: Dag Apt Repository, http://dag.wieers.com/apt/
-
-Source: ftp://cran.r-project.org/pub/R/src/base/R-2/R-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-
-BuildRequires: gcc-c++, gcc-g77, tetex-latex, texinfo 
+Packager: Martyn Plummer <martyn.plummer@r-project.org>
+URL: http://www.r-project.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Icon: logosm-trans.gif
+BuildRequires: gcc-c++, gcc-%{FORTRAN}, gcc-objc
 BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
-BuildRequires: XFree86-devel
-BuildRequires: tcl-devel, tk-devel
-BuildRequires: blas >= 3.0, pcre-devel, zlib-devel
-BuildRequires: java-1.4.2-gcj-compat
-Requires: ggv, cups, firefox
-
-### These are the submodules that R provides. Sometimes R modules say they
-### depend on one of these submodules rather than just R. These are 
-### provided for packager convenience. (taken from Fedora)
-Provides: R-base = %{version}
-Provides: R-boot = 1.2
-Provides: R-class = %{version}
-Provides: R-cluster = 1.10.5
-Provides: R-datasets = %{version}
-Provides: R-foreign = 0.8
-Provides: R-graphics = %{version}
-Provides: R-grDevices = %{version}
-Provides: R-grid = %{version}
-Provides: R-KernSmooth = 2.22
-Provides: R-lattice = 0.13
-Provides: R-MASS = %{version}
-Provides: R-methods = %{version}
-Provides: R-mgcv = 1.3
-Provides: R-nlme = 3.1
-Provides: R-nnet = %{version}
-Provides: R-rpart = 3.1
-Provides: R-spatial = %{version}
-Provides: R-splines = %{version}
-Provides: R-stats = %{version}
-Provides: R-stats4 = %{version}
-Provides: R-survival = 2.24
-Provides: R-tcltk = %{version}
-Provides: R-tools = %{version}
-Provides: R-utils = %{version}
-Provides: R-VR = 7.2
+BuildRequires: tetex-latex, tcl-devel, tk-devel
+BuildRequires: %{X11DEV} %{TEXINFO}
 
 %description
-A language and environment for statistical computing and graphics. 
-R is similar to the award-winning S system, which was developed at 
-Bell Laboratories by John Chambers et al. It provides a wide 
-variety of statistical and graphical techniques (linear and
+`GNU S' - A language and environment for statistical computing and
+graphics. R is similar to the award-winning S system, which was
+developed at Bell Laboratories by John Chambers et al. It provides a
+wide variety of statistical and graphical techniques (linear and
 nonlinear modelling, statistical tests, time series analysis,
 classification, clustering, ...).
 
@@ -67,10 +129,25 @@ add additional functionality by defining new functions. For
 computationally intensive tasks, C, C++ and Fortran code can be linked
 and called at run time.
 
+%package devel
+Summary: files for development of R packages.
+Group: Applications/Engineering
+Requires: R = %{epoch}:%{version}-%{release}
+# You need all the BuildRequires for the development version
+Requires: gcc-c++, gcc-%{FORTRAN}
+Requires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
+Requires: %{X11DEV}
+Requires: tetex-latex, texinfo, tcl-devel, tk-devel
+%description devel
+Install R-devel if you are going to develop or compile R packages. 
+
+This is just a stub package containing the documentation on "Writing R
+Extensions".  However, installing it will ensure that the build
+environment for R packages is correct.
+
 %package -n libRmath
 Summary: standalone math library from the R project
 Group: Development/Libraries
-
 %description -n libRmath
 A standalone library of mathematical and statistical functions derived
 from the R project.  This packages provides the shared libRmath library.
@@ -78,111 +155,117 @@ from the R project.  This packages provides the shared libRmath library.
 %package -n libRmath-devel
 Summary: standalone math library from the R project
 Group: Development/Libraries
-Requires: libRmath = %{version}-%{release}
-
+Requires: libRmath = %{epoch}:%{version}
 %description -n libRmath-devel
 A standalone library of mathematical and statistical functions derived
 from the R project.  This packages provides the static libRmath library
 and header files.
 
-%package devel
-Summary: Header files, libraries and development documentation for %{name}.
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-Requires: gcc-c++, gcc-g77, tetex-latex, texinfo 
-Requires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
-Requires: XFree86-devel, tcl-devel, tk-devel
-
-%description devel
-This package contains the header files, static libraries and development
-documentation for %{name}. If you like to develop programs using %{name},
-you will need to install %{name}-devel.
-
 %prep
-%setup
-
-echo "%{_libdir}/R/lib/" >R.ld.conf
+%setup -q 
+%patch0 -p1
 
 %build
-export F77="g77"
-export R_BROWSER="%{_bindir}/firefox"
-export R_PDFVIEWER="%{_bindir}/ggv"
 export R_PRINTCMD="lpr"
-%configure \
-	--enable-R-shlib \
-	--with-system-bzlib \
-	--with-system-pcre \
-	--with-system-zlib \
-	--with-tcl-config="%{_libdir}/tclConfig.sh" \
-	--with-tk-config="%{_libdir}/tkConfig.sh"
-%{__make}
-%{__make} -C src/nmath/standalone
-#make check-all
-%{__make} pdf info
+export R_BROWSER="%{_bindir}/mozilla" 
+%{?RBROWSER: R_BROWSER=%{_bindir}/%{RBROWSER}}
+export R_PDFVIEWER="%{_bindir}/ggv"
+%{?RPDFVIEWER: R_PDFVIEWER=%{_bindir}/%{RPDFVIEWER}}
+export F77=%{FORTRAN}
+export FC=%{FORTRAN}
+export CFLAGS=%{CFLAGS}
+export CXXFLAGS=%{CXXFLAGS}
+export FFLAGS=%{FFLAGS}
+export LDFLAGS=%{LDFLAGS}
+( %configure \
+    --without-blas \
+    --with-tcl-config=%{_libdir}/tclConfig.sh \
+    --with-tk-config=%{_libdir}/tkConfig.sh \
+    --enable-R-shlib )\
+ | grep -A30 'R is now' - > CAPABILITIES
+make 
+(cd src/nmath/standalone; make)
+##make check-all
+make pdf
+#We can only "make info" if we have an up to date version of texinfo
+%{?INFO: make info}
 
 %install
-%{__rm} -rf %{buildroot}
-%makeinstall install-info
-%makeinstall -C src/nmath/standalone
 
-%{__perl} -pi -e 's|R_HOME_DIR=.*|R_HOME_DIR=%{_libdir}/R|' bin/R
-%{__install} -Dp -m0755 bin/R %{buildroot}%{_libdir}/R/bin/R
-%{__install} -Dp -m0755 bin/R %{buildroot}%{_bindir}/R
+%makeinstall install-pdf %{?INFO:install-info} 
+rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir.old
 
-%{__install} -Dp -m0644 R.ld.conf %{buildroot}%{_sysconfdir}/ld.so.conf.d/R-%{_target}.conf
+#Install libRmath files
+(cd src/nmath/standalone; make install \
+    includedir=${RPM_BUILD_ROOT}%{_includedir} \
+    libdir=${RPM_BUILD_ROOT}%{_libdir})
 
-### Clean up buildroot
-%{__rm} -f %{buildroot}%{_libdir}/R/{AUTHORS,COPYING*,COPYRIGHTS,FAQ,NEWS,ONEWS,RESOURCES,THANKS}
-
-%post 
-/sbin/install-info %{_infodir}/R-FAQ.info.gz %{_infodir}/dir 2>/dev/null
-/sbin/install-info %{_infodir}/R-admin.info.gz %{_infodir}/dir 2>/dev/null
-/sbin/install-info %{_infodir}/R-exts.info.gz %{_infodir}/dir 2>/dev/null
-/sbin/install-info %{_infodir}/R-intro.info.gz %{_infodir}/dir 2>/dev/null
-/sbin/install-info %{_infodir}/R-lang.info.gz %{_infodir}/dir 2>/dev/null
-/sbin/ldconfig
-
-%preun 
-/sbin/install-info --delete R-FAQ %{_infodir}/dir 2>/dev/null
-/sbin/install-info --delete R-admin %{_infodir}/dir 2>/dev/null
-/sbin/install-info --delete R-exts %{_infodir}/dir 2>/dev/null
-/sbin/install-info --delete R-intro %{_infodir}/dir 2>/dev/null
-/sbin/install-info --delete R-lang %{_infodir}/dir 2>/dev/null
-
-%postun -p /sbin/ldconfig
-
-%post -n libRmath -p /sbin/ldconfig
-%postun -n libRmath -p /sbin/ldconfig
-
-%clean
-%{__rm} -rf %{buildroot}
-
+mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
+echo "%{_libdir}/R/lib" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 %files
-%defattr(-, root, root, 0755)
-%doc NEWS ONEWS README VERSION doc/AUTHORS doc/COPYING* doc/COPYRIGHTS doc/FAQ
-%doc doc/RESOURCES doc/THANKS doc/manual/R-admin.pdf doc/manual/R-data.pdf
-%doc doc/manual/R-FAQ.pdf doc/manual/R-intro.pdf doc/manual/R-lang.pdf
-%doc %{_mandir}/man1/*.1*
-%doc %{_infodir}/R-*.info*
-%config %{_sysconfdir}/ld.so.conf.d/R-%{_target}.conf
-%{_bindir}/R
-%{_libdir}/R/
-%exclude %{_datadir}/info/dir*
+%defattr(-, root, root)
+%{_bindir}/R*
+%{_libdir}/R
+%{?INFO:%{_infodir}/R-*.info*}
+%{_mandir}/man1/*
+/etc/ld.so.conf.d/*
+%doc CAPABILITIES
 
 %files devel
-%defattr(-, root, root, 0755)
+%defattr(-, root, root)
+%{_libdir}/pkgconfig/libR.pc
 %doc doc/manual/R-exts.pdf
 
 %files -n libRmath
-%defattr(-, root, root, 0755)
+%defattr(-, root, root)
 %{_libdir}/libRmath.so
 
 %files -n libRmath-devel
-%defattr(-, root, root, 0755)
-%{_includedir}/Rmath.h
+%defattr(-, root, root)
+%{_libdir}/pkgconfig/libRmath.pc
 %{_libdir}/libRmath.a
+%{_includedir}/Rmath.h
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%if 0%{?INFO}
+
+%post 
+   # Create directory entries for info files
+   # (optional doc files, so we must check that they are installed)
+   for doc in admin data exts FAQ intro lang; do
+      file=%{_infodir}/R-${doc}.info.gz
+      if [ -e $file ]; then
+         /sbin/install-info ${file} %{_infodir}/dir 2>/dev/null
+      fi
+   done
+   /sbin/ldconfig
+
+%preun 
+if [ $1 = 0 ]; then
+   # Delete directory entries for info files (if they were installed)
+   for doc in admin data exts FAQ intro lang; do
+      file=%{_infodir}/R-${doc}.info.gz
+      if [ -e ${file} ]; then
+         /sbin/install-info --delete R-${doc} %{_infodir}/dir 2>/dev/null
+      fi
+   done
+fi
+
+%endif
+
+%postun 
+/sbin/ldconfig
+
+%post -n libRmath
+/sbin/ldconfig
+
+%postun -n libRmath
+/sbin/ldconfig
 
 $Log: R.spec.in,v $
-Revision 1.15  2007/04/16 22:38:48  bpbuild
-imported R from dag, again
+Revision 1.16  2007/05/23 00:58:38  bpbuild
+imported 2.5.0 from CRAN
 
