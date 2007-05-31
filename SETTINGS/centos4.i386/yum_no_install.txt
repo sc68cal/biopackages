@@ -43,3 +43,4 @@ perl-DBD-Pg
 perl-DBI
 fftw3-devel
 fftw3
+R
