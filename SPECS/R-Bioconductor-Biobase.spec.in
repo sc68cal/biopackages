@@ -1,10 +1,10 @@
-#$Id: R-Bioconductor-Biobase.spec.in,v 1.6 2006/07/15 01:55:18 boconnor Exp $
+#$Id: R-Bioconductor-Biobase.spec.in,v 1.7 2007/06/06 04:17:43 bpbuild Exp $
 %define	base	Biobase
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.8.0
+Version: 1.14.0
 Release: %{revision}.%{distro}
 Name: R-Bioconductor-%{base}
 Summary: Tools for sequence matching of probes on arrays
@@ -12,7 +12,7 @@ Group: Applications/Engineering
 License: GPL
 URL: http://www.r-project.org
 Source0: %{base}_%{version}.tar.gz
-Requires: R >= 2.2.0
+Requires: R >= 2.5.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.2.0, biopackages
 
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Bioconductor-Biobase.spec.in,v $
+Revision 1.7  2007/06/06 04:17:43  bpbuild
+trying 1.14.0
+
 Revision 1.6  2006/07/15 01:55:18  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
