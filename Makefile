@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.82 2007/06/06 04:05:38 bpbuild Exp $
+#$Id: Makefile,v 1.83 2007/06/12 22:57:39 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -68,14 +68,14 @@ cluster_postbuild :: report migrate
 ## FIXME: first line is a temporary fix cause make prep causes too many levels of symlinks
 report ::
 	rm -Rf /usr/src/biopackages/SETTINGS/*/{SCRIPTS/SCRIPTS,LOGS/LOGS,DEP_TREES/DEP_TREES}
-	sudo mkdir -p /biopackages/report
+	mkdir -p /biopackages/report
 	perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
-	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
-	sudo rsync -rvL --progress /usr/src/biopackages/SETTINGS /biopackages/report/
+	cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
+	rsync -rvL --progress /usr/src/biopackages/SETTINGS /biopackages/report/
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 migrate :: 
-	for i in /biopackages/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	for i in /biopackages/testing/*/*/*/*.rpm ; do mv -vf $$i $${i/testing/stable} ; done
 	$(MAKE) repo
 
 # perform all actions related to generation and cleanliness of yum repository
@@ -84,11 +84,10 @@ repo : repo_headers repo_permissions
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
 repo_headers ::
-	sudo make -C /biopackages all
+	make -C /biopackages all
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
-	sudo chown -Rf root:root /biopackages
 	sudo chown -Rf bpbuild:bpbuild /biopackages/testing
 
 all :: specs
