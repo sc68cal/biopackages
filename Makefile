@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.83 2007/06/12 22:57:39 bpbuild Exp $
+#$Id: Makefile,v 1.84 2007/06/12 23:08:07 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -88,7 +88,9 @@ repo_headers ::
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
+	sudo chown -Rf bpbuild:bpbuild /biopackages/stable
 	sudo chown -Rf bpbuild:bpbuild /biopackages/testing
+	sudo chown -Rf bpbuild:bpbuild /biopackages/report	
 
 all :: specs
 
