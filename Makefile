@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.86 2007/06/13 01:32:31 bpbuild Exp $
+#$Id: Makefile,v 1.87 2007/06/13 01:59:42 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -84,7 +84,7 @@ repo : repo_headers repo_permissions
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
 repo_headers ::
-	sudo $(MAKE) -C /biopackages all
+	sudo -H $(MAKE) -C /biopackages all
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
