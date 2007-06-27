@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.2 2007/06/27 07:57:00 bpbuild Exp $
+#$Id: spread.spec.in,v 1.3 2007/06/27 08:00:16 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -54,9 +54,12 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 %files -f %{name}-%{version}-%{release}-filelist
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.3  2007/06/27 08:00:16  bpbuild
+clean
+
 Revision 1.2  2007/06/27 07:57:00  bpbuild
 *** empty log message ***
 
