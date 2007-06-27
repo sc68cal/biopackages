@@ -1,0 +1,51 @@
+#$Id: spread.spec.in,v 1.1 2007/06/27 02:25:14 bpbuild Exp $
+Name: spread
+Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
+Version: 4.0.0
+Release: %{revision}.%{distro}
+License: Spread Open Source License
+URL: http://www.spread.org
+Packager: Jordan Mendler <jmendler@ucla.edu>
+Group: Development/Misc
+Source: spread-src-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: gcc
+
+%description
+Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks. Spread functions as a unified message bus for distributed applications, and provides highly tuned application-level multicast, group communication, and point to point support. Spread services range from reliable messaging to fully ordered messages with delivery guarantees.
+
+Spread can be used in many distributed applications that require high reliability, high performance, and robust communication among various subsets of members. The toolkit is designed to encapsulate the challenging aspects of asynchronous networks and enable the construction of reliable and scalable distributed applications.
+
+Spread consists of a library that user applications are linked with, a binary daemon which runs on each computer that is part of the processor group, and various utility and demonstration programs.
+
+Some of the services and benefits provided by Spread:
+    * Reliable and scalable messaging and group communication.
+    * A very powerful but simple API simplifies the construction of distributed architectures.
+    * Easy to use, deploy and maintain.
+    * Highly scalable from one local area network to complex wide area networks.
+    * Supports thousands of groups with different sets of members.
+    * Enables message reliability in the presence of machine failures, process crashes and recoveries, and network partitions and merges.
+    * Provides a range of reliability, ordering and stability guarantees for messages.
+    * Emphasis on robustness and high performance.
+    * Completely distributed algorithms with no central point of failure.
+
+%prep
+%setup -n %{name}-src-%{version} 
+
+%build
+./configure
+make
+
+%install
+rm -fr $RPM_BUILD_ROOT
+make install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+$Log: spread.spec.in,v $
+Revision 1.1  2007/06/27 02:25:14  bpbuild
+new SPEC
+
