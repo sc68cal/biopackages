@@ -1,4 +1,4 @@
-#$Id: hobbit.spec.in,v 1.1 2007/06/27 20:57:45 bpbuild Exp $
+#$Id: hobbit.spec.in,v 1.2 2007/06/27 21:05:52 bpbuild Exp $
 Name: hobbit
 Version: 4.2.0
 Release: %{version}.%{distro}
@@ -12,6 +12,7 @@ Source3: hobbit-client.init
 Source4: hobbit-client.default
 Summary: Hobbit network monitor
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires : gcc
 #BuildRequires: openssl-devel
 #BuildRequires: pcre-devel
 #BuildRequires: rrdtool-devel
@@ -175,6 +176,9 @@ chkconfig --del hobbit-client
 %attr(750, root, hobbit) /usr/lib/hobbit/client/bin/clientupdate
 
 $Log: hobbit.spec.in,v $
+Revision 1.2  2007/06/27 21:05:52  bpbuild
+needs gcc
+
 Revision 1.1  2007/06/27 20:57:45  bpbuild
 imported from SourceForge SRPM
 
