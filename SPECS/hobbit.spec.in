@@ -1,7 +1,7 @@
-#$Id: hobbit.spec.in,v 1.4 2007/06/28 05:53:32 bpbuild Exp $
+#$Id: hobbit.spec.in,v 1.5 2007/06/28 05:58:10 bpbuild Exp $
 Name: hobbit
 Version: 4.2.0
-Release: %{version}.%{distro}
+Release: %{revision}.%{distro}
 Group: Networking/Daemons
 URL: http://hobbitmon.sourceforge.net/
 License: GPL
@@ -176,6 +176,9 @@ chkconfig --del hobbit-client
 %attr(750, root, hobbit) /usr/lib/hobbit/client/bin/clientupdate
 
 $Log: hobbit.spec.in,v $
+Revision 1.5  2007/06/28 05:58:10  bpbuild
+revision, not version in Release
+
 Revision 1.4  2007/06/28 05:53:32  bpbuild
 Requires c++ compiler
 
