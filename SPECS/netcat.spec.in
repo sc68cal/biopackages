@@ -1,4 +1,4 @@
-#$Id: netcat.spec.in,v 1.2 2007/07/02 19:04:55 bpbuild Exp $
+#$Id: netcat.spec.in,v 1.3 2007/07/02 19:10:54 bpbuild Exp $
 Summary: Networking utility that manages TCP and UDP connections
 Name: netcat
 Version: 0.7.1
@@ -44,7 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING ChangeLog NEWS README TODO doc/migration doc/drafts
 
 %{_bindir}/netcat
-%{_bindir}/nc
+#%{_bindir}/nc
 
 %{_infodir}/*
 %{_mandir}/*/*
@@ -58,6 +58,9 @@ if [ "$1" = 0 ]; then
 fi
 
 $Log: netcat.spec.in,v $
+Revision 1.3  2007/07/02 19:10:54  bpbuild
+removing /usr/bin/nc -> netcat symlink because it conflicts with netcdf
+
 Revision 1.2  2007/07/02 19:04:55  bpbuild
 requires GCC
 
