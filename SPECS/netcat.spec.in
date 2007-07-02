@@ -1,0 +1,62 @@
+#$Id: netcat.spec.in,v 1.1 2007/07/02 19:03:50 bpbuild Exp $
+Summary: Networking utility that manages TCP and UDP connections
+Name: netcat
+Version: 0.7.1
+Release: 1
+License: GPL
+Group: Applications/Internet
+URL: http://netcat.sourceforge.net/
+Source: http://prdownloads.sourceforge.net/netcat/netcat-%{version}.tar.bz2
+Packager: Giovanni Giacobbi <giovanni@giacobbi.net>
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+
+%description
+Netcat is a featured networking utility which reads and writes data across
+network connections, using the TCP/IP protocol.
+It is designed to be a reliable "back-end" tool that can be used directly or
+easily driven by other programs and scripts. At the same time, it is a
+feature-rich network debugging and exploration tool, since it can create
+almost any kind of connection you would need and has several interesting
+built-in capabilities.
+
+%prep
+%setup -q
+
+%build
+%configure
+#configure --program-suffix= --program-prefix=
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR="$RPM_BUILD_ROOT"
+
+# ugly hack in order to include the structured directory in the rpm
+rm -f doc/drafts/Makefile*
+
+%find_lang %name
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}.lang
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog NEWS README TODO doc/migration doc/drafts
+
+%{_bindir}/netcat
+%{_bindir}/nc
+
+%{_infodir}/*
+%{_mandir}/*/*
+
+%post
+/sbin/install-info %{_infodir}/netcat.info.gz %{_infodir}/dir
+
+%preun
+if [ "$1" = 0 ]; then
+    /sbin/install-info --delete %{_infodir}/netcat.info.gz %{_infodir}/dir
+fi
+
+$Log: netcat.spec.in,v $
+Revision 1.1  2007/07/02 19:03:50  bpbuild
+imported from netcat
+
