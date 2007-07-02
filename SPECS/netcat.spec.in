@@ -1,8 +1,8 @@
-#$Id: netcat.spec.in,v 1.3 2007/07/02 19:10:54 bpbuild Exp $
+#$Id: netcat.spec.in,v 1.4 2007/07/02 19:14:36 bpbuild Exp $
 Summary: Networking utility that manages TCP and UDP connections
 Name: netcat
 Version: 0.7.1
-Release: 1
+Release: %{revision}.%{distro}
 License: GPL
 Group: Applications/Internet
 URL: http://netcat.sourceforge.net/
@@ -58,6 +58,9 @@ if [ "$1" = 0 ]; then
 fi
 
 $Log: netcat.spec.in,v $
+Revision 1.4  2007/07/02 19:14:36  bpbuild
+fixed Revision
+
 Revision 1.3  2007/07/02 19:10:54  bpbuild
 removing /usr/bin/nc -> netcat symlink because it conflicts with netcdf
 
