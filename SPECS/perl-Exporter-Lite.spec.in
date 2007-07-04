@@ -1,4 +1,4 @@
-#$Id#
+#$Id: perl-Exporter-Lite.spec.in,v 1.3 2007/07/04 05:42:33 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Exporter-Lite.spec.in,v $
+Revision 1.3  2007/07/04 05:42:33  bpbuild
+fixed Id tag
+
 Revision 1.2  2006/09/09 16:25:43  jmendler
 noarch
 
