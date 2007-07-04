@@ -4,7 +4,7 @@
 %define dfi %(which desktop-file-install &>/dev/null; echo $?)
 
 Summary: Library used to play AVI streams.
-Name: avifile
+Name: libavifile
 Version: 0.7.38
 Release: %{revision}.%{distro}
 License: GPL
@@ -152,6 +152,9 @@ EOF
 #exclude %{_libdir}/avifile0.7/vidix/*.la
 
 $Log: libavifile.spec.in,v $
+Revision 1.2  2007/07/04 05:19:37  bpbuild
+updating spec to reflect new package name
+
 Revision 1.1  2007/07/04 05:18:04  bpbuild
 renamed from avifile to libavifile
 
