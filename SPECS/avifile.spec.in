@@ -1,4 +1,4 @@
-#$Id: avifile.spec.in,v 1.1 2007/07/04 06:57:53 bpbuild Exp $
+#$Id: avifile.spec.in,v 1.2 2007/07/04 07:07:57 bpbuild Exp $
 Summary: The avifile library used to play AVI streams, including DivX ;-)
 Name: avifile
 Version: 0.7.45
@@ -14,7 +14,9 @@ BuildRequires: gcc-c++
 BuildRequires: autoconf, automake14, libtool, gettext
 BuildRequires: qt-devel >= 2.0.0, SDL-devel >= 1.0.0, esound-devel
 BuildRequires: libvorbis-devel, libjpeg-devel, libpng-devel, libmng-devel
-BuildRequires: divx4linux-devel, xvidcore-devel, faad2-devel, faac-devel, freetype-devel >= 2.0
+BuildRequires: xvidcore-devel, faad2-devel, faac-devel, freetype-devel >= 2.0
+#BuildRequires: divx4linux-devel
+BuildRequires: divx4linux
 BuildRequires: libXft-devel
 BuildRequires: zlib-devel
 BuildRequires: a52dec-devel
@@ -112,6 +114,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/avifile.pc
 
 $Log: avifile.spec.in,v $
+Revision 1.2  2007/07/04 07:07:57  bpbuild
+fixing dep
+
 Revision 1.1  2007/07/04 06:57:53  bpbuild
 imported from atrpms
 
