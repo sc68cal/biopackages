@@ -1,4 +1,4 @@
-# $Id
+#$Id
 
 %define	date 20030428
 %define real_version 505
@@ -65,6 +65,9 @@ done
 %{_includedir}/*.h
 
 $Log: divx4linux.spec.in,v $
+Revision 1.2  2007/07/04 05:34:38  bpbuild
+fixed Id tag
+
 Revision 1.1  2007/07/04 05:29:49  bpbuild
 imported from dag
 
