@@ -1,4 +1,4 @@
-#$Id: avifile.spec.in,v 1.3 2007/07/04 07:10:44 bpbuild Exp $
+#$Id: avifile.spec.in,v 1.4 2007/07/04 07:40:28 bpbuild Exp $
 Summary: The avifile library used to play AVI streams, including DivX ;-)
 Name: avifile
 Version: 0.7.45
@@ -76,12 +76,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING ChangeLog README doc
 %{_bindir}/avibench
-%{_bindir}/avicap
+#%{_bindir}/avicap
 %{_bindir}/avicat
 %{_bindir}/avimake
-%{_bindir}/aviplay
+#%{_bindir}/aviplay
 %{_bindir}/avirec
-%{_bindir}/avirecompress
+#%{_bindir}/avirecompress
 %{_bindir}/avitype
 %attr(4755, root, root) %{_bindir}/kv4lsetup
 %{_libdir}/*.so.*
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/avifile.pc
 
 $Log: avifile.spec.in,v $
+Revision 1.4  2007/07/04 07:40:28  bpbuild
+removed unbuilt binaries
+
 Revision 1.3  2007/07/04 07:10:44  bpbuild
 trying build with divx4linux instead of divx4linux-devel
 
