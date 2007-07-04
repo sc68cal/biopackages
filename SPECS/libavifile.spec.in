@@ -1,11 +1,11 @@
-#$Id: libavifile.spec.in,v 1.4 2007/07/04 06:00:46 bpbuild Exp $
+#$Id: libavifile.spec.in,v 1.5 2007/07/04 06:28:31 bpbuild Exp $
 
 %define	date 20030710
 %define dfi %(which desktop-file-install &>/dev/null; echo $?)
 
 Summary: Library used to play AVI streams.
 Name: libavifile
-Version: 0.7.38
+Version: 0.7.45
 Release: %{revision}.%{distro}
 License: GPL
 Group: Applications/Multimedia
@@ -14,8 +14,7 @@ URL: http://avifile.sf.net/
 Packager: Dag Wieers <dag@wieers.com>
 Vendor: Dag Apt Repository, http://dag.wieers.com/apt/
 
-Source: http://dl.sf.net/avifile/avifile-0.7-%{version}.tar.gz
-#Source: http://dl.sf.net/avifile/avifile-%{version}-%{date}.tgz
+Source: http://dl.sf.net/avifile/avifile-0.7-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Prefix: %{_prefix}
 
@@ -45,7 +44,6 @@ documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
 %prep
-#%setup -n %{name}0.7-%{version}
 %setup -n avifile-0.7-%{version}
 
 %{__cat} <<EOF >%{name}.desktop
@@ -152,6 +150,9 @@ EOF
 #exclude %{_libdir}/avifile0.7/vidix/*.la
 
 $Log: libavifile.spec.in,v $
+Revision 1.5  2007/07/04 06:28:31  bpbuild
+updating version
+
 Revision 1.4  2007/07/04 06:00:46  bpbuild
 updated setup location
 
