@@ -1,4 +1,4 @@
-# $Id
+#$Id: libavifile.spec.in,v 1.3 2007/07/04 05:38:43 bpbuild Exp $
 
 %define	date 20030710
 %define dfi %(which desktop-file-install &>/dev/null; echo $?)
@@ -152,6 +152,9 @@ EOF
 #exclude %{_libdir}/avifile0.7/vidix/*.la
 
 $Log: libavifile.spec.in,v $
+Revision 1.3  2007/07/04 05:38:43  bpbuild
+cleanup
+
 Revision 1.2  2007/07/04 05:19:37  bpbuild
 updating spec to reflect new package name
 
