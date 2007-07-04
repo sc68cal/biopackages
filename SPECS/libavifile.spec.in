@@ -1,4 +1,4 @@
-#$Id: libavifile.spec.in,v 1.3 2007/07/04 05:38:43 bpbuild Exp $
+#$Id: libavifile.spec.in,v 1.4 2007/07/04 06:00:46 bpbuild Exp $
 
 %define	date 20030710
 %define dfi %(which desktop-file-install &>/dev/null; echo $?)
@@ -16,7 +16,7 @@ Vendor: Dag Apt Repository, http://dag.wieers.com/apt/
 
 Source: http://dl.sf.net/avifile/avifile-0.7-%{version}.tar.gz
 #Source: http://dl.sf.net/avifile/avifile-%{version}-%{date}.tgz
-BuildRoot: %{_tmppath}/root-%{name}-%{version}
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Prefix: %{_prefix}
 
 BuildRequires: libstdc++-devel
@@ -46,7 +46,7 @@ you will need to install %{name}-devel.
 
 %prep
 #%setup -n %{name}0.7-%{version}
-%setup -n %{name}-0.7-%{version}
+%setup -n avifile-0.7-%{version}
 
 %{__cat} <<EOF >%{name}.desktop
 [Desktop Entry]
@@ -152,6 +152,9 @@ EOF
 #exclude %{_libdir}/avifile0.7/vidix/*.la
 
 $Log: libavifile.spec.in,v $
+Revision 1.4  2007/07/04 06:00:46  bpbuild
+updated setup location
+
 Revision 1.3  2007/07/04 05:38:43  bpbuild
 cleanup
 
