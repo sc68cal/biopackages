@@ -1,4 +1,4 @@
-#$Id: swftools.spec.in,v 1.1 2007/07/04 02:32:03 bpbuild Exp $
+#$Id: swftools.spec.in,v 1.2 2007/07/04 05:16:39 bpbuild Exp $
 # Authority: dag
 
 Summary: Tools for SWF (Flash) animations under linux
@@ -17,7 +17,7 @@ Patch0: swftools-0.8.0-destdir.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: bison, flex, gcc >= 3.0, zlib-devel, libjpeg-devel, t1lib-devel
-#BuildRequires: libavifile-devel
+BuildRequires: avifile-devel
 Conflicts: ming
 
 %description
@@ -72,6 +72,9 @@ SWF Tools is a collection of SWF manipulation and generation utilities.
 %{_datadir}/swftools/
 
 $Log: swftools.spec.in,v $
+Revision 1.2  2007/07/04 05:16:39  bpbuild
+avifile-devel instead of libavifile-devel
+
 Revision 1.1  2007/07/04 02:32:03  bpbuild
 imported from dag
 
