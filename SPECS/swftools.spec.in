@@ -1,4 +1,4 @@
-#$Id: swftools.spec.in,v 1.8 2007/07/06 01:46:28 bpbuild Exp $
+#$Id: swftools.spec.in,v 1.9 2007/07/06 01:47:12 bpbuild Exp $
 
 Summary: Tools for SWF (Flash) animations under linux
 Name: swftools
@@ -28,8 +28,7 @@ rm -rf $RPM_BUILD_ROOT
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelis
-t
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
@@ -44,6 +43,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: swftools.spec.in,v $
+Revision 1.9  2007/07/06 01:47:12  bpbuild
+remove accidental newline
+
 Revision 1.8  2007/07/06 01:46:28  bpbuild
 c++ not g++
 
