@@ -1,4 +1,4 @@
-#$Id: swftools.spec.in,v 1.10 2007/07/06 02:33:16 bpbuild Exp $
+#$Id: swftools.spec.in,v 1.11 2007/07/06 04:51:42 bpbuild Exp $
 
 Summary: Tools for SWF (Flash) animations under linux
 Name: swftools
@@ -10,7 +10,7 @@ URL: http://www.swftools.org/
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Source: http://www.swftools.org/swftools-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc, gcc-c++
+BuildRequires: gcc, gcc-c++, zlib-devel, libjpeg-devel, t1lib-devel, freetype-devel, lame-devel
 
 %description
 SWF Tools is a collection of SWF manipulation and generation utilities.
@@ -48,6 +48,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 #rm -rf $RPM_BUILD_ROOT
 
 $Log: swftools.spec.in,v $
+Revision 1.11  2007/07/06 04:51:42  bpbuild
+added deps
+
 Revision 1.10  2007/07/06 02:33:16  bpbuild
 unlink and relink so does not point to BuildRoot
 
