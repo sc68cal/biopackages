@@ -1,4 +1,4 @@
-#$Id: swftools.spec.in,v 1.9 2007/07/06 01:47:12 bpbuild Exp $
+#$Id: swftools.spec.in,v 1.10 2007/07/06 02:33:16 bpbuild Exp $
 
 Summary: Tools for SWF (Flash) animations under linux
 Name: swftools
@@ -26,6 +26,11 @@ make
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
+#Unlink and relink so not pointing to BuildRoot
+for i in default_loader.swf default_viewer.swf ; do unlink $RPM_BUILD_ROOT/usr/share/swftools/swfs/$i; done
+ln -s /usr/share/swftools/swfs/tessel_loader.swf $RPM_BUILD_ROOT/usr/share/swftools/swfs/default_loader.swf
+ln -s /usr/share/swftools/swfs/simple_viewer.swf $RPM_BUILD_ROOT/usr/share/swftools/swfs/default_viewer.swf
+
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
@@ -40,9 +45,12 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 %files -f %{name}-%{version}-%{release}-filelist
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 $Log: swftools.spec.in,v $
+Revision 1.10  2007/07/06 02:33:16  bpbuild
+unlink and relink so does not point to BuildRoot
+
 Revision 1.9  2007/07/06 01:47:12  bpbuild
 remove accidental newline
 
