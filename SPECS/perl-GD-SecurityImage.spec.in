@@ -1,0 +1,50 @@
+#$Id: perl-GD-SecurityImage.spec.in,v 1.1 2007/07/09 22:32:13 bpbuild Exp $
+Name: perl-GD-SecurityImage
+Summary: This module gives you a basic interface to create Security Images.
+Version: 1.64
+Release: %{revision}.%{distro}
+License: GPL
+URL: http://search.cpan.org/~burak/GD-SecurityImage-1.64/lib/GD/SecurityImage.pm
+Packager: Jordan Mendler <jmendler@ucla.edu>
+Group: Development/Tools
+Source: GD-SecurityImage-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, perl-GD
+
+%description
+The (so called) "Security Images" are so popular. Most internet software use these in their registration screens to block robot programs (which may register tons of fake member accounts). Security images are basicaly, graphical CAPTCHAs (Completely Automated Public Turing Test to Tell Computers and Humans Apart). This module gives you a basic interface to create such an image. The final output is the actual graphic data, the mime type of the graphic and the created random string. The module also has some "styles" that are used to create the background (or foreground) of the image.
+
+This module is just an image generator. Not a captcha handler. The validation of the generated graphic is left to your programming taste. But there are some captcha handlers for several Perl FrameWorks. If you are an user of one of these frameworks, see "GD::SecurityImage Implementations" in "SEE ALSO" section for information
+
+%prep
+%setup -n GD-SecurityImage-%{version}
+
+%build
+perl Makefile.PL
+make
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+$Log: perl-GD-SecurityImage.spec.in,v $
+Revision 1.1  2007/07/09 22:32:13  bpbuild
+new spec.in
+
