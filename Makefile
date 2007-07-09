@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.89 2007/07/09 22:13:06 bpbuild Exp $
+#$Id: Makefile,v 1.90 2007/07/09 22:16:30 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -54,7 +54,7 @@ cluster_buildprep ::
 
 cluster_buildclean ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -p 5 -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
-
+	
 cluster_cvsupdate ::
 	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsetenv CVS_RSH ssh\ncvs update\n" > SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; qsub -cwd -p 4 -o SETTINGS/$$file/LOGS/cluster_cvsupdate.stdout -e SETTINGS/$$file/LOGS/cluster_cvsupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; done' | /bin/bash
 
@@ -104,6 +104,8 @@ buildclean ::
 	$(RM_RF) SPECS/*.built
 	$(RM_RF) SPECS/*.cbuilt
 	$(RM_RF) SPECS/*.rbuilt
+	$(RM_RF) tmp/*
+	$(RM_RF) BUILD/*
 
 sources ::
 	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "$(MAKE) symlink\n" : print "$(MAKE) rsync\n"' | /bin/bash
