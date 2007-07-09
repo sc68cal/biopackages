@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.90 2007/07/09 22:16:30 bpbuild Exp $
+#$Id: Makefile,v 1.91 2007/07/09 22:18:21 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -39,9 +39,9 @@ update ::
 cluster_buildprep ::
 ##Prepares the cluster for building -- either for cluster_buildall or make %.cbuilt's
 ##Various cluster prep steps are given higher priorities to insure execution before build jobs
-#buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed
+#buildclean: gets rid of all .cbuilt targets on neuron, so will cleanly build everything even if target SPECs have not changed, also cleans BUILD and tmp directories
 #prep/cvs update: locally on neuron
-#cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes
+#cluster_buildclean: removes .built and .rbuilt targets on all cluster nodes, also cleans BUILD and tmp directories
 #cluster_prep: makes sure all sources directories are set up on cluster nodes
 #cluster_cvsupdate: cvs update all cluster nodes
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
