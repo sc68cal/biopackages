@@ -1,4 +1,4 @@
-#$Id: perl-GD-SecurityImage.spec.in,v 1.1 2007/07/09 22:32:13 bpbuild Exp $
+#$Id: perl-GD-SecurityImage.spec.in,v 1.2 2007/07/09 23:33:37 bpbuild Exp $
 Name: perl-GD-SecurityImage
 Summary: This module gives you a basic interface to create Security Images.
 Version: 1.64
@@ -20,7 +20,7 @@ This module is just an image generator. Not a captcha handler. The validation of
 %setup -n GD-SecurityImage-%{version}
 
 %build
-perl Makefile.PL
+perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
 make
 make test
 
@@ -45,6 +45,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-GD-SecurityImage.spec.in,v $
+Revision 1.2  2007/07/09 23:33:37  bpbuild
+added PATH for Makefile
+
 Revision 1.1  2007/07/09 22:32:13  bpbuild
 new spec.in
 
