@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.88 2007/06/13 19:38:28 bpbuild Exp $
+#$Id: Makefile,v 1.89 2007/07/09 22:13:06 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -31,6 +31,10 @@ cluster_buildall ::
 ###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make cluster_postbuild' to generate reports, make yum headers and fix ownership.
 	$(MAKE) cluster_buildprep
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
+
+update ::
+	$(MAKE) sources
+	cvs update
 
 cluster_buildprep ::
 ##Prepares the cluster for building -- either for cluster_buildall or make %.cbuilt's
