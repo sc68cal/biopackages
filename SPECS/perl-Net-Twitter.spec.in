@@ -1,0 +1,50 @@
+#$Id: perl-Net-Twitter.spec.in,v 1.1 2007/07/10 09:43:40 bpbuild Exp $
+Name: perl-Net-Twitter
+Summary: http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
+Version: 1.04
+Release: %{revision}.%{distro}
+License: GPL
+URL: http://search.cpan.org/~cthom/Net-Twitter-1.04/ 
+Packager: Jordan Mendler <jmendler@ucla.edu>
+Group: Development/Tools
+Source: http://search.cpan.org/CPAN/authors/id/C/CT/CTHOM/Net-Twitter-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl
+
+%description
+http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
+
+You can view the latest status of Net::Twitter on it's own twitter timeline at http://twitter.com/net_twitter
+
+%prep
+%setup -n Net-Twitter-%{version}
+
+%build
+perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+make
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+$Log: perl-Net-Twitter.spec.in,v $
+Revision 1.1  2007/07/10 09:43:40  bpbuild
+new spec
+
