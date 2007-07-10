@@ -44,4 +44,3 @@ mod_perl
 gd
 fftw3-devel
 fftw3
-R
