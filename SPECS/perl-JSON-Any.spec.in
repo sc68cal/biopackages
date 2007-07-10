@@ -1,0 +1,47 @@
+#$Id: perl-JSON-Any.spec.in,v 1.1 2007/07/10 09:51:43 bpbuild Exp $
+Name: perl-JSON-Any
+Summary: This module will provide a coherent API to bring together the various JSON modules currently on CPAN.
+Version: 1.08
+Release: %{revision}.%{distro}
+License: GPL
+URL: http://search.cpan.org/~perigrin/JSON-Any-1.08/
+Packager: Jordan Mendler <jmendler@ucla.edu>
+Group: Development/Tools
+Source: http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/JSON-Any-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl
+
+%description
+
+%prep
+%setup -n JSON-Any-%{version}
+
+%build
+perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+make
+make test
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+$Log: perl-JSON-Any.spec.in,v $
+Revision 1.1  2007/07/10 09:51:43  bpbuild
+new spec
+
