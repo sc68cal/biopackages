@@ -1,4 +1,4 @@
-#$Id: R-XML.spec.in,v 1.2 2006/09/10 21:31:13 allenday Exp $
+#$Id: R-XML.spec.in,v 1.3 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -24,12 +24,12 @@ This package provides facilities for the S language to
 %prep
 #rm -rf ${RPM_BUILD_ROOT}
 %setup -n XML
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -42,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-XML.spec.in,v $
+Revision 1.3  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.2  2006/09/10 21:31:13  allenday
 import
 

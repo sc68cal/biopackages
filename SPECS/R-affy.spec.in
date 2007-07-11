@@ -1,4 +1,4 @@
-#$Id: R-affy.spec.in,v 1.5 2007/07/11 18:08:23 bpbuild Exp $
+#$Id: R-affy.spec.in,v 1.6 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -18,7 +18,6 @@ The package contains functions for exploratory oligonucleotide array analysis. T
 
 %prep
 %setup -n affy
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"

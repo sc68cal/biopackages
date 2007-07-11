@@ -1,4 +1,4 @@
-#$Id: R-R.huge.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+#$Id: R-R.huge.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -18,12 +18,12 @@ R.huge
 
 %prep
 %setup -n R.huge
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;

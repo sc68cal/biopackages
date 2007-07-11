@@ -1,4 +1,4 @@
-#$Id: R-ncdf.spec.in,v 1.6 2006/07/15 01:55:20 boconnor Exp $
+#$Id: R-ncdf.spec.in,v 1.7 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -27,13 +27,13 @@ adds support for byte variables, plus small bug fixes.
 
 %prep
 %setup -n ncdf
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library ncdf_%{version}.tar.gz
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -48,6 +48,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-ncdf.spec.in,v $
+Revision 1.7  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.6  2006/07/15 01:55:20  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 

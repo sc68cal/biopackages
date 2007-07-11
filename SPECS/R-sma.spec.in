@@ -1,4 +1,4 @@
-#$Id: R-sma.spec.in,v 1.2 2006/09/27 04:06:53 jmendler Exp $
+#$Id: R-sma.spec.in,v 1.3 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -20,10 +20,10 @@ R Statistical Microarray Analysis library
 
 %prep
 %setup -T -c
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 echo "install.packages('sma','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-sma.spec.in,v $
+Revision 1.3  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.2  2006/09/27 04:06:53  jmendler
 noarch
 

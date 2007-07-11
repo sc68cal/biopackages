@@ -1,4 +1,4 @@
-#$Id: R-Biobase.spec.in,v 1.6 2007/07/11 18:11:01 bpbuild Exp $
+#$Id: R-Biobase.spec.in,v 1.7 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -18,7 +18,6 @@ Biobase: Base functions for Bioconductor
 
 %prep
 %setup -n Biobase
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"

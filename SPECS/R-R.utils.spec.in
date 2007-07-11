@@ -1,4 +1,4 @@
-#$Id: R-R.utils.spec.in,v 1.4 2007/04/27 01:26:36 allenday Exp $
+#$Id: R-R.utils.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -19,11 +19,11 @@ This package provides utility classes and methods useful when programming in R a
 
 %prep
 %setup -n R.utils
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.utils.spec.in,v $
+Revision 1.5  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.4  2007/04/27 01:26:36  allenday
 bump
 

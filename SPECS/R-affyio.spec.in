@@ -1,4 +1,4 @@
-#$Id: R-affyio.spec.in,v 1.4 2007/07/11 18:03:25 bpbuild Exp $
+#$Id: R-affyio.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Jordan Mendler <jmendler@ucla.edu>
@@ -18,7 +18,6 @@ Routines for parsing Affymetrix data files based upon file format information. P
 
 %prep
 %setup -n affyio
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"

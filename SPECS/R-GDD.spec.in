@@ -1,4 +1,4 @@
-#$Id: R-GDD.spec.in,v 1.4 2006/07/15 01:55:20 boconnor Exp $
+#$Id: R-GDD.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -31,13 +31,13 @@ Created by Simon Urbanek, 2004
 
 %prep
 %setup -n GDD
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -53,6 +53,9 @@ rm %{buildroot}%{_prefix}/lib/R/library/GDD/fonts/blue*
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-GDD.spec.in,v $
+Revision 1.5  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.4  2006/07/15 01:55:20  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 

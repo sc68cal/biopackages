@@ -1,4 +1,4 @@
-#$Id: R-topGO.spec.in,v 1.2 2007/01/26 01:29:12 bpbuild Exp $
+#$Id: R-topGO.spec.in,v 1.3 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Brian O'Connor <boconnor@ucla.edu>
@@ -21,11 +21,11 @@ implemented and applied.
 
 %prep
 %setup -n topGO
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-topGO.spec.in,v $
+Revision 1.3  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.2  2007/01/26 01:29:12  bpbuild
 updates to deps
 

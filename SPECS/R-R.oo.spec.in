@@ -1,4 +1,4 @@
-#$Id: R-R.oo.spec.in,v 1.4 2007/03/13 19:43:38 allenday Exp $
+#$Id: R-R.oo.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
 %define R_name R.oo
 Vendor: biopackages.net
 Group: Applications/Scientific
@@ -20,11 +20,11 @@ Methods and classes for object-oriented programming in R with or without referen
 
 %prep
 %setup -n %{R_name}
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 cp %{SOURCE0} .
 
 %build
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -39,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.oo.spec.in,v $
+Revision 1.5  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.4  2007/03/13 19:43:38  allenday
 brining forward
 

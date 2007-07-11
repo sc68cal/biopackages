@@ -1,4 +1,4 @@
-#$Id: R-RCurl.spec.in,v 1.5 2006/08/29 20:41:16 allenday Exp $
+#$Id: R-RCurl.spec.in,v 1.6 2007/07/11 19:54:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -32,7 +32,6 @@ This package will be used to implement the low-level communication in the SSOAP 
 
 %prep
 %setup -n RCurl
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 %patch0 -p1
 pushd ..
 tar -cvzf RCurl/RCurl_%{version}.tar.gz RCurl
@@ -42,6 +41,7 @@ popd
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library RCurl_%{version}.tar.gz
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -56,6 +56,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RCurl.spec.in,v $
+Revision 1.6  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.5  2006/08/29 20:41:16  allenday
 patch!!
 

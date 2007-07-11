@@ -1,4 +1,4 @@
-#$Id: R-vsn.spec.in,v 1.1 2007/04/26 08:22:32 allenday Exp $
+#$Id: R-vsn.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
 %define	base	vsn
 Epoch: 1
 Vendor: biopackages.net
@@ -22,12 +22,12 @@ The package implements a robust variant of the maximum-likelihood estimator for 
 
 %prep
 %setup -n %{base}
-mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
@@ -42,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-vsn.spec.in,v $
+Revision 1.2  2007/07/11 19:54:58  bpbuild
+fixed mkdir/rm -rf issue
+
 Revision 1.1  2007/04/26 08:22:32  allenday
 renamed
 
