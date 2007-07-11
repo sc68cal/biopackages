@@ -1,4 +1,4 @@
-#$Id: R-affy.spec.in,v 1.2 2007/07/10 23:57:13 bpbuild Exp $
+#$Id: R-affy.spec.in,v 1.3 2007/07/11 00:03:32 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,7 +9,7 @@ Summary: The package contains functions for exploratory oligonucleotide array an
 License: GPL
 URL: http://www.bioconductor.org
 Source0: affy_1.12.2.tar.gz
-Requires: R >= 2.4.0, R-Biobase, R-affyio
+Requires: R >= 2.4.0, R-Biobase >= 1.12.0, R-affyio
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.4.0, R-Biobase >= 1.12.0, R-affyio, gcc, biopackages
 
