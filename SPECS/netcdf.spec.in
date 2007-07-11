@@ -1,4 +1,4 @@
-#$Id: netcdf.spec.in,v 1.1 2006/06/30 17:17:46 allenday Exp $
+#$Id: netcdf.spec.in,v 1.2 2007/07/11 23:16:24 bpbuild Exp $
 Vendor: biopackages.net
 Packager: Allen Day <allenday@ucla.edu>
 Version: 3.5.1
@@ -14,7 +14,11 @@ License: See included COPYRIGHT file
 BuildRoot: %{_tmppath}/%{name}-root
 Provides: %{name}
 Requires: glibc
-BuildRequires: glibc-devel, gcc-g77, gcc, make, automake
+BuildRequires: glibc-devel, gcc, make, automake
+%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented data 
@@ -74,6 +78,9 @@ necessary for developing programs which will use the %{name} library.
 rm -rf $RPM_BUILD_ROOT
 
 $Log: netcdf.spec.in,v $
+Revision 1.2  2007/07/11 23:16:24  bpbuild
+ifdistro for gcc-g77
+
 Revision 1.1  2006/06/30 17:17:46  allenday
 import
 

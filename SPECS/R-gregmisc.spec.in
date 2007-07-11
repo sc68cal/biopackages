@@ -1,4 +1,4 @@
-#$Id: R-gregmisc.spec.in,v 1.4 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-gregmisc.spec.in,v 1.5 2007/07/11 23:16:24 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,7 +12,10 @@ URL: http://www.r-project.org
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
+BuildRequires: R >= 2.0.0, gcc, biopackages
+%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
 
 %description
 The gregmisc bundle is a repository for a variety of useful functions. See the individual packages for more details.
@@ -39,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-gregmisc.spec.in,v $
+Revision 1.5  2007/07/11 23:16:24  bpbuild
+ifdistro for gcc-g77
+
 Revision 1.4  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 

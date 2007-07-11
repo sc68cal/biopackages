@@ -1,4 +1,4 @@
-#$Id: udunits.spec.in,v 1.1 2006/09/27 04:11:21 jmendler Exp $
+#$Id: udunits.spec.in,v 1.2 2007/07/11 23:15:58 bpbuild Exp $
 Name: udunits
 Version: 1.12.4
 Release: %{version}.%{distro}
@@ -12,7 +12,10 @@ Source0: udunits-1.12.4.tar.bz2
 Patch0: udunits-1.12.4-linuxfixes.patch
 Patch1: udunits-1.12.4-64bit.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: gcc-g77, gcc-c++, groff, biopackages
+BuildRequires: gcc-c++, groff, biopackages
+%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
 
 %description
 The Unidata units utility, udunits, supports conversion of unit specifications 
@@ -107,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/udunitsperl.1.gz
 
 $Log: udunits.spec.in,v $
+Revision 1.2  2007/07/11 23:15:58  bpbuild
+ifdistro for gcc-g77
+
 Revision 1.1  2006/09/27 04:11:21  jmendler
 import from testing
 

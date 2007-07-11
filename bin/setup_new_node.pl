@@ -214,7 +214,7 @@ END
   # FIXME:  on neuron: qconf -ah centos4.x86_64
   print "FIXME:  on neuron: qconf -ah centos4.x86_64.\nEnter yes when ready.\n";
   $answer = rl("yes");
-  
+  system("yum install binutils");
   system("cd /gridware/sge; export SGE_ROOT=/gridware/sge; ./install_execd");
   
   print "FIXME: remove node from being an administrative host on SGE\n";
@@ -283,6 +283,7 @@ END
   system("chown bpbuild:bpbuild /usr/src");
   system("chmod 775 /usr/src");
   system("mkdir -p /usr/src/biopackages/RPMS");
+  system("yum install cvs");
   system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages\'; cd /usr/src/biopackages; make prep');
 
   # make symlinks
@@ -302,7 +303,7 @@ END
   system("rpm -Uvh http://yum.biopackages.net/biopackages/stable/$distro/$version/noarch/biopackages-1.0.1-1.14.noarch.rpm");
 
 }
-
+  system(" yum install rpm-build");
 # done
 print("Setup is complete, reboot the system and take a snapshot\n");
 

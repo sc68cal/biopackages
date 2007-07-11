@@ -1,4 +1,4 @@
-#$Id: R-plier.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-plier.spec.in,v 1.6 2007/07/11 23:16:24 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,8 +12,12 @@ URL: http://www.r-project.org
 Source0: plier_1.0.0.tar.gz
 Requires: R >= 2.0.0, R-affy
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, gcc-g77, gcc, biopackages
+BuildRequires: R >= 2.0.0, gcc, biopackages
 Obsoletes: R-Bioconductor-plier
+%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+
 
 %description
 The PLIER (Probe Logarithmic Error Intensity Estimate) method produces an improved signal by accounting for experimentally observed patterns in probe behavior and handling error at the appropriately at low and high signal values.
@@ -41,6 +45,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-plier.spec.in,v $
+Revision 1.6  2007/07/11 23:16:24  bpbuild
+ifdistro for gcc-g77
+
 Revision 1.5  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
