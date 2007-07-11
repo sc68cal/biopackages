@@ -1,4 +1,4 @@
-#$Id: R-celsius.spec.in,v 1.1 2007/07/10 18:07:57 bpbuild Exp $
+#$Id: R-celsius.spec.in,v 1.2 2007/07/11 19:22:37 bpbuild Exp $
 Name: R-celsius
 Summary: Retrieve Affymetrix microarray measurements and metadata from Celsius web services.
 Version: 1.0.7
@@ -15,15 +15,17 @@ BuildRequires: R, R-Biobase
 Retrieve Affymetrix microarray measurements and metadata from Celsius web services, see http://genome.ucla.edu/projects/celsius
 
 %prep
-%setup -n celsius
-
+%setup -n affy
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+                                                                           
 %build
-R CMD build .
-
-%install
-rm -rf $RPM_BUILD_ROOT
-R CMD check .
-R CMD build .
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+                                                                           
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -42,6 +44,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: R-celsius.spec.in,v $
+Revision 1.2  2007/07/11 19:22:37  bpbuild
+finishing initial spec.in
+
 Revision 1.1  2007/07/10 18:07:57  bpbuild
  new spec
 
