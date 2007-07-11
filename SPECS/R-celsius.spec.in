@@ -1,4 +1,4 @@
-#$Id: R-celsius.spec.in,v 1.2 2007/07/11 19:22:37 bpbuild Exp $
+#$Id: R-celsius.spec.in,v 1.3 2007/07/11 19:24:59 bpbuild Exp $
 Name: R-celsius
 Summary: Retrieve Affymetrix microarray measurements and metadata from Celsius web services.
 Version: 1.0.7
@@ -15,7 +15,7 @@ BuildRequires: R, R-Biobase
 Retrieve Affymetrix microarray measurements and metadata from Celsius web services, see http://genome.ucla.edu/projects/celsius
 
 %prep
-%setup -n affy
+%setup -n celsius
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
                                                                            
 %build
@@ -44,6 +44,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: R-celsius.spec.in,v $
+Revision 1.3  2007/07/11 19:24:59  bpbuild
+accidently had affy in setup
+
 Revision 1.2  2007/07/11 19:22:37  bpbuild
 finishing initial spec.in
 
