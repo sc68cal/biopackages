@@ -1,17 +1,17 @@
-#$Id: R-affyio.spec.in,v 1.2 2007/07/11 17:41:10 bpbuild Exp $
+#$Id: R-affyio.spec.in,v 1.3 2007/07/11 17:48:44 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.2.0
+Packager: Jordan Mendler <jmendler@ucla.edu>
+Version: 1.4.1
 Release: %{revision}.%{distro}
 Name: R-affyio
 Summary: Routines for parsing Affymetrix data files based upon file format information. Primary focus is on accessing the CEL and CDF file formats.
 License: GPL
 URL: http://www.bioconductor.org
-Source0: affyio_1.2.0.tar.gz
-Requires: R >= 2.4.0
+Source0: affyio_%{version}.tar.gz
+Requires: R >= 2.5.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, gcc, biopackages
+BuildRequires: R >= 2.5.0, gcc, biopackages
 
 %description
 Routines for parsing Affymetrix data files based upon file format information. Primary focus is on accessing the CEL and CDF file formats.
