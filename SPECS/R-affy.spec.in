@@ -1,17 +1,17 @@
-#$Id: R-affy.spec.in,v 1.4 2007/07/11 17:38:21 bpbuild Exp $
+#$Id: R-affy.spec.in,v 1.5 2007/07/11 18:08:23 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.12.2
+Version: 1.14.2
 Release: %{revision}.%{distro}
 Name: R-affy
 Summary: The package contains functions for exploratory oligonucleotide array analysis.
 License: GPL
 URL: http://www.bioconductor.org
-Source0: affy_1.12.2.tar.gz
+Source0: affy_%{version}.tar.gz
 Requires: R >= 2.4.0, R-Biobase >= 1.12.0, R-affyio
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-Biobase >= 1.12.0, R-affyio, gcc, biopackages
+BuildRequires: R >= 2.4.0, R-Biobase >= 1.13.41, R-affyio >= 1.4.0, gcc, biopackages
 
 %description
 The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
