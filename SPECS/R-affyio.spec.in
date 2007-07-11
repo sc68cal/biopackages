@@ -1,4 +1,4 @@
-#$Id: R-affyio.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+#$Id: R-affyio.spec.in,v 1.2 2007/07/11 17:41:10 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -24,6 +24,7 @@ mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
