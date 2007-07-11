@@ -1,4 +1,4 @@
-#$Id: R-genefilter.spec.in,v 1.4 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-genefilter.spec.in,v 1.5 2007/07/11 21:07:55 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -13,6 +13,9 @@ Source0: genefilter_%{version}.tar.gz
 Requires: R >= 2.0.0, R-Biobase
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.0.0, R-Biobase, gcc, biopackages
+%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
 
 %description
 genefilter: methods for filtering genes from microarray experiments
@@ -40,6 +43,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-genefilter.spec.in,v $
+Revision 1.5  2007/07/11 21:07:55  bpbuild
+need gcc-gfortran
+
 Revision 1.4  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
