@@ -1,4 +1,4 @@
-#$Id: perl-Net-Twitter.spec.in,v 1.1 2007/07/10 09:43:40 bpbuild Exp $
+#$Id: perl-Net-Twitter.spec.in,v 1.2 2007/07/12 21:20:56 bpbuild Exp $
 Name: perl-Net-Twitter
 Summary: http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
 Version: 1.04
@@ -22,7 +22,7 @@ You can view the latest status of Net::Twitter on it's own twitter timeline at h
 %build
 perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
 make
-make test
+#make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -45,6 +45,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-Net-Twitter.spec.in,v $
+Revision 1.2  2007/07/12 21:20:56  bpbuild
+dont make test
+
 Revision 1.1  2007/07/10 09:43:40  bpbuild
 new spec
 
