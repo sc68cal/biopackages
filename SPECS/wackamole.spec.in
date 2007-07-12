@@ -1,4 +1,4 @@
-#$Id: wackamole.spec.in,v 1.1 2007/07/12 19:55:12 bpbuild Exp $
+#$Id: wackamole.spec.in,v 1.2 2007/07/12 19:57:23 bpbuild Exp $
 Name: wackamole
 Summary: Wackamole is an application that helps with making a cluster highly available.
 Version: 2.1.3
@@ -9,7 +9,6 @@ Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source: wackamole-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc
 
 %description
 What is Wackamole?
@@ -33,7 +32,7 @@ Wackamole is an application that runs as root in a cluster to make it highly ava
 Wackamole works towards achieving a balanced distribution of the clusters IP space between its instances. First, each instance immediately claims its preferred IP address. Then, if the number of virtual IP addresses acquired by any two machines does differ by more than one, Wackamole will work towards making the them differ by one or less. Wackamole has the ability to balance all the IP addresses at once or do it gradually. 
 
 %prep
-%setup -n %{name}-src-%{version} 
+%setup -n %{name}-%{version} 
 
 %build
 ./configure
@@ -60,6 +59,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: wackamole.spec.in,v $
+Revision 1.2  2007/07/12 19:57:23  bpbuild
+updated setup name
+
 Revision 1.1  2007/07/12 19:55:12  bpbuild
 new spec
 
