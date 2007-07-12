@@ -1,4 +1,4 @@
-#$Id: perl-Net-Twitter.spec.in,v 1.2 2007/07/12 21:20:56 bpbuild Exp $
+#$Id: perl-Net-Twitter.spec.in,v 1.3 2007/07/12 21:21:57 bpbuild Exp $
 Name: perl-Net-Twitter
 Summary: http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
 Version: 1.04
@@ -8,8 +8,10 @@ URL: http://search.cpan.org/~cthom/Net-Twitter-1.04/
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source: http://search.cpan.org/CPAN/authors/id/C/CT/CTHOM/Net-Twitter-%{version}.tar.gz
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl
+Requires: perl
 
 %description
 http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
@@ -45,6 +47,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-Net-Twitter.spec.in,v $
+Revision 1.3  2007/07/12 21:21:57  bpbuild
+noarch
+
 Revision 1.2  2007/07/12 21:20:56  bpbuild
 dont make test
 
