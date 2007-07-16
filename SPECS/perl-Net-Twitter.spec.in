@@ -1,4 +1,4 @@
-#$Id: perl-Net-Twitter.spec.in,v 1.3 2007/07/12 21:21:57 bpbuild Exp $
+#$Id: perl-Net-Twitter.spec.in,v 1.4 2007/07/16 08:31:38 bpbuild Exp $
 Name: perl-Net-Twitter
 Summary: http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
 Version: 1.04
@@ -10,8 +10,8 @@ Group: Development/Tools
 Source: http://search.cpan.org/CPAN/authors/id/C/CT/CTHOM/Net-Twitter-%{version}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl
-Requires: perl
+BuildRequires: perl, perl-JSON-Any
+Requires: perl, perl-JSON-Any
 
 %description
 http://www.twitter.com provides a web 2.0 type of ubiquitous presence. This module allows you to set your status, as well as the statuses of your friends.
@@ -22,9 +22,9 @@ You can view the latest status of Net::Twitter on it's own twitter timeline at h
 %setup -n Net-Twitter-%{version}
 
 %build
-perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr
 make
-#make test
+make test
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +47,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-Net-Twitter.spec.in,v $
+Revision 1.4  2007/07/16 08:31:38  bpbuild
+JSON-Any, make test
+
 Revision 1.3  2007/07/12 21:21:57  bpbuild
 noarch
 
