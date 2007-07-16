@@ -1,4 +1,4 @@
-#$Id: perl-JSON-Any.spec.in,v 1.4 2007/07/16 08:53:00 bpbuild Exp $
+#$Id: perl-JSON-Any.spec.in,v 1.5 2007/07/16 09:04:24 bpbuild Exp $
 Name: perl-JSON-Any
 Summary: This module will provide a coherent API to bring together the various JSON modules currently on CPAN.
 Version: 1.08
@@ -26,6 +26,9 @@ make
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
+# Remove perllocal.pod from the RPM to avoid installation conflicts
+find $RPM_BUILD_ROOT -type f | grep perllocal.pod | xargs rm -vf
+
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
@@ -43,6 +46,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-JSON-Any.spec.in,v $
+Revision 1.5  2007/07/16 09:04:24  bpbuild
+remove perllocal.pod to avoid conflicts
+
 Revision 1.4  2007/07/16 08:53:00  bpbuild
 dont make test since perl-JSON is optional
 
