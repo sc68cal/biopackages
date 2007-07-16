@@ -1,4 +1,4 @@
-#$Id: perl-JSON-Any.spec.in,v 1.1 2007/07/10 09:51:43 bpbuild Exp $
+#$Id: perl-JSON-Any.spec.in,v 1.2 2007/07/16 08:36:25 bpbuild Exp $
 Name: perl-JSON-Any
 Summary: This module will provide a coherent API to bring together the various JSON modules currently on CPAN.
 Version: 1.08
@@ -17,7 +17,7 @@ BuildRequires: perl
 %setup -n JSON-Any-%{version}
 
 %build
-perl Makefile.PL PREFIX=$RPM_BUILD_ROOT
+perl Makefile.PL --skipdeps PREFIX=$RPM_BUILD_ROOT
 make
 make test
 
@@ -42,6 +42,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-JSON-Any.spec.in,v $
+Revision 1.2  2007/07/16 08:36:25  bpbuild
+dont ask to autoinstall deps
+
 Revision 1.1  2007/07/10 09:51:43  bpbuild
 new spec
 
