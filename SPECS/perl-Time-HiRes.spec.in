@@ -1,12 +1,12 @@
-#$Id: perl-Time-HiRes.spec.in,v 1.5 2006/11/29 23:47:50 bpbuild Exp $
+#$Id: perl-Time-HiRes.spec.in,v 1.6 2007/07/16 06:38:14 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: High resolution alarm, sleep, gettimeofday, interval timers
 Name: perl-Time-HiRes
-Version: 1.83
+Version: 1.9707
 Release: %{revision}.%{distro}
-Packager: allenday@jugular.ctrl.ucla.edu
+Packager: Jordan Mendler <jmendler@ucla.edu>
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
@@ -14,7 +14,7 @@ URL: http://search.cpan.org/dist/Time-HiRes/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, gcc
 
-Source0: Time-HiRes-1.83.tar.gz
+Source0: Time-HiRes-%{version}.tar.gz
 
 %description
 Time::HiRes module: High resolution time, sleep, and alarm.
