@@ -1,4 +1,4 @@
-#$Id: perl-GD-SecurityImage.spec.in,v 1.7 2007/07/16 02:59:15 bpbuild Exp $
+#$Id: perl-GD-SecurityImage.spec.in,v 1.8 2007/07/16 05:55:25 bpbuild Exp $
 Name: perl-GD-SecurityImage
 Summary: This module gives you a basic interface to create Security Images.
 Version: 1.64
@@ -8,6 +8,7 @@ URL: http://search.cpan.org/~burak/GD-SecurityImage-1.64/lib/GD/SecurityImage.pm
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source: GD-SecurityImage-%{version}.tar.gz
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, perl-GD
 Requires: ImageMagick-perl
@@ -48,6 +49,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-GD-SecurityImage.spec.in,v $
+Revision 1.8  2007/07/16 05:55:25  bpbuild
+noarch
+
 Revision 1.7  2007/07/16 02:59:15  bpbuild
 fixed ignore perllocal.pod
 
