@@ -1,4 +1,4 @@
-#$Id: perl-JSON-Any.spec.in,v 1.5 2007/07/16 09:04:24 bpbuild Exp $
+#$Id: perl-JSON-Any.spec.in,v 1.6 2007/07/16 09:14:21 bpbuild Exp $
 Name: perl-JSON-Any
 Summary: This module will provide a coherent API to bring together the various JSON modules currently on CPAN.
 Version: 1.08
@@ -8,6 +8,7 @@ URL: http://search.cpan.org/~perigrin/JSON-Any-1.08/
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source: http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/JSON-Any-%{version}.tar.gz
+BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl
 
@@ -46,6 +47,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-JSON-Any.spec.in,v $
+Revision 1.6  2007/07/16 09:14:21  bpbuild
+noarch
+
 Revision 1.5  2007/07/16 09:04:24  bpbuild
 remove perllocal.pod to avoid conflicts
 
