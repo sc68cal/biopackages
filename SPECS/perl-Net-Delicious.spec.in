@@ -1,0 +1,53 @@
+#$Id: perl-Net-Delicious.spec.in,v 1.1 2007/07/16 06:15:49 bpbuild Exp $
+
+%define perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)
+%define perl_vendorarch %(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
+
+%define real_name Net-Delicious
+
+Summary: OOP for the del.icio.us API
+Name: perl-Net-Delicious
+Version: 1.11
+Release: %{revision}.%{distro} 
+License: Artistic/GPL
+Group: Applications/CPAN
+URL: http://search.cpan.org/dist/Net-Delicious/
+
+Packager: Dries Verachtert <dries@ulyssis.org>
+Vendor: Dag Apt Repository, http://dag.wieers.com/apt/
+
+Source: http://search.cpan.org/CPAN/authors/id/A/AS/ASCOPE/Net-Delicious-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
+BuildArch: noarch
+BuildRequires: perl, perl-Module-Build
+
+%description
+OOP for the del.icio.us API.
+
+%prep
+%setup -n %{real_name}-%{version}
+
+%build
+%{__perl} Makefile.PL INSTALLDIRS="vendor" PREFIX="%{buildroot}%{_prefix}"
+%{__make} %{?_smp_mflags}
+
+%install
+%{__rm} -rf %{buildroot}
+%makeinstall
+%{__rm} -rf %{buildroot}%{perl_archlib}/perllocal.pod %{buildroot}%{perl_vendorarch}/auto/*/*/.packlist
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%files
+%defattr(-, root, root, 0755)
+%doc Changes README
+%doc %{_mandir}/man3/*
+%{perl_vendorlib}/Net/Delicious.pm
+%{perl_vendorlib}/Net/Delicious/
+
+$Log: perl-Net-Delicious.spec.in,v $
+Revision 1.1  2007/07/16 06:15:49  bpbuild
+imported from dag
+
