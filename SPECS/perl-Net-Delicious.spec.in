@@ -1,4 +1,4 @@
-#$Id: perl-Net-Delicious.spec.in,v 1.1 2007/07/16 06:15:49 bpbuild Exp $
+#$Id: perl-Net-Delicious.spec.in,v 1.2 2007/07/16 06:19:38 bpbuild Exp $
 
 %define perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)
 %define perl_vendorarch %(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
@@ -20,7 +20,8 @@ Source: http://search.cpan.org/CPAN/authors/id/A/AS/ASCOPE/Net-Delicious-%{versi
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildArch: noarch
-BuildRequires: perl, perl-Module-Build
+BuildRequires: perl, perl-Module-Build, perl-YAML, perl-Crypt-SSLeay, perl-XML-Simple, perl-Time-HiRes >= 1.65
+Requires: perl-YAML, perl-Crypt-SSLeay, perl-XML-Simple, perl-Time-HiRes >= 1.65
 
 %description
 OOP for the del.icio.us API.
@@ -48,6 +49,9 @@ OOP for the del.icio.us API.
 %{perl_vendorlib}/Net/Delicious/
 
 $Log: perl-Net-Delicious.spec.in,v $
+Revision 1.2  2007/07/16 06:19:38  bpbuild
+additional deps
+
 Revision 1.1  2007/07/16 06:15:49  bpbuild
 imported from dag
 
