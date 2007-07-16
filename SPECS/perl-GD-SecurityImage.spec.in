@@ -1,4 +1,4 @@
-#$Id: perl-GD-SecurityImage.spec.in,v 1.5 2007/07/15 10:21:31 bpbuild Exp $
+#$Id: perl-GD-SecurityImage.spec.in,v 1.6 2007/07/16 02:15:41 bpbuild Exp $
 Name: perl-GD-SecurityImage
 Summary: This module gives you a basic interface to create Security Images.
 Version: 1.64
@@ -31,14 +31,14 @@ rm -rf $RPM_BUILD_ROOT
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep -v perllocal.pod | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep -v perllocal.pod | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v perllocal.pod | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep -v perllocal.pod | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep -v perllocal.pod | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v perllocal.pod | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v perllocal.pod | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | grep -v perllocal.pod | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 
@@ -46,6 +46,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-GD-SecurityImage.spec.in,v $
+Revision 1.6  2007/07/16 02:15:41  bpbuild
+ignore perllocal.pod
+
 Revision 1.5  2007/07/15 10:21:31  bpbuild
 install to /usr instead of /
 
