@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.17 2007/07/18 20:23:57 bpbuild Exp $
+#$Id: R.spec.in,v 1.18 2007/07/18 20:24:42 bpbuild Exp $
 #Query the RPM database to find which release we are running.
 ################################################################
 
@@ -262,6 +262,6 @@ fi
 /sbin/ldconfig
 
 $Log: R.spec.in,v $
-Revision 1.17  2007/07/18 20:23:57  bpbuild
-SPECS/R.spec.in
+Revision 1.18  2007/07/18 20:24:42  bpbuild
+upgrade to 2.5.1
 
