@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.16 2007/05/23 00:58:38 bpbuild Exp $
+#$Id: R.spec.in,v 1.17 2007/07/18 20:23:57 bpbuild Exp $
 #Query the RPM database to find which release we are running.
 ################################################################
 
@@ -96,14 +96,13 @@
 
 ################################################################
 
-%define REL 2
+%define REL 1
 Summary: A language for data analysis and graphics
 Name: R
-Version: 2.5.0
+Version: 2.5.1
 Epoch: 2
-Release: %{revision}.%{distro}
+Release: %{version}.%{distro}
 Source0: ftp://cran.r-project.org/pub/R/src/base/R-2/R-%{version}.tar.gz
-Patch0: R-%{version}-fedora.patch
 License: GPL
 Group: Applications/Engineering
 Packager: Martyn Plummer <martyn.plummer@r-project.org>
@@ -163,7 +162,6 @@ and header files.
 
 %prep
 %setup -q 
-%patch0 -p1
 
 %build
 export R_PRINTCMD="lpr"
@@ -185,21 +183,19 @@ export LDFLAGS=%{LDFLAGS}
  | grep -A30 'R is now' - > CAPABILITIES
 make 
 (cd src/nmath/standalone; make)
-##make check-all
+make check-all
 make pdf
 #We can only "make info" if we have an up to date version of texinfo
 %{?INFO: make info}
 
 %install
 
-%makeinstall install-pdf %{?INFO:install-info} 
+make install install-pdf %{?INFO:install-info} DESTDIR=${RPM_BUILD_ROOT}
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir.old
 
 #Install libRmath files
-(cd src/nmath/standalone; make install \
-    includedir=${RPM_BUILD_ROOT}%{_includedir} \
-    libdir=${RPM_BUILD_ROOT}%{_libdir})
+(cd src/nmath/standalone; make install DESTDIR=${RPM_BUILD_ROOT})
 
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/R/lib" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
@@ -266,6 +262,6 @@ fi
 /sbin/ldconfig
 
 $Log: R.spec.in,v $
-Revision 1.16  2007/05/23 00:58:38  bpbuild
-imported 2.5.0 from CRAN
+Revision 1.17  2007/07/18 20:23:57  bpbuild
+SPECS/R.spec.in
 

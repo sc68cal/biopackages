@@ -189,7 +189,8 @@ END
   system("cp /etc/fstab /etc/fstab.distro");
   $contents = <<END;
   #XSAN
-  nucleus.i:/genomics     /net/host/nucleus/genomics      nfs     hard,intr,nolock,posix,rsize=8192,wsize=8192,timeo=14   0 0
+  #nucleus.i:/genomics     /net/host/nucleus/genomics      nfs     hard,intr,nolock,posix,rsize=8192,wsize=8192,timeo=14   0 0
+  vault.i:/genomics     /net/host/nucleus/genomics      nfs     hard,intr,nolock,posix,rsize=8192,wsize=8192,timeo=14   0 0
   nucleus.i:/biopackages  /net/host/nucleus/biopackages   nfs     hard,intr,nolock,posix,rsize=8192,wsize=8192,timeo=14   0 0
   nucleus.i:/home         /net/host/nucleus/home          nfs     hard,intr,nolock,posix,rsize=8192,wsize=8192,timeo=14   0 0
   # SGE
@@ -289,10 +290,10 @@ END
   # make symlinks
   # FIXME: make prep shouldn't create these!
   system("rm -rf /usr/src/biopackages/RPMS/*");
-  system("for n in i386 noarch x86_64; do ln -s /net/biopackages/stable/$distro/$version/\$n /usr/src/biopackages/RPMS/\$n; done");
+  system("for n in i386 noarch x86_64; do ln -s /net/biopackages/testing/$distro/$version/\$n /usr/src/biopackages/RPMS/\$n; done");
   # FIXME: shouldn't be created
   system("rm -rf /usr/src/biopackages/SRPMS");
-  system("ln -s /net/biopackages/stable/$distro/$version/SRPMS/ /usr/src/biopackages/SRPMS");
+  system("ln -s /net/biopackages/testing/$distro/$version/SRPMS/ /usr/src/biopackages/SRPMS");
   
   # create a list of RPMs installed on the base system
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
