@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.20 2007/07/18 21:11:01 bpbuild Exp $
+#$Id: R.spec.in,v 1.21 2007/07/18 22:32:52 bpbuild Exp $
 #Query the RPM database to find which release we are running.
 ################################################################
 
@@ -110,7 +110,7 @@ URL: http://www.r-project.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Icon: logosm-trans.gif
 BuildRequires: gcc-c++, gcc-%{FORTRAN}, gcc-objc
-BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel, libXmu-devel
+BuildRequires: libpng-devel, libjpeg-devel, readline-devel, libtermcap-devel
 BuildRequires: tetex-latex, tcl-devel, tk-devel
 BuildRequires: %{X11DEV} %{TEXINFO}
 
@@ -262,6 +262,9 @@ fi
 /sbin/ldconfig
 
 $Log: R.spec.in,v $
+Revision 1.21  2007/07/18 22:32:52  bpbuild
+requires ghostscript
+
 Revision 1.20  2007/07/18 21:11:01  bpbuild
 build requires libXmu-devel
 

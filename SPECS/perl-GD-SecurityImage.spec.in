@@ -1,4 +1,4 @@
-#$Id: perl-GD-SecurityImage.spec.in,v 1.8 2007/07/16 05:55:25 bpbuild Exp $
+#$Id: perl-GD-SecurityImage.spec.in,v 1.9 2007/07/18 22:32:52 bpbuild Exp $
 Name: perl-GD-SecurityImage
 Summary: This module gives you a basic interface to create Security Images.
 Version: 1.64
@@ -11,7 +11,7 @@ Source: GD-SecurityImage-%{version}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, perl-GD
-Requires: ImageMagick-perl
+Requires: ImageMagick-perl, ghostscript
 
 %description
 The (so called) "Security Images" are so popular. Most internet software use these in their registration screens to block robot programs (which may register tons of fake member accounts). Security images are basicaly, graphical CAPTCHAs (Completely Automated Public Turing Test to Tell Computers and Humans Apart). This module gives you a basic interface to create such an image. The final output is the actual graphic data, the mime type of the graphic and the created random string. The module also has some "styles" that are used to create the background (or foreground) of the image.
@@ -49,6 +49,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-GD-SecurityImage.spec.in,v $
+Revision 1.9  2007/07/18 22:32:52  bpbuild
+requires ghostscript
+
 Revision 1.8  2007/07/16 05:55:25  bpbuild
 noarch
 
