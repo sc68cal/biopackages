@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.18 2007/07/18 20:24:42 bpbuild Exp $
+#$Id: R.spec.in,v 1.19 2007/07/18 21:01:21 bpbuild Exp $
 #Query the RPM database to find which release we are running.
 ################################################################
 
@@ -101,7 +101,7 @@ Summary: A language for data analysis and graphics
 Name: R
 Version: 2.5.1
 Epoch: 2
-Release: %{version}.%{distro}
+Release: %{revision}.%{distro}
 Source0: ftp://cran.r-project.org/pub/R/src/base/R-2/R-%{version}.tar.gz
 License: GPL
 Group: Applications/Engineering
@@ -262,6 +262,9 @@ fi
 /sbin/ldconfig
 
 $Log: R.spec.in,v $
+Revision 1.19  2007/07/18 21:01:21  bpbuild
+revision
+
 Revision 1.18  2007/07/18 20:24:42  bpbuild
 upgrade to 2.5.1
 
