@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.92 2007/07/18 21:06:10 bpbuild Exp $
+#$Id: Makefile,v 1.93 2007/07/18 21:07:00 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -32,7 +32,7 @@ cluster_buildall ::
 	$(MAKE) cluster_buildprep
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
-builprep :: buildclean update
+buildprep :: buildclean update
 
 update ::
 	$(MAKE) sources
