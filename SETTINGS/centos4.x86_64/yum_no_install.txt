@@ -47,4 +47,3 @@ fftw3-devel
 fftw3
 perl-Net-Delicious
 perl-Time-HiRes
-R
