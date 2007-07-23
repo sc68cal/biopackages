@@ -1,4 +1,4 @@
-#$Id: R-sma.spec.in,v 1.6 2007/07/23 20:03:19 bpbuild Exp $
+#$Id: R-sma.spec.in,v 1.7 2007/07/23 20:15:15 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -25,9 +25,11 @@ R Statistical Microarray Analysis library
 %setup -T -c
 
 %build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-echo "install.packages('sma','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
@@ -41,6 +43,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-sma.spec.in,v $
+Revision 1.7  2007/07/23 20:15:15  bpbuild
+trying alternate installation methord
+
 Revision 1.6  2007/07/23 20:03:19  bpbuild
 upgrade to 0.5.15
 
