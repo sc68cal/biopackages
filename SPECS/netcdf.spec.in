@@ -1,4 +1,4 @@
-#$Id: netcdf.spec.in,v 1.2 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: netcdf.spec.in,v 1.3 2007/07/23 05:27:50 bpbuild Exp $
 Vendor: biopackages.net
 Packager: Allen Day <allenday@ucla.edu>
 Version: 3.5.1
@@ -15,9 +15,9 @@ BuildRoot: %{_tmppath}/%{name}-root
 Provides: %{name}
 Requires: glibc
 BuildRequires: glibc-devel, gcc, make, automake
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 
 %description
@@ -78,6 +78,9 @@ necessary for developing programs which will use the %{name} library.
 rm -rf $RPM_BUILD_ROOT
 
 $Log: netcdf.spec.in,v $
+Revision 1.3  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.2  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 

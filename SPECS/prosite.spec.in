@@ -1,4 +1,4 @@
-#$Id: prosite.spec.in,v 1.7 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: prosite.spec.in,v 1.8 2007/07/23 05:27:50 bpbuild Exp $
 Summary:  perl program used to scan one or several patterns, rules and/or profiles from PROSITE against one or several protein sequnces in Swiss-Prot or FASTA format
 Name: prosite 
 Version: 18.49
@@ -12,9 +12,9 @@ URL: ftp://au.expasy.org/databases/prosite
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl
 BuildRequires: perl, gcc
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 %description
 ps_scan documentation
@@ -55,6 +55,9 @@ install -m 755 pft2.2/{2ft,6ft,gtop,htop,pfmake,pfscale,pfscan,pfsearch,pfw,psa2
 [ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && rm -rf %{buildroot};
 
 $Log: prosite.spec.in,v $
+Revision 1.8  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.7  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 

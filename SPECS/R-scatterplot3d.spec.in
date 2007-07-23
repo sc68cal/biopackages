@@ -1,4 +1,4 @@
-#$Id: R-scatterplot3d.spec.in,v 1.5 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: R-scatterplot3d.spec.in,v 1.6 2007/07/23 05:27:50 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -14,9 +14,9 @@ Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: R >= 2.0.0, gcc, biopackages
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 %description
 Plots a three dimensional (3D) point cloud. 
@@ -41,6 +41,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-scatterplot3d.spec.in,v $
+Revision 1.6  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.5  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 

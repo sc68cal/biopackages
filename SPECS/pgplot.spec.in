@@ -1,4 +1,4 @@
-#$Id: pgplot.spec.in,v 1.4 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: pgplot.spec.in,v 1.5 2007/07/23 05:27:50 bpbuild Exp $
 %define date    %(echo `LC_ALL="C" date +"%a %b %d %Y"`)
 Summary:	The PGPLOT Graphics Subroutine Library
 Summary(pl):	Biblioteka PGPLOT
@@ -18,9 +18,9 @@ Patch5:         %{name}-x86_64-X11.patch
 URL:		http://astro.caltech.edu/~tjp/pgplot/
 BuildRequires:	XFree86-devel, biopackages
 BuildRequires:	lesstif-devel
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -150,6 +150,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpgplot.a
 
 $Log: pgplot.spec.in,v $
+Revision 1.5  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.4  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 

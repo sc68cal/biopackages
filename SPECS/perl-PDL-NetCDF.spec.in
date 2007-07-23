@@ -1,4 +1,4 @@
-#$Id: perl-PDL-NetCDF.spec.in,v 1.4 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: perl-PDL-NetCDF.spec.in,v 1.5 2007/07/23 05:27:50 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Object-oriented interface between NetCDF files and PDL objects
@@ -12,9 +12,9 @@ URL: http://search.cpan.org/dist/PDL-NetCDF
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, gcc
 BuildRequires: perl-PDL, netcdf, netcdf-devel
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 Requires: perl-PDL >= 2.4.2-4, netcdf, netcdf-devel
 Source0: PDL-NetCDF-%{version}.tar.gz
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-PDL-NetCDF.spec.in,v $
+Revision 1.5  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.4  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 

@@ -1,4 +1,4 @@
-#$Id: perl-PDL.spec.in,v 1.4 2007/07/11 23:16:24 bpbuild Exp $
+#$Id: perl-PDL.spec.in,v 1.5 2007/07/23 05:27:50 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl Data Language 
@@ -11,9 +11,9 @@ Group: Development/Libraries
 URL: http://search.cpan.org/dist/PDL/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, gcc
-%{ifdistro_release fedora 2}BuildRequires: gcc-f77
+%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-gfortran
+%{ifdistro_release centos 4}BuildRequires: gcc-g77
 BuildRequires: perl-ExtUtils-F77, perl-Inline, xorg-x11-Mesa-libGLU
 Requires: perl-ExtUtils-F77, perl-Inline, perl-PGPLOT, xorg-x11-Mesa-libGLU
 Source0: PDL-2.4.2.tar.gz
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-PDL.spec.in,v $
+Revision 1.5  2007/07/23 05:27:50  bpbuild
+fixed gcc-g77/gcc-gfortran deps
+
 Revision 1.4  2007/07/11 23:16:24  bpbuild
 ifdistro for gcc-g77
 
