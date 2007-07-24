@@ -1,0 +1,49 @@
+#$Id: perl-WWW-Shorten.spec.in,v 1.1 2007/07/24 03:59:56 bpbuild Exp $
+Summary: Interface to URL shortening sites. 
+Name: perl-WWW-Shorten
+Version: 1.97
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: WWW-Shorten-%{version}.tar.gz
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://search.cpan.org/~davecross/WWW-Shorten-1.97/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+Requires: perl, perl-libwww-perl
+BuildRequires: perl, perl-libwww-perl
+
+%description
+Interface to URL shortening sites. 
+
+%prep
+%setup -n WWW-Shorten-%{version}
+
+%build
+/usr/bin/perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}
+make;
+
+%install
+make install;
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%doc
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+
+%preun
+
+$Log: perl-WWW-Shorten.spec.in,v $
+Revision 1.1  2007/07/24 03:59:56  bpbuild
+import
+
