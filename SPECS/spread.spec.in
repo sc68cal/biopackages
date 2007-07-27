@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.6 2007/07/27 22:28:42 bpbuild Exp $
+#$Id: spread.spec.in,v 1.7 2007/07/27 23:03:07 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -40,6 +40,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+mkdir $RPM_BUILD_ROOT/var/run/spread
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -58,6 +59,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.7  2007/07/27 23:03:07  bpbuild
+mkdir /var/run/spread
+
 Revision 1.6  2007/07/27 22:28:42  bpbuild
 provides libspread.so()(64bit)
 
