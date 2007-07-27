@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.5 2007/07/27 22:14:46 bpbuild Exp $
+#$Id: spread.spec.in,v 1.6 2007/07/27 22:28:42 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -10,7 +10,7 @@ Group: Development/Tools
 Source: spread-src-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc
-Provides: libspread, libspread.so
+Provides: libspread, libspread.so, libspread.so()(64bit)
 
 %description
 Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks. Spread functions as a unified message bus for distributed applications, and provides highly tuned application-level multicast, group communication, and point to point support. Spread services range from reliable messaging to fully ordered messages with delivery guarantees.
@@ -58,6 +58,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.6  2007/07/27 22:28:42  bpbuild
+provides libspread.so()(64bit)
+
 Revision 1.5  2007/07/27 22:14:46  bpbuild
 provides libspread
 
