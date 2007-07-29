@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.11 2007/07/29 01:35:16 bpbuild Exp $
+#$Id: spread.spec.in,v 1.12 2007/07/29 01:39:35 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -41,12 +41,12 @@ make
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
 
-%post
+%pre
 /usr/sbin/useradd -M -c "Spread User" -d / -s /sbin/nologin spread
 mkdir -p $RPM_BUILD_ROOT/var/run/spread
 chown -Rvf spread:spread $RPM_BUILD_ROOT/var/run/spread
 
-%postun
+%preun
 /usr/sbin/userdel spread
 
 # Make RPM aware of each type of file
@@ -66,6 +66,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.12  2007/07/29 01:39:35  bpbuild
+pre for useradd and userdel
+
 Revision 1.11  2007/07/29 01:35:16  bpbuild
 post for useradd and userdel
 
