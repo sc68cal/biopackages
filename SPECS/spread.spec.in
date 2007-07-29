@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.15 2007/07/29 02:27:49 bpbuild Exp $
+#$Id: spread.spec.in,v 1.16 2007/07/29 07:48:41 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -38,8 +38,6 @@ Some of the services and benefits provided by Spread:
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -pv $RPM_BUILD_ROOT/var/run/spread
 %makeinstall
 
 # Make RPM aware of each type of file
@@ -56,18 +54,29 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 %files -f %{name}-%{version}-%{release}-filelist
 
 %pre
-/usr/sbin/useradd -M -r -c "Spread User" -d / -s /sbin/nologin spread
-
-%post
-chown -Rvf spread:spread /var/run/spread
+if grep spread /etc/passwd
+then 
+	echo "spread user already exists, making /var/run/spread owned by spread:spread"
+	exec mkdir -p /var/run/spread && chown -Rf spread:spread /var/run/spread
+else
+	echo "Adding spread user and group"
+	exec /usr/sbin/useradd -M -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
+fi
 
 %preun
-/usr/sbin/userdel spread
+if grep spread /etc/passwd
+then
+	echo "Removing spread user and group"
+	exec /usr/sbin/userdel -r spread 
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.16  2007/07/29 07:48:41  bpbuild
+cleaned up user adding/deleting and /var/run/spread creation and chown
+
 Revision 1.15  2007/07/29 02:27:49  bpbuild
 cleaned up pre and post
 
