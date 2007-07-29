@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.17 2007/07/29 08:11:58 bpbuild Exp $
+#$Id: spread.spec.in,v 1.18 2007/07/29 08:20:24 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -60,7 +60,7 @@ then
 	exec mkdir -p /var/run/spread && chown -Rf spread:spread /var/run/spread
 else
 	echo "Adding spread user and group"
-	exec /usr/sbin/useradd -m -M -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
+	exec /usr/sbin/useradd -m -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
 fi
 
 %preun
@@ -74,6 +74,9 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.18  2007/07/29 08:20:24  bpbuild
+-M was still in there
+
 Revision 1.17  2007/07/29 08:11:58  bpbuild
 -m to force homedir creation
 
