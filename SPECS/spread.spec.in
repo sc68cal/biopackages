@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.18 2007/07/29 08:20:24 bpbuild Exp $
+#$Id: spread.spec.in,v 1.19 2007/07/31 01:11:04 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -7,7 +7,8 @@ License: Spread Open Source License
 URL: http://www.spread.org
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
-Source: spread-src-%{version}.tar.gz
+Source0: spread-src-%{version}.tar.gz
+Source1: spread-init
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc
 Provides: libspread, libspread.so, libspread.so()(64bit)
@@ -32,6 +33,8 @@ Some of the services and benefits provided by Spread:
 
 %prep
 %setup -n %{name}-src-%{version} 
+mkdir -pv $RPM_BUILD_ROOT/etc/init.d
+mkdir -pv $RPM_BUILD_ROOT/var/run/spread
 
 %build
 ./configure
@@ -39,41 +42,49 @@ make
 
 %install
 %makeinstall
+cp -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spread
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+echo "%attr(-, spread, spread) %dir /var/run/spread" >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
+%defattr(-, root, root, -)
 
 %pre
 if grep spread /etc/passwd
 then 
-	echo "spread user already exists, making /var/run/spread owned by spread:spread"
-	exec mkdir -p /var/run/spread && chown -Rf spread:spread /var/run/spread
+	echo "Spread user already exists..."
 else
-	echo "Adding spread user and group"
-	exec /usr/sbin/useradd -m -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
+	echo "Adding spread user and group..."
+	exec /usr/sbin/useradd -M -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
 fi
+exec /sbin/chkconfig --add spread
 
 %preun
 if grep spread /etc/passwd
 then
-	echo "Removing spread user and group"
-	exec /usr/sbin/userdel -r spread 
+	echo "Removing spread user and group..."
+	exec /usr/sbin/userdel spread 
 fi
+if grep spread /etc/group
+then
+        echo "Spread group still exists. Removing spread group..."
+        exec /usr/sbin/groupdel spread
+fi
+exec /sbin/chkconfig --del spread
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.19  2007/07/31 01:11:04  bpbuild
+added init.d script and greatly cleaned up RPM
+
 Revision 1.18  2007/07/29 08:20:24  bpbuild
 -M was still in there
 
