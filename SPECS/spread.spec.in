@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.20 2007/07/31 01:16:33 bpbuild Exp $
+#$Id: spread.spec.in,v 1.21 2007/07/31 01:22:32 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -63,6 +63,8 @@ else
 	echo "Adding spread user and group..."
 	exec /usr/sbin/useradd -M -r -c "Spread User" -d /var/run/spread -s /sbin/nologin spread
 fi
+
+%post
 exec /sbin/chkconfig --add spread
 
 %preun
@@ -82,6 +84,9 @@ exec /sbin/chkconfig --del spread
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.21  2007/07/31 01:22:32  bpbuild
+chkconfig --add should be %post operation
+
 Revision 1.20  2007/07/31 01:16:33  bpbuild
 mode of 644 for /var/run/spread
 
