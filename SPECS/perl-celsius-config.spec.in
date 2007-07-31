@@ -1,4 +1,4 @@
-#$Id: perl-celsius-config.spec.in,v 1.7 2007/05/07 22:02:41 allenday Exp $
+#$Id: perl-celsius-config.spec.in,v 1.8 2007/07/31 02:01:10 bpbuild Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, configuration access for make, shell, and perl
 Name: perl-celsius-config
 Version: 0.01
@@ -30,6 +30,9 @@ make;
 make install;
 cp %{SOURCE1} $RPM_BUILD_ROOT/etc/
 
+# Remove perllocal.pod from the RPM to avoid installation conflicts
+find $RPM_BUILD_ROOT -type f | grep perllocal.pod | xargs rm -vf
+
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
 find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
@@ -47,6 +50,9 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 %preun
 
 $Log: perl-celsius-config.spec.in,v $
+Revision 1.8  2007/07/31 02:01:10  bpbuild
+remove perllocal.pod to avoid installation conflicts
+
 Revision 1.7  2007/05/07 22:02:41  allenday
 bad prefix
 
