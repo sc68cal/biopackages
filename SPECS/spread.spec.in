@@ -1,4 +1,4 @@
-#$Id: spread.spec.in,v 1.22 2007/07/31 01:28:23 bpbuild Exp $
+#$Id: spread.spec.in,v 1.23 2007/07/31 01:39:03 bpbuild Exp $
 Name: spread
 Summary: Spread is an open source toolkit that provides a high performance messaging service that is resilient to faults across local and wide area networks.
 Version: 4.0.0
@@ -9,6 +9,7 @@ Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source0: spread-src-%{version}.tar.gz
 Source1: spread-init
+Source2: spread-log
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc
 Provides: libspread, libspread.so, libspread.so()(64bit)
@@ -35,7 +36,7 @@ Some of the services and benefits provided by Spread:
 %setup -n %{name}-src-%{version} 
 mkdir -pv $RPM_BUILD_ROOT/etc/init.d
 mkdir -pv $RPM_BUILD_ROOT/var/run/spread
-touch $RPM_BUILD_ROOT/var/log/spread
+mkdir -pv $RPM_BUILD_ROOT/var/log
 
 %build
 ./configure
@@ -43,15 +44,21 @@ make
 
 %install
 %makeinstall
-cp -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spread
+cp -vf %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spread
+if test -e /var/log/spread
+then
+	echo "/var/log/spread already exists, skipping"
+else
+	cp -v %{SOURCE2} $RPM_BUILD_ROOT/var/log/spread
+	echo "%attr(600, spread, spread) /var/log/spread" >> %{name}-%{version}-%{release}-filelist
+fi
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | grep -v /var/log/spread | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | grep -v /var/log/spread | sed "s@^%{buildroot}@@g" |grep / >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-echo "%attr(600, spread, spread) /var/log/spread" >> %{name}-%{version}-%{release}-filelist
 echo "%attr(644, spread, spread) %dir /var/run/spread" >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
@@ -86,6 +93,9 @@ exec /sbin/chkconfig --del spread
 rm -rf $RPM_BUILD_ROOT
 
 $Log: spread.spec.in,v $
+Revision 1.23  2007/07/31 01:39:03  bpbuild
+fixing /var/log/spread
+
 Revision 1.22  2007/07/31 01:28:23  bpbuild
 add /var/log/spread
 
