@@ -1,58 +1,41 @@
-#$Id: mod_log_spread.spec.in,v 1.1 2007/07/03 21:35:25 bpbuild Exp $
-Name: mod_log_spread
-Summary: mod_log_spread is a patch to Apache's mod_log_config, which provides an interface for spread to multicast access logs.
-Version: 1.0.4
-Release: %{revision}.%{distro}
-License: Spread Open Source License
-URL: http://www.backhand.org/mod_log_spread/
-Packager: Jordan Mendler <jmendler@ucla.edu>
-Group: Development/Tools
-Source: mod_log_spread-%{Version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-#BuildRequires: spread
-BuildRequires: httpd-devel
-Requires: spread
-Requires: httpd
+#$Id: mod_log_spread.spec.in,v 1.2 2007/08/02 18:32:05 bpbuild Exp $
+Name:           mod_log_spread
+Version:        1.0
+Release:        %{revision}.%{distro}
+Summary:        multicast httpd logs to spread
+
+Group:          System Environment/Daemons
+License:        Apache Software License
+URL:            http://www.openinfo.co.uk/apache/
+Source0:        mod-log-spread2.tar.bz2
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildRequires:  spread, httpd-devel
+Requires:       spread
 
 %description
-What is mod_log_spread?
-mod_log_spread is a patch to Apache's mod_log_config, which provides an interface for spread to multicast access logs. It utilizes the group communication toolkit Spread, developed at Johns Hopkins University's Center for Networking and Distributed Systems. mod_log_spread was developed to solve the problem of collecting consolidated access logs for large web farms. In particular, the solution needed to be scalable to hundreds of machines, utilize a reliable network transport, allow machines to added or dropped on the fly, and impose minimal performance impact on the webservers. Current version is 1.0.3p3. This makes a fix to a stupid vhost logging bug as well as providing a complete and flexible log-writing solution.
-
-What is wrong with the way things were...?
-The reason I wrote mod_log_spread was that a popular commercial log writing application my company purchased was hard to support, non-scalable, and broke frequently. The scalability concerns with it stemmed from it's basic design. The particular product I was addled with was a (java-based) packet sniffer. It sniffs for http transactions and recreates them from tcp sessions. This presents immediate scalability concerns. How do we sniff a network pushing 70Mb of traffic with a single non-clustering packet-sniffer? You don't. mod_log_spread backs up this assertion by demonstratebly recording 10-15% more traffic. Sniffers drop logs, Spread, the underlying protocol behind mod_log_spread, is designed to be unable to drop messages. This particular commercial sniffer is also a single point of failure. mod_log_spread can run two (or any number) logging hosts simultaneously with no netwrok overhead. Further it is not a black box product, mod_log_spread is an open-source project.
-
-So why not just write logs locally?
-There is a 20-30% performance hit, and you have never known pain until you have tried to manage local logging across 60 machines. Trust me.
+multicast httpd logs to spread
 
 %prep
-%setup -n %{name}-%{version} 
+%setup -q -n mod_log_spread2
 
 %build
-apxs -c -I /usr/lib -L/usr/lib -lsp \
-                src/modules/extra/mod_log_spread.c   
-apxs -i -a -n log_spread mod_log_spread.so
+apxs -lspread -c %{name}.c
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%makeinstall
-
-# Make RPM aware of each type of file
-[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
-
-%files -f %{name}-%{version}-%{release}-filelist
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_libdir}/httpd/modules
+install -p .libs/%{name}.so %{buildroot}/%{_libdir}/httpd/modules/
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root,-)
+%{_libdir}/httpd/modules/mod_log_spread.so
+
 
 $Log: mod_log_spread.spec.in,v $
-Revision 1.1  2007/07/03 21:35:25  bpbuild
-preliminary spec.in
+Revision 1.2  2007/08/02 18:32:05  bpbuild
+new spec
 

@@ -1,0 +1,46 @@
+#$Id: spreadlogd.spec.in,v 1.1 2007/08/02 18:32:05 bpbuild Exp $
+Name:           spreadlogd
+Version:        1.4.2
+Release:        %{revision}.%{distro}
+Summary:        a replacement to log_writer
+
+Group:          System Environment/Daemons
+License:        Apache Software License
+URL:            http://www.openinfo.co.uk/apache/
+Source0:        %{name}.tar.gz
+Patch0:		%{name}.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildRequires:  flex, bison, spread, gcc
+Requires:       spread
+
+%description
+a replacement to log_writer
+
+%prep
+%setup -q -n spreadlogd-%{version}
+%patch0 -p1
+
+%build
+make
+
+%install
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}/etc
+install -m755 spreadlogd %{buildroot}/%{_bindir}/
+install -m644 spreadlogd.conf %{buildroot}/etc
+
+%clean
+rm -rf %{buildroot}
+
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/spreadlogd
+/etc/spreadlogd.conf
+
+$Log: spreadlogd.spec.in,v $
+Revision 1.1  2007/08/02 18:32:05  bpbuild
+new spec
+
