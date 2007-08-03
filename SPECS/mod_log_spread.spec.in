@@ -1,4 +1,4 @@
-#$Id: mod_log_spread.spec.in,v 1.2 2007/08/02 18:32:05 bpbuild Exp $
+#$Id: mod_log_spread.spec.in,v 1.3 2007/08/03 19:43:55 bpbuild Exp $
 Name:           mod_log_spread
 Version:        1.0
 Release:        %{revision}.%{distro}
@@ -20,7 +20,7 @@ multicast httpd logs to spread
 %setup -q -n mod_log_spread2
 
 %build
-apxs -lspread -c %{name}.c
+/usr/sbin/apxs -lspread -c %{name}.c
 
 %install
 rm -rf %{buildroot}
@@ -36,6 +36,9 @@ rm -rf %{buildroot}
 
 
 $Log: mod_log_spread.spec.in,v $
+Revision 1.3  2007/08/03 19:43:55  bpbuild
+/usr/sbin/apxs instead of apxs
+
 Revision 1.2  2007/08/02 18:32:05  bpbuild
 new spec
 
