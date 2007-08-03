@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.93 2007/07/18 21:07:00 bpbuild Exp $
+#$Id: Makefile,v 1.94 2007/08/03 19:22:19 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -81,8 +81,22 @@ report ::
 # migrate all packages from testing into stable and make new headers for all repositories.
 ## FIXME: add a migrate target to allow for migration of individual packages in case one does not want to migrate the entire testing repository
 migrate :: 
+	sudo -H $(MAKE) -C /biopackages	gpgsignature
 	for i in /biopackages/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 	$(MAKE) repo
+
+migrate_centos ::
+	sudo -H $(MAKE) -C /biopackages sign_centos 
+	for i in /biopackages/testing/centos/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	sudo -H $(MAKE) -C /biopackages all_but_sign_centos
+	$(MAKE) repo_permissions
+
+migrate_fedora ::
+	sudo -H $(MAKE) -C /biopackages sign_fedora
+	for i in /biopackages/testing/fedora/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	sudo -H $(MAKE) -C /biopackages all_but_sign_fedora
+	$(MAKE) repo_permissions
+
 
 # perform all actions related to generation and cleanliness of yum repository
 repo : repo_headers repo_permissions
@@ -90,7 +104,7 @@ repo : repo_headers repo_permissions
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
 repo_headers ::
-	sudo -H $(MAKE) -C /biopackages all
+	sudo -H $(MAKE) -C /biopackages all_but_sign
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
