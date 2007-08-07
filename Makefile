@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.94 2007/08/03 19:22:19 bpbuild Exp $
+#$Id: Makefile,v 1.95 2007/08/07 21:45:51 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -76,7 +76,7 @@ report ::
 	sudo mkdir -p /biopackages/report
 	sudo perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
 	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
-	sudo rsync -rvL --progress /usr/src/biopackages/SETTINGS /biopackages/report/
+	sudo rsync -rvL --times --whole-file --progress /usr/src/biopackages/SETTINGS /biopackages/report/
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 ## FIXME: add a migrate target to allow for migration of individual packages in case one does not want to migrate the entire testing repository
