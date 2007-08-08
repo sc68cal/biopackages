@@ -1,4 +1,4 @@
-#$Id: perl-Catalyst-Engine-Apache.spec.in,v 1.7 2006/07/15 01:55:21 boconnor Exp $
+#$Id: perl-Catalyst-Engine-Apache.spec.in,v 1.8 2007/08/08 23:50:27 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,7 +13,7 @@ Epoch: 0
 URL: http://search.cpan.org/dist/Catalyst-Engine-Apache/
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, mod_perl >= 2.0.0
+BuildRequires: perl, biopackages, mod_perl >= 2.0.0, perl-Module-Build
 Requires: mod_perl >= 2.0.0
 Patch0: Catalyst-Engine-Apache-1.07.mp2.patch
 Source0: Catalyst-Engine-Apache-1.07.tar.gz
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Catalyst-Engine-Apache.spec.in,v $
+Revision 1.8  2007/08/08 23:50:27  bpbuild
+build requires perl-Module-Build
+
 Revision 1.7  2006/07/15 01:55:21  boconnor
 I updated the hardcoded /usr directory in all the spec files.  This was to support MacOS which installs all RPMs into /usr/local.  It uses a RPM macro now to make it platform neutral.  I've also updated some other SPEC files to support MacOS, I've done my best to ensure any changes don't affect other platforms negatively
 
