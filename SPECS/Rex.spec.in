@@ -1,4 +1,4 @@
-#$Id: Rex.spec.in,v 1.4 2007/04/25 06:13:24 allenday Exp $
+#$Id: Rex.spec.in,v 1.5 2007/08/08 18:37:17 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,7 +12,7 @@ URL: http://search.cpan.org/~allenday
 Source0: %{name}-%{version}.tar.gz
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: R >= 2.0.0, biopackages, gcc
 
 %description
 R shebang scripts (#!/usr/bin/Rex)
@@ -45,6 +45,9 @@ find %{buildroot}%{_prefix} -type f | sed "s@^%{buildroot}@@g" > %{name}-%{versi
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: Rex.spec.in,v $
+Revision 1.5  2007/08/08 18:37:17  bpbuild
+requires gcc
+
 Revision 1.4  2007/04/25 06:13:24  allenday
 path fixup
 
