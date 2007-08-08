@@ -1,4 +1,4 @@
-#$Id: postgresql.spec.in,v 1.3 2007/05/09 02:11:27 bpbuild Exp $
+#$Id: postgresql.spec.in,v 1.4 2007/08/08 22:45:28 bpbuild Exp $
 # Conventions for PostgreSQL Global Development Group RPM releases:
 
 # Official PostgreSQL Development Group RPMS have a PGDG after the release number.
@@ -115,7 +115,7 @@ Patch6: postgresql-perl-rpath.patch
 Patch7: pgtcl-quote.patch
 
 BuildRequires: perl, glibc-devel, bison, flex, autoconf
-Requires: /sbin/ldconfig, initscripts
+Requires: /sbin/ldconfig, initscripts, postgresql-libs = %{version}
 
 %if %python
 BuildRequires: python-devel
@@ -829,6 +829,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 $Log: postgresql.spec.in,v $
+Revision 1.4  2007/08/08 22:45:28  bpbuild
+requires postgresql-libs
+
 Revision 1.3  2007/05/09 02:11:27  bpbuild
 syntax of rpm
 
