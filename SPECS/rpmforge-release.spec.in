@@ -1,10 +1,10 @@
-#$Id: rpmforge-release.spec.in,v 1.1 2007/08/08 23:39:35 bpbuild Exp $
+#$Id: rpmforge-release.spec.in,v 1.2 2007/08/08 23:40:12 bpbuild Exp $
 # Authority: dag
 # Upstream: Dag Wieers <dag@wieers.com>
 
 %{?dist: %{expand: %%define %dist 1}}
 
-%{ifdistro centos 2.1}%define _without_rpmpubkey 1}
+%{ifdistro_release centos 2.1}%define _without_rpmpubkey 1}
 
 Summary: RPMforge release file and package configuration
 Name: rpmforge-release
@@ -135,6 +135,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-*
 
 $Log: rpmforge-release.spec.in,v $
+Revision 1.2  2007/08/08 23:40:12  bpbuild
+ifdistro_release not ifdistro
+
 Revision 1.1  2007/08/08 23:39:35  bpbuild
 imported from dag, adjusted for biopackages
 
