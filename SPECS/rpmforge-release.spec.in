@@ -1,4 +1,4 @@
-#$Id: rpmforge-release.spec.in,v 1.4 2007/08/09 00:00:47 bpbuild Exp $
+#$Id: rpmforge-release.spec.in,v 1.5 2007/08/09 00:07:14 bpbuild Exp $
 # Authority: dag
 # Upstream: Dag Wieers <dag@wieers.com>
 
@@ -86,19 +86,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %files
 %defattr(-, root, root, 0755)
 %doc mirrors-rpmforge.yum RPM-GPG-KEY-rpmforge-* rpmforge.*
-%if %{!?_without_rpmpubkey:1}0
 %pubkey RPM-GPG-KEY-rpmforge-dag
 %pubkey RPM-GPG-KEY-rpmforge-dries
 %pubkey RPM-GPG-KEY-rpmforge-matthias
-%endif
-%dir %{_sysconfdir}/apt/
-%dir %{_sysconfdir}/apt/sources.list.d/
-%config(noreplace) %{_sysconfdir}/apt/sources.list.d/rpmforge.list
-%dir %{_sysconfdir}/smart/
-%dir %{_sysconfdir}/smart/channels/
-%config(noreplace) %{_sysconfdir}/smart/channels/rpmforge.channel
-%dir %{_sysconfdir}/sysconfig/rhn/
-%config %{_sysconfdir}/sysconfig/rhn/sources.rpmforge.txt
 %dir %{_sysconfdir}/yum.repos.d/
 %config(noreplace) %{_sysconfdir}/yum.repos.d/rpmforge.repo
 %config %{_sysconfdir}/yum.repos.d/mirrors-rpmforge
@@ -106,6 +96,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-*
 
 $Log: rpmforge-release.spec.in,v $
+Revision 1.5  2007/08/09 00:07:14  bpbuild
+fixed files section
+
 Revision 1.4  2007/08/09 00:00:47  bpbuild
 gave low version number to be overwritten by official rpm on yum update, noarch, only provide yum config
 
