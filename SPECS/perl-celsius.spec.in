@@ -1,4 +1,4 @@
-#$Id: perl-celsius.spec.in,v 1.4 2007/08/09 01:14:07 bpbuild Exp $
+#$Id: perl-celsius.spec.in,v 1.5 2007/08/09 01:35:10 bpbuild Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, perl webserver component
 Name: perl-celsius
 Version: 0.04
@@ -11,8 +11,8 @@ Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.sf.net/projects/celsius
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Requires:      Rex, celsius-database, mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error, perl-celsius-config
-BuildRequires:                        mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath, perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error
+Requires:      Rex, celsius-database, mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Catalyst-View-TT, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error, perl-celsius-config
+BuildRequires:                        mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Catalyst-View-TT, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath, perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error
 
 %description
 Celsius Affymetrix microarray data warehousing system, perl webserver component
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROO
 %preun
 
 $Log: perl-celsius.spec.in,v $
+Revision 1.5  2007/08/09 01:35:10  bpbuild
+requires perl-Catalyst-View-TT
+
 Revision 1.4  2007/08/09 01:14:07  bpbuild
 requires perl-Class-DBI-Pg and perl-Catalyst-Plugin-Cache-FileCache
 
