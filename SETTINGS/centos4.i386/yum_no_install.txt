@@ -26,6 +26,7 @@ perl-Storable
 #perl-XML-DOM
 #perl-XML-LibXML
 #perl-XML-SAX
+perl-libwww-perl
 pgplot
 postgresql
 primer3
