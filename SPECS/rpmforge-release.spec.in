@@ -1,4 +1,4 @@
-#$Id: rpmforge-release.spec.in,v 1.5 2007/08/09 00:07:14 bpbuild Exp $
+#$Id: rpmforge-release.spec.in,v 1.6 2007/08/13 18:38:34 bpbuild Exp $
 # Authority: dag
 # Upstream: Dag Wieers <dag@wieers.com>
 
@@ -32,16 +32,15 @@ GPG keys used to sign them.
 %prep
 %setup -c
 
-%{ifdistro_release centos 5}name='Red Hat Enterprise'; version='5'; path="redhat/el"; builder='dag'}
-%{ifdistro_release centos 4}name='Red Hat Enterprise'; version='4'; path="redhat/el"; builder='dag'}
-%{ifdistro_release centos 3}name='Red Hat Enterprise'; version='3'; path="redhat/el"; builder='dag'}
-%{ifdistro_release centos 2}name='Red Hat Enterprise'; version='2.1'; path="redhat/el"; builder='dag'}
-%{ifdistro_release fedora 6}name='Fedora Core'; version='6'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'}
-%{ifdistro_release fedora 5}name='Fedora Core'; version='5'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'}
-%{ifdistro_release fedora 4}name='Fedora Core'; version='4'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'}
-%{ifdistro_release fedora 3}name='Fedora Core'; version='3'; path="fedora/"; builder='dag'}
-%{ifdistro_release fedora 2}name='Fedora Core'; version='2'; path="fedora/"; builder='dag'}
-%{ifdistro_release fedora 1}name='Fedora Core'; version='1'; path="fedora/"; builder='dag'}
+%{ifdistro_release centos 5}name='Red Hat Enterprise'; version='5'; path="redhat/el"; builder='dag'
+%{ifdistro_release centos 3}name='Red Hat Enterprise'; version='3'; path="redhat/el"; builder='dag'
+%{ifdistro_release centos 2}name='Red Hat Enterprise'; version='2.1'; path="redhat/el"; builder='dag'
+%{ifdistro_release fedora 6}name='Fedora Core'; version='6'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'
+%{ifdistro_release fedora 5}name='Fedora Core'; version='5'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'
+%{ifdistro_release fedora 4}name='Fedora Core'; version='4'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'
+%{ifdistro_release fedora 3}name='Fedora Core'; version='3'; path="fedora/"; builder='dag'
+%{ifdistro_release fedora 2}name='Fedora Core'; version='2'; path="fedora/"; builder='dag'
+%{ifdistro_release fedora 1}name='Fedora Core'; version='1'; path="fedora/"; builder='dag'
 
 ### Yum needs hardcoded version as on RHEL4AS releasever translates to 4AS :(
 %{__cat} <<EOF >rpmforge.yum
@@ -96,6 +95,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-*
 
 $Log: rpmforge-release.spec.in,v $
+Revision 1.6  2007/08/13 18:38:34  bpbuild
+removed extra }
+
 Revision 1.5  2007/08/09 00:07:14  bpbuild
 fixed files section
 
