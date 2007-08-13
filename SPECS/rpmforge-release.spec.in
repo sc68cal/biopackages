@@ -1,4 +1,4 @@
-#$Id: rpmforge-release.spec.in,v 1.6 2007/08/13 18:38:34 bpbuild Exp $
+#$Id: rpmforge-release.spec.in,v 1.7 2007/08/13 18:39:48 bpbuild Exp $
 # Authority: dag
 # Upstream: Dag Wieers <dag@wieers.com>
 
@@ -33,6 +33,7 @@ GPG keys used to sign them.
 %setup -c
 
 %{ifdistro_release centos 5}name='Red Hat Enterprise'; version='5'; path="redhat/el"; builder='dag'
+%{ifdistro_release centos 4}name='Red Hat Enterprise'; version='4'; path="redhat/el"; builder='dag'
 %{ifdistro_release centos 3}name='Red Hat Enterprise'; version='3'; path="redhat/el"; builder='dag'
 %{ifdistro_release centos 2}name='Red Hat Enterprise'; version='2.1'; path="redhat/el"; builder='dag'
 %{ifdistro_release fedora 6}name='Fedora Core'; version='6'; path="fedora/"; builder='dries'; driesrepomdsuffix='/RPMS'
@@ -95,6 +96,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-*
 
 $Log: rpmforge-release.spec.in,v $
+Revision 1.7  2007/08/13 18:39:48  bpbuild
+accidentally removed centos4
+
 Revision 1.6  2007/08/13 18:38:34  bpbuild
 removed extra }
 
