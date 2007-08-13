@@ -1,0 +1,56 @@
+#$Id: biopackages-client-config-testing.spec.in,v 1.1 2007/08/13 19:05:18 bpbuild Exp $
+Summary: Configuration package for the often unstable Biopackages-testing repository.
+Name: biopackages-client-config
+Version: 1.0
+Release: %{revision}.%{distro}
+License: GPL
+Group: System Environment/Base
+Source0: GPL
+Source1: BIOPACKAGES-RPM-GPG-KEY
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+Requires: rpmforge-release
+                                                                                                                                                             
+%description
+This packages contains the yum configuration for the biopackages.net testing repository. This repository is designed for internal testing use only. The testing repository features regularly changing packages, untested and often non-functional packages which may break your system, and frequently contains broken yum metadata that can prevent yum from functioning. Use for anything but experimentation and internal testing is highly discouraged. Caveat emptor.
+
+%prep
+%setup -c
+
+%{ifdistro centos}name='CentOS'; path="centos"
+%{ifdistro fedora}name='Fedora Core'; path="fedora"
+
+
+%{__cat} <<EOF >biopackages-testing.yum
+[biopackages-testing]
+name = Biopackages Testing - $name \$releasever - \$basearch
+baseurl = http://biopackages.net/testing/$path/\$releasever/\$basearch/
+enabled = 1
+gpgcheck = 0
+
+[biopackages-testing-noarch]
+name = Biopackages Testing - $name \$releasever - noarch
+baseurl = http://biopackages.net/testing/$path/\$releasever/noarch/
+enabled = 1
+gpgcheck = 0
+
+EOF
+
+%build
+
+%install
+%{__rm} -rf %{buildroot}
+%{__install} -Dp -m0644 biopackages-testing.yum %{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-testing.repo
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%files
+%defattr(-, root, root, 0755)
+%dir %{_sysconfdir}/yum.repos.d/
+%config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages-testing.repo
+
+$Log: biopackages-client-config-testing.spec.in,v $
+Revision 1.1  2007/08/13 19:05:18  bpbuild
+new spec
+
