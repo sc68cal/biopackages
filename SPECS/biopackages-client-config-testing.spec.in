@@ -1,12 +1,10 @@
-#$Id: biopackages-client-config-testing.spec.in,v 1.1 2007/08/13 19:05:18 bpbuild Exp $
+#$Id: biopackages-client-config-testing.spec.in,v 1.2 2007/08/13 19:06:29 bpbuild Exp $
 Summary: Configuration package for the often unstable Biopackages-testing repository.
 Name: biopackages-client-config
 Version: 1.0
 Release: %{revision}.%{distro}
 License: GPL
 Group: System Environment/Base
-Source0: GPL
-Source1: BIOPACKAGES-RPM-GPG-KEY
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 Requires: rpmforge-release
@@ -51,6 +49,9 @@ EOF
 %config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages-testing.repo
 
 $Log: biopackages-client-config-testing.spec.in,v $
+Revision 1.2  2007/08/13 19:06:29  bpbuild
+no sources should be present
+
 Revision 1.1  2007/08/13 19:05:18  bpbuild
 new spec
 
