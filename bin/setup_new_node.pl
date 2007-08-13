@@ -28,12 +28,9 @@ $arch = rl("i386");
 ##General config
 # resolv.conf
   system("cp /etc/resolv.conf /etc/resolv.conf.distro");
-  $contents = <<END;
-  search genomics.ctrl.ucla.edu
-  nameserver 10.67.183.1
-  nameserver 164.67.128.1
-END
-  printfile("/etc/resolve.conf", $contents);
+  system("echo 'search genomics.ctrl.ucla.edu' > /etc/resolve.conf && echo 'nameserver 10.67.183.1' >> /etc/resolve.conf && echo 'nameserver 164.67.128.1' >> /etc/resolv.conf");
+
+
 # YUM
 	system("cp /etc/yum.conf /etc/yum.conf.distro");
 
@@ -42,12 +39,12 @@ END
 if($vmtype eq 'test')  {
 	# yum
 	system("rpm -Uvh http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-1.0-1.5.bp.centos4.noarch.rpm");
-}
+
 	print "Would you like to enable the biopackages testing repository? (e.g. yes, no):\n";
 	$testing = <STDIN>;
 	chomp($testing);
 	if ($testing = "yes") { system("rpm -Uvh http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-testing-1.0-1.5.bp.centos4.noarch.rpm"); }
-
+}
 
 ### Build and Dev
 if ($vmtype eq 'build' || $vmtype eq 'dev') {
@@ -212,7 +209,7 @@ END
   system("chmod 775 /usr/src");
   system("mkdir -p /usr/src/biopackages/RPMS");
   system("sudo yum -y install cvs");
-  system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep\'; chown -Rvf bpbuild:bpbuild /usr/src/biopackages');
+  system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown -Rf bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep\'');
 
   # make symlinks
   # FIXME: make prep shouldn't create these!
