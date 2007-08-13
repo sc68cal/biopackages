@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.22 2007/08/13 19:18:28 bpbuild Exp $
+#$Id: R.spec.in,v 1.23 2007/08/13 19:21:43 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -15,10 +15,8 @@ Icon: logosm-trans.gif
 Provides: R-base, R-recommended
 Obsoletes: R-base, R-recommended
 Requires: %__perl 
-BuildRequires: tk-devel tetex-latex readline-devel pcre-devel libjpeg-devel
-BuildRequires: zlib-devel bzip2-devel blas libglade2-devel, xorg-x11-devel
+BuildRequires: tk-devel, tetex-latex, readline-devel, pcre-devel, libjpeg-devel, zlib-devel, bzip2-devel, blas, libglade2-devel, xorg-x11-devel, xpdf, gcc-g77, gcc-c++, gcc
 BuildRequires: biopackages
-BuildRequires: xpdf, gcc-g77, gcc-c++, gcc
 
 Requires: xpdf, gcc-g77, gcc-c++, gcc
 
@@ -120,6 +118,9 @@ if [ $1 = 0 ]; then
 fi
 
 $Log: R.spec.in,v $
+Revision 1.23  2007/08/13 19:21:43  bpbuild
+cleaned up deps
+
 Revision 1.22  2007/08/13 19:18:28  bpbuild
 downgrading R to 2.2.0, since we need that for some apps and dag provides 2.4.x and 2.5.x when that is needed
 
