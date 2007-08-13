@@ -10,97 +10,50 @@
 
 use strict;
 
-my ($vmtype, $distro, $dabb, $version, $arch, $yum_settings, $answer);
+my ($vmtype, $distro, $dabb, $version, $arch, $answer, $contents, $testing);
 
-# yum data
-# FIXME: these need to be used to update yum.conf on each platform
-# the other mirror seems to be ftp.belnet.be
-
-$yum_settings->{fc2_i386} = <<END;
-[rpmforge]
-name = Fedora Core 2 - i386 - RPMforge.net - dag
-baseurl = http://apt.sw.be/fedora/2/en/\$basearch/dag/
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-$yum_settings->{fc2_x86_64} = <<END;
-[rpmforge]
-name = Fedora Core 2 - x86_64 - RPMforge.net - dag
-baseurl = http://apt.sw.be/fedora/2/en/\$basearch/dag/
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-$yum_settings->{fc5_i386} = <<END;
-[rpmforge]
-name = Fedora Core 5 - i386 - RPMforge.net - dries
-baseurl = http://apt.sw.be/fedora/5/en/\$basearch/dries/RPMS
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-$yum_settings->{fc5_x86_64} = <<END;
-[rpmforge]
-name = Fedora Core 5 - x86_64 - RPMforge.net - dries
-baseurl = http://apt.sw.be/fedora/5/en/\$basearch/dries/RPMS
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-$yum_settings->{centos4_i386} = <<END;
-[rpmforge]
-name = Centos 4 - i386 - RPMforge.net - dag
-baseurl = http://apt.sw.be/redhat/el4/en/\$basearch/dag/
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-$yum_settings->{centos4_x86_64} = <<END;
-[rpmforge]
-name = Centos 4 - x86_64 - RPMforge.net - dag
-baseurl = http://apt.sw.be/redhat/el4/en/\$basearch/dag/
-enabled = 1
-gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
-gpgcheck = 0
-END
-
-# collect some info:
+## collect some info:
 print "Is this a build, development, or testing virtual machine? [build, dev, test]\n";
 $vmtype = rl("build");
 print "What is the distribution (e.g. centos, fedora):\n";
 $distro = rl("fedora");
-print "What is the distribution abbreviation (e.g. centos, fc):\n";
-$dabb = rl("fc");
+	if ($distro eq 'centos') {$dabb = "centos";}
+	if ($distro eq 'fedora') {$dabb = "fc";}
+print "Abbreviating as $dabb...\n";
 print "What is the distro version (e.g. 2, 3, 4...):\n";
 $version = rl("2");
 print "What is the arch (e.g. i386, x86_64):\n";
 $arch = rl("i386");
 
-
-# YUM
-# everything needs yum configured
-system("cp /etc/yum.conf /etc/yum.conf.distro");
-my $contents = $yum_settings->{"$dabb$version\_$arch"};
-if($vmtype eq 'test')  {
-$contents .= <<END;
-[biopackages-stable]
-name=BioPackages (Stable) for Fedora Core \$releasever - \$basearch
-baseurl=http://yum.biopackages.net/biopackages/stable/$distro/\$releasever/\$basearch/
-
-[biopackages-stable-noarch]
-name=BioPackages (Stable) for Fedora Core \$releasever - noarch
-baseurl=http://yum.biopackages.net/biopackages/stable/$distro/\$releasever/noarch/
+##General config
+# resolv.conf
+  system("cp /etc/resolv.conf /etc/resolv.conf.distro");
+  $contents = <<END;
+  search genomics.ctrl.ucla.edu
+  nameserver 10.67.183.1
+  nameserver 164.67.128.1
 END
-}
-printfile(">/etc/yum.conf", $contents);
+  printfile("/etc/resolve.conf", $contents);
+# YUM
+	system("cp /etc/yum.conf /etc/yum.conf.distro");
 
+
+### Testing
+if($vmtype eq 'test')  {
+	# yum
+	system("rpm -Uvh http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-1.0-1.5.bp.centos4.noarch.rpm");
+}
+	print "Would you like to enable the biopackages testing repository? (e.g. yes, no):\n";
+	$testing = <STDIN>;
+	chomp($testing);
+	if ($testing = "yes") { system("rpm -Uvh http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-testing-1.0-1.5.bp.centos4.noarch.rpm"); }
+
+
+### Build and Dev
 if ($vmtype eq 'build' || $vmtype eq 'dev') {
+
+  # Enable RPMForge repositroy
+  system("rpm -Uvh http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm");
 
   # add bpbuild to sudo users file
   
@@ -163,14 +116,6 @@ END
   }
   $contents.="  ".$ipaddress."   ".`hostname`;
   printfile("/etc/hosts", $contents);
-  # resolve
-  system("cp /etc/resolv.conf /etc/resolv.conf.distro");
-  $contents = <<END;
-  search genomics.ctrl.ucla.edu
-  nameserver 10.67.183.1
-  nameserver 164.67.128.1
-END
-  printfile("/etc/resolve.conf", $contents);
   
   # setup users and groups
   system("groupadd -g 776 bpbuild");
@@ -203,24 +148,6 @@ END
   system("ln -s /net/host/nucleus/biopackages /net/biopackages");
   system("ln -s /net/host/nucleus/home /net/home");
   system("ln -s /net/home /home");
-  
-  # SGE
-  system("cp /etc/services /etc/services.distro");
-  $contents = <<END;
-  sge_commd 536/tcp # comm port SUN GRID ENGINE
-  sge_execd 537/tcp # Master port SUN GRID ENGINE
-END
-  printfile(">/etc/services", $contents);
-  
-  # FIXME:  on neuron: qconf -ah centos4.x86_64
-  print "FIXME:  on neuron: qconf -ah centos4.x86_64.\nEnter yes when ready.\n";
-  $answer = rl("yes");
-  system("sudo yum -y install binutils");
-  system("cd /gridware/sge; export SGE_ROOT=/gridware/sge; ./install_execd");
-  
-  print "FIXME: remove node from being an administrative host on SGE\n";
-  print 'FIXME: [root@neuron]# qconf -dh centos4.i386.JMM\nEner yes when ready.\n';
-  $answer = rl("yes");
   
   # time server
   system("sudo yum -y install ntp");
@@ -299,15 +226,36 @@ END
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
   
   # install bootstrap packages
-  system("sudo yum -y install cvs perl-DateManip");
+  system("sudo yum -y install cvs perl-DateManip rpm-build");
   system("sudo rpm -Uvh http://yum.biopackages.net/biopackages/stable/$distro/$version/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
   system("sudo rpm -Uvh http://yum.biopackages.net/biopackages/stable/$distro/$version/noarch/biopackages-1.0.1-1.14.noarch.rpm");
-
-}
   system("sudo yum -y install rpm-build");
+}
+
+
+### Build only
+if ($vmtype eq 'build') {
+  # SGE
+  system("cp /etc/services /etc/services.distro");
+  $contents = <<END;
+  sge_commd 536/tcp # comm port SUN GRID ENGINE
+  sge_execd 537/tcp # Master port SUN GRID ENGINE
+END
+  printfile(">/etc/services", $contents);
+                                                                                                                                                             
+  # FIXME:  on neuron: qconf -ah centos4.x86_64
+  print "FIXME:  on neuron: qconf -ah centos4.x86_64.\nEnter yes when ready.\n";
+  $answer = rl("yes");
+  system("sudo yum -y install binutils");
+  system("cd /gridware/sge; export SGE_ROOT=/gridware/sge; ./install_execd");
+                                                                                                                                                             
+  print "FIXME: remove node from being an administrative host on SGE\n";
+  print 'FIXME: [root@neuron]# qconf -dh centos4.i386.JMM\nEner yes when ready.\n';
+  $answer = rl("yes");
+}
+
 # done
 print("Setup is complete, reboot the system and take a snapshot\n");
-
 
 
 # subroutines
