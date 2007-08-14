@@ -1,4 +1,4 @@
-#$Id: php.spec.in,v 1.1 2007/08/14 23:14:09 bpbuild Exp $
+#$Id: php.spec.in,v 1.2 2007/08/14 23:16:17 bpbuild Exp $
 %define contentdir /var/www
 %define with_oci8 %{?_with_oci8:1}%{!?_with_oci8:0}
 %define with_mssql %{?_with_mssql:1}%{!?_with_mssql:0}
@@ -8,7 +8,7 @@
 Summary: The PHP HTML-embedded scripting language. (PHP: Hypertext Preprocessor)
 Name: php
 Version: 5.0.4
-Release: 10
+Release: 10.%{revision}.%{distro}
 License: The PHP License
 Group: Development/Languages
 URL: http://www.php.net/
@@ -643,6 +643,9 @@ rm files.*
 %endif
 
 $Log: php.spec.in,v $
+Revision 1.2  2007/08/14 23:16:17  bpbuild
+fixed version tag
+
 Revision 1.1  2007/08/14 23:14:09  bpbuild
 imported from fc4
 
