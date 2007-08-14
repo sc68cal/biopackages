@@ -223,7 +223,8 @@ END
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
   
   # install bootstrap packages
-  system("sudo yum -y install cvs perl-DateManip rpm-build biopackages usr-local-bin-perl rpmforge-release");
+  system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release");
+  system("sudo rpm -Uvh http://www.biopackages.net/stable/centos/4/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/centos/4/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
 }
 
 
