@@ -52,6 +52,9 @@ if ($vmtype eq 'build' || $vmtype eq 'dev') {
   # Enable RPMForge repositroy
   system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm");
 
+  # Yum install whatever we will need
+  system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release ntp");
+
   # add bpbuild to sudo users file
   
   system("echo 'bpbuild ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers");
@@ -147,7 +150,6 @@ END
   system("ln -s /net/home /home");
   
   # time server
-  system("sudo yum -y install ntp");
   my $contents = <<END;
   # Prohibit general access to this service.
   restrict default ignore
@@ -208,7 +210,6 @@ END
   system("chown bpbuild:bpbuild /usr/src");
   system("chmod 775 /usr/src");
   system("mkdir -p /usr/src/biopackages/RPMS");
-  system("sudo yum -y install cvs");
   system('export CVS_RSH=ssh; cd /usr/src; chown bpbuild:bpbuild /usr/src; chmod 775 /usr/src; chown -Rf bpbuild:bpbuild /usr/src/biopackages; chmod 775 /usr/src/biopackages; su bpbuild -c \'cvs -z 3 -d :ext:bpbuild@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep\'');
 
   # make symlinks
@@ -223,7 +224,6 @@ END
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
   
   # install bootstrap packages
-  system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release");
   system("sudo rpm -Uvh http://www.biopackages.net/stable/centos/4/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/centos/4/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
 }
 
