@@ -19,7 +19,6 @@ print "What is the distribution (e.g. centos, fedora):\n";
 $distro = rl("fedora");
 	if ($distro eq 'centos') {$dabb = "centos";}
 	if ($distro eq 'fedora') {$dabb = "fc";}
-print "Abbreviating as $dabb...\n";
 print "What is the distro version (e.g. 2, 3, 4...):\n";
 $version = rl("2");
 print "What is the arch (e.g. i386, x86_64):\n";
