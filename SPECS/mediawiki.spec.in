@@ -1,0 +1,65 @@
+#$Id: mediawiki.spec.in,v 1.1 2007/08/14 23:28:42 bpbuild Exp $
+Summary: A wiki engine
+Name: mediawiki
+Version: 1.7.1
+Release: 24.%{revision}.%{distro}
+License: GPL
+Group: Development/Tools
+URL: http://wikipedia.sourceforge.net/
+Source0: http://prdownloads.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
+Patch0: mediawiki-1.7.1-commoncode.patch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: ocaml >= 3.06
+Requires: php >= 5, mysql >= 4.0.14
+Requires: tetex-latex, tetex-dvips, ImageMagick
+
+%description
+MediaWiki is wiki software released under the GPL that is used by
+Wikimedia projects and others. It is developed using SourceForge
+(http://www.sourceforge.net/) and BugZilla
+(http://www.bugzilla.org/). MediaWiki's site is
+http://wikipedia.sourceforge.net/.
+
+This package supports wiki farms. Copy /var/www/wiki over to the
+desired wiki location and configure it through the web
+interface. Remember to remove the config dir after completing the
+configuration.
+
+%prep
+%setup -q
+%patch -p1
+
+%build
+cd math
+make
+
+%install
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_datadir}/mediawiki
+cp -a * %{buildroot}%{_datadir}/mediawiki/
+rm -fr %{buildroot}%{_datadir}/mediawiki/math
+mkdir -p %{buildroot}%{_libdir}/mediawiki
+cp -a math %{buildroot}%{_libdir}/mediawiki/
+
+mkdir -p %{buildroot}/var/www/wiki
+cd %{buildroot}/var/www/wiki/
+mkdir images
+cp -a %{buildroot}%{_datadir}/mediawiki/config .
+ln -s %{_datadir}/mediawiki/index.php index.php
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root,-)
+%doc COPYING FAQ HISTORY README RELEASE-NOTES UPGRADE
+%{_datadir}/mediawiki
+%attr(-,apache,apache) %{_datadir}/mediawiki/config
+%{_libdir}/mediawiki
+/var/www/wiki
+%attr(-,apache,apache) /var/www/wiki/config
+
+$Log: mediawiki.spec.in,v $
+Revision 1.1  2007/08/14 23:28:42  bpbuild
+imported from ulna
+
