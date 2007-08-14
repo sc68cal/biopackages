@@ -225,6 +225,10 @@ END
   
   # install bootstrap packages
   system("sudo rpm -Uvh http://www.biopackages.net/stable/centos/4/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/centos/4/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
+
+  # Setup hostname
+  system("echo 'NETWORKING=yes' > /etc/sysconfig/network && echo 'GATEWAY=10.67.183.1' >> /etc/sysconfig/network && echo 'HOSTNAME=$dabb$version.$arch >> /etc/sysconfig/network'");
+  system("hostname $dabb$version.$arch");
 }
 
 
