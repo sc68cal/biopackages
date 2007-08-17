@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.95 2007/08/07 21:45:51 bpbuild Exp $
+#$Id: Makefile,v 1.96 2007/08/17 23:53:41 bpbuild Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -204,10 +204,10 @@ symlink : symlink_clean symlink_small symlink_large
 symlink_clean : sync_clean
 
 symlink_large ::
-	ln -s ~bpbuild/SOURCES.large/* ./SOURCES/
+	for i in ~bpbuild/SOURCES.large/* ; do ln -s $$i ./SOURCES/ ; done
 
 symlink_small ::
-	ln -s ~bpbuild/SOURCES.small/* ./SOURCES/
+	for i in ~bpbuild/SOURCES.small/* ; do ln -s $$i ./SOURCES/ ; done
 
 rsync :		sync_clean rsync_down rsync_up
 rsync_down :	sync_clean rsync_down_small rsync_down_large
