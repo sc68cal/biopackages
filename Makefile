@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.97 2007/08/18 03:43:16 jmendler Exp $
+#$Id: Makefile,v 1.98 2007/08/18 03:51:35 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -228,7 +228,7 @@ symlink_large ::
 symlink_small ::
 	for i in ~bpbuild/SOURCES.small/* ; do ln -s $$i ./SOURCES/ ; done
 
-rsync_sources :		sync_clean rsync_down rsync_up
+rsync_sources :		sync_clean rsync_down
 rsync_down :	sync_clean rsync_down_small rsync_down_large
 rsync_up :	sync_clean rsync_up_small rsync_up_large
 rsync_small :	sync_clean rsync_down_small rsync_up_small
@@ -239,13 +239,15 @@ sync_clean ::
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
+
+##FIXME: rsyncs should be down through anonymous read-only rsyncd
 rsync_down_large ::
-	rsync -av $(SYNCHOST):/home/bpbuild/SOURCES.large/ ./SOURCES.large
-	cd SOURCES; ln -s ../SOURCES.large/* .;	cd ..
+	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.large/ ./SOURCES.large
+	ln -s ../SOURCES.large/* ./SOURCES/
 
 rsync_down_small ::
-	rsync -av $(SYNCHOST):/home/bpbuild/SOURCES.small/ ./SOURCES.small
-	cd SOURCES; ln -s ../SOURCES.small/* .; cd ..
+	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.small/ ./SOURCES.small
+	ln -s ../SOURCES.small/* ./SOURCES/
 
 rsync_up_large ::
 	rsync -av ./SOURCES.large/ $(SYNCHOST):/home/bpbuild/SOURCES.large
