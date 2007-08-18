@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.98 2007/08/18 03:51:35 jmendler Exp $
+#$Id: Makefile,v 1.99 2007/08/18 04:09:19 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -228,26 +228,27 @@ symlink_large ::
 symlink_small ::
 	for i in ~bpbuild/SOURCES.small/* ; do ln -s $$i ./SOURCES/ ; done
 
-rsync_sources :		sync_clean rsync_down
+rsync_sources :		sync_clean rsync_down rsync_links
 rsync_down :	sync_clean rsync_down_small rsync_down_large
 rsync_up :	sync_clean rsync_up_small rsync_up_large
 rsync_small :	sync_clean rsync_down_small rsync_up_small
 rsync_large :	sync_clean rsync_down_large rsync_up_large
 
 sync_clean ::
-	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "Move your files from SOURCES/ to one of ~bpbuild/SOURCES.{large,small}"; exit 1; fi
+	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ so they are not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 
 ##FIXME: rsyncs should be down through anonymous read-only rsyncd
 rsync_down_large ::
-	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.large/ ./SOURCES.large
-	ln -s ../SOURCES.large/* ./SOURCES/
+	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.large/ SOURCES.small/
 
 rsync_down_small ::
-	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.small/ ./SOURCES.small
-	ln -s ../SOURCES.small/* ./SOURCES/
+	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.small/ SOURCES.large/
+
+rsync_links ::
+	for i in SOURCES.small/* SOURCES.large/* ; do ln -s $$i SOURCES/$$i ; done
 
 rsync_up_large ::
 	rsync -av ./SOURCES.large/ $(SYNCHOST):/home/bpbuild/SOURCES.large
