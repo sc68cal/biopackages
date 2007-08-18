@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.96 2007/08/17 23:53:41 bpbuild Exp $
+#$Id: Makefile,v 1.97 2007/08/18 03:43:16 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -7,28 +7,51 @@ RPMBUILD=/usr/bin/rpmbuild
 SYNCHOST=neuron.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
 
-# test
+###User Defined Settings
+#CVSPATH is the topdir of your CVS checkout. Default: /usr/src/biopackages
+CVSPATH=/usr/src/biopackages
+
+#WEBROOT is the path to where the root of your webserver is mounted on your local machine (often /var/www/html by many default apache installations). This does not effect package development in any way, and only matters if you want to run your own RPM repository. Default: /biopackages
+WEBROOT=/biopackages
+
+#BUILDUSER is the user that you will be building RPMs as. BUILDGROUP is the group of that user. Default: bpbuild
+BUILDUSER=bpbuild
+BUILDGROUP=bpbuild
+
+#DISTRO is the distribution that is being built on, specified in all lower-case letters. Default: centos 
+DISTRO=centos
+
+#DISTRO_VER is the major version of that distribution. CentOS 4.0, 4.1, ... 4.x should all be specified as 4. Default: 4
+DISTRO_VER=4
+
+#DISTRO_ARCH is the architecture of the distribution. Examples include i386, x86_64, ppc and ppc64. Default: i386
+DISTRO_ARCH=i386
+
+#ALLDISTROS specified all of the distributions and architectures a farm will support. This is geared toward multiple-distribution farms, and has little relevance to individual developers. Seperate platforms must be seperated by commas and no spaces. For example: fc2,fc5,centos4 sets up your build environment to support Fedora Core 2, Fedora Core 5 and CentOS 4.
+ALLDISTROS=fc2,fc5,centos4
+
+#ALLARCH specifies the all of the architectures this farm will support. This is geared towards implimentations of farms supporting multiple architectures. Specify seperate architectures with a comman. Individual users can use the default. Default: i386,x86_64
+ALLARCH=i386,x86_64
 
 # FIXME:
 # * the cvsupdate target may not actually work (no rsh var set? can't login?)
 
 ####################################
-#stuff for initial environment setup
+#stuff for initial environment setup.
 prep ::
 	$(PERL) bin/rpmmacros.pl > ~/.rpmmacros
-	echo 'for d in tmp SETTINGS/{fc2,fc5,centos4}.{i386,x86_64} SOURCES SRPMS BUILD RPMS/i386 RPMS/noarch RPMS/ppc RPMS/ppc64 RPMS/x86_64; do mkdir -p $${d}; done' | /bin/bash
-	$(MAKE) sources
 	$(MAKE) settings
+	$(MAKE) sources
 
 ####################################
 #main build targets
 # triggers a .spec and .built file for each spec file on each target platform
 # also summarizes the build status of each to a log file
 # FIXME: add individual targets so you can build all/a package on a certain queue
-cluster_buildall ::
 #cluster_buildprep: prepares cluster for building
 #last statment: makes a cbuilt for every SPEC file which in turn triggers cluster builds on all nodes.
 ###This submits jobs to cluster. Wait until after all build jobs are done on all nodes and then manually run 'make cluster_postbuild' to generate reports, make yum headers and fix ownership.
+cluster_buildall ::
 	$(MAKE) cluster_buildprep
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.cbuilt}; done' | /bin/bash 
 
@@ -55,16 +78,16 @@ cluster_buildprep ::
 	$(MAKE) cluster_cvsupdate
 
 cluster_buildclean ::
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -p 5 -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{$(ALLDISTROS)}.{$(ALLARCH)}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n\n$(MAKE) buildclean\n" > SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; qsub -cwd -p 5 -o SETTINGS/$$file/LOGS/cluster_buildclean.stdout -e SETTINGS/$$file/LOGS/cluster_buildclean.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_buildclean.sh; done' | /bin/bash
 	
 cluster_cvsupdate ::
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsetenv CVS_RSH ssh\ncvs update\n" > SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; qsub -cwd -p 4 -o SETTINGS/$$file/LOGS/cluster_cvsupdate.stdout -e SETTINGS/$$file/LOGS/cluster_cvsupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{$(ALLDISTROS)}.{$(ALLARCH)}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsetenv CVS_RSH ssh\ncvs update\n" > SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; qsub -cwd -p 4 -o SETTINGS/$$file/LOGS/cluster_cvsupdate.stdout -e SETTINGS/$$file/LOGS/cluster_cvsupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_cvsupdate.sh; done' | /bin/bash
 
 cluster_prep ::
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -p 3 -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{$(ALLDISTROS)}.{$(ALLARCH)}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\n$(MAKE) prep\n" > SETTINGS/$$file/SCRIPTS/cluster_prep.sh; qsub -cwd -p 3 -o SETTINGS/$$file/LOGS/cluster_prep.stdout -e SETTINGS/$$file/LOGS/cluster_prep.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_prep.sh; done' | /bin/bash
 
 cluster_yumupdate ::
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsudo yum -y update\n" > SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; qsub -cwd -p 2 -o SETTINGS/$$file/LOGS/cluster_yumupdate.stdout -e SETTINGS/$$file/LOGS/cluster_yumupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{$(ALLDISTROS)}.{$(ALLARCH)}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; echo -e "#!/bin/csh\nsudo yum -y update\n" > SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; qsub -cwd -p 2 -o SETTINGS/$$file/LOGS/cluster_yumupdate.stdout -e SETTINGS/$$file/LOGS/cluster_yumupdate.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/cluster_yumupdate.sh; done' | /bin/bash
 
 # after a cluster_buildall finishes, 'make cluster_postbuild' to generate reports, migrate packages from testing to stable and make headers/rest of repo (make migrate triggers a make repo).
 cluster_postbuild :: report migrate
@@ -72,29 +95,28 @@ cluster_postbuild :: report migrate
 # creates an HTML output report summarizing the build status of each package based on logs
 ## FIXME: first line is a temporary fix cause make prep causes too many levels of symlinks
 report ::
-	sudo rm -Rf /usr/src/biopackages/SETTINGS/*/{SCRIPTS/SCRIPTS,LOGS/LOGS,DEP_TREES/DEP_TREES}
-	sudo mkdir -p /biopackages/report
+	sudo mkdir -p $(WEBROOT)/report
 	sudo perl bin/build_report.pl --dir SETTINGS --outdir REPORTS --format html
-	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html /biopackages/report
-	sudo rsync -rvL --times --whole-file --progress /usr/src/biopackages/SETTINGS /biopackages/report/
+	sudo cp -Rf REPORTS/green.gif REPORTS/red.gif REPORTS/index.html $(WEBROOT)/report
+	sudo rsync -rvL --times --whole-file --progress $(CVSPATH)/SETTINGS $(WEBROOT)/report/
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 ## FIXME: add a migrate target to allow for migration of individual packages in case one does not want to migrate the entire testing repository
 migrate :: 
-	sudo -H $(MAKE) -C /biopackages	gpgsignature
-	for i in /biopackages/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	sudo -H $(MAKE) -C $(WEBROOT)	gpgsignature
+	for i in $(WEBROOT)/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 	$(MAKE) repo
 
 migrate_centos ::
-	sudo -H $(MAKE) -C /biopackages sign_centos 
-	for i in /biopackages/testing/centos/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
-	sudo -H $(MAKE) -C /biopackages all_but_sign_centos
+	sudo -H $(MAKE) -C $(WEBROOT) sign_centos 
+	for i in $(WEBROOT)/testing/centos/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign_centos
 	$(MAKE) repo_permissions
 
 migrate_fedora ::
-	sudo -H $(MAKE) -C /biopackages sign_fedora
-	for i in /biopackages/testing/fedora/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
-	sudo -H $(MAKE) -C /biopackages all_but_sign_fedora
+	sudo -H $(MAKE) -C $(WEBROOT) sign_fedora
+	for i in $(WEBROOT)/testing/fedora/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
+	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign_fedora
 	$(MAKE) repo_permissions
 
 
@@ -104,12 +126,12 @@ repo : repo_headers repo_permissions
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
 repo_headers ::
-	sudo -H $(MAKE) -C /biopackages all_but_sign
+	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
-	sudo chown -Rf root:root /biopackages
-	sudo chown -Rf bpbuild:bpbuild /biopackages/testing
+	sudo chown -Rf root:root $(WEBROOT)
+	sudo chown -Rf $(BUILDUSER):$(BUILDGROUP) $(WEBROOT)/testing
 
 all :: specs
 
@@ -123,11 +145,11 @@ buildclean ::
 	$(RM_RF) tmp/*
 	$(RM_RF) BUILD/*
 
-sources ::
-	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "$(MAKE) symlink\n" : print "$(MAKE) rsync\n"' | /bin/bash
-
 settings ::
-	perl -e '(-e "/home/bpbuild/SETTINGS") ? print "$(MAKE) symlink_settings\n" : print "$(MAKE) rsync_settings"' | /bin/bash
+	perl -e '(-e "/home/bpbuild/SETTINGS.large") ? print "$(MAKE) symlink_settings\n" : print "$(MAKE) local_settings"' | /bin/bash
+
+sources ::
+	perl -e '(-e "/home/bpbuild/SOURCES.large") ? print "$(MAKE) symlink_sources\n" : print "$(MAKE) rsync_sources\n"' | /bin/bash
 
 specs ::
 	echo 'for i in SPECS/*.spec.in; do $(MAKE) $${i/.spec.in/.spec}; done' | /bin/bash
@@ -146,7 +168,7 @@ specs ::
 #
 # NOTE: If doing an individual 'make .cbuilt' you should manually do a 'make cluster_cvsupdate' before, because all the automatic cvs updates are done by the 'make cluster_buildall' 
 %.cbuilt : %.spec.in
-	echo 'for i in SETTINGS/{fc2,fc5,centos4}.{i386,x86_64}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; rm SETTINGS/$$file/LOGS/$$spec.*; echo -e "#!/bin/csh\n\nsetenv CVS_RSH ssh\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
+	echo 'for i in SETTINGS/{$(ALLDISTROS)}.{$(ALLARCH)}; do spec=$(subst .spec.in,,$<); spec=$${spec#SPECS/}; spec=$${spec}; file=$${i#SETTINGS/}; distro=$${file%.*}; arch=$${file#*.}; rm SETTINGS/$$file/LOGS/$$spec.*; echo -e "#!/bin/csh\n\nsetenv CVS_RSH ssh\n$(MAKE) $(subst .spec.in,.rbuilt,$<)\n" > SETTINGS/$$file/SCRIPTS/$$spec.sh; echo "qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh"; qsub -cwd -o SETTINGS/$$file/LOGS/$$spec.stdout -e SETTINGS/$$file/LOGS/$$spec.stderr -q $$file.q SETTINGS/$$file/SCRIPTS/$$spec.sh; done' | /bin/bash
 	touch $@
 
 %.built : %.spec
@@ -182,25 +204,22 @@ specs ::
 %.spec : %.spec.in
 	cat $< | $(PERL) bin/in2spec.pl > $@
 
-####################################
-#symlink/rsync targets to maintain SETTINGS
-#this dir structure also has the logs dir
+########################################################################
+#Setup targets, called by various targets above in preparing a system
+
+local_settings ::
+	echo 'for d in tmp SETTINGS/{$(DISTRO)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
+
 ## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
 symlink_settings ::
-	echo 'for dist in {fc2,fc5,centos4}.{i386,x86_64} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -sf /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
-#
-#FIXME: finish following statment to symlink RPMS and SRPMS to Shared Storage as part of symlink_settings target (JMM)
-#       echo 'for n in SRPMS RPMS/{i386,noarch,x86_64} ; do unlink $n ; done' | /bin/bash
-#       echo 'if [ "$$(hostname|cut -d . -f 1)" = "fc2" ] ; then ln -s /net/biopackages/testing/fedora/2/SRPMS SRPMS && ln -s /net/biopackages/testing/fedora/2/i386 RPMS/i386 && ln -s /net/biopackages/testing/fedora/2/noarch RPMS/noarch && ln -s /net/biopackages/testing/fedora/2/x86_64 RPMS/x86_64 ; elif [ "$$(hostname|cut -d . -f 1)" = "fc5" ] ; then ln -s /net/biopackages/testing/fedora/5/SRPMS SRPMS && ln -s /net/biopackages/testing/fedora/5/i386 RPMS/i386 && ln -s /net/biopackages/testing/fedora/5/noarch RPMS/noarch && ln -s /net/biopackages/testing/fedora/5/x86_64 RPMS/x86_64 ; elif [ "$$(hostname|cut -d . -f 1)" = "centos4" ] ; then ln -s /net/biopackages/testing/centos/4/SRPMS SRPMS && ln -s /net/biopackages/testing/centos/4/i386 RPMS/i386 && ln -s /net/biopackages/testing/centos/4/noarch RPMS/noarch && ln -s /net/biopackages/testing/centos/4/x86_64 RPMS/x86_64 ; else echo "WARNING: CANNOT RESOLVE YOUR HOSTNAME" && echo "BUILT YOUR RPMS & SRPMS WILL NOT BE WRITTEN TO SHARED STORAGE" ; fi ' | /bin/bash
+	echo 'for d in tmp SETTINGS/{$(DISTRO)}.{$(ALLARCH)} SOURCES BUILD RPMS ; do mkdir -p $${d}; done' | /bin/bash
+	echo 'for dist in {$(ALLDISTROS)}.{$(ALLARCH)} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -sf /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
+	sudo rm -Rf $(CVSPATH)/SETTINGS/*/{SCRIPTS/SCRIPTS,LOGS/LOGS,DEP_TREES/DEP_TREES}
+###FIXME: create symlinks for each distro/architecture to $(WEBROOT)/testing/... for SRPMS and RPMS
 
-rsync_settings : rsync_settings_down rsync_settings_up
-rsync_settings_down ::
-	rsync -avr $(SYNCHOST):/home/bpbuild/SETTINGS/ ./SETTINGS
-rsync_settings_up ::
-	rsync -avr ./SETTINGS/ $(SYNCHOST):/home/bpbuild/SETTINGS
 
 #symlink/rsync targets to maintain SOURCES/
-symlink : symlink_clean symlink_small symlink_large
+symlink_sources : symlink_clean symlink_small symlink_large
 symlink_clean : sync_clean
 
 symlink_large ::
@@ -209,7 +228,7 @@ symlink_large ::
 symlink_small ::
 	for i in ~bpbuild/SOURCES.small/* ; do ln -s $$i ./SOURCES/ ; done
 
-rsync :		sync_clean rsync_down rsync_up
+rsync_sources :		sync_clean rsync_down rsync_up
 rsync_down :	sync_clean rsync_down_small rsync_down_large
 rsync_up :	sync_clean rsync_up_small rsync_up_large
 rsync_small :	sync_clean rsync_down_small rsync_up_small
