@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.100 2007/08/20 20:37:46 jmendler Exp $
+#$Id: Makefile,v 1.101 2007/08/20 21:29:02 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -11,6 +11,9 @@ RECURSIVE_BUILD=bin/resolve_deps.pl
 ###User Defined configuration options
 #ENABLE_LARGE specifies whether or not remote users you would like to include large sources. Beware that these sources exceed 8gb, so rsyncing will take a while. If you would like large sources, set "ENABLE_LARGE=yes". Default: no
 ENABLE_LARGE=no
+
+#SYNCUSER is the name of the user that will be authenticated against SYNCHOST when uploading sources. While downloading sources can be done anonymously, uploading sources requires authentication. If you would like to become a biopackages developer and gain uploading ability, please email nelsonlab-devel@sourceforge.net. Default: bpbuild
+SYNCUSER=bpbuild
 
 ###User Environmental Defined Settings
 #CVSPATH is the topdir of your CVS checkout. Default: /usr/src/biopackages
@@ -235,9 +238,6 @@ symlink_small ::
 
 rsync_sources :		sync_clean rsync_down rsync_links
 rsync_down :	sync_clean rsync_down_small rsync_down_large
-rsync_up :	sync_clean rsync_up_small rsync_up_large
-rsync_small :	sync_clean rsync_down_small rsync_up_small
-rsync_large :	sync_clean rsync_down_large rsync_up_large
 
 sync_clean ::
 	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ so they are not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
@@ -257,11 +257,9 @@ endif
 
 rsync_links ::
 	for i in SOURCES.small/* ; do ln -s $$i $${i/SOURCES.small/SOURCES} ; done
+ifeq ($(ENABLE_LARGE),yes)
 	for i in SOURCES.large/* ; do ln -s $$i $${i/SOURCES.large/SOURCES} ; done
+endif
 
-rsync_up_large ::
-	rsync -av ./SOURCES.large/ $(SYNCHOST):/home/bpbuild/SOURCES.large
-
-rsync_up_small ::
-	rsync -av ./SOURCES.small/ $(SYNCHOST):/home/bpbuild/SOURCES.small
-
+sources_up ::
+	rsync -rlv --progress ./SOURCES.upload/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.upload
