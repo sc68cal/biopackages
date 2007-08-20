@@ -1,13 +1,18 @@
-#$Id: Makefile,v 1.99 2007/08/18 04:09:19 jmendler Exp $
+#$Id: Makefile,v 1.100 2007/08/20 20:37:46 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
-SYNCHOST=neuron.genomics.ctrl.ucla.edu
+SYNCHOST=ulna.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
 
-###User Defined Settings
+
+###User Defined configuration options
+#ENABLE_LARGE specifies whether or not remote users you would like to include large sources. Beware that these sources exceed 8gb, so rsyncing will take a while. If you would like large sources, set "ENABLE_LARGE=yes". Default: no
+ENABLE_LARGE=no
+
+###User Environmental Defined Settings
 #CVSPATH is the topdir of your CVS checkout. Default: /usr/src/biopackages
 CVSPATH=/usr/src/biopackages
 
@@ -208,11 +213,11 @@ specs ::
 #Setup targets, called by various targets above in preparing a system
 
 local_settings ::
-	echo 'for d in tmp SETTINGS/{$(DISTRO)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
+	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
 
 ## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
 symlink_settings ::
-	echo 'for d in tmp SETTINGS/{$(DISTRO)}.{$(ALLARCH)} SOURCES BUILD RPMS ; do mkdir -p $${d}; done' | /bin/bash
+	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)} SOURCES BUILD RPMS ; do mkdir -p $${d}; done' | /bin/bash
 	echo 'for dist in {$(ALLDISTROS)}.{$(ALLARCH)} ; do for dir in LOGS DEP_TREES SCRIPTS ; do ln -sf /home/bpbuild/SETTINGS/$${dist}/$${dir} SETTINGS/$${dist}/$${dir} ; done ; done' | /bin/bash
 	sudo rm -Rf $(CVSPATH)/SETTINGS/*/{SCRIPTS/SCRIPTS,LOGS/LOGS,DEP_TREES/DEP_TREES}
 ###FIXME: create symlinks for each distro/architecture to $(WEBROOT)/testing/... for SRPMS and RPMS
@@ -239,16 +244,20 @@ sync_clean ::
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
-
-##FIXME: rsyncs should be down through anonymous read-only rsyncd
-rsync_down_large ::
-	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.large/ SOURCES.small/
-
 rsync_down_small ::
-	rsync -av bpbuild@$(SYNCHOST):/home/bpbuild/SOURCES.small/ SOURCES.large/
+	@echo You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST). This may take a while...
+	rsync -rl $(SYNCHOST)::SOURCES.small SOURCES.small/
+
+rsync_down_large ::
+ifeq ($(ENABLE_LARGE),yes)
+	rsync -rl $(SYNCHOST)::SOURCES.large SOURCES.large/
+else
+	@echo ENABLE_large is not set to yes, so skipping large sources.
+endif
 
 rsync_links ::
-	for i in SOURCES.small/* SOURCES.large/* ; do ln -s $$i SOURCES/$$i ; done
+	for i in SOURCES.small/* ; do ln -s $$i $${i/SOURCES.small/SOURCES} ; done
+	for i in SOURCES.large/* ; do ln -s $$i $${i/SOURCES.large/SOURCES} ; done
 
 rsync_up_large ::
 	rsync -av ./SOURCES.large/ $(SYNCHOST):/home/bpbuild/SOURCES.large
