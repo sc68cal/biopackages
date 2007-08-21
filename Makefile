@@ -1,46 +1,5 @@
-#$Id: Makefile,v 1.105 2007/08/21 03:10:26 jmendler Exp $
-LN_S=ln -s
-PERL=/usr/bin/perl
-RM_RF=rm -rf
-RM_I=rm -i
-RPMBUILD=/usr/bin/rpmbuild
-SYNCHOST=ulna.genomics.ctrl.ucla.edu
-#SYNCHOST=sumo.genomics.ctrl.ucla.edu
-RECURSIVE_BUILD=bin/resolve_deps.pl
-
-
-###User Defined configuration options
-#ENABLE_LARGE specifies whether or not remote users you would like to include large sources. Beware that these sources exceed 8gb, so rsyncing will take a while. If you would like large sources, set "ENABLE_LARGE=yes". Default: no
-ENABLE_LARGE=no
-
-#SYNCUSER is the name of the user that will be authenticated against SYNCHOST when uploading sources. While downloading sources can be done anonymously, uploading sources requires authentication. If you would like to become a biopackages developer and gain uploading ability, please email nelsonlab-devel@sourceforge.net. Default: bpbuild
-SYNCUSER=bpbuild
-
-###User Environmental Defined Settings
-#CVSPATH is the topdir of your CVS checkout. Default: /usr/src/biopackages
-CVSPATH=/usr/src/biopackages
-
-#WEBROOT is the path to where the root of your webserver is mounted on your local machine (often /var/www/html by many default apache installations). This does not effect package development in any way, and only matters if you want to run your own RPM repository. Default: /biopackages
-WEBROOT=/biopackages
-
-#BUILDUSER is the user that you will be building RPMs as. BUILDGROUP is the group of that user. Default: bpbuild
-BUILDUSER=bpbuild
-BUILDGROUP=bpbuild
-
-#DISTRO is the distribution that is being built on, specified in all lower-case letters. Default: centos 
-DISTRO=centos
-
-#DISTRO_VER is the major version of that distribution. CentOS 4.0, 4.1, ... 4.x should all be specified as 4. Default: 4
-DISTRO_VER=4
-
-#DISTRO_ARCH is the architecture of the distribution. Examples include i386, x86_64, ppc and ppc64. Default: i386
-DISTRO_ARCH=i386
-
-#ALLDISTROS specified all of the distributions and architectures a farm will support. This is geared toward multiple-distribution farms, and has little relevance to individual developers. Seperate platforms must be seperated by commas and no spaces. For example: fc2,fc5,centos4 sets up your build environment to support Fedora Core 2, Fedora Core 5 and CentOS 4.
-ALLDISTROS=fc2,fc5,centos4
-
-#ALLARCH specifies the all of the architectures this farm will support. This is geared towards implimentations of farms supporting multiple architectures. Specify seperate architectures with a comman. Individual users can use the default. Default: i386,x86_64
-ALLARCH=i386,x86_64
+#$Id: Makefile,v 1.106 2007/08/21 03:39:20 jmendler Exp $
+include ./Makefile.conf
 
 # FIXME:
 # * the cvsupdate target may not actually work (no rsh var set? can't login?)
