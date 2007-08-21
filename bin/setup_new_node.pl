@@ -37,19 +37,19 @@ $arch = rl("i386");
 ### Testing
 if($vmtype eq 'test')  {
 	# yum
-	system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-1.0-1.5.bp.centos4.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm biopackages-client-config-1.0-1.5.bp.centos4.noarch.rpm");
+	system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-1.0-1.5.bp.$dabb$version.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm biopackages-client-config-1.0-1.5.bp.$dabb$version.noarch.rpm");
 
 	print "Would you like to enable the biopackages testing repository? (e.g. yes, no):\n";
 	$testing = <STDIN>;
 	chomp($testing);
-	if ($testing = "yes") { system("wget http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-testing-1.0-1.5.bp.centos4.noarch.rpm && rpm -Uvh biopackages-client-config-testing-1.0-1.5.bp.centos4.noarch.rpm"); }
+	if ($testing = "yes") { system("wget http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-testing-1.0-1.5.bp.$dabb$version.noarch.rpm && rpm -Uvh biopackages-client-config-testing-1.0-1.5.bp.$dabb$version.noarch.rpm"); }
 }
 
 ### Build and Dev
 if ($vmtype eq 'build' || $vmtype eq 'dev') {
 
   # Enable RPMForge repositroy
-  system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.centos4.noarch.rpm");
+  system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm");
 
   # Yum install whatever we will need
   system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release ntp");
