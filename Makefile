@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.108 2007/08/21 03:49:16 jmendler Exp $
+#$Id: Makefile,v 1.109 2007/08/21 03:58:40 jmendler Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -226,15 +226,15 @@ rsync_notify ::
 
 rsync_up ::
 	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
-	rsync -rlv ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small.auth
-	rsync -rlv ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large.auth
+	rsync -rlWv ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small.auth
+	rsync -rlWv ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large.auth
 
 rsync_down_small ::
-	rsync -rlv $(SYNCHOST)::SOURCES.small SOURCES.small/
+	rsync -rlWv $(SYNCHOST)::SOURCES.small SOURCES.small/
 
 rsync_down_large ::
 ifeq ($(ENABLE_LARGE),yes)
-	rsync -rlv $(SYNCHOST)::SOURCES.large SOURCES.large/
+	rsync -rlWv $(SYNCHOST)::SOURCES.large SOURCES.large/
 else
 	@echo "ENABLE_large is not set to yes, so skipping large sources."
 endif
@@ -258,4 +258,4 @@ anonymous_sync_clean ::
 
 anonymous_up ::
 	@echo "Uploading sources from SOURCES.upload to anonymous rsync"
-	rsync -rlv ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
+	rsync -rlWv ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
