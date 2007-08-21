@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.109 2007/08/21 03:58:40 jmendler Exp $
+#$Id: Makefile,v 1.110 2007/08/21 20:06:31 jmendler Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -176,9 +176,9 @@ specs ::
 #Setup targets, called by various targets above in preparing a system
 
 local_settings ::
-	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES.{small,large} SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
+	echo 'for d in tmp SETTINGS/$(DISTRO)$(DISTRO_VER).{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES SOURCES.{small,large} SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
 ifeq ($(SYNCUSER),anonymous)
-	mkdir SOURCES.upload
+	mkdir -p SOURCES.upload
 endif
 
 ## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
@@ -241,9 +241,9 @@ endif
 
 rsync_links ::
 	@echo "Making symlinks. This may take a moment..."
-	for i in SOURCES.small/* ; do ln -s $$i $${i/SOURCES.small/SOURCES} ; done
+	for i in SOURCES.small/* ; do ln -s ../$$i $${i/SOURCES.small/SOURCES} ; done
 ifeq ($(ENABLE_LARGE),yes)
-	for i in SOURCES.large/* ; do ln -s $$i $${i/SOURCES.large/SOURCES} ; done
+	for i in SOURCES.large/* ; do ln -s ../$$i $${i/SOURCES.large/SOURCES} ; done
 endif
 
 
