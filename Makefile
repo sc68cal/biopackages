@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.101 2007/08/20 21:29:02 jmendler Exp $
+#$Id: Makefile,v 1.102 2007/08/21 02:20:47 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -236,7 +236,20 @@ symlink_large ::
 symlink_small ::
 	for i in ~bpbuild/SOURCES.small/* ; do ln -s $$i ./SOURCES/ ; done
 
-rsync_sources :		sync_clean rsync_down rsync_links
+
+## Rsync_sources tests whether a user is anonymous or authorized.
+rsync_sources ::
+ifeq ($(SYNCUSER),anonymous)
+	$(MAKE) anonymous_sync
+else
+	$(MAKE) authorized_sync
+endif
+
+
+
+##Rsync procedure for authorized users.
+authorized_sync :	sync_clean rsync_notify rsync_up rsync_down rsync_links
+
 rsync_down :	sync_clean rsync_down_small rsync_down_large
 
 sync_clean ::
@@ -244,8 +257,15 @@ sync_clean ::
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
+rsync_notify ::
+	@echo "You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST). This may take a while..."
+
+rsync_up ::
+	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
+	rsync -rlv --progress ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
+	rsync -rlv --progress ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
+
 rsync_down_small ::
-	@echo You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST). This may take a while...
 	rsync -rl $(SYNCHOST)::SOURCES.small SOURCES.small/
 
 rsync_down_large ::
@@ -261,5 +281,21 @@ ifeq ($(ENABLE_LARGE),yes)
 	for i in SOURCES.large/* ; do ln -s $$i $${i/SOURCES.large/SOURCES} ; done
 endif
 
-sources_up ::
-	rsync -rlv --progress ./SOURCES.upload/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.upload
+
+##The following is for anonymous users to download read-only sources and upload sources through the anonymous rsync server. Upon uploading sources, please open a task on http://sourceforge.net/projects/biopackages so that the sources will be verified and built.
+
+anonymous_sync : sync_clean anonymous_up anonymous_down rsync_links
+
+anoymous_up ::
+	@echo "Uploading sources from SOURCES.upload to anonymous rsync"
+	rsync -rl ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
+
+anonymous_down ::
+	@echo "Downloading sources over rsync. This may take a while..."
+	rsync -rl $(SYNCHOST)::SOURCES.small.anonymous SOURCES.small/
+ifeq ($(ENABLE_LARGE),yes)
+	rsync -rl $(SYNCHOST)::SOURCES.large.anonymous SOURCES.large/
+else
+	@echo ENABLE_large is not set to yes, so skipping large sources.
+endif
+
