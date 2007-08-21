@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.107 2007/08/21 03:43:32 jmendler Exp $
+#$Id: Makefile,v 1.108 2007/08/21 03:49:16 jmendler Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -177,6 +177,9 @@ specs ::
 
 local_settings ::
 	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES.{small,large} SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
+ifeq ($(SYNCUSER),anonymous)
+	mkdir SOURCES.upload
+endif
 
 ## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
 symlink_settings ::
