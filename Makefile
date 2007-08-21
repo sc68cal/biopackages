@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.103 2007/08/21 02:25:04 jmendler Exp $
+#$Id: Makefile,v 1.104 2007/08/21 02:32:06 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -253,29 +253,31 @@ authorized_sync :	sync_clean rsync_notify rsync_up rsync_down rsync_links
 rsync_down :	sync_clean rsync_down_small rsync_down_large
 
 sync_clean ::
-	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ so they are not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
+	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ and into SOURCES.small (less than 10mb) or SOURCES.large (over 10mb), so they are uploaded and not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 rsync_notify ::
+	@echo "--------------------------------------------------------------------------------------------------"
 	@echo "You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST). This may take a while..."
 
 rsync_up ::
 	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
-	rsync -rl ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
-	rsync -rl ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
+	rsync -rlv ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
+	rsync -rlv ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
 
 rsync_down_small ::
-	rsync -rl $(SYNCHOST)::SOURCES.small SOURCES.small/
+	rsync -rlv $(SYNCHOST)::SOURCES.small SOURCES.small/
 
 rsync_down_large ::
 ifeq ($(ENABLE_LARGE),yes)
-	rsync -rl $(SYNCHOST)::SOURCES.large SOURCES.large/
+	rsync -rlv $(SYNCHOST)::SOURCES.large SOURCES.large/
 else
-	@echo ENABLE_large is not set to yes, so skipping large sources.
+	@echo "ENABLE_large is not set to yes, so skipping large sources."
 endif
 
 rsync_links ::
+	@echo "Making symlinks. This may take a moment..."
 	for i in SOURCES.small/* ; do ln -s $$i $${i/SOURCES.small/SOURCES} ; done
 ifeq ($(ENABLE_LARGE),yes)
 	for i in SOURCES.large/* ; do ln -s $$i $${i/SOURCES.large/SOURCES} ; done
@@ -284,17 +286,22 @@ endif
 
 ##The following is for anonymous users to download read-only sources and upload sources through the anonymous rsync server. Upon uploading sources, please open a task on http://sourceforge.net/projects/biopackages so that the sources will be verified and built.
 
-anonymous_sync : sync_clean anonymous_up anonymous_down rsync_links
+anonymous_sync : anonymous_sync_clean anonymous_up anonymous_down rsync_links
+
+anonymous_sync_clean ::
+	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ and into SOURCES.upload, so they are uploaded and not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
+	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
+	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
 anoymous_up ::
 	@echo "Uploading sources from SOURCES.upload to anonymous rsync"
-	rsync -rl ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
+	rsync -rlv ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
 
 anonymous_down ::
 	@echo "Downloading sources over rsync. This may take a while..."
-	rsync -rl $(SYNCHOST)::SOURCES.small.anonymous SOURCES.small/
+	rsync -rlv $(SYNCHOST)::SOURCES.small.anonymous SOURCES.small/
 ifeq ($(ENABLE_LARGE),yes)
-	rsync -rl $(SYNCHOST)::SOURCES.large.anonymous SOURCES.large/
+	rsync -rlv $(SYNCHOST)::SOURCES.large.anonymous SOURCES.large/
 else
 	@echo ENABLE_large is not set to yes, so skipping large sources.
 endif
