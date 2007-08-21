@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.106 2007/08/21 03:39:20 jmendler Exp $
+#$Id: Makefile,v 1.107 2007/08/21 03:43:32 jmendler Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -253,6 +253,6 @@ anonymous_sync_clean ::
 	@find SOURCES/ -type l | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 	@find SOURCES/ -type d | grep -vw SOURCES/ | grep -vw SOURCES/CVS | xargs rm -rf
 
-anoymous_up ::
+anonymous_up ::
 	@echo "Uploading sources from SOURCES.upload to anonymous rsync"
 	rsync -rlv ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
