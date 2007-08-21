@@ -1,10 +1,11 @@
-#$Id: Makefile,v 1.104 2007/08/21 02:32:06 jmendler Exp $
+#$Id: Makefile,v 1.105 2007/08/21 03:10:26 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
 RM_I=rm -i
 RPMBUILD=/usr/bin/rpmbuild
 SYNCHOST=ulna.genomics.ctrl.ucla.edu
+#SYNCHOST=sumo.genomics.ctrl.ucla.edu
 RECURSIVE_BUILD=bin/resolve_deps.pl
 
 
@@ -216,7 +217,7 @@ specs ::
 #Setup targets, called by various targets above in preparing a system
 
 local_settings ::
-	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
+	echo 'for d in tmp SETTINGS/{$(DISTRO)$(DISTRO_VER)}.{$(ALLARCH)}/{LOGS,DEP_TREES,SCRIPTS} SOURCES.{small,large} SRPMS BUILD RPMS/{$(ALLARCH)} ; do mkdir -p $${d}; done' | /bin/bash
 
 ## FIXME: This works somewhat, but makes too many levels of symlinks (i.e. SETINGS/$$dist/LOGS/LOGS/LOGS)... rm -Rf dir/dir before making again
 symlink_settings ::
@@ -263,8 +264,8 @@ rsync_notify ::
 
 rsync_up ::
 	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
-	rsync -rlv ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
-	rsync -rlv ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
+	rsync -rlv ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small.auth
+	rsync -rlv ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large.auth
 
 rsync_down_small ::
 	rsync -rlv $(SYNCHOST)::SOURCES.small SOURCES.small/
@@ -286,7 +287,7 @@ endif
 
 ##The following is for anonymous users to download read-only sources and upload sources through the anonymous rsync server. Upon uploading sources, please open a task on http://sourceforge.net/projects/biopackages so that the sources will be verified and built.
 
-anonymous_sync : anonymous_sync_clean anonymous_up anonymous_down rsync_links
+anonymous_sync : anonymous_sync_clean anonymous_up rsync_down_small rsync_down_large rsync_links
 
 anonymous_sync_clean ::
 	@if [[ `find SOURCES/ -type f | grep -vw CVS | wc -l` > 0 ]]; then echo "=================================================================================" && echo "=================================================================================" && echo "====>  Please move your files out of SOURCES/ and into SOURCES.upload, so they are uploaded and not overwritten!  <====" && echo "=================================================================================" && echo "================================================================================="; exit 1; fi
@@ -296,13 +297,3 @@ anonymous_sync_clean ::
 anoymous_up ::
 	@echo "Uploading sources from SOURCES.upload to anonymous rsync"
 	rsync -rlv ./SOURCES.upload/ $(SYNCHOST)::SOURCES.upload.anonymous
-
-anonymous_down ::
-	@echo "Downloading sources over rsync. This may take a while..."
-	rsync -rlv $(SYNCHOST)::SOURCES.small.anonymous SOURCES.small/
-ifeq ($(ENABLE_LARGE),yes)
-	rsync -rlv $(SYNCHOST)::SOURCES.large.anonymous SOURCES.large/
-else
-	@echo ENABLE_large is not set to yes, so skipping large sources.
-endif
-
