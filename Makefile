@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.110 2007/08/21 20:06:31 jmendler Exp $
+#$Id: Makefile,v 1.111 2007/08/21 21:41:14 jmendler Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -222,7 +222,7 @@ sync_clean ::
 
 rsync_notify ::
 	@echo "--------------------------------------------------------------------------------------------------"
-	@echo "You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST). This may take a while..."
+	@echo "You appear to be outside of the lab, so rsyncing sources from $(SYNCHOST) as $(SYNCUSER). This may take a while..."
 
 rsync_up ::
 	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
