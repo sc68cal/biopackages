@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.102 2007/08/21 02:20:47 jmendler Exp $
+#$Id: Makefile,v 1.103 2007/08/21 02:25:04 jmendler Exp $
 LN_S=ln -s
 PERL=/usr/bin/perl
 RM_RF=rm -rf
@@ -262,8 +262,8 @@ rsync_notify ::
 
 rsync_up ::
 	@echo "Uploading new sources in SOURCES.small and SOURCES.large."
-	rsync -rlv --progress ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
-	rsync -rlv --progress ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
+	rsync -rl ./SOURCES.small/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.small
+	rsync -rl ./SOURCES.large/ $(SYNCUSER)@$(SYNCHOST)::SOURCES.large
 
 rsync_down_small ::
 	rsync -rl $(SYNCHOST)::SOURCES.small SOURCES.small/
