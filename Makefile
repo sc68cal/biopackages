@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.111 2007/08/21 21:41:14 jmendler Exp $
+#$Id: Makefile,v 1.112 2007/08/22 03:14:06 bpbuild Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -70,10 +70,13 @@ report ::
 
 # migrate all packages from testing into stable and make new headers for all repositories.
 ## FIXME: add a migrate target to allow for migration of individual packages in case one does not want to migrate the entire testing repository
-migrate :: 
+migrate : sign_packages move_packages repo
+
+sign_packages ::
 	sudo -H $(MAKE) -C $(WEBROOT)	gpgsignature
+
+move_packages ::
 	for i in $(WEBROOT)/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
-	$(MAKE) repo
 
 migrate_centos ::
 	sudo -H $(MAKE) -C $(WEBROOT) sign_centos 
