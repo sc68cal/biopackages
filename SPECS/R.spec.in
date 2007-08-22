@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.23 2007/08/13 19:21:43 bpbuild Exp $
+#$Id: R.spec.in,v 1.24 2007/08/22 01:39:58 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -76,15 +76,16 @@ rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/function.html
 rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/packages.html
 rm -f %{?buildroot:%{buildroot}}%{_libdir}/R/doc/html/search/index.txt
 
-%files 
-%defattr(-, root, root)
-%{_bindir}/R
-%{_libdir}/R
-%doc AUTHORS CAPABILITIES ChangeLog COPYING COPYING.LIB COPYRIGHTS FAQ INSTALL NEWS
-%doc ONEWS README RESOURCES THANKS VERSION Y2K
-%doc doc/manual/R-*.pdf
-%{_infodir}/R-*.info*
-%{_mandir}/man1/*
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+                                                                                                                                                             
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-, root, root, -)
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
@@ -118,6 +119,9 @@ if [ $1 = 0 ]; then
 fi
 
 $Log: R.spec.in,v $
+Revision 1.24  2007/08/22 01:39:58  bpbuild
+fixed files section using auto filelist generation
+
 Revision 1.23  2007/08/13 19:21:43  bpbuild
 cleaned up deps
 
