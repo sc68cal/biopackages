@@ -24,7 +24,7 @@ $version = rl("2");
 print "What is the arch (e.g. i386, x86_64):\n";
 $arch = rl("i386");
 $builduser = "bpbuild";
-$buildgroup = "bpbuild;
+$buildgroup = "bpbuild";
 if($vmtype eq 'dev-external') {
   print "What is the username of the user that you will be building RPMs as?\n";
   $builduser = rl("bpbuild");
