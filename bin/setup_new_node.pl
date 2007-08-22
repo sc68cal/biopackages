@@ -62,8 +62,8 @@ if ($vmtype eq 'build' || $vmtype eq 'dev-internal' || $vmtype eq 'dev-external'
   system("wget http://www.biopackages.net/stable/nodistro/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/nodistro/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm && sudo rpm -Uvh biopackages-1.0.1-1.16.noarch.rpm usr-local-bin-perl-1.0-1.3.noarch.rpm");
 
   # setup cvs biopackages dir
-  system('export CVS_RSH=ssh; cd /usr/src; chown $builduser:$buildgroup /usr/src; chmod 775 /usr/src; su $builduser -c \'cvs -z 3 -d :ext:$builduser@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep\'');
-
+  system('export CVS_RSH=ssh; cd /usr/src; chown $builduser:$buildgroup /usr/src; chmod 775 /usr/src; su $builduser -c \'cvs -z 3 -d :ext:$builduser@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages\'');
+  print "Please edit Makefile.conf in the topdir of your Biopackages CVS checkout, and run 'make prep' in that directory");
 }
 
 ### Build and Dev
