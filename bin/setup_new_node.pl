@@ -10,10 +10,10 @@
 
 use strict;
 
-my ($vmtype, $distro, $dabb, $version, $arch, $answer, $contents, $testing);
+my ($vmtype, $distro, $dabb, $version, $arch, $answer, $contents, $testing, $builduser, $buildgroup);
 
 ## collect some info:
-print "Is this a build, development, or testing virtual machine? [build, dev, test]\n";
+print "Is this a build, development, or testing virtual machine? [build, dev-internal, dev-external, test]\n";
 $vmtype = rl("build");
 print "What is the distribution (e.g. centos, fedora):\n";
 $distro = rl("fedora");
@@ -23,6 +23,15 @@ print "What is the distro version (e.g. 2, 3, 4...):\n";
 $version = rl("2");
 print "What is the arch (e.g. i386, x86_64):\n";
 $arch = rl("i386");
+$builduser = "bpbuild";
+$buildgroup = "bpbuild;
+if($vmtype eq 'dev-external') {
+  print "What is the username of the user that you will be building RPMs as?\n";
+  $builduser = rl("bpbuild");
+  print "What is the groupname of the user that you will be building RPMs as?\n";
+  $buildgroup = rl("bpbuild");
+}
+
 
 ##General config
 # resolv.conf
@@ -45,14 +54,26 @@ if($vmtype eq 'test')  {
 	if ($testing = "yes") { system("wget http://www.biopackages.net/stable/$distro/$version/noarch/biopackages-client-config-testing-1.0-1.5.bp.$dabb$version.noarch.rpm && rpm -Uvh biopackages-client-config-testing-1.0-1.5.bp.$dabb$version.noarch.rpm"); }
 }
 
-### Build and Dev
-if ($vmtype eq 'build' || $vmtype eq 'dev') {
+  
+### Build, Dev-internel, Dev-external 
+if ($vmtype eq 'build' || $vmtype eq 'dev-internal' || $vmtype eq 'dev-external') {
 
   # Enable RPMForge repositroy
-  system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm && rpm -Uvh rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm");
+  system("wget http://www.biopackages.net/stable/$distro/$version/noarch/rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm && sudo rpm -Uvh rpmforge-release-0.0.1-1.7.bp.$dabb$version.noarch.rpm");
 
   # Yum install whatever we will need
-  system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release ntp");
+  system("sudo yum -y install cvs perl-DateManip rpm-build rpmforge-release");
+
+  # install bootstrap packages
+  system("wget http://www.biopackages.net/stable/nodistro/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/nodistro/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm && sudo rpm -Uvh biopackages-1.0.1-1.16.noarch.rpm usr-local-bin-perl-1.0-1.3.noarch.rpm");
+
+  # setup cvs biopackages dir
+  system('export CVS_RSH=ssh; cd /usr/src; chown $builduser:$buildgroup /usr/src; chmod 775 /usr/src; su $builduser -c \'cvs -z 3 -d :ext:$builduser@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages; make prep\'');
+
+}
+
+### Build and Dev
+if ($vmtype eq 'build' || $vmtype eq 'dev-internal') {
 
   # add bpbuild to sudo users file
   
@@ -120,8 +141,6 @@ END
   system("groupadd -g 776 bpbuild");
   system("useradd -g 776 -u 776 bpbuild");
   system("mv /home /home.local");
-  system("groupadd -g 888 sgeadm");
-  system("useradd -g 888 -u 888 -d /home.local/sgeadm sgeadmin");
   
   # setup NFS
   system("mkdir -p /net/host/nucleus/genomics");
@@ -222,18 +241,14 @@ END
   # create a list of RPMs installed on the base system
   system("rpm -qa > /home/bpbuild/SETTINGS/$dabb$version.$arch/clean_rpm_list.txt");
   
-  # install bootstrap packages
-  system("sudo rpm -Uvh http://www.biopackages.net/stable/centos/4/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/centos/4/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm");
-
-  # Setup hostname
-  system("echo 'NETWORKING=yes' > /etc/sysconfig/network && echo 'GATEWAY=10.67.183.1' >> /etc/sysconfig/network && echo 'HOSTNAME=$dabb$version.$arch >> /etc/sysconfig/network'");
-  system("hostname $dabb$version.$arch");
 }
 
 
 ### Build only
 if ($vmtype eq 'build') {
   # SGE
+  system("groupadd -g 888 sgeadm");
+  system("useradd -g 888 -u 888 -d /home.local/sgeadm sgeadmin");
   system("cp /etc/services /etc/services.distro");
   $contents = <<END;
   sge_commd 536/tcp # comm port SUN GRID ENGINE
