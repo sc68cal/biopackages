@@ -63,7 +63,7 @@ if ($vmtype eq 'build' || $vmtype eq 'dev-internal' || $vmtype eq 'dev-external'
 
   # setup cvs biopackages dir
   system('export CVS_RSH=ssh; cd /usr/src; chown $builduser:$buildgroup /usr/src; chmod 775 /usr/src; su $builduser -c \'cvs -z 3 -d :ext:$builduser@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages; cd /usr/src/biopackages\'');
-  print "Please edit Makefile.conf in the topdir of your Biopackages CVS checkout, and run 'make prep' in that directory");
+  print "Please edit Makefile.conf in the topdir of your Biopackages CVS checkout, and run 'make prep' in that directory";
 }
 
 ### Build and Dev
