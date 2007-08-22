@@ -33,12 +33,6 @@ if($vmtype eq 'dev-external') {
 }
 
 
-##General config
-# resolv.conf
-  system("cp /etc/resolv.conf /etc/resolv.conf.distro");
-  system("echo 'search genomics.ctrl.ucla.edu' > /etc/resolve.conf && echo 'nameserver 10.67.183.1' >> /etc/resolve.conf && echo 'nameserver 164.67.128.1' >> /etc/resolv.conf");
-
-
 # YUM
 	system("cp /etc/yum.conf /etc/yum.conf.distro");
 
@@ -74,6 +68,12 @@ if ($vmtype eq 'build' || $vmtype eq 'dev-internal' || $vmtype eq 'dev-external'
 
 ### Build and Dev
 if ($vmtype eq 'build' || $vmtype eq 'dev-internal') {
+
+##General config
+# resolv.conf
+  system("cp /etc/resolv.conf /etc/resolv.conf.distro");
+  system("echo 'search genomics.ctrl.ucla.edu' > /etc/resolve.conf && echo 'nameserver 10.67.183.1' >> /etc/resolve.conf && echo 'nameserver 164.67.128.1' >> /etc/resolv.conf");
+
 
   # add bpbuild to sudo users file
   
