@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.112 2007/08/22 03:14:06 bpbuild Exp $
+#$Id: Makefile,v 1.113 2007/08/23 23:52:22 boconnor Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -131,7 +131,7 @@ specs ::
 # rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
 # FIXME: probably don't need verbose here
 %.rbuilt : %.spec
-	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --spec $$spec' | /bin/bash
+	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --no-build $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/no_build.txt  --no-yum $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/yum_no_install.txt --dep-tree $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/DEP_TREES/$$spec.deptree --spec $$spec' | /bin/bash
 	touch $@
 
 #
