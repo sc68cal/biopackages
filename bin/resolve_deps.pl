@@ -100,7 +100,7 @@ my %parsed_before;
 my $install = 0;
 
 # A file for the dependency tree summary
-open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: $!";
+open TREE, ">$dep_tree_file" or die "RESOLVE_DEPS FATAL ERROR: Can't open file $dep_tree_file $!";
 
 # distro string
 my $distro_str;
