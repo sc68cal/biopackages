@@ -38,11 +38,11 @@ GetOptions ("arch=s"      => \$arch_str_universal,
             "no-deps=s"   => \$no_deps_file,
             "no-yum=s"    => \$no_yum_install_file,
             "remove-rpms" => \$remove_installed_rpms,
-            "rpm-base"    => \$base_rpm_list,
+            "rpm-base=s"  => \$base_rpm_list,
             "dep-tree=s"  => \$dep_tree_file,
             "help"        => \$help,
             "verbose"     => \$verbose,
-            "map"         => \$mapping_file,
+            "map=s"       => \$mapping_file,
             );
 
 # USAGE
