@@ -1,9 +1,13 @@
-#$Id: php.spec.in,v 1.2 2007/08/14 23:16:17 bpbuild Exp $
+#$Id: php.spec.in,v 1.3 2007/08/24 19:45:42 cghiban Exp $
 %define contentdir /var/www
-%define with_oci8 %{?_with_oci8:1}%{!?_with_oci8:0}
-%define with_mssql %{?_with_mssql:1}%{!?_with_mssql:0}
-%define with_mhash %{?_with_mhash:1}%{!?_with_mhash:0}
-%define with_ibase %{?_with_ibase:1}%{!?_with_ibase:0}
+#%define with_oci8 %{?_with_oci8:1}%{!?_with_oci8:0}
+#%define with_oci8 0
+#%define with_mhash %{?_with_mhash:1}%{!?_with_mhash:0}
+#%define with_mhash 0
+#%define with_mssql %{?_with_mssql:1}%{!?_with_mssql:0}
+#%define with_mssql 0
+#%define with_ibase %{?_with_ibase:1}%{!?_with_ibase:0}
+#%define with_ibase 0
 
 Summary: The PHP HTML-embedded scripting language. (PHP: Hypertext Preprocessor)
 Name: php
@@ -186,62 +190,6 @@ BuildRequires: libxml2-devel
 The php-soap package contains a dynamic shared object that will add
 support to PHP for using the SOAP web services protocol.
 
-%if %{with_ibase}
-%package interbase
-Group: Development/Languages
-Prereq: php = %{version}-%{release}, perl, grep
-Summary: A module for PHP applications that use Interbase databases.
-Provides: php_database
-
-%description interbase
-The php-interbase package contains a dynamic shared object that will add
-database support through Interbase to PHP. Interbase is a commercial
-database system made by the Interbase Corporation. PHP is an
-HTML-embeddable scripting language. If you need Interbase support for 
-PHP applications, you will need to install this package and the php 
-package.
-%endif
-
-%if %{with_oci8}
-%package oci8
-Group: Development/Languages
-Summary: A module for PHP applications that use OCI8 databases.
-Provides: php_database
-BuildRequires: oracle-instantclient-devel >= 10
-Requires: php = %{version}-%{release}
-Provides: php_database
-AutoReq: 0
-Requires: oracle-instantclient-basic >= 10
-
-%description oci8
-The php-oci8 package contains a dynamic shared object that will add
-support for accessing OCI8 databases to PHP.
-%endif
-
-%if %{with_mssql}
-%package mssql
-Group: Development/Languages
-Requires: php = %{version}-%{release}, freetds
-Summary: A module for PHP applications that use MSSQL databases.
-Provides: php_database
-BuildRequires: freetds-devel
-
-%description mssql
-The mssql package contains a dynamic shared object that will add
-support for accessing MSSQL databases to PHP.
-%endif
-
-%if %{with_mhash}
-%package mhash
-Summary: A module for PHP applications that use Mhash.
-Group: Development/Languages
-Requires: php = %{version}-%{release}
-BuildRequires: mhash-devel
-
-%description mhash
-The php-mhash package is a dynamic shared object (DSO) for the Apache
-Web server that adds Mhash support to PHP.
-%endif
 
 %package snmp
 Summary: A module for PHP applications that query SNMP-managed devices.
@@ -383,7 +331,7 @@ pushd pear/packages
   gunzip *.tgz
 popd
 
-: Build for oci8=%{with_oci8} mssql=%{with_mssql} mhash=%{with_mhash} ibase=%{with_ibase}
+#: Build for oci8=%{with_oci8} mssql=%{with_mssql} mhash=%{with_mhash} ibase=%{with_ibase}
 
 %build
 # Force use of system libtool:
@@ -476,10 +424,10 @@ build --enable-force-cgi-redirect \
       --with-ldap=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{_bindir}/mysql_config \
-      %{?_with_oci8:--with-oci8-instant-client=shared} \
-      %{?_with_mssql:--with-mssql=shared} \
-      %{?_with_mhash:--with-mhash=shared} \
-      %{?_with_ibase:--with-interbase=shared,/opt/interbase} \
+      #%{?_with_oci8:--with-oci8-instant-client=shared} \
+      #%{?_with_mssql:--with-mssql=shared} \
+      #%{?_with_mhash:--with-mhash=shared} \
+      #%{?_with_ibase:--with-interbase=shared,/opt/interbase} \
       --enable-dom=shared \
       --with-dom-xslt=%{_prefix} --with-dom-exslt=%{_prefix} \
       --with-pgsql=shared \
@@ -551,8 +499,8 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mbstring ncurses gd dom xsl soap bcmath dba \
-    %{?_with_oci8:oci8} %{?_with_mssql:mssql} %{?_with_mhash:mhash} \
-    %{?_with_ibase:interbase}; do
+    #%{?_with_oci8:oci8} %{?_with_mssql:mssql} %{?_with_mhash:mhash} \
+    #%{?_with_ibase:interbase}; do
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
@@ -629,20 +577,23 @@ rm files.*
 %files bcmath -f files.bcmath
 %files dba -f files.dba
 
-%if %{with_oci8}
-%files oci8 -f files.oci8
-%endif
-%if %{with_mssql}
-%files mssql -f files.mssql
-%endif
-%if %{with_mhash}
-%files mhash -f files.mhash
-%endif
-%if %{with_ibase}
-%files interbase -f files.interbase
-%endif
+#%if %{with_oci8}
+#%files oci8 -f files.oci8
+#%endif
+#%if %{with_mssql}
+#%files mssql -f files.mssql
+#%endif
+#%if %{with_mhash}
+#%files mhash -f files.mhash
+#%endif
+#%if %{with_ibase}
+#%files interbase -f files.interbase
+#%endif
 
 $Log: php.spec.in,v $
+Revision 1.3  2007/08/24 19:45:42  cghiban
+testing
+
 Revision 1.2  2007/08/14 23:16:17  bpbuild
 fixed version tag
 
