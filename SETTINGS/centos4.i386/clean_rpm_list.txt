@@ -203,6 +203,7 @@ setools-1.5.1-5
 util-linux-2.12a-16.EL4.20
 udev-039-10.15.EL4
 initscripts-7.93.25.EL-1.centos4
+initscripts-7.93.29.EL-1.centos4
 cyrus-sasl-md5-2.1.19-5.EL4
 mkinitrd-4.2.1.8-1
 openldap-2.2.13-6.4E
@@ -309,9 +310,3 @@ rpmforge-release-0.3.6-1.el4.rf
 usr-local-bin-perl-1.0-1.3
 vim-common-6.3.046-0.40E.7
 vim-X11-6.3.046-0.40E.7
-rpm-libs-4.3.3-18_nonptl
-rpm-build-4.3.3-22_nonptl
-rpmdb-CentOS-4.4-0.20060916
-rpm-4.3.3-22_nonptl
-rpm-python-4.3.3-22_nonptl
-rpmforge-release-0.3.6-1.el4.rf
