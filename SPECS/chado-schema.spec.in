@@ -1,9 +1,9 @@
-#$Id: chado-schema.spec.in,v 1.2 2007/01/04 02:59:52 bpbuild Exp $
+#$Id: chado-schema.spec.in,v 1.3 2007/08/24 20:30:43 boconnor Exp $
 %define gmod_root /var/lib/gmod/src/chado
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project.
 Name: chado-schema
-Version: 0.003
+Version: 0.5-RC1
 Epoch: 0
 Release: %{revision}.%{distro}
 License: GPL
@@ -36,6 +36,9 @@ find $RPM_BUILD_ROOT%{gmod_root} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 $Log: chado-schema.spec.in,v $
+Revision 1.3  2007/08/24 20:30:43  boconnor
+Updating for the 0.5 schema
+
 Revision 1.2  2007/01/04 02:59:52  bpbuild
 Updates to the chado RPMs, the schema is now separated into it's own RPM to make it easier to build GMODWeb sites without first having to build/install the chado RPM
 

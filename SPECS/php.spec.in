@@ -1,4 +1,4 @@
-#$Id: php.spec.in,v 1.3 2007/08/24 19:45:42 cghiban Exp $
+#$Id: php.spec.in,v 1.4 2007/08/24 20:30:43 boconnor Exp $
 %define contentdir /var/www
 #%define with_oci8 %{?_with_oci8:1}%{!?_with_oci8:0}
 #%define with_oci8 0
@@ -424,10 +424,6 @@ build --enable-force-cgi-redirect \
       --with-ldap=shared \
       --with-mysql=shared,%{_prefix} \
       --with-mysqli=shared,%{_bindir}/mysql_config \
-      #%{?_with_oci8:--with-oci8-instant-client=shared} \
-      #%{?_with_mssql:--with-mssql=shared} \
-      #%{?_with_mhash:--with-mhash=shared} \
-      #%{?_with_ibase:--with-interbase=shared,/opt/interbase} \
       --enable-dom=shared \
       --with-dom-xslt=%{_prefix} --with-dom-exslt=%{_prefix} \
       --with-pgsql=shared \
@@ -577,20 +573,10 @@ rm files.*
 %files bcmath -f files.bcmath
 %files dba -f files.dba
 
-#%if %{with_oci8}
-#%files oci8 -f files.oci8
-#%endif
-#%if %{with_mssql}
-#%files mssql -f files.mssql
-#%endif
-#%if %{with_mhash}
-#%files mhash -f files.mhash
-#%endif
-#%if %{with_ibase}
-#%files interbase -f files.interbase
-#%endif
-
 $Log: php.spec.in,v $
+Revision 1.4  2007/08/24 20:30:43  boconnor
+Updating for the 0.5 schema
+
 Revision 1.3  2007/08/24 19:45:42  cghiban
 testing
 
