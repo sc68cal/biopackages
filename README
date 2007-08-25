@@ -1,4 +1,4 @@
-#$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
+#$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
 
 ==========================================
 Setting up a Biopackages build environment
@@ -55,10 +55,10 @@ is being sniffed to produce the RPM release number.
   replacement on the file to do the CVS version linking.
 
   B. At the top of every .spec.in, add a line like this:
-       #$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
+       #$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
 
      In the spec file, this line will automatically be replaced with something like:
-       #$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
+       #$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
 
   C. Set the RPM 'Release' key to '%{revision}.%{distro}'.  E.g.,
 
@@ -114,3 +114,23 @@ system.  The .built file contains a log of the build process.
  c) Cluster building packages
 
  Another feature of the Biopackages build environment is cluster building, which is based on the recursive building process. This is the process of spawing recursive build jobs to multiple builds hosts through Sun Grid Engine, to allow for both the building of a package on multiple platforms and architectures, as well as the ability to add multiple physical nodes to your cluster to scale performance. This is done by submitted a 'make %.cbuilt' on a single submit host, but currently requires a good amount of configuration to get functional (this is currently in the process of being packaged for easy installation). In a nutshell, cluster building allows us to submit a single 'make %.cbuilt' which builds a given package and all of its dependencies on every platform and architecture we support (through virtualization of Sun Grid Engine build nodes).
+
+=========================================================
+Contributing Packages to Biopackages as an Anonymous User
+=========================================================
+
+1) Make sure your Makefile.conf is configured with SYNCUSER=anonymous (the default)
+
+2) Open a ticket on http://sourceforge.net/projects/biopackages specifying some information about the packages you would like to contribute.
+	-> What is the name of the package?
+	-> What is the version number?
+	-> Is this a new package or an update to one of our existing packages? 
+	-> What sources are you dropping off? Include the filename of the spec file and source(s).
+	
+	It is also a good idea to make sure we have a way to contact you in case we have any questions about the package, or issues building it.
+
+3) Place your sources and spec files in the SOURCES.upload directory in the topdir of your Biopackages CVS checkout (create it if it does not yet exist).
+
+4) From the root of your Biopackages checkout, execute 'make sources' to upload your sources to us and sync SOURCES.small and SOURCES.large with our latest sources.
+	-> Before running 'make sources', make sure that your sources are not located in SOURCES/ as this directory is reserved for symlinks from SOURCES.small and SOURCES.large. If you have non-symlinked files in here, you will receive an error message and the process will be interrupted.
+	-> Do not put your own sources in SOURCES.large or SOURCES.small. These are reserved for downloads only, and your sources present in these directories will be ignored and potentially could be overwritten by packages of the same name.
