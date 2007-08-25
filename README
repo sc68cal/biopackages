@@ -1,4 +1,4 @@
-#$Id: README,v 1.5 2007/08/24 18:25:11 bpbuild Exp $
+#$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
 
 ==========================================
 Setting up a Biopackages build environment
@@ -32,49 +32,18 @@ The basic procedure for setting up a new development machine is as follows. Even
 
 6) In Makefile.conf, change ENABLE_LARGE=no to ENABLE_LARGE=yes if you need large sources. These are sources greater than 10mb and total around 8.6gb. You should avoid these unless you specifically need them (they are disabled by default).
 
-7) Execute a 'make prep' , which should setup your directory structure, update cvs and hit our RSYNC server to grab all of the SOURCES. 
+7) Execute a 'make prep', which should setup your directory structure, update cvs and hit our RSYNC server to grab all of the SOURCES. Be ware that this will overwrite your existing ~/.rpmmacros with biopackages as top-level directory. If you are not happy with this, you should create a new user just for doing build.
  -> If you have specified a CVS account, enter your sourceforge password when prompted. 
- ->If you have specified a SYNCUSER other than anonymous in Makefile.conf, enter your RSYNC password when prompted during this step.
+ -> If you have specified a SYNCUSER other than anonymous in Makefile.conf, enter your RSYNC password when prompted during this step.
 
 
+==========================================
+Building RPMs in a Biopackages Environment
+==========================================
 
+1) Creating SPEC files. 
 
-This should get everything set up for building (hopefully). Next start is to start building RPMs. If you our documentation on the Sourceforge wiki is too bad to understand (which it likely is), let me know and I can give you the tutorial later on -- which is good, cause like this email forces me to do documentation. The basic rundown of use our system:
-
-1) Turn spec.in into spec:
-  # make foo.spec
-2) Build from spec file:
-  # make foo.built
-
-A key feature of our system is the ability to do recursive builds, which builds and install all package dependencies and then builds and install the top-level packages. This is done with make foo.rbuilt, but note that this will install packages which will dirty your system so should only be done on machines that you can destroy (i.e. virtual machines). This also requires sudo.
-
-Hope this is a good starting point. I am happy to give you more details as this is a great opportunity for me to fine-tune the system and update the wiki. Feel free email me/the list, or message me on AIM @ jordanmendler. Also, please point out any issues you have with our systems as the support for external users is still beta.
-
-
-
-
-
-
-
-
-
-
-
-
-1. SETTING UP THE ENVIRONMENT
-
-Run 'make prep'.  This will overwrite ~/.rpmmacros with a version
-that will make the biopackages checkout top-level directory your
-default rpm build directory.  If you're not happy with this,
-create a new user just for doing builds -- this setup is unlikely
-to change.
-
-2. AUTOMATICALLY CREATING SPEC FILES
-
-  A. For Perl modules from CPAN.
-  Not documented yet.  It can be done.  Read the Makefile for hints
-
-3. MANUALLY CREATING SPEC FILES
+A) MANUALLY CREATING SPEC FILES
 
 A few rules for creating new specfiles.  The purpose of these is
 to ensure the RPM package release numbers stay in sync with the
@@ -86,15 +55,17 @@ is being sniffed to produce the RPM release number.
   replacement on the file to do the CVS version linking.
 
   B. At the top of every .spec.in, add a line like this:
+       #$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
 
-       #$Id: README,v 1.5 2007/08/24 18:25:11 bpbuild Exp $
+     In the spec file, this line will automatically be replaced with something like:
+       #$Id: README,v 1.6 2007/08/25 09:53:47 bpbuild Exp $
 
-  C. Set the RPM 'Release' key to '%{revision}-%{distro}'.  E.g.,
+  C. Set the RPM 'Release' key to '%{revision}.%{distro}'.  E.g.,
 
-       Release: %{revision}-%{distro}
+       Release: %{revision}.%{distro}
 
      If your CVS version is 1.1, the .spec file generated from
-     the .spec.in file will be 1.1-%{distro}.
+     the .spec.in file will be 1.1.%{distro}.
 
      The %{distro} tag is a biopackages-specific RPM macro that
      appends the architcture, date, OS abbreviation, and 'bp'
@@ -103,24 +74,43 @@ is being sniffed to produce the RPM release number.
      is recommended because it allows all biopackages packages a
      consistent naming style.
 
-When you have finished your .spec.in file, run "make specs".
-This target iterates over all .spec.in files and generates their
-corresponding .spec files.
+  D. Additional spec.in functionality
+     -> ifdistro and ifdistro_release statements allow for the addition of lines to a spec file based on the distribution version or release. Grep through SPECS/*.spec.in for examples.
 
-4. BUILDING
 
-You shouldn't need to run 'rpmbuild ...' yourself, this is encapsulated
-in the 'buildall' make target.  In a nutsuell, this target converts
-.spec.in files to .spec files, and in turn .spec files to .built files.
+When you have finished your .spec.in file, check it into CVS and then run "make specs" or "make foo.spec".
+The first target iterates over all .spec.in files and generates their corresponding .spec files, whereas the second generates a spec for a given package -- in this case the package 'foo'.
+
+B) AUTOMATICALLY CREATING SPEC FILES
+
+  A. For Perl modules from CPAN.
+  Not documented yet.  It can be done.  Read the Makefile for hints
+
+
+2) BUILDING RPMs
+
+ a) Building individual packages
+
+   You should not need to run 'rpmbuild ...' yourself, this is encapsulated
+in the 'buildall' and '%.built' make targets.  In a nutsuell, this target converts
+.spec.in files to .spec files, and then turns .spec files to .built files.
 A .built file indicates the spec was successfully compiled on the local
 system.  The .built file contains a log of the build process.
 
-Always remember to cvs add and commit all .spec.in files in your SPECS/
-directory before building packages for distribution.  This ensures your
-rpm released versions are in sync with your CVS file revisions.
+  Example: Building bioperl
+  # make bioperl.spec		# This step is optional
+  # make bioperl.built
 
-Some of the .spec.in files can't be used to create .spec files.  These
-few are specs that are platform-specific.  For instance, we only want
-to build 'rpm' and 'yum' on the mac, because they're not available.
-For centos and fedora we just depend on RedHat to maintain the packages
-for us.
+ b) Recursively building packages
+
+  A key feature of the Biopackages build environment is the ability to recursively build packages automatically. This allows one to build a top-level packages, and have all of its build and installation dependencies built and installed in the process. This removed the burdensome task of having to build each dependency and dependencies of dependencies individually. This is done by triggering a 'make %.rbuilt' in place of the 'make %.built' from the previous example.
+
+ NOTE: This process will install and attempt to remove many packages and will dirty and contaminate your system. It is vital that you only use recursive building on disposable systems -- ideally virtual machines with a snapshotting feature to allow for quick reverting to a clean system image after builds. This process also requires sudo. You have been warned...
+
+ Example: Building bioperl, recursively (build bioperl, and every package that is required to build and install it)
+ # make bioperl.spec		# This step is optional
+ # make bioperl.rbuilt
+
+ c) Cluster building packages
+
+ Another feature of the Biopackages build environment is cluster building, which is based on the recursive building process. This is the process of spawing recursive build jobs to multiple builds hosts through Sun Grid Engine, to allow for both the building of a package on multiple platforms and architectures, as well as the ability to add multiple physical nodes to your cluster to scale performance. This is done by submitted a 'make %.cbuilt' on a single submit host, but currently requires a good amount of configuration to get functional (this is currently in the process of being packaged for easy installation). In a nutshell, cluster building allows us to submit a single 'make %.cbuilt' which builds a given package and all of its dependencies on every platform and architecture we support (through virtualization of Sun Grid Engine build nodes).
