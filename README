@@ -1,4 +1,4 @@
-#$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
+#$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
 
 ==========================================
 Setting up a Biopackages build environment
@@ -6,7 +6,7 @@ Setting up a Biopackages build environment
 
 The basic procedure for setting up a new development machine is as follows. Eventually this will all be included in the setup_new_node script as an interactive, but for the time being it must be done manually:
 
-1) Enable the RPMForge repository (we depend on them). We provide configuration RPMs for them on platforms we suppoer, but since we do not yet support all of their platforms, you can just install theirs. The respective RPMs can be found through http://apt.sw.be. Some examples include:
+1) Enable the RPMForge repository (we depend on them). We provide configuration RPMs for them on platforms we support, but since we do not yet support all of their platforms, you can install the RPM directory from RPMForge. The respective RPMs can be found through http://apt.sw.be. Some examples include:
    # sudo rpm -Uvh http://apt.sw.be/fedora/5/en/x86_64/dries/RPMS/rpmforge-release-0.2-2.2.fc5.rf.x86_64.rpm	#Fedora Core 5, x86_64
    # sudo rpm -Uvh http://apt.sw.be/fedora/2/en/i386/dag/RPMS/rpmforge-release-0.3.6-1.fc2.rf.i386.rpm		#Fedora Core 2, i386
    # sudo rpm -Uvh http://apt.sw.be/redhat/el5/en/i386/dag/RPMS/rpmforge-release-0.3.6-1.el5.rf.i386.rpm	#CentOS 5, i386
@@ -18,7 +18,7 @@ The basic procedure for setting up a new development machine is as follows. Even
 3) Install requirements to build in the biopackages environments:
    # sudo rpm -Uvh http://www.biopackages.net/stable/nodistro/noarch/biopackages-1.0.1-1.16.noarch.rpm http://www.biopackages.net/stable/nodistro/noarch/usr-local-bin-perl-1.0-1.3.noarch.rpm
 
-4) CVS checkout code from sourceforge. For simplicity, check it out to /usr/src/biopackages, though I am in the process of making this variable. Replace $builduser and $buildgroup with the name of the user and group that you will be building with on your system. Replace $sfuser with your sourceforge username:
+4) CVS checkout code from sourceforge. For simplicity, check it out to /usr/src/biopackages, though we are in the process of making this variable. Replace $builduser and $buildgroup with the name of the user and group that you will be building with on your system. Replace $sfuser with your sourceforge username:
    # echo "CVS_RSH=ssh" >> ~$builduser/.bashrc && export CVS_RSH=ssh && cd /usr/src && sudo chown $builduser:$buildgroup /usr/src && sudo -H -u $builduser cvs -z 3 -d : ext:$sfuser@biopackages.cvs.sourceforge.net:/cvsroot/biopackages co -P biopackages && cd /usr/src/biopackages
 
   We also support anonymous CVS checkout as follows:
@@ -32,7 +32,7 @@ The basic procedure for setting up a new development machine is as follows. Even
 
 6) In Makefile.conf, change ENABLE_LARGE=no to ENABLE_LARGE=yes if you need large sources. These are sources greater than 10mb and total around 8.6gb. You should avoid these unless you specifically need them (they are disabled by default).
 
-7) Execute a 'make prep', which should setup your directory structure, update cvs and hit our RSYNC server to grab all of the SOURCES. Be ware that this will overwrite your existing ~/.rpmmacros with biopackages as top-level directory. If you are not happy with this, you should create a new user just for doing build.
+7) Execute a 'make prep', which should setup your directory structure, update CVS and grab all of the sources from our RSYNC server. Beware that this will overwrite your existing ~/.rpmmacros with biopackages as the top-level directory. If you are not happy with this, you should create a new user just for doing build.
  -> If you have specified a CVS account, enter your sourceforge password when prompted. 
  -> If you have specified a SYNCUSER other than anonymous in Makefile.conf, enter your RSYNC password when prompted during this step.
 
@@ -43,77 +43,81 @@ Building RPMs in a Biopackages Environment
 
 1) Creating SPEC files. 
 
-A) MANUALLY CREATING SPEC FILES
+  I. MANUALLY CREATING SPEC FILES
 
-A few rules for creating new specfiles.  The purpose of these is
-to ensure the RPM package release numbers stay in sync with the
-CVS version.  Technically, what's happening is the RCS tag '$ Id $'
-is being sniffed to produce the RPM release number.
+  A few rules for creating new specfiles.  The purpose of these is to ensure the RPM package release numbers stay in sync with the CVS version.  Technically, what's happening is the RCS tag '$ Id $' is being sniffed to produce the RPM release number.
 
-  A. DO NOT CREATE .spec FILES.  Create .spec.in files instead.
-  The reason for this is that we need to do some token
-  replacement on the file to do the CVS version linking.
+    A. DO NOT CREATE .spec FILES.  Create .spec.in files instead. The reason for this is that we need to do some token replacement on the file to do the CVS version linking.
 
-  B. At the top of every .spec.in, add a line like this:
-       #$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
 
-     In the spec file, this line will automatically be replaced with something like:
-       #$Id: README,v 1.7 2007/08/25 10:10:17 bpbuild Exp $
+    B. At the top of every .spec.in, add a line like this:
+       #$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
 
-  C. Set the RPM 'Release' key to '%{revision}.%{distro}'.  E.g.,
+       In the spec file, this line will automatically be replaced with something like:
+       #$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
+
+
+    C. Set the RPM 'Release' key to '%{revision}.%{distro}'.  E.g.,
 
        Release: %{revision}.%{distro}
 
-     If your CVS version is 1.1, the .spec file generated from
-     the .spec.in file will be 1.1.%{distro}.
+       If your CVS version is 1.1, the .spec file generated from the .spec.in file will be 1.1.%{distro}.
 
-     The %{distro} tag is a biopackages-specific RPM macro that
-     appends the architcture, date, OS abbreviation, and 'bp'
-     biopackages identifier to the end of the RPM file resulting
-     from the build.  While this isn't absolutely necessary, it
-     is recommended because it allows all biopackages packages a
-     consistent naming style.
-
-  D. Additional spec.in functionality
-     -> ifdistro and ifdistro_release statements allow for the addition of lines to a spec file based on the distribution version or release. Grep through SPECS/*.spec.in for examples.
+       The %{distro} tag is a biopackages-specific RPM macro that appends the architcture, date, OS abbreviation, and 'bp' biopackages identifier to the end of the RPM file resulting from the build.  While this isn't absolutely necessary, it is recommended because it allows all biopackages packages a consistent naming style. During the build process, this tag is replaced with the results of /usr/bin/bp-distro
 
 
-When you have finished your .spec.in file, check it into CVS and then run "make specs" or "make foo.spec".
-The first target iterates over all .spec.in files and generates their corresponding .spec files, whereas the second generates a spec for a given package -- in this case the package 'foo'.
+    D.  When you have finished your .spec.in file, check it into CVS and then run "make specs" or "make foo.spec". The first target iterates over all .spec.in files and generates their corresponding .spec files, whereas the second generates a spec for a given package -- in this case the package 'foo'.
 
-B) AUTOMATICALLY CREATING SPEC FILES
 
-  A. For Perl modules from CPAN.
-  Not documented yet.  It can be done.  Read the Makefile for hints
+    E. Additional spec.in functionality
+       -> ifdistro statements allow for the addition of lines to a spec file based on the distribution specified
+       -> ifdistro_release statements allow for the addition of lines to a spec file based on the matchine of a given distribution and version
+
+       Examples:
+       # For different distributions one may want to specify different sources
+       %{ifdistro fedora}Source2: biopackages-fedora.repo
+       %{ifdistro centos}Source2: biopackages-centos.repo
+
+       # For different distributions, paths and names can vary
+       %{ifdistro centos}name='CentOS'; path="centos"
+       %{ifdistro fedora}name='Fedora Core'; path="fedora"
+
+       # For different versions of a given distribution, or amongst different distributions, the name of package can vary.
+       # For example, the fortran compiler goes by either gcc-g77 of gcc-gfortran depending on distribution.
+       %{ifdistro_release fedora 2}BuildRequires: gcc-g77
+       %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+       %{ifdistro_release centos 4}BuildRequires: gcc-g77
+
+
+  II. AUTOMATICALLY CREATING SPEC FILES
+
+  A. For Perl modules from CPAN
+     Not documented yet.  It can be done.  Read the Makefile for hints.
 
 
 2) BUILDING RPMs
 
- a) Building individual packages
+  I. Building individual packages
 
-   You should not need to run 'rpmbuild ...' yourself, this is encapsulated
-in the 'buildall' and '%.built' make targets.  In a nutsuell, this target converts
-.spec.in files to .spec files, and then turns .spec files to .built files.
-A .built file indicates the spec was successfully compiled on the local
-system.  The .built file contains a log of the build process.
+  You should not need to run 'rpmbuild ...' yourself, this is encapsulated in the 'buildall' and '%.built' make targets.  In a nutshell, this target converts .spec.in files to .spec files, and then turns .spec files to .built files. A .built file indicates the spec was successfully compiled on the local system. The .built file contains a log of the build process.
 
   Example: Building bioperl
   # make bioperl.spec		# This step is optional
   # make bioperl.built
 
- b) Recursively building packages
+  II. Recursively building packages
 
-  A key feature of the Biopackages build environment is the ability to recursively build packages automatically. This allows one to build a top-level packages, and have all of its build and installation dependencies built and installed in the process. This removed the burdensome task of having to build each dependency and dependencies of dependencies individually. This is done by triggering a 'make %.rbuilt' in place of the 'make %.built' from the previous example.
+  A key feature of the Biopackages build environment is the ability to recursively build packages automatically. This allows one to build a top-level package, and have all of its build and installation dependencies built and installed in the process. This removes the burdensome task of having to build each dependency and the dependencies of those dependencies individually. This is done by triggering a 'make %.rbuilt' in place of the 'make %.built' from the previous example.
 
- NOTE: This process will install and attempt to remove many packages and will dirty and contaminate your system. It is vital that you only use recursive building on disposable systems -- ideally virtual machines with a snapshotting feature to allow for quick reverting to a clean system image after builds. This process also requires sudo. You have been warned...
+  NOTE: This process will install and attempt to remove many packages, and will dirty and contaminate your system. It is vital that you only use recursive building on disposable systems -- ideally virtual machines with a snapshotting feature to allow for quick reverting to a clean system image after builds. This process also requires sudo. YOU HAVE BEEN WARNED!!!
 
- Example: Building bioperl, recursively (build bioperl, and every package that is required to build and install it)
- # make bioperl.spec		# This step is optional
- # make bioperl.rbuilt
+  Example: Building bioperl, recursively (build bioperl, and every package that is required to build and install it)
+  # make bioperl.spec		# This step is optional
+  # make bioperl.rbuilt
 
- c) Cluster building packages
+  III. Cluster building packages
 
- Another feature of the Biopackages build environment is cluster building, which is based on the recursive building process. This is the process of spawing recursive build jobs to multiple builds hosts through Sun Grid Engine, to allow for both the building of a package on multiple platforms and architectures, as well as the ability to add multiple physical nodes to your cluster to scale performance. This is done by submitted a 'make %.cbuilt' on a single submit host, but currently requires a good amount of configuration to get functional (this is currently in the process of being packaged for easy installation). In a nutshell, cluster building allows us to submit a single 'make %.cbuilt' which builds a given package and all of its dependencies on every platform and architecture we support (through virtualization of Sun Grid Engine build nodes).
+  Another feature of the Biopackages build environment is cluster building, which is based on the recursive building process. This is the process of spawing recursive build jobs to multiple builds hosts through Sun Grid Engine, to allow for the building of a package on multiple platforms and architectures, as well as the ability to add multiple physical nodes to your build cluster to scale performance. This is done by submitted a 'make %.cbuilt' on a single submit host, but currently requires a good amount of configuration to get functional (this is currently in the process of being packaged for easy installation). In a nutshell, cluster building allows one to submit a single 'make %.cbuilt' which builds a given package and all of its dependencies on every platform and architecture supported (through virtualization of Sun Grid Engine build nodes).
 
 =========================================================
 Contributing Packages to Biopackages as an Anonymous User
@@ -124,13 +128,14 @@ Contributing Packages to Biopackages as an Anonymous User
 2) Open a ticket on http://sourceforge.net/projects/biopackages specifying some information about the packages you would like to contribute.
 	-> What is the name of the package?
 	-> What is the version number?
-	-> Is this a new package or an update to one of our existing packages? 
+	-> Is this a new package or an update or fix to one of our existing packages? 
 	-> What sources are you dropping off? Include the filename of the spec file and source(s).
 	
 	It is also a good idea to make sure we have a way to contact you in case we have any questions about the package, or issues building it.
 
-3) Place your sources and spec files in the SOURCES.upload directory in the topdir of your Biopackages CVS checkout (create it if it does not yet exist).
+3) Place your sources and spec files in the SOURCES.upload directory in the topdir (/usr/src/biopackages) of your Biopackages CVS checkout (create it if it does not exist).
 
 4) From the root of your Biopackages checkout, execute 'make sources' to upload your sources to us and sync SOURCES.small and SOURCES.large with our latest sources.
 	-> Before running 'make sources', make sure that your sources are not located in SOURCES/ as this directory is reserved for symlinks from SOURCES.small and SOURCES.large. If you have non-symlinked files in here, you will receive an error message and the process will be interrupted.
-	-> Do not put your own sources in SOURCES.large or SOURCES.small. These are reserved for downloads only, and your sources present in these directories will be ignored and potentially could be overwritten by packages of the same name.
+	-> As an anonymous user, do not put your own sources in SOURCES.large or SOURCES.small. These are reserved for downloads only, and your sources present in these directories will be ignored and potentially could be overwritten by packages of the same name.
+	-> The only sources and spec files that will be uploaded to us are those in your SOURCES.upload directory.
