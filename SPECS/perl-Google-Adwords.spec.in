@@ -1,4 +1,4 @@
-#$Id: perl-Google-Adwords.spec.in,v 1.1 2007/08/30 04:56:21 bpbuild Exp $
+#$Id: perl-Google-Adwords.spec.in,v 1.2 2007/08/30 05:01:10 bpbuild Exp $
 Name: perl-Google-Adwords
 Summary: This module provides an interface to the Google Adwords SOAP API.
 Version: 1.3.1
@@ -8,8 +8,8 @@ URL: http://search.cpan.org/~rohan/Google-Adwords-v1.3.1/
 Packager: Jordan Mendler <jmendler@ucla.edu>
 Group: Development/Tools
 Source: http://search.cpan.org/CPAN/authors/id/R/RO/ROHAN/Google-Adwords-v%{version}.tar.gz
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl-version, perl-SOAP-Lite, perl-Readonly, perl-Class-Accessor-Chained, perl-Date-Manip, perl-Test-Class, perl-Test-More, perl-IO-Prompt, perl-Test-MockModule, perl-HTML-Entities
 
 %description
 This module provides an interface to the Google Adwords SOAP API.
@@ -47,6 +47,9 @@ find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s
 rm -rf $RPM_BUILD_ROOT
 
 $Log: perl-Google-Adwords.spec.in,v $
+Revision 1.2  2007/08/30 05:01:10  bpbuild
+added buildreqs
+
 Revision 1.1  2007/08/30 04:56:21  bpbuild
 new spec.in
 
