@@ -1,4 +1,4 @@
-#$Id: perl-Google-Adwords.spec.in,v 1.7 2007/09/03 19:51:01 bpbuild Exp $
+#$Id: perl-Google-Adwords.spec.in,v 1.8 2007/09/03 19:59:47 bpbuild Exp $
 Name: perl-Google-Adwords
 Summary: This module provides an interface to the Google Adwords SOAP API.
 Version: 1.3.1
@@ -42,11 +42,15 @@ find %{buildroot} -type d | %{__grep} /man | %{__sed} "s@^%{buildroot}@%docdir @
 find %{buildroot} -type d | %{__grep} -v /man | grep -v /doc | grep -v /etc/ | %{__sed} "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
+%defattr(-, root, root, -)
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: perl-Google-Adwords.spec.in,v $
+Revision 1.8  2007/09/03 19:59:47  bpbuild
+default to owned by root
+
 Revision 1.7  2007/09/03 19:51:01  bpbuild
 updated to macros
 
