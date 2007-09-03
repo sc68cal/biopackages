@@ -1,16 +1,21 @@
-#$Id: clucene.spec.in,v 1.7 2007/01/05 09:26:41 bpbuild Exp $
-Summary: A C++ port of Lucene
-Name: clucene
-Version: 0.9.16a
-Release: %{revision}.%{distro}
-License: LGPL
-Group: Development/System
-URL: http://www.sourceforge.net/projects/clucene
-#Source: http://easynews.dl.sf.net/clucene/clucene-core-%{version}.tar.bz2
-Source: %{name}-core-%{version}.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-root
-Patch:    %{name}-core-%{version}.patch
-BuildRequires: automake, libtool, autoconf, libstdc++-devel, m4, gcc-c++
+#$Id: clucene.spec.in,v 1.8 2007/09/03 08:09:07 bpbuild Exp $
+
+%define build_contrib	0
+
+Summary:	A C++ port of Lucene
+Name:		clucene
+Version:	0.9.19
+Release:	%{revision}.%{distro}
+License:	LGPL or ASL 2.0
+Group:		Development/System
+URL:		http://www.sourceforge.net/projects/clucene
+Source0:	http://easynews.dl.sf.net/clucene/clucene-core-%{version}.tar.bz2
+%if %{build_contrib}
+Source1:	http://easynews.dl.sf.net/clucene/clucene-contrib-0.9.16a.tar.bz2
+Patch1:		clucene-contrib-autoconf.patch
+%endif
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	automake
 
 %description
 CLucene is a C++ port of Lucene.
@@ -19,48 +24,106 @@ engine written in C++. CLucene is faster than lucene
 as it is written in C++
 
 %package core
-Summary: Core clucene module
-Group: Development/System
-Provides: clucene
+Summary:	Core clucene module
+Group:		Development/System
+Provides:	clucene
+#Requires: %{name} = %{version}-%{release}
 
 %description core
 The core clucene module
 
 %package core-devel
-Summary: Headers for developing programs that will use %{name}
-Group: Development/Libraries
-Requires: %{name}-core = %{version}-%{release}
+Summary:	Headers for developing programs that will use %{name}
+Group:		Development/Libraries
+Requires:	%{name}-core = %{version}-%{release}
 
 %description core-devel
 This package contains the static libraries and header files needed for
 developing with clucene
 
+%if %{build_contrib}
+%package	contrib
+Summary:	Core clucene module
+Group:		Development/System
+Requires:	%{name}-core >= %{version}-%{release}
+
+%description contrib
+Collection of contributions for C++ port of Lucene
+
+%package contrib-devel
+Summary:	Headers for developing programs that will use %{name}
+Group:		Development/Libraries
+Requires:	%{name}-contrib = %{version}-%{release}
+Requires:	%{name}-core-devel >= %{version}-%{release}
+
+%description contrib-devel
+This package contains the static libraries and header files needed for
+developing with clucene-contrib
+%endif
+
 %prep
-%setup -q -n clucene-core-%{version}
-%patch -p1
+%if %{build_contrib}
+%setup -q -c -a 1
+cd %{name}-contrib-%{version}
+%patch1 -p0 -b .autoconf
+%else
+%setup -q -c -a 0
+%endif
 
 %build
-./autogen.sh
-%configure --disable-debug --prefix=/usr --exec-prefix=/usr --enable-ascii
+pushd %{name}-core-%{version}
+%configure --disable-static
 make %{?_smp_mflags}
+popd
+
+%if %{build_contrib}
+pushd %{name}-contrib-%{version}
+aclocal -I m4
+autoconf
+automake --add-missing --copy
+%configure --disable-static
+make %{?_smp_mflags}
+popd
+%endif
 
 # Run the tests
 %check
+pushd %{name}-core-%{version}
 make check
+popd
 										
 %install
 rm -rf %{buildroot}
+pushd %{name}-core-%{version}
 make DESTDIR=%{buildroot} install
+popd
+
+%if %{build_contrib}
+pushd %{name}-contrib-%{version}
+make DESTDIR=%{buildroot} install
+popd
+%endif
 
 #Hope upstream will correct this problem in the next release
 mv %{buildroot}%{_libdir}/CLucene/clucene-config.h  %{buildroot}%{_includedir}/CLucene/
+%if %{build_contrib}
+mv %{buildroot}%{_libdir}/CLucene/clucene-config-contrib.h  %{buildroot}%{_includedir}/CLucene/
+%endif
 rm -rf %{buildroot}%{_libdir}/CLucene
 
 #Package the docs
 mkdir -p %{buildroot}%{_datadir}/%{name}/doc
+mkdir -p %{buildroot}%{_datadir}/doc/%{name}-%{version}
+pushd %{name}-core-%{version}
 cp -pr doc/*.htm doc/*.jpg %{buildroot}%{_datadir}/%{name}/doc
+cp -pr AUTHORS COPYING HACKING README REQUESTS \
+       %{buildroot}%{_datadir}/doc/%{name}-%{version}
+popd
 
 rm -rf %{buildroot}%{_libdir}/*.la
+# These are from the contrib package
+rm -rf %{buildroot}%{_includedir}/CuTest.h
+rm -rf %{buildroot}%{_includedir}/test.h
 
 %clean
 rm -rf %{buildroot}
@@ -71,35 +134,44 @@ rm -rf %{buildroot}
 
 %files core
 %defattr(-, root, root, -)
-%doc AUTHORS COPYING HACKING README REQUESTS
-%{_libdir}/*.so.*
+#%doc AUTHORS COPYING HACKING README REQUESTS
+%{_libdir}/libclucene.so.*
+%{_datadir}/doc/%{name}-%{version}/
 
 %files core-devel
 %defattr(-, root, root, -)
-%{_includedir}/CLucene/
+%dir %{_includedir}/CLucene
+%{_includedir}/CLucene/*
 %{_includedir}/CLucene.h
-%{_libdir}/*.so
-%{_libdir}/*.a
+%{_libdir}/libclucene.so
 %{_datadir}/%{name}/
+%if %{build_contrib}
+%exclude %{_includedir}/CLucene/clucene-config-contrib.h
+%exclude %{_includedir}/CLucene/analysis/cjk/
+%exclude %{_includedir}/CLucene/highlighter/
+%exclude %{_includedir}/CLucene/jstreams/
+%exclude %{_includedir}/CLucene/snowball/
+%endif
 
-# Log from FC5 spec
-#* Thu Dec 07 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.16a-1
-#- Name the built package clucene-core to conform to upstream naming
-#- Update to latest stable release 
-#- Run make check during build
-#
-#* Mon Nov 20 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-3
-#- Don't package APACHE.license since we've LGPL instead 
-#- Package documentation in devel subpackage
-#
-#* Mon Nov 13 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-2
-#- Fix a bunch of issues with the spec (#215258)
-#- Moved the header file away from lib dir
-#
-#* Sat Nov 04 2006 Deji Akingunola <dakingun@gmail.com> - 0.9.15-1
-#- Initial packaging for Fedora Extras
+%if %{build_contrib}
+%files contrib
+%defattr(-, root, root, -)
+%{_libdir}/libclucene-contrib.so.*
+
+%files contrib-devel
+%defattr(-, root, root, -)
+%{_includedir}/CLucene/clucene-config-contrib.h
+%{_includedir}/CLucene/analysis/cjk/
+%{_includedir}/CLucene/highlighter/
+%{_includedir}/CLucene/jstreams/
+%{_includedir}/CLucene/snowball/
+%{_libdir}/libclucene-contrib.so
+%endif
 
 $Log: clucene.spec.in,v $
+Revision 1.8  2007/09/03 08:09:07  bpbuild
+updated to 0.9.19 using upstream spec file
+
 Revision 1.7  2007/01/05 09:26:41  bpbuild
 update spec
 
@@ -120,4 +192,3 @@ Updated deps
 
 Revision 1.1  2006/12/22 05:05:17  bpbuild
 Adding clucene backport from FC5 but patched to work (better) with Turnkey.  A stock clucene would also work provided there aren't more than a couple thousand features to be searched
-
