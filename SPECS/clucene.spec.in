@@ -1,4 +1,4 @@
-#$Id: clucene.spec.in,v 1.9 2007/09/03 08:14:37 bpbuild Exp $
+#$Id: clucene.spec.in,v 1.10 2007/09/03 19:36:03 bpbuild Exp $
 
 %define build_contrib	0
 
@@ -15,7 +15,7 @@ Source1:	http://easynews.dl.sf.net/clucene/clucene-contrib-0.9.16a.tar.bz2
 Patch1:		clucene-contrib-autoconf.patch
 %endif
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	automake, gcc-c++
+BuildRequires:	automake, gcc-c++, doxygen
 
 %description
 CLucene is a C++ port of Lucene.
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 %endif
 
 $Log: clucene.spec.in,v $
+Revision 1.10  2007/09/03 19:36:03  bpbuild
+buildreq doxygen for doc
+
 Revision 1.9  2007/09/03 08:14:37  bpbuild
 needs gcc-c++
 
