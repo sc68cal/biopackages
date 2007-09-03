@@ -1,4 +1,4 @@
-#$Id: perl-Google-Adwords.spec.in,v 1.6 2007/09/03 19:41:11 bpbuild Exp $
+#$Id: perl-Google-Adwords.spec.in,v 1.7 2007/09/03 19:51:01 bpbuild Exp $
 Name: perl-Google-Adwords
 Summary: This module provides an interface to the Google Adwords SOAP API.
 Version: 1.3.1
@@ -18,35 +18,38 @@ This module provides an interface to the Google Adwords SOAP API.
 %setup -n Google-Adwords-v%{version}
 
 %build
-perl Makefile.PL PREFIX=$RPM_BUILD_ROOT/usr
-make
-#make test
+%{__perl} Makefile.PL PREFIX=$RPM_BUILD_ROOT/%{_prefix}
+%{__make}
+#%{__make} test
 
 %install
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 %makeinstall
 
 
 # Remove perllocal.pod from the RPM to avoid installation conflicts
-find $RPM_BUILD_ROOT -type f | grep perllocal.pod | xargs rm -vf
+find $RPM_BUILD_ROOT -type f | %{__grep} perllocal.pod | xargs %{__rm} -vf
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-find %{buildroot} -type f -o -type l | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /etc/ | sed "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /etc/ | sed "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /doc | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /doc | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep /man | sed "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | grep -v /man | grep -v /doc | grep -v /etc/ | sed "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} -v /man | grep -v /doc | grep -v /etc/ | %{__sed} "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /etc/ | %{__sed} "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | %{__grep} /etc/ | %{__sed} "s@^%{buildroot}@%configdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /doc | %{__sed} "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /man | %{__sed} "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | %{__grep} /doc | %{__sed} "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | %{__grep} /man | %{__sed} "s@^%{buildroot}@%docdir @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | %{__grep} -v /man | grep -v /doc | grep -v /etc/ | %{__sed} "s@^%{buildroot}@%dir @g" |grep / >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: perl-Google-Adwords.spec.in,v $
+Revision 1.7  2007/09/03 19:51:01  bpbuild
+updated to macros
+
 Revision 1.6  2007/09/03 19:41:11  bpbuild
 skip make test
 
