@@ -1,9 +1,9 @@
-#$Id: spreadlogd.spec.in,v 1.3 2007/09/12 07:39:22 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.4 2007/09/12 07:39:48 bpbuild Exp $
 Name:           spreadlogd
 Version:        2.0.0
 Release:        %{revision}.%{distro}
 Summary:        a replacement to log_writer
-Package:	Jordan Mendler <jmendler@ucla.edu>
+Packager:	Jordan Mendler <jmendler@ucla.edu>
 Group:          System Environment/Daemons
 License:        Apache Software License
 URL:            http://www.backhand.org/mod_log_spread/
@@ -46,6 +46,9 @@ find %{buildroot} -type f -o -type l | %{__grep} /man | %{__sed} "s@^%{buildroot
 
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.4  2007/09/12 07:39:48  bpbuild
+Packager not Package
+
 Revision 1.3  2007/09/12 07:39:22  bpbuild
 trying new non-patched spec for 2.0.0
 
