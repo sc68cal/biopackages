@@ -1,46 +1,54 @@
-#$Id: spreadlogd.spec.in,v 1.2 2007/09/12 06:13:09 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.3 2007/09/12 07:39:22 bpbuild Exp $
 Name:           spreadlogd
-Version:        1.4.2
+Version:        2.0.0
 Release:        %{revision}.%{distro}
 Summary:        a replacement to log_writer
-
+Package:	Jordan Mendler <jmendler@ucla.edu>
 Group:          System Environment/Daemons
 License:        Apache Software License
-URL:            http://www.openinfo.co.uk/apache/
+URL:            http://www.backhand.org/mod_log_spread/
 Source0:        %{name}-%{version}.tar.gz
-Patch0:		%{name}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:  flex, bison, spread, gcc
+BuildRequires:  flex, bison, spread, gcc, byacc, libevent-devel
 Requires:       spread
 
 %description
 a replacement to log_writer
 
+
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
+
 
 %build
-make
+./configure
+%{__make}
+%{__make} test
+
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}/etc
-install -m755 spreadlogd %{buildroot}/%{_bindir}/
-install -m644 spreadlogd.conf %{buildroot}/etc
+%{__rm} -rf $RPM_BUILD_ROOT
+%makeinstall
+
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | %{__grep} -v /man | grep -v /doc | grep -v /etc/ | %{__sed} "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /etc/ | %{__sed} "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /doc | %{__sed} "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | %{__grep} /man | %{__sed} "s@^%{buildroot}@%doc @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
 
 %clean
-rm -rf %{buildroot}
+%{__rm} -rf $RPM_BUILD_ROOT
 
-
-%files
-%defattr(-,root,root,-)
-%{_bindir}/spreadlogd
-/etc/spreadlogd.conf
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.3  2007/09/12 07:39:22  bpbuild
+trying new non-patched spec for 2.0.0
+
 Revision 1.2  2007/09/12 06:13:09  bpbuild
 updating spec to support different versions
 
