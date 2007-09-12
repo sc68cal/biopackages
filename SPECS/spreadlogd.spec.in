@@ -1,4 +1,4 @@
-#$Id: spreadlogd.spec.in,v 1.1 2007/08/02 18:32:05 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.2 2007/09/12 06:13:09 bpbuild Exp $
 Name:           spreadlogd
 Version:        1.4.2
 Release:        %{revision}.%{distro}
@@ -7,7 +7,7 @@ Summary:        a replacement to log_writer
 Group:          System Environment/Daemons
 License:        Apache Software License
 URL:            http://www.openinfo.co.uk/apache/
-Source0:        %{name}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 Patch0:		%{name}.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -18,7 +18,7 @@ Requires:       spread
 a replacement to log_writer
 
 %prep
-%setup -q -n spreadlogd-%{version}
+%setup -q -n %{name}-%{version}
 %patch0 -p1
 
 %build
@@ -41,6 +41,9 @@ rm -rf %{buildroot}
 /etc/spreadlogd.conf
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.2  2007/09/12 06:13:09  bpbuild
+updating spec to support different versions
+
 Revision 1.1  2007/08/02 18:32:05  bpbuild
 new spec
 
