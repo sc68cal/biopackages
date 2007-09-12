@@ -1,4 +1,4 @@
-#$Id: mod_log_spread.spec.in,v 1.3 2007/08/03 19:43:55 bpbuild Exp $
+#$Id: mod_log_spread.spec.in,v 1.4 2007/09/12 06:33:20 bpbuild Exp $
 Name:           mod_log_spread
 Version:        1.0
 Release:        %{revision}.%{distro}
@@ -6,12 +6,13 @@ Summary:        multicast httpd logs to spread
 
 Group:          System Environment/Daemons
 License:        Apache Software License
-URL:            http://www.openinfo.co.uk/apache/
+URL:            https://alioth.debian.org/frs/?group_id=30823
+URL:		http://mod-log-spread2.alioth.debian.org/
 Source0:        mod-log-spread2.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  spread, httpd-devel
-Requires:       spread
+Requires:       spread, httpd
 
 %description
 multicast httpd logs to spread
@@ -36,6 +37,9 @@ rm -rf %{buildroot}
 
 
 $Log: mod_log_spread.spec.in,v $
+Revision 1.4  2007/09/12 06:33:20  bpbuild
+updated URL and added httpd dep
+
 Revision 1.3  2007/08/03 19:43:55  bpbuild
 /usr/sbin/apxs instead of apxs
 
