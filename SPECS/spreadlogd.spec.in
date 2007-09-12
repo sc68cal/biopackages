@@ -1,4 +1,4 @@
-#$Id: spreadlogd.spec.in,v 1.4 2007/09/12 07:39:48 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.5 2007/09/12 07:56:28 bpbuild Exp $
 Name:           spreadlogd
 Version:        2.0.0
 Release:        %{revision}.%{distro}
@@ -23,7 +23,6 @@ a replacement to log_writer
 %build
 ./configure
 %{__make}
-%{__make} test
 
 
 %install
@@ -46,6 +45,9 @@ find %{buildroot} -type f -o -type l | %{__grep} /man | %{__sed} "s@^%{buildroot
 
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.5  2007/09/12 07:56:28  bpbuild
+make test should not be in there
+
 Revision 1.4  2007/09/12 07:39:48  bpbuild
 Packager not Package
 
