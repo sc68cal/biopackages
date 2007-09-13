@@ -1,4 +1,4 @@
-#$Id: wackamole.spec.in,v 1.8 2007/07/31 01:54:20 bpbuild Exp $
+#$Id: wackamole.spec.in,v 1.9 2007/09/13 05:39:48 bpbuild Exp $
 Name: wackamole
 Summary: Wackamole is an application that helps with making a cluster highly available.
 Version: 2.1.3
@@ -36,18 +36,18 @@ Wackamole is an application that runs as root in a cluster to make it highly ava
 Wackamole works towards achieving a balanced distribution of the clusters IP space between its instances. First, each instance immediately claims its preferred IP address. Then, if the number of virtual IP addresses acquired by any two machines does differ by more than one, Wackamole will work towards making the them differ by one or less. Wackamole has the ability to balance all the IP addresses at once or do it gradually. 
 
 %prep
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 %setup -n %{name}-%{version} 
 %patch -p1
-mkdir -pv $RPM_BUILD_ROOT/etc/init.d
+%{__mkdir} -pv $RPM_BUILD_ROOT/etc/init.d
 
 %build
 ./configure
-make all
+%{__make} all
 
 %install
 %makeinstall
-cp -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/wackamole
+%{__cp} -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/wackamole
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -60,15 +60,18 @@ find %{buildroot} -type f -o -type l | grep /man | sed "s@^%{buildroot}@%doc @g"
 %defattr(-, root, root, -)
 
 %post
-exec /sbin/chkconfig --add spread
+exec /sbin/chkconfig --add wackamole
 
 %preun
-exec /sbin/chkconfig --del spread
+exec /sbin/chkconfig --del wackamole 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: wackamole.spec.in,v $
+Revision 1.9  2007/09/13 05:39:48  bpbuild
+wackamole not spread in post scripts and use of rpmmacros
+
 Revision 1.8  2007/07/31 01:54:20  bpbuild
 added init.d script and other clean up
 
