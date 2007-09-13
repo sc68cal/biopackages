@@ -1,4 +1,4 @@
-#$Id: spreadlogd.spec.in,v 1.6 2007/09/13 05:47:36 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.7 2007/09/13 05:51:15 bpbuild Exp $
 Name:           spreadlogd
 Version:        2.0.0
 Release:        %{revision}.%{distro}
@@ -17,15 +17,15 @@ Requires:       spread
 a replacement to log_writer
 
 %prep
+%{__rm} -rf $RPM_BUILD_ROOT
 %setup -q -n %{name}-%{version}
-mkdir -pv $RPM_BUILD_ROOT/etc/init.d
+%{__mkdir} -pv $RPM_BUILD_ROOT/etc/init.d
 
 %build
 ./configure
 %{__make}
 
 %install
-%{__rm} -rf $RPM_BUILD_ROOT
 %makeinstall
 %{__cp} -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spreadlogd
 
@@ -49,6 +49,9 @@ exec /sbin/chkconfig --add spreadlogd
 exec /sbin/chkconfig --del spreadlogd
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.7  2007/09/13 05:51:15  bpbuild
+rm RPM_BUILD_ROOT in prep instead of build
+
 Revision 1.6  2007/09/13 05:47:36  bpbuild
 added init script
 
