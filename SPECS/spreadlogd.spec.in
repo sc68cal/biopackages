@@ -1,4 +1,4 @@
-#$Id: spreadlogd.spec.in,v 1.5 2007/09/12 07:56:28 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.6 2007/09/13 05:47:36 bpbuild Exp $
 Name:           spreadlogd
 Version:        2.0.0
 Release:        %{revision}.%{distro}
@@ -8,6 +8,7 @@ Group:          System Environment/Daemons
 License:        Apache Software License
 URL:            http://www.backhand.org/mod_log_spread/
 Source0:        %{name}-%{version}.tar.gz
+Source1:	spreadlogd-init
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  flex, bison, spread, gcc, byacc, libevent-devel
 Requires:       spread
@@ -15,20 +16,18 @@ Requires:       spread
 %description
 a replacement to log_writer
 
-
 %prep
 %setup -q -n %{name}-%{version}
-
+mkdir -pv $RPM_BUILD_ROOT/etc/init.d
 
 %build
 ./configure
 %{__make}
 
-
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 %makeinstall
-
+%{__cp} -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spreadlogd
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -43,8 +42,16 @@ find %{buildroot} -type f -o -type l | %{__grep} /man | %{__sed} "s@^%{buildroot
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%post
+exec /sbin/chkconfig --add spreadlogd
+
+%preun
+exec /sbin/chkconfig --del spreadlogd
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.6  2007/09/13 05:47:36  bpbuild
+added init script
+
 Revision 1.5  2007/09/12 07:56:28  bpbuild
 make test should not be in there
 
