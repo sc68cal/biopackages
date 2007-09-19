@@ -1,0 +1,146 @@
+#$Id: cobbler.spec.in,v 1.1 2007/09/19 01:24:39 bpbuild Exp $
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+Summary: Boot server configurator
+Name: cobbler
+Version: 0.6.1-2
+Release: ${revision}.${distro}
+Source0: %{name}-%{version}.tar.gz
+License: GPL
+Group: Applications/System
+Requires: python >= 2.3
+Requires: httpd
+Requires: tftp-server
+Requires: python-devel
+Requires: createrepo
+Requires: mod_python
+Requires: python-cheetah
+Requires: yum-utils
+Requires: rhpl
+%ifarch i386 i686 x86_64
+Requires: syslinux
+%endif
+Requires(post):  /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
+Requires(preun): /sbin/service
+BuildRequires: python-devel
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildArch: noarch
+ExcludeArch: ppc
+Url: http://cobbler.et.redhat.com
+
+%description
+
+Cobbler is a network boot and update server.  Cobbler 
+supports PXE, provisioning virtualized images, and 
+reinstalling existing Linux machines.  The last two 
+modes require a helper tool called 'koan' that 
+integrates with cobbler.  Cobbler's advanced features 
+include importing distributions from DVDs and rsync 
+mirrors, kickstart templating, integrated yum 
+mirroring, and built-in DHCP Management.  Cobbler has 
+a Python API for integration with other GPL systems 
+management applications.
+
+%prep
+%setup -q
+
+%build
+%{__python} setup.py build
+
+%install
+test "x$RPM_BUILD_ROOT" != "x" && rm -rf $RPM_BUILD_ROOT
+%{__python} setup.py install --optimize=1 --root=$RPM_BUILD_ROOT
+
+%post
+/sbin/chkconfig --add cobblerd
+
+
+%preun
+if [ $1 = 0 ]; then
+    /sbin/service cobblerd stop >/dev/null 2>&1 || :
+    chkconfig --del cobblerd
+fi
+
+%postun
+if [ "$1" -ge "1" ]; then
+    /sbin/service cobblerd condrestart >/dev/null 2>&1 || :
+fi
+
+%clean
+test "x$RPM_BUILD_ROOT" != "x" && rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(2744,apache,apache)
+/var/www/cgi-bin/findks.cgi
+/var/www/cgi-bin/nopxe.cgi
+%dir /var/log/cobbler
+%dir /var/log/cobbler/kicklog
+%dir /var/www/cobbler/
+%dir /var/www/cobbler/localmirror
+%dir /var/www/cobbler/kickstarts
+%dir /var/www/cobbler/kickstarts_sys
+%dir /var/www/cobbler/repo_mirror
+%dir /var/www/cobbler/ks_mirror
+%dir /var/www/cobbler/ks_mirror/config
+%dir /var/www/cobbler/images
+%dir /var/www/cobbler/distros
+%dir /var/www/cobbler/profiles
+%dir /var/www/cobbler/systems
+%dir /var/www/cobbler/links
+%defattr(-,root,root)
+%dir /tftpboot/pxelinux.cfg
+%dir /tftpboot/images
+%{_bindir}/cobbler
+%{_bindir}/cobblerd
+%dir /etc/cobbler
+%config(noreplace) /etc/cobbler/default.ks
+%config(noreplace) /etc/cobbler/kickstart_fc5.ks
+%config(noreplace) /etc/cobbler/kickstart_fc6.ks
+%config(noreplace) /etc/cobbler/kickstart_fc6_domU.ks
+%config(noreplace) /etc/cobbler/dhcp.template
+%config(noreplace) /etc/cobbler/dnsmasq.template
+%config(noreplace) /etc/cobbler/pxedefault.template
+%config(noreplace) /etc/cobbler/pxeprofile.template
+%config(noreplace) /etc/cobbler/pxesystem.template
+%config(noreplace) /etc/cobbler/pxesystem_ia64.template
+%config(noreplace) /etc/cobbler/rsync.exclude
+%config(noreplace) /etc/logrotate.d/cobblerd_rotate
+%dir %{python_sitelib}/cobbler
+%dir %{python_sitelib}/cobbler/yaml
+%{python_sitelib}/cobbler/*.py*
+%{python_sitelib}/cobbler/yaml/*.py*
+%{_mandir}/man1/cobbler.1.gz
+/etc/init.d/cobblerd
+%config(noreplace) /etc/httpd/conf.d/cobbler.conf
+%dir /var/log/cobbler/syslog
+%defattr(2550,root,root)
+%dir /var/lib/cobbler
+%dir /var/lib/cobbler/triggers/add/distro/pre
+%dir /var/lib/cobbler/triggers/add/distro/post
+%dir /var/lib/cobbler/triggers/add/profile/pre
+%dir /var/lib/cobbler/triggers/add/profile/post
+%dir /var/lib/cobbler/triggers/add/system/pre
+%dir /var/lib/cobbler/triggers/add/system/post
+%dir /var/lib/cobbler/triggers/add/repo/pre
+%dir /var/lib/cobbler/triggers/add/repo/post
+%dir /var/lib/cobbler/triggers/delete/distro/pre
+%dir /var/lib/cobbler/triggers/delete/distro/post
+%dir /var/lib/cobbler/triggers/delete/profile/pre
+%dir /var/lib/cobbler/triggers/delete/profile/post
+%dir /var/lib/cobbler/triggers/delete/system/pre
+%dir /var/lib/cobbler/triggers/delete/system/post
+%dir /var/lib/cobbler/triggers/delete/repo/pre
+%dir /var/lib/cobbler/triggers/delete/repo/post
+%dir /var/lib/cobbler/snippets/
+%config(noreplace) /var/lib/cobbler/snippets/partition_select
+/var/lib/cobbler/elilo-3.6-ia64.efi
+/var/lib/cobbler/menu.c32
+%defattr(2755,root,root)
+%config(noreplace) /var/lib/cobbler/cobbler_hosts
+%defattr(-,root,root)
+%doc AUTHORS CHANGELOG README COPYING
+
+$Log: cobbler.spec.in,v $
+Revision 1.1  2007/09/19 01:24:39  bpbuild
+import cobbler-0.6.1-2 from fc8 repo
+
