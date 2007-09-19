@@ -47,3 +47,4 @@ fftw3
 perl-Net-Delicious
 perl-Time-HiRes
 php
+cobbler
