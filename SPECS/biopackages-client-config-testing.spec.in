@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config-testing.spec.in,v 1.5 2007/08/13 19:10:22 bpbuild Exp $
+#$Id: biopackages-client-config-testing.spec.in,v 1.6 2007/09/25 20:43:59 bpbuild Exp $
 Summary: Configuration package for the often unstable Biopackages-testing repository.
 Name: biopackages-client-config-testing
 Version: 1.0
@@ -40,12 +40,20 @@ EOF
 %clean
 %{__rm} -rf %{buildroot}
 
+%post
+%{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages-testing.repo >> /etc/yum.conf
+# We don't want a possible error to leave the previous package installed
+exit 0
+
 %files
 %defattr(-, root, root, 0755)
 %dir %{_sysconfdir}/yum.repos.d/
 %config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages-testing.repo
 
 $Log: biopackages-client-config-testing.spec.in,v $
+Revision 1.6  2007/09/25 20:43:59  bpbuild
+fixed for fc2
+
 Revision 1.5  2007/08/13 19:10:22  bpbuild
 removed whitespace
 
