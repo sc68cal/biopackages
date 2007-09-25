@@ -1,12 +1,12 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.6 2006/09/13 06:00:06 boconnor Exp $
+#$Id: in2spec.pl,v 1.7 2007/09/25 21:02:41 bpbuild Exp $
 use strict;
 use Date::Manip;
 use Text::Wrap;
 $Text::Wrap::columns = 72;
 
 # figure out what distro we have
-my @results = `rpm -qa | grep 'release'`;
+my @results = `rpm -qa | grep 'release' | grep -v rpmforge`;
 chomp $results[0];
 $results[0] =~ /^([^-]+)-release-([^-]+)/;
 my $distro = $1;
@@ -91,6 +91,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.7  2007/09/25 21:02:41  bpbuild
+greping for release was finding rpmforge, so instead grep for release and exclude rpmforge
+
 Revision 1.6  2006/09/13 06:00:06  boconnor
 Added ifdistro and ifdistro_release tags to the pre-processor. Currently it just supports one line but it would be nice if this could be a multi-line enclosed by a fi
 
