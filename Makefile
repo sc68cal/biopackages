@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.117 2007/08/24 19:17:14 boconnor Exp $
+#$Id: Makefile,v 1.118 2007/09/25 21:04:13 bpbuild Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -110,6 +110,7 @@ buildall :: specs
 	echo 'for i in SPECS/*.spec; do $(MAKE) $${i/.spec/.built}; done' | /bin/bash
 
 buildclean ::
+	$(RM_RF) SPECS/*.spec
 	$(RM_RF) SPECS/*.built
 	$(RM_RF) SPECS/*.cbuilt
 	$(RM_RF) SPECS/*.rbuilt
