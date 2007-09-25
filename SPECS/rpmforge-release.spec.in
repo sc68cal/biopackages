@@ -1,4 +1,4 @@
-#$Id: rpmforge-release.spec.in,v 1.7 2007/08/13 18:39:48 bpbuild Exp $
+#$Id: rpmforge-release.spec.in,v 1.8 2007/09/25 20:07:40 bpbuild Exp $
 # Authority: dag
 # Upstream: Dag Wieers <dag@wieers.com>
 
@@ -82,6 +82,11 @@ rpm -q gpg-pubkey-6b8d79e6-3f49313d &>/dev/null || rpm --import %{_sysconfdir}/p
 rpm -q gpg-pubkey-1aa78495-3eb24301 &>/dev/null || rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries || :
 rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias || :
 %endif
+# FC2 doesn't support external repo files!
+%{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages.repo >> /etc/yum.conf
+# We don't want a possible error to leave the previous package installed
+exit 0
+
 
 %files
 %defattr(-, root, root, 0755)
@@ -96,6 +101,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 &>/dev/null || rpm --import %{_sysconfdir}/p
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-*
 
 $Log: rpmforge-release.spec.in,v $
+Revision 1.8  2007/09/25 20:07:40  bpbuild
+yum.conf instead of yum.repos.d for fc2
+
 Revision 1.7  2007/08/13 18:39:48  bpbuild
 accidentally removed centos4
 
