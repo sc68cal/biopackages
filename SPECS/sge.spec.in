@@ -1,0 +1,172 @@
+#$Id: sge.spec.in,v 1.1 2007/10/08 21:58:14 bpbuild Exp $
+
+%define sgedir /usr/share/sge
+%define qmasterspool /var/lib/sge_qmaster
+%define execdspool /var/lib/sge_execd
+
+Summary: Sun Grid Engine
+Name: sge
+Version: 6.1u2
+Release: %{revision}.%{distro}
+Group: Applications/System
+License: SISSL
+URL: http://gridengine.sunsource.net/
+Source0: http://gridengine.sunsource.net/files/documents/7/149/sge-V61u2_TAG-src.tar.gz
+Source1: sge-inst.conf
+Source2: sge-README.rpm
+Requires: pdksh
+Provides: gridengine
+BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel
+BuildRequires: /usr/bin/perl, openssl-devel
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Packager: Jordan Mendler <jmendler@ucla.edu>
+
+%description
+Sun[tm] Grid Engine finds a pool of idle resources and harnesses it
+productively, so an organization gets as much as five to ten times the
+usable power out of systems on the network. That can increase utilization
+to as much as 98%.
+
+Sun Grid Engine software aggregates available compute resources and
+delivers compute power as a network service.
+
+
+%prep
+# create a top level directory
+%setup -q -n gridengine
+
+
+%build
+# set up the target installation directory
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{sgedir}
+
+cd source
+# creates the sge-depend tool
+./aimk -only-depend -no-java -no-jni -no-secure
+scripts/zerodepend
+# creates the dependencies
+./aimk -no-java -no-jni -no-secure depend 
+# creates the core programs, qmon, qmake and qrsh/qtcsh
+./aimk -spool-classic -no-java -no-jni -no-secure
+# processing of the man files
+./aimk -no-java -no-jni -no-secure -man
+
+
+%install 
+cp %{SOURCE1} .
+/usr/bin/perl -pi -e "s!RPM_BUILD_ROOT!$RPM_BUILD_ROOT!" sge-inst.conf
+cd source
+ARCH=`dist/util/arch`
+export SGE_ROOT=$RPM_BUILD_ROOT%{sgedir}
+export SGE_CELL=default
+# creates the linux distribution of gridengine
+echo "Y" | scripts/distinst -local -allall -nobdb -noopenssl -noexit $ARCH
+cd $SGE_ROOT
+./inst_sge -m -x -auto %{_builddir}/gridengine/sge-inst.conf || true
+
+
+
+# Move binaries
+##install -d $RPM_BUILD_ROOT/usr/bin
+##mv $SGE_ROOT/bin/$ARCH/* $RPM_BUILD_ROOT/usr/bin
+##rmdir $SGE_ROOT/bin/$ARCH
+##ln -s /usr/bin $SGE_ROOT/bin/$ARCH
+
+# Move libraries
+##install -d $RPM_BUILD_ROOT%{_libdir}
+##mv $SGE_ROOT/lib/$ARCH/* $RPM_BUILD_ROOT%{_libdir}
+##rmdir $SGE_ROOT/lib/$ARCH
+##ln -s %{_libdir} $SGE_ROOT/lib/$ARCH
+
+##install -d $RPM_BUILD_ROOT/etc/profile.d
+##install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+##install -d $RPM_BUILD_ROOT%{execdspool}
+
+# create the man and documentation directories
+##mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{1,3,5,8}
+
+# moving the man files into the correct man dirs
+##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3
+##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man5/* $RPM_BUILD_ROOT%{_mandir}/man5
+##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man8/* $RPM_BUILD_ROOT%{_mandir}/man8
+##rm -rf $RPM_BUILD_ROOT%{sgedir}/man
+
+##mv $RPM_BUILD_ROOT%{_mandir}/man5/complex.5 $RPM_BUILD_ROOT%{_mandir}/man5/sge_complex.5 
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%pre
+
+
+%post
+
+if [ "$1" = "1" ]; then
+	HN=`hostname -s`
+	echo $HN > %{sgedir}/default/common/primary_qmaster
+	echo $HN > %{sgedir}/default/common/act_qmaster
+	cat << EOF >> %{qmasterspool}/admin_hosts/$HN
+# Version: 6.0
+#
+# DO NOT MODIFY THIS FILE MANUALLY!
+#
+hostname                   $HN
+EOF
+	cp %{qmasterspool}/admin_hosts/$HN %{qmasterspool}/submit_hosts/$HN
+fi
+
+if grep "^sge_qmaster" /etc/services >/dev/null
+then
+	true
+else
+	echo "sge_qmaster          536/tcp     # Sun Grid Engine Qmaster" >>/etc/services
+	echo "sge_qmaster          536/udp     # Sun Grid Engine Qmaster" >>/etc/services
+	echo "sge_execd            537/tcp     # Sun Grid Engine Execd" >>/etc/services
+	echo "sge_execd            537/udp     # Sun Grid Engine Execd" >>/etc/services
+fi
+/sbin/ldconfig
+
+
+
+%preun
+# stop the gridengine script
+if [ "$1" = "0" ]; then
+	/etc/rc.d/init.d/sgemaster stop >& /dev/null  || true
+	/etc/rc.d/init.d/sgeexecd stop >& /dev/null  || true
+	if [ -L /usr/share/sge/default/common ]; then
+		rm /usr/share/sge/default/common
+	fi
+	if [ -L /var/lib/sge_qmaster ]; then
+		rm /var/lib/sge_qmster
+	fi
+	rm -f %{sgedir}/default/common/primary_qmaster
+	rm -f %{sgedir}/default/common/act_qmaster
+	rm -f %{qmasterspool}/admin_hosts/`hostname -s`
+	rm -f %{qmasterspool}/submit_hosts/`hostname -s`
+fi
+
+%postun
+if [ "$1" = "0" ]; then
+	grep -v "^sge_" /etc/services >/tmp/services
+	mv -f /tmp/services /etc/services
+fi
+/sbin/ldconfig
+
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / > %{name}-%{version}-%{release}-filelist
+#find %{buildroot} -type d | sed "s@^%{buildroot}@@g" | grep / >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-, root, root)
+
+
+$Log: sge.spec.in,v $
+Revision 1.1  2007/10/08 21:58:14  bpbuild
+new spec file influenced by http://www.linux.duke.edu/~agrajag/RPMS/, http://ubertechnique.com/seth/work/sge/sge-6.0u8-1.asf.src.rpm and http://svn.oscar.openclustergroup.org/oscar/branches/branch-5-0/packages/sge/SRPMS/sge-6.0u8-6.src.rpm
+
