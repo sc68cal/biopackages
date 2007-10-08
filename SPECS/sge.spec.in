@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.1 2007/10/08 21:58:14 bpbuild Exp $
+#$Id: sge.spec.in,v 1.2 2007/10/08 22:08:45 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -16,7 +16,7 @@ Source1: sge-inst.conf
 Source2: sge-README.rpm
 Requires: pdksh
 Provides: gridengine
-BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel
+BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc
 BuildRequires: /usr/bin/perl, openssl-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 Packager: Jordan Mendler <jmendler@ucla.edu>
@@ -167,6 +167,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / > %{nam
 
 
 $Log: sge.spec.in,v $
+Revision 1.2  2007/10/08 22:08:45  bpbuild
+requires gcc
+
 Revision 1.1  2007/10/08 21:58:14  bpbuild
 new spec file influenced by http://www.linux.duke.edu/~agrajag/RPMS/, http://ubertechnique.com/seth/work/sge/sge-6.0u8-1.asf.src.rpm and http://svn.oscar.openclustergroup.org/oscar/branches/branch-5-0/packages/sge/SRPMS/sge-6.0u8-6.src.rpm
 
