@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.3 2007/10/08 22:23:19 bpbuild Exp $
+#$Id: sge.spec.in,v 1.4 2007/10/09 00:11:33 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -7,7 +7,8 @@
 Summary: Sun Grid Engine
 Name: sge
 Version: 6.1u2
-Release: %{revision}.%{distro}
+#Release: %{revision}.%{distro}
+Release: %{revision}.centos4
 Group: Applications/System
 License: SISSL
 URL: http://gridengine.sunsource.net/
@@ -66,45 +67,48 @@ cd $SGE_ROOT
 ./inst_sge -m -x -auto %{_builddir}/gridengine/sge-inst.conf || true
 
 
-
 # Move binaries
-##install -d $RPM_BUILD_ROOT/usr/bin
-##mv $SGE_ROOT/bin/$ARCH/* $RPM_BUILD_ROOT/usr/bin
-##rmdir $SGE_ROOT/bin/$ARCH
-##ln -s /usr/bin $SGE_ROOT/bin/$ARCH
+install -d $RPM_BUILD_ROOT/usr/bin
+mv $SGE_ROOT/bin/$ARCH/* $RPM_BUILD_ROOT/usr/bin
+rmdir $SGE_ROOT/bin/$ARCH
+ln -s /usr/bin $SGE_ROOT/bin/$ARCH
 
 # Move libraries
-##install -d $RPM_BUILD_ROOT%{_libdir}
-##mv $SGE_ROOT/lib/$ARCH/* $RPM_BUILD_ROOT%{_libdir}
-##rmdir $SGE_ROOT/lib/$ARCH
-##ln -s %{_libdir} $SGE_ROOT/lib/$ARCH
+install -d $RPM_BUILD_ROOT%{_libdir}
+mv $SGE_ROOT/lib/$ARCH/* $RPM_BUILD_ROOT%{_libdir}
+rmdir $SGE_ROOT/lib/$ARCH
+ln -s %{_libdir} $SGE_ROOT/lib/$ARCH
 
-##install -d $RPM_BUILD_ROOT/etc/profile.d
-##install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-##install -d $RPM_BUILD_ROOT%{execdspool}
+#Create directories for init.d scripts
+install -d $RPM_BUILD_ROOT/etc/profile.d
+install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -d $RPM_BUILD_ROOT%{execdspool}
+
+#Install init.d scripts
+install -m 755 $SGE_ROOT/default/common/sgemaster $RPM_BUILD_ROOT/etc/rc.d/init.d/sgemaster
+install -m 755 $SGE_ROOT/default/common/sgeexecd $RPM_BUILD_ROOT/etc/rc.d/init.d/sgeexecd
 
 # create the man and documentation directories
-##mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{1,3,5,8}
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{1,3,5,8}
 
 # moving the man files into the correct man dirs
-##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
-##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3
-##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man5/* $RPM_BUILD_ROOT%{_mandir}/man5
-##install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man8/* $RPM_BUILD_ROOT%{_mandir}/man8
-##rm -rf $RPM_BUILD_ROOT%{sgedir}/man
+install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3
+install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man5/* $RPM_BUILD_ROOT%{_mandir}/man5
+install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man8/* $RPM_BUILD_ROOT%{_mandir}/man8
+rm -rf $RPM_BUILD_ROOT%{sgedir}/man
 
-##mv $RPM_BUILD_ROOT%{_mandir}/man5/complex.5 $RPM_BUILD_ROOT%{_mandir}/man5/sge_complex.5 
+mv $RPM_BUILD_ROOT%{_mandir}/man5/complex.5 $RPM_BUILD_ROOT%{_mandir}/man5/sge_complex.5 
 
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / > %{name}-%{version}-%{release}-filelist
-#find %{buildroot} -type d | sed "s@^%{buildroot}@@g" | grep / >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+#find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep / >> %{name}-%{version}-%{release}-filelist
 
-%files -f %{name}-%{version}-%{release}-filelist
+%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 %defattr(-, root, root)
-
 
 
 %clean
@@ -168,6 +172,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.4  2007/10/09 00:11:33  bpbuild
+various fixes
+
 Revision 1.3  2007/10/08 22:23:19  bpbuild
 filelist should be after install
 
