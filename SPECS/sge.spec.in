@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.8 2007/10/09 01:38:56 bpbuild Exp $
+#$Id: sge.spec.in,v 1.9 2007/10/09 19:22:42 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -69,7 +69,7 @@ cd $SGE_ROOT
 
 
 #Fix results of rpmbuilding in config files
-SED_RULE='s!$RPM_BUILD_ROOT!!g'
+SED_RULE='s!%{buildroot}!!g'
 /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgemaster
 /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgeexecd
 /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/bootstrap
@@ -148,14 +148,14 @@ cp %{SOURCE2} $RPM_BUILD_ROOT%{sgedir}/doc/README.sge-rpm
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / > %{_tmppath}/%{name}-%{version}-%{release}-filelist
-#find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep / >> %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep sge |grep / >> %{name}-%{version}-%{release}-filelist
 
 %files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 %defattr(-, root, root)
 
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %pre
 if grep sgeadmin /etc/passwd
@@ -232,6 +232,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.9  2007/10/09 19:22:42  bpbuild
+fixes
+
 Revision 1.8  2007/10/09 01:38:56  bpbuild
 fixes
 
