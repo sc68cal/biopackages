@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.6 2007/10/09 01:35:00 bpbuild Exp $
+#$Id: sge.spec.in,v 1.7 2007/10/09 01:35:35 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -211,7 +211,6 @@ if [ "$1" = "0" ]; then
 fi
 
 %postun
-%preun master
 if grep sgeadmin /etc/passwd
 then
         echo "Removing SGE user and group..."
@@ -231,6 +230,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.7  2007/10/09 01:35:35  bpbuild
+fixes
+
 Revision 1.6  2007/10/09 01:35:00  bpbuild
 fixes
 
