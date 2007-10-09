@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.7 2007/10/09 01:35:35 bpbuild Exp $
+#$Id: sge.spec.in,v 1.8 2007/10/09 01:38:56 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -141,6 +141,8 @@ rsh_command                  /usr/bin/ssh
 rsh_daemon                   /usr/sbin/sshd -i
 EOF
 
+#Include original SGE Readme
+cp %{SOURCE2} $RPM_BUILD_ROOT%{sgedir}/doc/README.sge-rpm
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -230,6 +232,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.8  2007/10/09 01:38:56  bpbuild
+fixes
+
 Revision 1.7  2007/10/09 01:35:35  bpbuild
 fixes
 
