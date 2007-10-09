@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.10 2007/10/09 19:45:16 bpbuild Exp $
+#$Id: sge.spec.in,v 1.11 2007/10/09 21:50:47 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -16,7 +16,7 @@ Source1: sge-inst.conf
 Source2: sge-README.rpm
 Source3: sge-sge.sh
 Source4: sge-sge.csh
-Requires: pdksh
+Requires: pdksh, openmotif
 Provides: gridengine
 BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc
 BuildRequires: /usr/bin/perl, openssl-devel
@@ -157,7 +157,7 @@ find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep sge |grep / >> 
 
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %pre
 if grep sgeadmin /etc/passwd
@@ -234,6 +234,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.11  2007/10/09 21:50:47  bpbuild
+fixes
+
 Revision 1.10  2007/10/09 19:45:16  bpbuild
 fixes
 
