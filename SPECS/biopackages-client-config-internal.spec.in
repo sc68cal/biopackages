@@ -1,0 +1,56 @@
+#$Id: biopackages-client-config-internal.spec.in,v 1.1 2007/10/11 23:12:23 bpbuild Exp $
+Summary: Configuration package for the Biopackages-internal repository.
+Name: biopackages-client-config-internal
+Version: 1.0
+Release: %{revision}.%{distro}
+License: GPL
+Group: System Environment/Base
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+Requires: rpmforge-release, biopackages-client-config
+                                                                                                                                                             
+%description
+This packages contains the yum configuration for the biopackages.net internal repository. This repository is designed for and restricted to internal use only. 
+
+%prep
+%{ifdistro centos}name='CentOS'; path="centos"
+%{ifdistro fedora}name='Fedora Core'; path="fedora"
+
+
+%{__cat} <<EOF >biopackages-internal.yum
+[biopackages-internal]
+name = Biopackages Internal - $name \$releasever - \$basearch
+baseurl = http://genome.ucla.edu/internal/yum/$path/\$releasever/\$basearch/
+enabled = 1
+gpgcheck = 0
+
+[biopackages-internal-noarch]
+name = Biopackages Internal - $name \$releasever - noarch
+baseurl = http://genome.ucla.edu/internal/yum/$path/\$releasever/noarch/
+enabled = 1
+gpgcheck = 0
+EOF
+
+%build
+
+%install
+%{__rm} -rf %{buildroot}
+%{__install} -Dp -m0644 biopackages-internal.yum %{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-internal.repo
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%post
+%{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages-internal.repo >> /etc/yum.conf
+# We don't want a possible error to leave the previous package installed
+exit 0
+
+%files
+%defattr(-, root, root, 0755)
+%dir %{_sysconfdir}/yum.repos.d/
+%config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages-internal.repo
+
+$Log: biopackages-client-config-internal.spec.in,v $
+Revision 1.1  2007/10/11 23:12:23  bpbuild
+new spec for internal biopackages repo
+
