@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.14 2007/10/11 03:27:23 bpbuild Exp $
+#$Id: sge.spec.in,v 1.15 2007/10/11 03:29:41 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -18,7 +18,7 @@ Source2: sge-README.rpm
 Source3: sge-sge.sh
 Source4: sge-sge.csh
 Provides: gridengine
-Requires: openmotif, pdksh
+Requires: openmotif, /bin/ksh
 BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc
 BuildRequires: /usr/bin/perl, openssl-devel, pam-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
@@ -241,6 +241,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.15  2007/10/11 03:29:41  bpbuild
+req
+
 Revision 1.14  2007/10/11 03:27:23  bpbuild
 build requires pam-devel
 
