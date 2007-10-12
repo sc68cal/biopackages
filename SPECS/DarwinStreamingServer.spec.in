@@ -1,0 +1,102 @@
+#$Id: DarwinStreamingServer.spec.in,v 1.1 2007/10/12 03:38:39 bpbuild Exp $
+
+Summary: Darwin Streaming Server
+Name: DarwinStreamingServer
+Version: 5.5.5
+Release: %{revision}.%{distro}
+Group: Applications/System
+License: Apple Public Source License
+Packager: Jordan Mendler <jmendler@ucla.edu>
+URL: http://developer.apple.com/opensource/server/streaming/index.html
+Source0: http://www.opensource.apple.com/projects/streaming/release/DarwinStreamingSrvr5.5.5-Linux.tar.gz
+Patch0: DarwinStreamingSrvr5.5.5-Linux-RPM.patch
+BuildRequires: perl, libstdc++
+Requires: perl, libstdc++
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildArch: noarch
+
+%description
+Welcome to Darwin Streaming Server, the open source version of Apple's QuickTime Streaming Server technology that allows you to send streaming media to clients across the Internet using the industry standard RTP and RTSP protocols. Based on the same code base as QuickTime Streaming Server, Darwin Streaming Server provides a high level of customizability and runs on a variety of platforms allowing you to manipulate the code to fit your needs.
+
+While sharing the same code base as QuickTime Streaming Server, Darwin Streaming Server is an open source project intended for developers who need to stream QuickTime and MPEG-4 media on alternative platforms such as Windows, Linux, and Solaris, or those developers who need to extend and/or modify the existing streaming server code to fit their needs. Darwin Streaming Server is only supported by the open source community and is not eligible for technical support from Apple. Apple hosts a number of email discussion lists for Darwin Streaming Server users and developers to share ideas and discuss deployment scenarios.
+
+QuickTime Streaming Server (QTSS) is Apple's commercial streaming server delivered as part of Mac OS X Server. QTSS provides users with enhanced administration and media management tools as a result of the tight integration with Mac OS X Server; these tools are not available as part of the open source project. Technical support is available for QTSS as part of the AppleCare support plans provided for Mac OS X Server and Xserve.
+
+Both DSS and QTSS are built on a core server that provides state of the art quality of service features with Skip protection and Instant-On, and support for the latest digital media standards, MPEG-4 and 3GPP.
+
+Darwin Streaming Server is available as a free download under the Apple Public Source License.
+
+
+%prep
+%setup -q -n DarwinStreamingSrvrlinux-Linux
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT
+%patch -p1
+
+
+%install 
+./Install
+
+
+#Install init.d scripts
+
+
+# Make RPM aware of each type of file
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, qtss, qtss) @g" | grep / | grep -v bin/ | grep -v /etc/init.d/ > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep bin/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep /etc/init.d/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+
+
+
+%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
+%defattr(-, root, root)
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%pre
+if [ $USERID = 0 ]; then
+        echo Checking for and Killing currently running Darwin Streaming Server
+        if [ `uname` = "FreeBSD" ]; then
+                ps -ax | awk '/DarwinStreamingServer/ {print $1}' | xargs kill -9
+                ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs kill -9
+        fi
+
+        if [ `uname` = "Linux" ]; then
+                ps -ax | awk '{print $1" " $5}' | awk '/DarwinStreamingServer/ {print $1}' | xargs -r kill -9
+                ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs -r kill -9
+        fi
+
+        if [ `uname` = "SunOS" -o `uname` = "IRIX" -o `uname` = "IRIX64" ]; then
+                ps -aef | awk '/DarwinStreamingServer/ {print $2}' | xargs -n 2 kill -9
+                ps -aef | awk '/streamingadminserver.pl/ {print $2}' | xargs -n 1 kill -9
+        fi
+
+
+# Add the unprivileged user qtss as the server's run user
+        echo "Creating unprivileged user to run the server = \"qtss\"."
+    if [ $INSTALL_OS = "Linux" ]; then
+        /usr/sbin/useradd -M qtss > /dev/null 2>&1
+    else
+        /usr/sbin/useradd qtss > /dev/null 2>&1
+    fi
+
+%preun
+/sbin/chkconfig --del DarwinStreamingServer
+
+
+%post
+/sbin/chkconfig --add DarwinStreamingServer
+
+%postun
+/usr/sbin/userdel qtss > /dev/null 2>&1
+/usr/sbin/groupdel qtss > /dev/null 2>&1
+
+
+$Log: DarwinStreamingServer.spec.in,v $
+Revision 1.1  2007/10/12 03:38:39  bpbuild
+new spec
+
