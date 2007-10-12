@@ -1,4 +1,4 @@
-#$Id: DarwinStreamingServer.spec.in,v 1.1 2007/10/12 03:38:39 bpbuild Exp $
+#$Id: DarwinStreamingServer.spec.in,v 1.2 2007/10/12 03:48:55 bpbuild Exp $
 
 Summary: Darwin Streaming Server
 Name: DarwinStreamingServer
@@ -46,7 +46,7 @@ mkdir -p $RPM_BUILD_ROOT
 
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, qtss, qtss) @g" | grep / | grep -v bin/ | grep -v /etc/init.d/ > %{_tmppath}/%{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep bin/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep /etc/init.d/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+#find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep /etc/init.d/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
 
 
@@ -97,6 +97,9 @@ if [ $USERID = 0 ]; then
 
 
 $Log: DarwinStreamingServer.spec.in,v $
+Revision 1.2  2007/10/12 03:48:55  bpbuild
+new spec
+
 Revision 1.1  2007/10/12 03:38:39  bpbuild
 new spec
 
