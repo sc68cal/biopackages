@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.16 2007/10/16 21:11:12 bpbuild Exp $
+#$Id: sge.spec.in,v 1.17 2007/10/16 21:20:53 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -168,6 +168,7 @@ then
         echo "SGE user already exists..."
 else
         echo "Adding SGE user and group..."
+	exec /usr/sbin/groupadd -g 888 -o sgeadmin
         exec /usr/sbin/useradd -u 888 -g 888 -r -c "Sun Grid Engine User" sgeadmin
 fi
 
@@ -240,6 +241,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.17  2007/10/16 21:20:53  bpbuild
+fixed group issue
+
 Revision 1.16  2007/10/16 21:11:12  bpbuild
 fixed group issue
 
