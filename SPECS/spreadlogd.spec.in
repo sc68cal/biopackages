@@ -1,4 +1,4 @@
-#$Id: spreadlogd.spec.in,v 1.7 2007/09/13 05:51:15 bpbuild Exp $
+#$Id: spreadlogd.spec.in,v 1.8 2007/10/23 09:50:03 bpbuild Exp $
 Name:           spreadlogd
 Version:        2.0.0
 Release:        %{revision}.%{distro}
@@ -29,7 +29,7 @@ a replacement to log_writer
 %makeinstall
 %{__cp} -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/spreadlogd
 
-# Make RPM aware of each type of file
+# Make RPM aware of each type of file 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 find %{buildroot} -type f -o -type l | %{__grep} -v /man | grep -v /doc | grep -v /etc/ | %{__sed} "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | %{__grep} /etc/ | %{__sed} "s@^%{buildroot}@%config @g" >> %{name}-%{version}-%{release}-filelist
@@ -49,6 +49,9 @@ exec /sbin/chkconfig --add spreadlogd
 exec /sbin/chkconfig --del spreadlogd
 
 $Log: spreadlogd.spec.in,v $
+Revision 1.8  2007/10/23 09:50:03  bpbuild
+fixed init.d script
+
 Revision 1.7  2007/09/13 05:51:15  bpbuild
 rm RPM_BUILD_ROOT in prep instead of build
 
