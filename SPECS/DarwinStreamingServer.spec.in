@@ -1,4 +1,4 @@
-#$Id: DarwinStreamingServer.spec.in,v 1.2 2007/10/12 03:48:55 bpbuild Exp $
+#$Id: DarwinStreamingServer.spec.in,v 1.3 2007/10/24 05:37:57 bpbuild Exp $
 
 Summary: Darwin Streaming Server
 Name: DarwinStreamingServer
@@ -9,6 +9,8 @@ License: Apple Public Source License
 Packager: Jordan Mendler <jmendler@ucla.edu>
 URL: http://developer.apple.com/opensource/server/streaming/index.html
 Source0: http://www.opensource.apple.com/projects/streaming/release/DarwinStreamingSrvr5.5.5-Linux.tar.gz
+Source1: DarwinStreamingServer-init
+Source2: DarwinStreamingServer-admin-init
 Patch0: DarwinStreamingSrvr5.5.5-Linux-RPM.patch
 BuildRequires: perl, libstdc++
 Requires: perl, libstdc++
@@ -31,23 +33,23 @@ Darwin Streaming Server is available as a free download under the Apple Public S
 %setup -q -n DarwinStreamingSrvrlinux-Linux
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
 %patch -p1
 
 
 %install 
 ./Install
 
-
 #Install init.d scripts
-
+cp -v %{SOURCE1} $RPM_BUILD_ROOT/etc/init.d/DarwinStreamingServer
+cp -v %{SOURCE2} $RPM_BUILD_ROOT/etc/init.d/DarwinStreamingServerAdmin
 
 # Make RPM aware of each type of file
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, qtss, qtss) @g" | grep / | grep -v bin/ | grep -v /etc/init.d/ > %{_tmppath}/%{name}-%{version}-%{release}-filelist
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep bin/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-#find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep /etc/init.d/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep /etc/init.d/ >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
 
 %files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
@@ -58,38 +60,18 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep bin/ >> %
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ $USERID = 0 ]; then
-        echo Checking for and Killing currently running Darwin Streaming Server
-        if [ `uname` = "FreeBSD" ]; then
-                ps -ax | awk '/DarwinStreamingServer/ {print $1}' | xargs kill -9
-                ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs kill -9
-        fi
-
-        if [ `uname` = "Linux" ]; then
-                ps -ax | awk '{print $1" " $5}' | awk '/DarwinStreamingServer/ {print $1}' | xargs -r kill -9
-                ps -ax | awk '/streamingadminserver.pl/ {print $1}' | xargs -r kill -9
-        fi
-
-        if [ `uname` = "SunOS" -o `uname` = "IRIX" -o `uname` = "IRIX64" ]; then
-                ps -aef | awk '/DarwinStreamingServer/ {print $2}' | xargs -n 2 kill -9
-                ps -aef | awk '/streamingadminserver.pl/ {print $2}' | xargs -n 1 kill -9
-        fi
-
-
 # Add the unprivileged user qtss as the server's run user
         echo "Creating unprivileged user to run the server = \"qtss\"."
-    if [ $INSTALL_OS = "Linux" ]; then
-        /usr/sbin/useradd -M qtss > /dev/null 2>&1
-    else
-        /usr/sbin/useradd qtss > /dev/null 2>&1
-    fi
+	/usr/sbin/useradd -M qtss > /dev/null 2>&1
 
 %preun
 /sbin/chkconfig --del DarwinStreamingServer
+/sbin/chkconfig --del DarwinStreamingServerAdmin
 
 
 %post
 /sbin/chkconfig --add DarwinStreamingServer
+/sbin/chkconfig --add DarwinStreamingServerAdmin
 
 %postun
 /usr/sbin/userdel qtss > /dev/null 2>&1
@@ -97,6 +79,9 @@ if [ $USERID = 0 ]; then
 
 
 $Log: DarwinStreamingServer.spec.in,v $
+Revision 1.3  2007/10/24 05:37:57  bpbuild
+added init scripts
+
 Revision 1.2  2007/10/12 03:48:55  bpbuild
 new spec
 
