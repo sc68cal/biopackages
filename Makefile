@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.119 2007/09/25 21:20:25 bpbuild Exp $
+#$Id: Makefile,v 1.120 2007/11/15 23:02:11 bpbuild Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -102,7 +102,7 @@ repo : repo_headers repo_permissions
 # creates yum and legacy yum-arch headers for all biopackages branches. Depends on /biopackages/Makefile
 ## FIXME: Merge /biopackages/Makefile header creation into this Makefile.
 repo_headers ::
-	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign
+	sudo -H $(MAKE) -j $(THREADS) -C $(WEBROOT) all_but_sign
 
 # make root own everything in the repository, except for testing
 repo_permissions ::
