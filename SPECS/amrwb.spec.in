@@ -1,3 +1,4 @@
+#$Id: amrwb.spec.in,v 1.2 2007/11/15 22:20:51 bpbuild Exp $
 Name:           amrwb
 Version:        7.0.0.2
 Release:        %{revision}.%{distro}
@@ -73,11 +74,8 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %{_includedir}/amrwb
 %{_libdir}/*.so
 
-%changelog
-* Fri Oct  5 2007 kwizart <kwizart at gmail.com > - 7.0.0.2-1
-- Update to 7.0.0.2
 
-* Sun May 13 2007 Dominik Mierzejewski <rpm at greysector.net> 7.0.0.0-1
-- adapted bundled specfile
-- fixed rpaths
+$Log: amrwb.spec.in,v $
+Revision 1.2  2007/11/15 22:20:51  bpbuild
+Id and Log
 

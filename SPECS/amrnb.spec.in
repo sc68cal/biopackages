@@ -1,4 +1,4 @@
-# $Id: amrnb.spec.in,v 1.1 2007/11/15 22:18:13 bpbuild Exp $
+# $Id: amrnb.spec.in,v 1.2 2007/11/15 22:20:51 bpbuild Exp $
 # Authority: matthias
 
 Summary: AMR NarrowBand speech codec
@@ -61,10 +61,7 @@ AMR-NB is a narrowband speech codec used in mobile phones development files.
 %{_libdir}/libamrnb.so
 
 
-%changelog
-* Fri Dec 16 2005 Matthias Saou <http://freshrpms.net/> 0.0.1-1
-- Spec file inclusion in rpmforge.
-
-* Wed Sep 07 2005 Thomas Vander Stichele <thomas at apestaart dot org>
-- 0.0.1-0.lvn.1: initial package
+$Log: amrnb.spec.in,v $
+Revision 1.2  2007/11/15 22:20:51  bpbuild
+Id and Log
 
