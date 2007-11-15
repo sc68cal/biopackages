@@ -1,0 +1,83 @@
+Name:           amrwb
+Version:        7.0.0.2
+Release:        %{revision}.%{distro}
+URL:            http://www.penguin.cz/~utx/amr
+Group:          System Environment/Libraries
+License:        Commercial
+Summary:        Adaptive Multi-Rate - Wideband (AMR-WB) Speech Codec
+Source0:        http://ftp.penguin.cz/pub/users/utx/amr/%{name}-%{version}.tar.bz2
+Source1:        http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-700.zip
+NoSource:       1
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
+
+%description
+Adaptive Multi-Rate Wideband decoder and encoder library.
+(3GPP TS 26.204 V7.0.0)
+
+http://www.3gpp.org/ftp/Specs/html-info/26204.htm
+
+%package tools
+Group:          Applications/Multimedia
+Summary:        Adaptive Multi-Rate - Wideband (AMR-WB) Speech Codec tools
+
+%description tools
+Adaptive Multi-Rate Wideband decoder and encoder library.
+(3GPP TS 26.204 V7.0.0)
+
+http://www.3gpp.org/ftp/Specs/html-info/26204.htm
+
+%package devel
+Group:          System/Libraries
+Summary:        Adaptive Multi-Rate - Wideband (AMR-WB) Speech Codec
+Requires:       %{name} = %{version} glibc-devel
+
+%description devel
+Adaptive Multi-Rate Wideband decoder and encoder library.
+(3GPP TS 26.204 V7.0.0)
+
+http://www.3gpp.org/ftp/Specs/html-info/26204.htm
+
+%prep
+%setup -q
+%{__cp} -p %{SOURCE1} .
+
+%build
+%configure --disable-static
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+%{__make} %{?_smp_mflags}
+
+%install
+%{__rm} -rf $RPM_BUILD_ROOT
+%{__make} DESTDIR=$RPM_BUILD_ROOT install
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr (-, root, root)
+%doc AUTHORS ChangeLog COPYING NEWS README TODO readme.txt
+%{_libdir}/*.so.*
+
+%files tools
+%defattr (-, root, root)
+%{_bindir}/*
+
+%files devel
+%defattr (-, root, root)
+%{_includedir}/amrwb
+%{_libdir}/*.so
+
+%changelog
+* Fri Oct  5 2007 kwizart <kwizart at gmail.com > - 7.0.0.2-1
+- Update to 7.0.0.2
+
+* Sun May 13 2007 Dominik Mierzejewski <rpm at greysector.net> 7.0.0.0-1
+- adapted bundled specfile
+- fixed rpaths
+
