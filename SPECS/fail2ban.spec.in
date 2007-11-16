@@ -1,0 +1,80 @@
+#$Id: fail2ban.spec.in,v 1.1 2007/11/16 09:15:30 bpbuild Exp $
+# Not defined in Fedora's buildsystem
+%global _initdir %{_sysconfdir}/rc.d/init.d
+
+Summary: Ban IPs that make too many password failures
+Name: fail2ban
+Version: 0.8.1
+Release: 10.%{revision}.%{distro}
+License: GPL
+Group: System Environment/Daemons
+URL: http://fail2ban.sourceforge.net/
+Source0: http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+Source1: fail2ban-logrotate
+Patch0: fail2ban-0.8.0-init.patch
+Patch1: fail2ban-0.8.1-sshd.patch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: python-devel >= 2.4
+BuildArch: noarch
+Requires: iptables, tcp_wrappers, shorewall, gamin-python
+Requires(post): /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
+Requires(preun): /sbin/service
+
+%description
+Fail2ban scans log files like /var/log/pwdfail or
+/var/log/apache/error_log and bans IP that makes too many password
+failures. It updates firewall rules to reject the IP address.
+
+%prep
+%setup -q
+%patch0 -p1 -b .init
+%patch1 -p1 -b .sshd
+
+%build
+python setup.py build
+
+%install
+rm -rf %{buildroot}
+python setup.py install -O1 --root %{buildroot}
+mkdir -p %{buildroot}%{_initdir}
+install -p -m 755 files/redhat-initd %{buildroot}%{_initdir}/fail2ban
+mkdir -p %{buildroot}%{_mandir}/man1
+install -p -m 644 man/fail2ban*.1 %{buildroot}%{_mandir}/man1
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+install -p -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/fail2ban
+%clean
+rm -rf %{buildroot}
+
+%post
+/sbin/chkconfig --add %{name}
+
+%preun
+if [ $1 = 0 ]; then
+  /sbin/service %{name} stop > /dev/null 2>&1
+  /sbin/chkconfig --del %{name}
+fi
+
+%files
+%defattr(-,root,root,-)
+%doc README TODO CHANGELOG COPYING
+#doc config/fail2ban.conf*
+%{_bindir}/fail2ban-server
+%{_bindir}/fail2ban-client
+%{_bindir}/fail2ban-regex
+%{_datadir}/fail2ban
+%{_initdir}/fail2ban
+%{_mandir}/man1/fail2ban-*.1*
+%dir %{_sysconfdir}/fail2ban
+%dir %{_sysconfdir}/fail2ban/action.d
+%dir %{_sysconfdir}/fail2ban/filter.d
+%config(noreplace) %{_sysconfdir}/fail2ban/fail2ban.conf
+%config(noreplace) %{_sysconfdir}/fail2ban/jail.conf
+%config(noreplace) %{_sysconfdir}/fail2ban/action.d/*.conf
+%config(noreplace) %{_sysconfdir}/fail2ban/filter.d/*.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/fail2ban
+
+$Log: fail2ban.spec.in,v $
+Revision 1.1  2007/11/16 09:15:30  bpbuild
+imported from fc6-extras
+
