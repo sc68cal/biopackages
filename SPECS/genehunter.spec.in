@@ -1,4 +1,4 @@
-#$Id: genehunter.spec.in,v 1.1 2007/11/20 01:15:45 bpbuild Exp $
+#$Id: genehunter.spec.in,v 1.2 2007/11/20 01:18:09 bpbuild Exp $
 Name:           genehunter
 Version:        2.1r2
 Release:        %{revision}.%{distro}
@@ -9,7 +9,7 @@ License:        GPL
 URL:            http://www.broad.mit.edu/ftp/distribution/software/genehunter/
 Source0:        http://www.broad.mit.edu/ftp/distribution/software/genehunter/gh2.1/gh-v2_1_r2_tar.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	biopackages
+BuildRequires:	gcc, biopackages
 
 %description
 GENEHUNTER is a software package that allows the very rapid extraction of complete multipoint inheritance information from pedigrees of moderate size.  This information is then used in exact computation of multipoint LOD scores and in a powerful new method of non-parametric linkage analysis.  Quick calculations involving dozens of markers, even in pedigrees with inbreeding and marriage loops, is possible with GENEHUNTER.  In addition, the multipoint inheritance information allows the reconstruction of maximum-likelihood haplotypes for all individuals in the pedigree and information content mapping which measures the fraction of the total inheritance information extracted from the marker data.  All of these calculations are performed in a user-friendly environment familiar to MAPMAKER, SIBS, or HOMOZ users.
@@ -17,6 +17,7 @@ GENEHUNTER is a software package that allows the very rapid extraction of comple
 %prep
 %{__rm} -rf $RPM_BUILD_ROOT
 %setup -q -n GH-V2.1_r2
+mkdir $RPM_BUILD_ROOT/%{_bindir}/
 
 %build
 make
@@ -35,6 +36,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: genehunter.spec.in,v $
+Revision 1.2  2007/11/20 01:18:09  bpbuild
+fixes
+
 Revision 1.1  2007/11/20 01:15:45  bpbuild
 new spec
 
