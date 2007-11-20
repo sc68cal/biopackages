@@ -1,4 +1,4 @@
-#$Id: plink.spec.in,v 1.4 2007/11/20 00:59:39 bpbuild Exp $
+#$Id: plink.spec.in,v 1.5 2007/11/20 01:18:59 bpbuild Exp $
 Name:           plink
 Version:        0.99s
 Release:        %{revision}.%{distro}
@@ -22,6 +22,7 @@ PLINK (one syllable) is being developed by Shaun Purcell at the Center for Human
 %prep
 %{__rm} -rf $RPM_BUILD_ROOT
 %setup -q -n %{name}-%{version}-src
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/usr/lib/plink
 
 %build
@@ -43,6 +44,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: plink.spec.in,v $
+Revision 1.5  2007/11/20 01:18:59  bpbuild
+make bindir
+
 Revision 1.4  2007/11/20 00:59:39  bpbuild
 fixes
 
