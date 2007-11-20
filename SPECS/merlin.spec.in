@@ -1,4 +1,4 @@
-#$Id: merlin.spec.in,v 1.1 2007/11/20 00:06:14 bpbuild Exp $
+#$Id: merlin.spec.in,v 1.2 2007/11/20 00:27:20 bpbuild Exp $
 Name:           merlin
 Version:        1.1.1
 Release:        %{revision}.%{distro}
@@ -9,19 +9,20 @@ License:        GPL
 URL:            http://www.sph.umich.edu/csg/abecasis/Merlin/index.html
 Source0:        http://www.sph.umich.edu/csg/abecasis/Merlin/download/merlin-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	gcc-c++, zlib-devel, make, biopackages
 
 %description
 MERLIN uses sparse trees to represent gene flow in pedigrees and is one of the fastest pedigree analysis packages around.
 
 %prep
 %{__rm} -rf $RPM_BUILD_ROOT
-%setup -q -n %{name}-%{version}-src
+%setup -q
 
 %build
 make all
 
 %install
-%makeinstall
+make install INSTALLDIR=$RPM_BUILD_ROOT/
 
 # Make RPM aware of each type of file 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -34,6 +35,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: merlin.spec.in,v $
+Revision 1.2  2007/11/20 00:27:20  bpbuild
+fixes to initial spec
+
 Revision 1.1  2007/11/20 00:06:14  bpbuild
 initial spec
 
