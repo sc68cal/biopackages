@@ -1,4 +1,4 @@
-#$Id: genehunter.spec.in,v 1.2 2007/11/20 01:18:09 bpbuild Exp $
+#$Id: genehunter.spec.in,v 1.3 2007/11/20 01:19:32 bpbuild Exp $
 Name:           genehunter
 Version:        2.1r2
 Release:        %{revision}.%{distro}
@@ -17,7 +17,7 @@ GENEHUNTER is a software package that allows the very rapid extraction of comple
 %prep
 %{__rm} -rf $RPM_BUILD_ROOT
 %setup -q -n GH-V2.1_r2
-mkdir $RPM_BUILD_ROOT/%{_bindir}/
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
 
 %build
 make
@@ -36,6 +36,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: genehunter.spec.in,v $
+Revision 1.3  2007/11/20 01:19:32  bpbuild
+fix
+
 Revision 1.2  2007/11/20 01:18:09  bpbuild
 fixes
 
