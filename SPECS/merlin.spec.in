@@ -1,4 +1,4 @@
-#$Id: merlin.spec.in,v 1.2 2007/11/20 00:27:20 bpbuild Exp $
+#$Id: merlin.spec.in,v 1.3 2007/11/20 00:42:50 bpbuild Exp $
 Name:           merlin
 Version:        1.1.1
 Release:        %{revision}.%{distro}
@@ -22,7 +22,7 @@ MERLIN uses sparse trees to represent gene flow in pedigrees and is one of the f
 make all
 
 %install
-make install INSTALLDIR=$RPM_BUILD_ROOT/
+make install INSTALLDIR=$RPM_BUILD_ROOT/usr/bin/
 
 # Make RPM aware of each type of file 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -35,6 +35,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: merlin.spec.in,v $
+Revision 1.3  2007/11/20 00:42:50  bpbuild
+put everything in /usr/bin
+
 Revision 1.2  2007/11/20 00:27:20  bpbuild
 fixes to initial spec
 
