@@ -1,12 +1,12 @@
-#$Id: whap.spec.in,v 1.2 2006/01/06 22:36:08 allenday Exp $
+#$Id: whap.spec.in,v 1.3 2007/11/20 00:11:30 bpbuild Exp $
 Name: whap
-Version: 2.08
+Version: 2.09
 Release: %{revision}.%{distro}
 Summary: SNP haplotype analysis package
 License: Custom
 Group: Applications/Bioinformatics
-#URL: 
-Source0: %{name}-src.tar
+URL: http://pngu.mgh.harvard.edu/~purcell/whap/
+Source0: http://pngu.mgh.harvard.edu/~purcell/dist/whap-src-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gcc-c++, make, biopackages
 
@@ -36,6 +36,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/snphap
 
 $Log: whap.spec.in,v $
+Revision 1.3  2007/11/20 00:11:30  bpbuild
+2.09
+
 Revision 1.2  2006/01/06 22:36:08  allenday
 builds now
 
