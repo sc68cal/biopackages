@@ -1,0 +1,43 @@
+#$Id: mendel.spec.in,v 1.1 2007/11/21 02:28:32 bpbuild Exp $
+Name:           mendel
+Version:        7.0.0
+Release:        %{revision}.%{distro}
+Summary:        Comprehensive Package for Exact Statistical Analysis of Qualitative and Quantitative Traits.
+Packager:	Jordan Mendler <jmendler@ucla.edu>
+Group:          Applications/Bioinformatics
+License:        Custom
+URL:            http://www.genetics.ucla.edu/software/download?package=1
+Source0:        Mendel-700_lin_intel.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	biopackages
+
+%description
+Comprehensive Package for Exact Statistical Analysis of Qualitative and Quantitative Traits.
+
+%prep
+%{__rm} -rf $RPM_BUILD_ROOT
+%setup -q -n Mendel-700
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
+mkdir -p $RPM_BUILD_ROOT/%{_docdir}/mendel
+
+%build
+
+%install
+install -m 555 mendel $RPM_BUILD_ROOT/%{_bindir}/
+install -m 444 * $RPM_BUILD_ROOT/%{_docdir}/mendel/
+
+
+# Make RPM aware of each type of file 
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+$Log: mendel.spec.in,v $
+Revision 1.1  2007/11/21 02:28:32  bpbuild
+new spec
+
