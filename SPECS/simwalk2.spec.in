@@ -1,0 +1,43 @@
+#$Id: simwalk2.spec.in,v 1.1 2007/11/21 02:34:47 bpbuild Exp $
+Name:           simwalk2
+Version:        2.91
+Release:        %{revision}.%{distro}
+Summary:        SimWalk2 analyzes large pedigrees using MCMC estimation techniques.
+Packager:	Jordan Mendler <jmendler@ucla.edu>
+Group:          Applications/Bioinformatics
+License:        Custom
+URL:            http://www.genetics.ucla.edu/software/download?package=2
+Source0:        SimWalk2-2.91-lin.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	biopackages
+
+%description
+Stochastic Statistical Analysis of Qualitative Traits. Available analyses include: Haplotyping, Parametric Linkage, Non-Parametric Linkage (NPL), Identity-by-Descent (IBD), and Mistyping. SimWalk2 analyzes large pedigrees using MCMC estimation techniques.
+
+%prep
+%{__rm} -rf $RPM_BUILD_ROOT
+%setup -q -n Mendel-700
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
+mkdir -p $RPM_BUILD_ROOT/%{_docdir}/simwalk2
+
+%build
+
+%install
+install -m 555 simwalk2 $RPM_BUILD_ROOT/%{_bindir}/
+install -m 555 simwalk2snp $RPM_BUILD_ROOT/%{_bindir}/
+install -m 444 * $RPM_BUILD_ROOT/%{_docdir}/simwalk2/
+
+# Make RPM aware of each type of file 
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+$Log: simwalk2.spec.in,v $
+Revision 1.1  2007/11/21 02:34:47  bpbuild
+new spec
+
