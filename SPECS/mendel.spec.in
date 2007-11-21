@@ -1,4 +1,4 @@
-#$Id: mendel.spec.in,v 1.2 2007/11/21 02:49:55 bpbuild Exp $
+#$Id: mendel.spec.in,v 1.3 2007/11/21 02:50:34 bpbuild Exp $
 Name:           mendel
 Version:        7.0.0
 Release:        %{revision}.%{distro}
@@ -24,7 +24,6 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/mendel/
 
 %install
 install -m 555 mendel $RPM_BUILD_ROOT/%{_bindir}/
-install -m 444 * $RPM_BUILD_ROOT/%{_docdir}/mendel/
 for i in Example_Input Example_Output License_2007.txt Mendel_700_Documentation.pdf ReadMe_Unix.txt Recent_Changes_700.txt ; do cp -av $i $RPM_BUILD_ROOT/%{_docdir}/simwalk2/ ; done
 
 # Make RPM aware of each type of file 
@@ -38,6 +37,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: mendel.spec.in,v $
+Revision 1.3  2007/11/21 02:50:34  bpbuild
+fixed
+
 Revision 1.2  2007/11/21 02:49:55  bpbuild
 fixed
 
