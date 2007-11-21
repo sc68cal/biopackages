@@ -1,4 +1,4 @@
-#$Id: simwalk2.spec.in,v 1.2 2007/11/21 02:36:01 bpbuild Exp $
+#$Id: simwalk2.spec.in,v 1.3 2007/11/21 02:45:18 bpbuild Exp $
 Name:           simwalk2
 Version:        2.91
 Release:        %{revision}.%{distro}
@@ -18,14 +18,14 @@ Stochastic Statistical Analysis of Qualitative Traits. Available analyses includ
 %{__rm} -rf $RPM_BUILD_ROOT
 %setup -q -n SimWalk291
 mkdir -p $RPM_BUILD_ROOT/%{_bindir}/
-mkdir -p $RPM_BUILD_ROOT/%{_docdir}/simwalk2
+mkdir -p $RPM_BUILD_ROOT/%{_docdir}/simwalk2/
 
 %build
 
 %install
 install -m 555 simwalk2 $RPM_BUILD_ROOT/%{_bindir}/
 install -m 555 simwalk2snp $RPM_BUILD_ROOT/%{_bindir}/
-install -m 444 * $RPM_BUILD_ROOT/%{_docdir}/simwalk2/
+for i in CODE DOCS Examples ReadMe.txt WhatsNew_291.txt ; do cp -av $i $RPM_BUILD_ROOT/%{_docdir}/simwalk2/ ; done
 
 # Make RPM aware of each type of file 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
@@ -38,6 +38,9 @@ find %{buildroot} -type f -o -type l | %{__sed} "s@^%{buildroot}@@g" |grep / > %
 %{__rm} -rf $RPM_BUILD_ROOT
 
 $Log: simwalk2.spec.in,v $
+Revision 1.3  2007/11/21 02:45:18  bpbuild
+fix
+
 Revision 1.2  2007/11/21 02:36:01  bpbuild
 fix
 
