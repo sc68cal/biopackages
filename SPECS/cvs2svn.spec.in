@@ -1,0 +1,77 @@
+#$Id: cvs2svn.spec.in,v 1.1 2007/12/05 19:43:33 bpbuild Exp $
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
+Name:           cvs2svn
+Version:        1.5.1
+Release:        1.%{revision}.%{distro}
+Summary:        CVS to Subversion Repository Converter
+
+Group:          Development/Tools
+License:        BSD
+URL:            http://cvs2svn.tigris.org/
+Source0:        http://cvs2svn.tigris.org/files/documents/1462/34574/cvs2svn-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildArch:      noarch
+BuildRequires:  python-devel
+Requires:       cvs, rcs, subversion
+
+
+%description
+cvs2svn is a Python script that converts a CVS repository to a 
+Subversion repository. It is designed for one-time conversions, not for 
+repeated synchronizations between CVS and Subversion.
+
+
+%prep
+%setup -q
+
+
+%build
+%{__python} setup.py build
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+mkdir -p -m 0755 $RPM_BUILD_ROOT%{_mandir}/man1
+install -p -m 0644 *.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+%doc BUGS CHANGES COMMITTERS COPYING HACKING README design-notes.txt www/*.html
+%{_bindir}/*
+%{_mandir}/man?/*
+%{python_sitelib}/*
+
+
+%changelog
+* Sun Mar 11 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.5.1-1
+- Upstream 1.5.1
+
+* Sat Oct 28 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.5.0-1
+- Upstream 1.5.0
+
+* Wed Sep 06 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-2
+- Ghostbusting
+
+* Sun Sep 03 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-1
+- 1.4.0 final release
+
+* Wed Jul 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-0.4.rc1
+- Require cvs and subversion
+- Add python-abi for easy builds on systems <FC4
+
+* Wed Jul 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-0.3.rc1
+- Requires rcs.
+
+* Wed Jul 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-0.2.rc1
+- Group is Development/Tools
+
+* Wed Jul 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 1.4.0-0.1.rc1
+- Initial packaging.
