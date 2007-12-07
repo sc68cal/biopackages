@@ -1,4 +1,4 @@
-#$Id: R.spec.in,v 1.25 2007/12/07 20:23:28 bpbuild Exp $
+#$Id: R.spec.in,v 1.26 2007/12/07 21:39:09 bpbuild Exp $
 #Query the RPM database to find which release we are running.
 ################################################################
 
@@ -109,7 +109,7 @@
 %define REL 3
 Summary: A language for data analysis and graphics
 Name: R
-Version: 2.6.0
+Version: 2.6.1
 Epoch: 2
 Release: %{revision}.%{distro}
 Source0: ftp://cran.r-project.org/pub/R/src/base/R-2/R-%{version}.tar.gz
@@ -275,6 +275,9 @@ fi
 /sbin/ldconfig
 
 $Log: R.spec.in,v $
+Revision 1.26  2007/12/07 21:39:09  bpbuild
+updated version
+
 Revision 1.25  2007/12/07 20:23:28  bpbuild
 updated version
 
