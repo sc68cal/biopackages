@@ -1,4 +1,4 @@
-#$Id: R-affyQCReport.spec.in,v 1.6 2007/12/07 20:00:17 bpbuild Exp $
+#$Id: R-affyQCReport.spec.in,v 1.7 2007/12/07 20:03:00 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,9 +9,9 @@ Summary: QC Report Generation for affyBatch objects
 License: GPL
 URL: http://www.bioconductor.org
 Source0: affyQCReport_%{version}.tar.gz
-Requires: R >= 2.4.0, R-Biobase,  R-affy, R-simpleaffy, R-xtable, R-affyPLM, R-RColorBrewer, R-geneplotter
+Requires: R >= 2.6.0, R-Biobase,  R-affy, R-simpleaffy, R-xtable, R-affyPLM, R-RColorBrewer, R-geneplotter
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-Biobase, R-affy, R-simpleaffy, R-xtable, R-affyPLM, R-RColorBrewer, R-geneplotter, gcc, biopackages
+BuildRequires: R >= 2.6.0, R-Biobase, R-affy, R-simpleaffy, R-xtable, R-affyPLM, R-RColorBrewer, R-geneplotter, gcc, biopackages
 
 %description
 This package creates a QC report for an AffyBatch object. The report is intended to allow the user to quickly assess the quality of a set of arrays in an AffyBatch object.
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-affyQCReport.spec.in,v $
+Revision 1.7  2007/12/07 20:03:00  bpbuild
+updated version
+
 Revision 1.6  2007/12/07 20:00:17  bpbuild
 updated version
 

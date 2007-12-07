@@ -1,4 +1,4 @@
-#$Id: R-Biobase.spec.in,v 1.8 2007/12/07 20:00:17 bpbuild Exp $
+#$Id: R-Biobase.spec.in,v 1.9 2007/12/07 20:03:00 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,9 +9,9 @@ Summary: Biobase: Base functions for Bioconductor
 License: The Artistic License
 URL: http://www.bioconductor.org
 Source0: Biobase_%{version}.tar.gz
-Requires: R >= 2.5.0
+Requires: R >= 2.6.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.5.0, gcc, biopackages
+BuildRequires: R >= 2.6.0, gcc, biopackages
 
 %description
 Biobase: Base functions for Bioconductor
