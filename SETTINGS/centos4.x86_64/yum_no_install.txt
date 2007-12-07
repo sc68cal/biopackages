@@ -30,6 +30,7 @@ pgplot
 postgresql
 primer3
 R-RCurl
+R
 rrdtool
 textpresso
 turnkey
