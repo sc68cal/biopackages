@@ -1,8 +1,8 @@
-#$Id: R-affyio.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-affyio.spec.in,v 1.6 2007/12/07 20:00:17 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Jordan Mendler <jmendler@ucla.edu>
-Version: 1.4.1
+Version: 1.6.1
 Release: %{revision}.%{distro}
 Name: R-affyio
 Summary: Routines for parsing Affymetrix data files based upon file format information. Primary focus is on accessing the CEL and CDF file formats.

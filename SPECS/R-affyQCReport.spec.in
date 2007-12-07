@@ -1,8 +1,8 @@
-#$Id: R-affyQCReport.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-affyQCReport.spec.in,v 1.6 2007/12/07 20:00:17 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
-Version: 1.12.0
+Version: 1.16.0
 Release: %{revision}.%{distro}
 Name: R-affyQCReport
 Summary: QC Report Generation for affyBatch objects
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-affyQCReport.spec.in,v $
+Revision 1.6  2007/12/07 20:00:17  bpbuild
+updated version
+
 Revision 1.5  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
