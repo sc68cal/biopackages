@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.120 2007/11/15 23:02:11 bpbuild Exp $
+#$Id: Makefile,v 1.121 2007/12/11 00:55:01 bpbuild Exp $
 include ./Makefile.conf
 
 # FIXME:
@@ -84,13 +84,13 @@ move_packages ::
 	for i in $(WEBROOT)/testing/*/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 
 migrate_centos ::
-	sudo -H $(MAKE) -C $(WEBROOT) sign_centos 
+	sudo -H $(MAKE) -C $(WEBROOT) sign_centos_testing
 	for i in $(WEBROOT)/testing/centos/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign_centos
 	$(MAKE) repo_permissions
 
 migrate_fedora ::
-	sudo -H $(MAKE) -C $(WEBROOT) sign_fedora
+	sudo -H $(MAKE) -C $(WEBROOT) sign_fedora_testing
 	for i in $(WEBROOT)/testing/fedora/*/*/*.rpm ; do sudo mv -vf $$i $${i/testing/stable} ; done
 	sudo -H $(MAKE) -C $(WEBROOT) all_but_sign_fedora
 	$(MAKE) repo_permissions
