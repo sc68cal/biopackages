@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline.spec.in,v 1.8 2007/12/11 01:13:48 bpbuild Exp $
+#$Id: solexa-pipeline.spec.in,v 1.9 2007/12/11 02:22:56 bpbuild Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 0.2.2.6
@@ -29,7 +29,7 @@ documentation.html".  The installation is described in "Pipeline
 documentation.html". A quick-start guide is given by "Pipeline usage".
 
 %prep
-rm -rf ${RPM_BUILD_ROOT}
+#rm -rf ${RPM_BUILD_ROOT}
 %setup -q -n SolexaPipeline-%{version}
 mkdir -p ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
 
@@ -41,7 +41,7 @@ make
 cp -R Bustard CommonUtils Eland Firecrest Gerald Goat MathUtils Misc PhageAlign QCalibration README.txt ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
 
 #Cleanup source code
-find %{buildroot} | grep -P "\.cpp|\.o|\.h|\.d|\.c" | xargs rm
+find %{buildroot} | grep -P '\.cpp$|\.o$|\.h$|\.d$|\.c$' | xargs rm
 
 #Generate file list
 find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
@@ -51,13 +51,16 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %defattr(-,solexa,solexa)
 
 %clean
-[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+#[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 %post 
 
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.9  2007/12/11 02:22:56  bpbuild
+checkin
+
 Revision 1.8  2007/12/11 01:13:48  bpbuild
 updated version and clean out source code when packaging RPM
 
