@@ -1,0 +1,254 @@
+#$Id: gpac.spec.in,v 1.1 2007/12/18 01:18:18 bpbuild Exp $
+# Copyright (c) 2006-2007 oc2pus
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# Please submit bugfixes or comments to toni@links2linux.de
+
+# norootforbuild
+
+%define _prefix			/usr
+%define _with_amr		1
+%define _cvs_version	cvs20070531
+
+Name:			gpac
+Summary:		GPAC is a multimedia framework covering MPEG-4, VRML/X3D and SVG
+Version:		0.4.4
+Release:		%{revision}.%[version}
+Source:			%{name}-%{version}.tar.bz2
+%if "%{_with_amr}" == "1"
+Source1:		http://www.3gpp.org/ftp/Specs/archive/26_series/26.104/26104-610.zip
+Source2:		http://www.3gpp.org/ftp/Specs/archive/26_series/26.204/26204-600.zip
+%endif
+Patch:			%{name}-modules-ffmpeg_in-ffmpeg_demux.c.diff
+Patch1:			%{name}-nspr4.patch
+URL:			http://gpac.sourceforge.net/
+License:		LGPL
+Group:			Productivity/Multimedia/Video/Editors and Convertors
+BuildRoot:		%{_tmppath}/%{name}-%{version}-build
+BuildRequires:	alsa-devel
+BuildRequires:	doxygen
+BuildRequires:	freetype2-devel
+BuildRequires:	freeglut-devel
+BuildRequires:	faad2-devel
+BuildRequires:	gcc-c++
+BuildRequires:	ImageMagick
+BuildRequires:	libffmpeg0-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	libjs-devel
+BuildRequires:	libogg-devel
+BuildRequires:	libpng-devel
+BuildRequires:	libtheora-devel
+BuildRequires:	libvorbis-devel
+BuildRequires:	libxml2-devel
+BuildRequires:	mad-devel
+#BuildRequires:	gecko-sdk
+#BuildRequires:	mDNSResponder-lib
+BuildRequires:	openssl-devel
+BuildRequires:	SDL-devel
+BuildRequires:	update-desktop-files
+BuildRequires:	wxGTK-devel
+BuildRequires:	xvid-devel
+BuildRequires:	zlib-devel
+#BuildRequires:	Mesa-devel
+#BuildRequires:	xorg-x11-Mesa
+#BuildRequires:	xorg-x11-Mesa-devel
+Requires:		faad2
+Requires:		freeglut
+#Requires:		libffmpeg0
+#Requires:		libjs
+#Requires:		libogg
+#Requires:		libtheora
+#Requires:		libvorbis
+#Requires:		libxml2
+Requires:		mad
+Requires:		openssl
+#Requires:		wxGTK
+Requires:		xvid
+Requires:		zlib
+
+%description
+GPAC is a multimedia framework for MPEG-4, VRML/X3D and SVG/SMIL.
+
+GPAC is built upon an implementation of the MPEG-4 Systems standard
+(ISO/IEC 14496-1) developed from scratch in C.
+
+The main development goal is to provide a clean (a.k.a. readable by
+as many people as possible), small and flexible alternative to the
+MPEG-4 Systems reference software (known as IM1 and distributed in
+ISO/IEC 14496-5).
+
+The second development goal is to achieve integration of recent
+multimedia standards (SVG/SMIL, VRML, X3D, SWF, etc) into a single
+framework. This stage is still under drafting but GPAC already
+supports most of VRML97, some X3D as well as very simple SVG.
+
+GPAC already features 2D and 3D multimedia playback, MPEG-4 Systems
+encoders/multiplexers and publishing tools for content distribution.
+
+GPAC is licensed under the GNU Lesser General Public License.
+
+The current GPAC release (0.4.4) already covers a very large part of
+the MPEG-4 standard, and features what can probably be seen as the
+most advanced and robust 2D MPEG-4 Player available worldwide, as
+well as a decent 3D MPEG-4/VRML player.
+
+Author: Jean Le Feuvre <jeanlf at users.sourceforge.net>
+
+%package devel
+Summary:	Development files for gpac
+Group:		Development/Languages/C and C++
+Requires:	%{name} = %{version}
+
+%description devel
+Development files for gpac.
+
+Author: Jean Le Feuvre <jeanlf at users.sourceforge.net>
+
+%package -n Osmo4
+Summary:	MPEG-4 Media player based on gpac
+Group:		Productivity/Multimedia/Video/Players
+Requires:	%{name} = %{version}
+#Requires:	wxGTK
+
+%description -n Osmo4
+Osmo4 is an MPEG-4 player with the following features:
+* MPEG-4 Systems player:
+* Optimized 2D graphics renderer compliant with the Complete2D Scene
+  Graph and Graphics profiles.
+* Video and audio presentation achieved through plugins
+* Multimedia player features:
+* Timeline controls: play, pause, step.
+* Graphics features: antialising, zoom and pan, scalable resizing
+  of rendering area
+* Support for Advanced Text and Graphics extension of MPEG-4 Systems
+* Frame export to JPG, PNG, BMP.
+
+Osmo4 enables the use of MPEG-4 Systems in a vast aplication domain,
+among which:
+* downloaded or streamed cartoons
+* synchronized, interactive mixes of graphics, text, video and audio
+* applications benefiting from MPEG-7 and MPEG-21 advances: meta-data,
+  encryption, watermarking, rights management
+
+Author: Jean Le Feuvre <jeanlf at users.sourceforge.net>
+
+%debug_package
+
+%prep
+%setup -q -n %{name}
+#%patch
+#%patch1 -p1
+
+%__chmod 755 configure
+# 64bit adjustments ...
+%__perl -p -i -e 's/lGLU/lGLU\ \-L\/usr\/X11R6\/%{_lib}/g' \
+	configure
+%__perl -p -i -e 's,\$prefix/lib/gpac,\$prefix/%{_lib}/gpac,' \
+	configure
+%__perl -p -i -e 's,\$\(prefix\)/lib,\$(prefix)/%{_lib},' \
+	Makefile
+%__perl -p -i -e 's/Wall/w/g' `find -name \
+	Makefile`
+
+# unpack amr files
+%if "%{_with_amr}" == "1"
+%__install -dm 755 modules/amr_float_dec/amr_nb_ft
+pushd modules/amr_float_dec/amr_nb_ft
+	%__unzip -q %{SOURCE1}
+	%__unzip -qj 26104-610_ANSI_C_source_code.zip
+popd
+
+%__install -dm 755 modules/amr_float_dec/amr_wb_ft
+pushd modules/amr_float_dec/amr_wb_ft
+	%__unzip -q %{SOURCE2}
+	%__unzip -qj 26204-600_ANSI-C_source_code.zip
+popd
+%endif
+
+%build
+# configure the beast
+./configure \
+	--prefix=%{buildroot}%{_prefix} \
+	--mandir=%{buildroot}%{_mandir} \
+	--X11-libs=/usr/X11R6/%{_lib} \
+%if "%{_with_amr}" == "1"
+	--enable-amr \
+%endif
+	--enable-oss-audio \
+	--extra-cflags="%optflags -fPIC"
+
+# make the beast
+%__make
+
+# create dev-docs
+(cd doc && doxygen)
+
+%install
+%__install -dm 755 %{buildroot}%{_bindir}
+
+%__make install \
+	prefix=%{buildroot}%{_prefix} \
+	INSTFLAGS=""
+%__make install-lib
+
+%__install -dm 755 %{buildroot}%{_datadir}/pixmaps
+convert -size 48x48 applications/osmo4_wx/osmo4.xpm \
+	Osmo4.png
+%__install -m 644 Osmo4.png \
+	%{buildroot}%{_datadir}/pixmaps
+
+# menu-entry
+%__install -dm 755 %{buildroot}%{_datadir}/applications
+%__cat > Osmo4.desktop << EOF
+[Desktop Entry]
+Comment=MPEG-4 Media player based on gpac
+Name=Osmo4
+GenericName=MPEG-4 Media player based on gpac
+Type=Application
+Exec=Osmo4
+Icon=Osmo4.png
+Encoding=UTF-8
+Terminal=false
+Categories=AudioVideo;Player;
+EOF
+%suse_update_desktop_file -i Osmo4 AudioVideo Player
+
+%clean
+[ -d %{buildroot} -a "%{buildroot}" != "" ] && %__rm -rf %{buildroot}
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS BUGS Changelog COPYING README TODO
+%doc doc/configuration.html doc/*.bt
+%{_bindir}/MP4Box
+%{_bindir}/MP4Client
+%{_libdir}/*.so
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/*
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*
+%{_mandir}/man1/*
+
+%files devel
+%defattr(-,root,root)
+%doc doc/html/*
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/*
+%{_libdir}/*.a
+
+%files -n Osmo4
+%defattr(-,root,root)
+%doc doc/osmo4*
+%{_bindir}/Osmo4
+%{_datadir}/pixmaps/Osmo4.png
+%{_datadir}/applications/Osmo4.desktop
+
+$Log: gpac.spec.in,v $
+Revision 1.1  2007/12/18 01:18:18  bpbuild
+imported spec from suse
+
