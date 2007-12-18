@@ -1,4 +1,4 @@
-#$Id: gpac.spec.in,v 1.3 2007/12/18 03:15:48 bpbuild Exp $
+#$Id: gpac.spec.in,v 1.4 2007/12/18 03:19:03 bpbuild Exp $
 
 Name:			gpac
 Summary:		GPAC is a multimedia framework covering MPEG-4, VRML/X3D and SVG
@@ -77,10 +77,11 @@ most advanced and robust 2D MPEG-4 Player available worldwide, as
 well as a decent 3D MPEG-4/VRML player.
 
 %prep
+rm -Rvf %{buildroot}
 %setup -q -n %{name}
 %__chmod 755 configure
-mkdir -pv %{buildroot}/usr/bin
-mkdir -pv %{buildroot}/usr/%{libdir}
+mkdir -pv %{buildroot}/%{bindir}
+mkdir -pv %{buildroot}/%{_libdir}
 
 
 %build
@@ -118,6 +119,7 @@ mv -v bin/gcc/MP4Client		%{buildroot}%{bindir}
 %{_libdir}/*.so
 %{_libdir}/*.a
 
+%changelog
 Revision 1.1  2007/12/18 01:18:18  bpbuild
 imported spec from suse
 
