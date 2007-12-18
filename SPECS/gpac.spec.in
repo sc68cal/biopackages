@@ -1,9 +1,9 @@
-#$Id: gpac.spec.in,v 1.7 2007/12/18 03:26:02 bpbuild Exp $
+#$Id: gpac.spec.in,v 1.8 2007/12/18 03:33:18 bpbuild Exp $
 
 Name:			gpac
 Summary:		GPAC is a multimedia framework covering MPEG-4, VRML/X3D and SVG
 Version:		0.4.4
-Release:		%{revision}.%[version}
+Release:		%{revision}.%{distro}
 Source:			%{name}-%{version}.tar.gz
 URL:			http://gpac.sourceforge.net/
 License:		LGPL
@@ -121,6 +121,9 @@ well as a decent 3D MPEG-4/VRML player.
 
 
 $Log: gpac.spec.in,v $
+Revision 1.8  2007/12/18 03:33:18  bpbuild
+fixes
+
 Revision 1.7  2007/12/18 03:26:02  bpbuild
 fixes
 
