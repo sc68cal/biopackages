@@ -1,4 +1,4 @@
-#$Id: gpac.spec.in,v 1.4 2007/12/18 03:19:03 bpbuild Exp $
+#$Id: gpac.spec.in,v 1.5 2007/12/18 03:21:07 bpbuild Exp $
 
 Name:			gpac
 Summary:		GPAC is a multimedia framework covering MPEG-4, VRML/X3D and SVG
@@ -119,7 +119,8 @@ mv -v bin/gcc/MP4Client		%{buildroot}%{bindir}
 %{_libdir}/*.so
 %{_libdir}/*.a
 
-%changelog
-Revision 1.1  2007/12/18 01:18:18  bpbuild
-imported spec from suse
+
+$Log: gpac.spec.in,v $
+Revision 1.5  2007/12/18 03:21:07  bpbuild
+fixes
 
