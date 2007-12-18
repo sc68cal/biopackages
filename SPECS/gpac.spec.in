@@ -1,4 +1,4 @@
-#$Id: gpac.spec.in,v 1.2 2007/12/18 03:12:30 bpbuild Exp $
+#$Id: gpac.spec.in,v 1.3 2007/12/18 03:15:48 bpbuild Exp $
 
 Name:			gpac
 Summary:		GPAC is a multimedia framework covering MPEG-4, VRML/X3D and SVG
@@ -97,10 +97,10 @@ mkdir -pv %{buildroot}/usr/%{libdir}
 
 
 %install
-mv -v libgpac_static.a	%{buildroot}%{libdir}
-mv -v libgpac.so	%{buildroot}%{libdir}
-mv -v MP4Box		%{buildroot}%{bindir}
-mv -v MP4Client		%{buildroot}%{bindir}
+mv -v bin/gcc/libgpac_static.a	%{buildroot}%{libdir}
+mv -v bin/gcc/libgpac.so	%{buildroot}%{libdir}
+mv -v bin/gcc/MP4Box		%{buildroot}%{bindir}
+mv -v bin/gcc/MP4Client		%{buildroot}%{bindir}
 
 
 %clean
