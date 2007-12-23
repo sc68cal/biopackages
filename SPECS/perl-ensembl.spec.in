@@ -1,4 +1,4 @@
-#$Id: perl-Bio-EnsEMBL.spec.in,v 1.2 2007/12/23 02:59:44 bpbuild Exp $
+#$Id: perl-ensembl.spec.in,v 1.1 2007/12/23 02:59:44 bpbuild Exp $
 %{ifdistro_release fedora 2} %define perldir /usr/lib/perl5/site_perl/5.8.3
 %{ifdistro_release centos 4} %define perldir /usr/lib/perl5/site_perl/5.8.5
 Summary: Ensembl Perl modules
@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 
-$Log: perl-Bio-EnsEMBL.spec.in,v $
-Revision 1.2  2007/12/23 02:59:44  bpbuild
+$Log: perl-ensembl.spec.in,v $
+Revision 1.1  2007/12/23 02:59:44  bpbuild
 new spec
 
