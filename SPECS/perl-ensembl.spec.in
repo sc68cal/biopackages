@@ -1,4 +1,4 @@
-#$Id: perl-ensembl.spec.in,v 1.1 2007/12/23 02:59:44 bpbuild Exp $
+#$Id: perl-ensembl.spec.in,v 1.2 2007/12/23 03:18:27 bpbuild Exp $
 %{ifdistro_release fedora 2} %define perldir /usr/lib/perl5/site_perl/5.8.3
 %{ifdistro_release centos 4} %define perldir /usr/lib/perl5/site_perl/5.8.5
 Summary: Ensembl Perl modules
@@ -25,16 +25,18 @@ The main Ensembl databases are introduced below. Data releases for these databas
 find . -name CVS | xargs rm -Rvf
 rm -rf $RPM_BUILD_ROOT
 mkdir -pv $RPM_BUILD_ROOT%{perldir}
-mkdir -pv $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
-mkdir -pv $RPM_BUILD_ROOT%{_bindir}
+mkdir -pv $RPM_BUILD_ROOT%{_defaultdocdir}
+mkdir -pv $RPM_BUILD_ROOT%{_datadir}/perl-ensembl
 
 %build
 
 %install
-%{__cp} -av modules/Bio $RPM_BUILD_ROOT%{perldir}
-%{__cp} -av docs/* $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
-for i in misc-scripts/* ; do cp -av $i $RPM_BUILD_ROOT%{_bindir}/ensembl-$i ; done
-%{_cp} -av LICENSE $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
+%{__cp} -av modules/Bio $RPM_BUILD_ROOT%{perldir}/
+%{__cp} -av docs $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
+%{__cp} -av LICENSE $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}/
+%{__cp} -av misc-scripts $RPM_BUILD_ROOT%{_datadir}/%{name}/
+%{__cp} -av sql $RPM_BUILD_ROOT%{_datadir}/%{name}/
+
 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
@@ -48,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 $Log: perl-ensembl.spec.in,v $
+Revision 1.2  2007/12/23 03:18:27  bpbuild
+fixes
+
 Revision 1.1  2007/12/23 02:59:44  bpbuild
 new spec
 
