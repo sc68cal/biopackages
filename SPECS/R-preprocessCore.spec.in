@@ -1,4 +1,4 @@
-#$Id: R-preprocessCore.spec.in,v 1.1 2007/12/10 21:03:20 bpbuild Exp $
+#$Id: R-preprocessCore.spec.in,v 1.2 2007/12/23 07:48:18 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Jordan Mendler <jmendler@ucla.edu>
@@ -11,7 +11,7 @@ URL: http://www.bioconductor.org
 Source0: http://bioconductor.org/packages/2.1/bioc/src/contrib/preprocessCore_%{version}.tar.gz
 Requires: R >= 2.6.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.6.0, gcc, biopackages
+BuildRequires: R >= 2.6.0, gcc, gcc-g77 biopackages
 
 %description
 A library of core preprocessing routines.
@@ -38,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-preprocessCore.spec.in,v $
+Revision 1.2  2007/12/23 07:48:18  bpbuild
+buildreq gcc-g77
+
 Revision 1.1  2007/12/10 21:03:20  bpbuild
 new spec
 
