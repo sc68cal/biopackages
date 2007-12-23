@@ -1,0 +1,49 @@
+#$Id: perl-Bio-EnsEMBL.spec.in,v 1.1 2007/12/23 02:11:40 bpbuild Exp $
+%{ifdistro_release fedora 2} %define perldir /usr/lib/perl5/site_perl/5.8.3
+%{ifdistro_release centos 4} %define perldir /usr/lib/perl5/site_perl/5.8.5
+Summary: Ensembl Perl modules
+Name: perl-Bio-EnsEMBL
+Version: 48
+Release: %{revision}.%{distro}
+Packager: Jordan Mendler <jmendler@ucla.edu>
+License: GPL
+Group: Development/Libraries
+URL: http://www.ensembl.org/info/using/api/index.html
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl-bioperl, perl, biopackages
+Requires: perl-bioperl, perl
+Source0: ensembl-%{version}.tar.gz
+
+%description
+Ensembl uses MySQL relational databases to store its information. A comprehensive set of Application Programme Interfaces (APIs) serve as a middle-layer between underlying database schemes and more specific application programmes. The APIs aim to encapsulate the database layout by providing efficient high-level access to data tables and isolate applications from data layout changes. Ensembl provides an API in Perl.
+
+The main Ensembl databases are introduced below. Data releases for these databases can be obtained from the Ensembl FTP site. For installation of the Perl APIs see the installation instructions.
+
+%prep
+%setup -q -n ensembl
+find . -name CVS | xargs rm -Rvf
+rm -rf $RPM_BUILD_ROOT
+mkdir -pv $RPM_BUILD_ROOT%{perldir}
+
+%build
+
+%install
+%{__cp} -av ensembl/modules/Bio $RPM_BUILD_ROOT%{perldir}
+
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | grep '.pm' | sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+
+$Log: perl-Bio-EnsEMBL.spec.in,v $
+Revision 1.1  2007/12/23 02:11:40  bpbuild
+new spec
+
