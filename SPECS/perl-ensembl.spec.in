@@ -1,4 +1,4 @@
-#$Id: perl-ensembl.spec.in,v 1.2 2007/12/23 03:18:27 bpbuild Exp $
+#$Id: perl-ensembl.spec.in,v 1.3 2007/12/25 03:43:18 bpbuild Exp $
 %{ifdistro_release fedora 2} %define perldir /usr/lib/perl5/site_perl/5.8.3
 %{ifdistro_release centos 4} %define perldir /usr/lib/perl5/site_perl/5.8.5
 Summary: Ensembl Perl modules
@@ -11,17 +11,40 @@ Group: Development/Libraries
 URL: http://www.ensembl.org/info/using/api/index.html
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl-bioperl, perl, biopackages
+BuildRequires: biopackages
 Requires: perl-bioperl, perl
 Source0: ensembl-%{version}.tar.gz
+Source1: ensembl-compara-%{version}.tar.gz
+Source2: ensembl-variation-%{version}.tar.gz
 
 %description
 Ensembl uses MySQL relational databases to store its information. A comprehensive set of Application Programme Interfaces (APIs) serve as a middle-layer between underlying database schemes and more specific application programmes. The APIs aim to encapsulate the database layout by providing efficient high-level access to data tables and isolate applications from data layout changes. Ensembl provides an API in Perl.
 
 The main Ensembl databases are introduced below. Data releases for these databases can be obtained from the Ensembl FTP site. For installation of the Perl APIs see the installation instructions.
 
+
+%package variation
+Summary: variation package for perl-ensemble
+Group: Development/Libraries
+Requires: perl-ensembl, perl, perl-bioperl
+
+%description variation
+variation package for perl-ensemble
+
+
+%package compara
+Summary: compara package for perl-ensemble
+Group: Development/Libraries
+Requires: perl-ensembl, perl, perl-bioperl
+
+%description compara
+compara package for perl-ensemble
+
+
 %prep
 %setup -q -n ensembl
+%setup -q -n ensembl-compara
+%setup -q -n ensembl-variation
 find . -name CVS | xargs rm -Rvf
 rm -rf $RPM_BUILD_ROOT
 mkdir -pv $RPM_BUILD_ROOT%{perldir}
@@ -34,13 +57,22 @@ mkdir -pv $RPM_BUILD_ROOT%{_datadir}/perl-ensembl
 %{__cp} -av modules/Bio $RPM_BUILD_ROOT%{perldir}/
 %{__cp} -av docs $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
 %{__cp} -av LICENSE $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}/
-%{__cp} -av misc-scripts $RPM_BUILD_ROOT%{_datadir}/%{name}/
-%{__cp} -av sql $RPM_BUILD_ROOT%{_datadir}/%{name}/
+#%{__cp} -av misc-scripts $RPM_BUILD_ROOT%{_datadir}/%{name}/
+#%{__cp} -av sql $RPM_BUILD_ROOT%{_datadir}/%{name}/
+#
+%{__cp} -av modules/Algorithm $RPM_BUILD_ROOT%{perldir}/
+%{__cp} -av modules/Bio/Das $RPM_BUILD_ROOT%{perldir}/Bio/
+%{__cp} -av modules/Bio/EnsEMBL/Compara $RPM_BUILD_ROOT%{perldir}/Bio/EnsEMBL/
+#
+%{__cp} -av modules/Bio/EnsEMBL/Variation $RPM_BUILD_ROOT%{perldir}/Bio/EnsEMBL/
+#
 
 
 [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
 
-find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f | grep -v -P "/Algorithm\/|/Bio/Das/|/Bio/EnsEMBL/Compara/|/Bio/EnsEMBL/Variation" |sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f | grep "/Algorithm/|/Bio/Das/|/Bio/EnsEMBL/Compara/" | sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-compara-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f | grep "/Bio/EnsEMBL/Variation | sed "s@^$RPM_BUILD_ROOT@@g" > %{name}-variation-%{version}-%{release}-filelist
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,8 +80,17 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
+%files compara -f %{name}-compara-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+%files variation -f %{name}-variation-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
 
 $Log: perl-ensembl.spec.in,v $
+Revision 1.3  2007/12/25 03:43:18  bpbuild
+initial build at multiple subpackages
+
 Revision 1.2  2007/12/23 03:18:27  bpbuild
 fixes
 
