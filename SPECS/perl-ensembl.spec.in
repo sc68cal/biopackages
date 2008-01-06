@@ -1,4 +1,4 @@
-#$Id: perl-ensembl.spec.in,v 1.5 2008/01/06 04:37:41 bpbuild Exp $
+#$Id: perl-ensembl.spec.in,v 1.6 2008/01/06 04:48:10 bpbuild Exp $
 %{ifdistro_release fedora 2} %define perldir /usr/lib/perl5/site_perl/5.8.3
 %{ifdistro_release centos 4} %define perldir /usr/lib/perl5/site_perl/5.8.5
 Summary: Ensembl Perl modules
@@ -32,15 +32,17 @@ The main Ensembl databases are introduced below. Data releases for these databas
 %setup -q -n ensembl-%{version}
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__mkdir} -pv $RPM_BUILD_ROOT%{perldir}
-%(__mkdir} -pv $RPM_BUILD_ROOT%{_defaultdocdir}
+%{__mkdir} -pv $RPM_BUILD_ROOT%{_defaultdocdir}
+%{__mkdir} -pv $RPM_BUILD_ROOT%{_defaultdocdir}/modules/
 %{__mkdir} -pv $RPM_BUILD_ROOT%{_datadir}/perl-ensembl/
 
 %build
 
 %install
-%{__cp} -av modules/* $RPM_BUILD_ROOT%{perldir}/
-%{__cp} -av docs $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
-%{__cp} -av LICENSE $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}/
+%{__mv} -vf modules/t 			$RPM_BUILD_ROOT%{_datadir}/%{name}/modules/
+%{__cp} -av modules/*			$RPM_BUILD_ROOT%{perldir}/
+%{__cp} -av docs			$RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}
+%{__cp} -av LICENSE 			$RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-%{version}/
 
 %{__cp} -av C_code			$RPM_BUILD_ROOT%{_datadir}/%{name}/
 %{__cp} -av conf			$RPM_BUILD_ROOT%{_datadir}/%{name}/
@@ -67,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-ensembl.spec.in,v $
+Revision 1.6  2008/01/06 04:48:10  bpbuild
+trying to build a full ensembl-*
+
 Revision 1.5  2008/01/06 04:37:41  bpbuild
 trying to build a full ensembl-*
 
