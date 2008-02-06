@@ -1,4 +1,4 @@
-#$ID$
+#$Id: perlbal.spec.in,v 1.3 2008/02/06 22:53:33 bpbuild Exp $
 Name:           perlbal
 Version:        1.60
 Release:        %{revision}.%{distro}
@@ -99,6 +99,9 @@ fi
 
 
 $Log: perlbal.spec.in,v $
+Revision 1.3  2008/02/06 22:53:33  bpbuild
+fixed id tag
+
 Revision 1.2  2008/02/06 22:51:48  bpbuild
 imported perlbal from epel5
 
