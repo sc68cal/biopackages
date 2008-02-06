@@ -12,10 +12,11 @@ Source1:        perlbal.init
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-BuildRequires:    perl(ExtUtils::MakeMaker)
-BuildRequires:    perl(Test::More)
-BuildRequires:    perl(HTTP::Date)
-BuildRequires:    perl(HTTP::Response)
+BuildRequires:    perl-libwww-perl
+#BuildRequires:    perl(ExtUtils::MakeMaker)
+#BuildRequires:    perl(Test::More)
+#BuildRequires:    perl(HTTP::Date)
+#BuildRequires:    perl(HTTP::Response)
 BuildRequires:    perl(BSD::Resource)
 BuildRequires:    perl(Danga::Socket)
 BuildRequires:    perl(IO::AIO)
@@ -96,4 +97,8 @@ fi
 %{_mandir}/man1/*
 %{_mandir}/man3/*
 
-$LOG$
+
+$Log: perlbal.spec.in,v $
+Revision 1.2  2008/02/06 22:51:48  bpbuild
+imported perlbal from epel5
+
