@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.22 2007/02/05 03:48:55 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.23 2008/03/17 17:15:35 boconnor Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -15,6 +15,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch: noarch
 BuildRequires: perl, biopackages
 Requires: httpd, mod_perl >= 2.0.1
+Requires: postgresql-server
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
 Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
@@ -88,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.23  2008/03/17 17:15:35  boconnor
+Updated the turnkey spec
+
 Revision 1.22  2007/02/05 03:48:55  bpbuild
 Updated version number of gmod-web, turnkey
 
