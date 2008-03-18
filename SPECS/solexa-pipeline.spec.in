@@ -1,11 +1,10 @@
-#$Id: solexa-pipeline.spec.in,v 1.9 2007/12/11 02:22:56 bpbuild Exp $
+#$Id: solexa-pipeline.spec.in,v 1.10 2008/03/18 22:28:42 bpbuild Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
-Version: 0.2.2.6
+Version: 0.3.0
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: SolexaPipeline-%{version}.tar.gz
-
+Source0: GAPipeline-%{version}.tar.gz
 License: Solexa Public Source License
 Group: Bioinformatics
 Packager: Brian O'Connor <boconnor@ucla.edu>
@@ -13,6 +12,7 @@ URL: http://www.solexa.com/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3
 BuildRequires: biopackages, gcc-c++, fftw3, fftw3-devel, libtiff, libtiff-devel
+BuildRequires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3
 
 %description
 This module contains the source code for the Solexa data analysis
@@ -30,7 +30,7 @@ documentation.html". A quick-start guide is given by "Pipeline usage".
 
 %prep
 #rm -rf ${RPM_BUILD_ROOT}
-%setup -q -n SolexaPipeline-%{version}
+%setup -q -n GAPipeline-%{version}
 mkdir -p ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline
 
 %build
@@ -58,6 +58,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.10  2008/03/18 22:28:42  bpbuild
+3.0
+
 Revision 1.9  2007/12/11 02:22:56  bpbuild
 checkin
 
