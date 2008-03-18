@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config-internal.spec.in,v 1.1 2007/10/11 23:12:23 bpbuild Exp $
+#$Id: biopackages-client-config-internal.spec.in,v 1.2 2008/03/18 21:39:24 bpbuild Exp $
 Summary: Configuration package for the Biopackages-internal repository.
 Name: biopackages-client-config-internal
 Version: 1.0
@@ -20,13 +20,13 @@ This packages contains the yum configuration for the biopackages.net internal re
 %{__cat} <<EOF >biopackages-internal.yum
 [biopackages-internal]
 name = Biopackages Internal - $name \$releasever - \$basearch
-baseurl = http://genome.ucla.edu/internal/yum/$path/\$releasever/\$basearch/
+baseurl = http://biopackages.net/internal/$path/\$releasever/\$basearch/
 enabled = 1
 gpgcheck = 0
 
 [biopackages-internal-noarch]
 name = Biopackages Internal - $name \$releasever - noarch
-baseurl = http://genome.ucla.edu/internal/yum/$path/\$releasever/noarch/
+baseurl = http://biopackages.net/internal/$path/\$releasever/noarch/
 enabled = 1
 gpgcheck = 0
 EOF
@@ -51,6 +51,9 @@ exit 0
 %config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages-internal.repo
 
 $Log: biopackages-client-config-internal.spec.in,v $
+Revision 1.2  2008/03/18 21:39:24  bpbuild
+updated for new internal yum server
+
 Revision 1.1  2007/10/11 23:12:23  bpbuild
 new spec for internal biopackages repo
 
