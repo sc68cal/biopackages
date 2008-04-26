@@ -1,4 +1,4 @@
-#$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
+#$Id: README,v 1.9 2008/04/26 00:10:27 boconnor Exp $
 
 ==========================================
 Setting up a Biopackages build environment
@@ -36,6 +36,13 @@ The basic procedure for setting up a new development machine is as follows. Even
  -> If you have specified a CVS account, enter your sourceforge password when prompted. 
  -> If you have specified a SYNCUSER other than anonymous in Makefile.conf, enter your RSYNC password when prompted during this step.
 
+8) If you are adding a new distribution that's not currently check into CVS in the SETTINGS directory note that you need
+to create the following files:
+ a) SETTINGS/<newdistro><distroversion>.<arch>/no_deps.txt: packages that should be installed without dependency check
+ b) SETTINGS/<newdistro><distroversion>.<arch>/no_build.txt: packages that should not be built locally
+ c) SETTINGS/<newdistro><distroversion>.<arch>/package_name_mapping.txt: a file that specifies how to map RPM names to SPEC files, useful for SPEC files that produce more than one RPM
+ d) SETTINGS/<newdistro><distroversion>.<arch>/clean_rpm_list.txt: a list of all RPMs on the system when it's in a clean state, used to restore a system to a clean state for a new build
+ e) SETTINGS/<newdistro><distroversion>.<arch>/yum_no_install.txt: packages that should never be installed via yum, e.g. these should be built locally
 
 ==========================================
 Building RPMs in a Biopackages Environment
@@ -51,10 +58,10 @@ Building RPMs in a Biopackages Environment
 
 
     B. At the top of every .spec.in, add a line like this:
-       #$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
+       #$Id: README,v 1.9 2008/04/26 00:10:27 boconnor Exp $
 
        In the spec file, this line will automatically be replaced with something like:
-       #$Id: README,v 1.8 2007/08/27 23:37:50 jmendler Exp $
+       #$Id: README,v 1.9 2008/04/26 00:10:27 boconnor Exp $
 
 
     C. Set the RPM 'Release' key to '%{revision}.%{distro}'.  E.g.,
