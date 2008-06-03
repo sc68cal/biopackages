@@ -1,14 +1,14 @@
-#$Id: R-randomForest.spec.in,v 1.1 2008/06/03 22:31:44 bpbuild Exp $
+#$Id: R-randomForest.spec.in,v 1.2 2008/06/03 22:34:13 bpbuild Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 4.5-25
+Version: 4.5.25
 Release: %{revision}.%{distro}
 Name: R-randomForest
 Summary: randomForest: Classification and regression based on a forest of trees using random inputs.
 License: GPL version 2 or later
 URL: http://cran.r-project.org/web/packages/randomForest/index.html
-Source0: randomForest_%{version}.tar.gz
+Source0: randomForest_4.5-25.tar.gz
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.0.0, biopackages
@@ -38,6 +38,10 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-randomForest.spec.in,v $
+Revision 1.2  2008/06/03 22:34:13  bpbuild
+version 4.2-25 -> 4.2.25
+CVs: ----------------------------------------------------------------------
+
 Revision 1.1  2008/06/03 22:31:44  bpbuild
 -new file
 
