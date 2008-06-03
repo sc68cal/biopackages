@@ -1,4 +1,4 @@
-#$Id: sge.spec.in,v 1.17 2007/10/16 21:20:53 bpbuild Exp $
+#$Id: sge.spec.in,v 1.18 2008/06/03 22:31:44 bpbuild Exp $
 
 %define sgedir /usr/share/sge
 %define qmasterspool /var/lib/sge_qmaster
@@ -18,8 +18,8 @@ Source2: sge-README.rpm
 Source3: sge-sge.sh
 Source4: sge-sge.csh
 Provides: gridengine
-Requires: openmotif, /bin/ksh
-BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc
+Requires: openmotif, /bin/ksh, db4
+BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc, db4, db4-devel
 BuildRequires: /usr/bin/perl, openssl-devel, pam-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
@@ -50,7 +50,7 @@ scripts/zerodepend
 # creates the dependencies
 ./aimk -no-java -no-jni -no-secure depend 
 # creates the core programs, qmon, qmake and qrsh/qtcsh
-./aimk -spool-classic -no-java -no-jni -no-secure
+./aimk -no-java -no-jni -no-secure
 # processing of the man files
 ./aimk -no-java -no-jni -no-secure -man
 
@@ -241,6 +241,9 @@ fi
 
 
 $Log: sge.spec.in,v $
+Revision 1.18  2008/06/03 22:31:44  bpbuild
+-new file
+
 Revision 1.17  2007/10/16 21:20:53  bpbuild
 fixed group issue
 
