@@ -1,18 +1,18 @@
-#$Id: R-RSQLite.spec.in,v 1.4 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-RSQLite.spec.in,v 1.5 2008/06/12 19:23:25 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 0.4.20
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.6.9
 Release: %{revision}.%{distro}
 Name: R-RSQLite
 Summary: RSQLite: SQLite interface for R
 Group: Applications/Engineering
-License: GPL
-URL: http://www.r-project.org
-Source0: RSQLite_0.4-20.tar.gz
-Requires: R >= 2.0.0, R-DBI >= 0.1.11
+License: LGPL (>= 2)
+URL: http://cran.r-project.org/web/packages/RSQLite/index.html
+Source0: RSQLite_0.6-9.tar.gz
+Requires: R >= 2.6.0, R-DBI >= 0.2.3
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-DBI >= 0.1.11, gcc, biopackages
+BuildRequires: R >= 2.6.0, R-DBI >= 0.2.3, gcc
 
 %description
 Database Interface R driver for SQLite. This package embeds the SQLite database engine in R and provides an interface compliant with the DBI package. The source for the SQLite engine (version 3.3.8) is included. 
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RSQLite.spec.in,v $
+Revision 1.5  2008/06/12 19:23:25  bret_harry
+bumped version
+
 Revision 1.4  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
