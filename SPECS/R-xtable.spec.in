@@ -1,4 +1,4 @@
-#$Id: R-xtable.spec.in,v 1.3 2008/06/12 19:42:55 bret_harry Exp $
+#$Id: R-xtable.spec.in,v 1.4 2008/06/12 19:50:01 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -10,7 +10,7 @@ Group: Applications/Engineering
 License: GPL (>= 2)
 URL: http://cran.r-project.org/web/packages/xtable/index.html
 Source0: xtable_1.5-2.tar.gz
-Requires: R >= 2.0.0, R-Biobase
+Requires: R >= 2.6.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.6.0, gcc 
 
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-xtable.spec.in,v $
+Revision 1.4  2008/06/12 19:50:01  bret_harry
+fixed deps
+
 Revision 1.3  2008/06/12 19:42:55  bret_harry
 bumped version
 
