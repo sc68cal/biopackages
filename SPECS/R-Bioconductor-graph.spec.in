@@ -1,4 +1,4 @@
-#$id$
+#$Id: R-Bioconductor-graph.spec.in,v 1.3 2008/06/13 02:11:03 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 #$Log: R-Bioconductor-graph.spec.in,v $
+#Revision 1.3  2008/06/13 02:11:03  bret_harry
+#$id$ -> $Id$
+#
 #Revision 1.2  2008/06/13 01:34:18  bret_harry
 #fixed Description
 #
