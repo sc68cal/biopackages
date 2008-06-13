@@ -1,0 +1,45 @@
+#$Id: R-Bioconductor-Category.spec.in,v 1.1 2008/06/13 02:19:45 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 2.6.0
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-Category
+Summary: A collection of tools for performing category analysis.
+Group: Applications/Engineering
+License: Artistic-2.0
+URL: http://bioconductor.org/packages/2.2/bioc/html/Category.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/Category_%{version}.tar.gz
+Requires: R >= 2.7.0, R-Biobase >= 2.0.1, R-Bioconductor-graph >= 1.18.1, R-annotate >= 1.18.0, R-genefilter >= 1.20.0, R-AnnotationDbi >= 1.2.1
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{requires}, gcc
+
+%description
+Using Categories to Model Genomic Data:
+http://bioconductor.org/packages/2.2/bioc/vignettes/Category/inst/doc/Category.pdf
+
+%prep
+%setup -c
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+#$Log: R-Bioconductor-Category.spec.in,v $
+#Revision 1.1  2008/06/13 02:19:45  bret_harry
+#new spec file
+#
