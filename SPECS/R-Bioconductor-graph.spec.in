@@ -15,7 +15,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{requires}, gcc
 
 %description
-%{URL}
+The graph package provides an implementation of graphs (the kind with nodes and edges) in R. Software
+infrastructure is provided by three different, but related packages,
 
 %prep
 %setup -c
@@ -39,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 #$Log: R-Bioconductor-graph.spec.in,v $
+#Revision 1.2  2008/06/13 01:34:18  bret_harry
+#fixed Description
+#
 #Revision 1.1  2008/06/13 01:25:47  bret_harry
 #new spec file
 #
