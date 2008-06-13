@@ -1,0 +1,44 @@
+#$Id: R-Bioconductor-GO.db.spec.in,v 1.1 2008/06/13 02:30:33 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 2.2.0
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-GO.db
+Summary: A set of annotation maps describing the entire Gene Ontology
+Group: Applications/Engineering
+License: The Artistic License, Version 2.0
+URL: http://bioconductor.org/packages/2.2/data/annotation/html/GO.db.html
+Source0: http://bioconductor.org/packages/2.2/data/annotation/src/contrib/GO.db_%{version}.tar.gz
+Requires: R >= 2.7.0, R-AnnotationDbi >= 1.2.1
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{requires}, gcc
+
+%description
+A set of annotation maps describing the entire Gene Ontology
+
+%prep
+%setup -c
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+#$Log: R-Bioconductor-GO.db.spec.in,v $
+#Revision 1.1  2008/06/13 02:30:33  bret_harry
+#new spec file
+#
