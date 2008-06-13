@@ -1,0 +1,44 @@
+#$Id: R-cluster.spec.in,v 1.1 2008/06/13 02:57:29 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.11.10
+Release: %{revision}.%{distro}
+Name: R-cluster
+Summary: Cluster Analysis, extended original from Peter Rousseeuw, Anja Struyf and Mia Hubert.
+Group: Applications/Engineering
+License: GPL (>=2)
+URL: http://cran.r-project.org/web/packages/cluster/index.html
+Source0: http://cran.r-project.org/src/contrib/cluster_%{version}.tar.gz
+Requires: R >= 2.5.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{requires}, gcc
+
+%description
+http://cran.r-project.org/web/packages/cluster/cluster.pdf
+
+%prep
+%setup -c
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+#$Log: R-cluster.spec.in,v $
+#Revision 1.1  2008/06/13 02:57:29  bret_harry
+#new spec file
+#
