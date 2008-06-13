@@ -1,0 +1,46 @@
+#$id$
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.16.0
+Release: %{revision}.%{distro}
+Name: R-Bioconductor-RBGL
+Summary: An interface to the BOOST graph library
+Group: Applications/Engineering
+License: The Artistic License, Version 2.0
+URL: http://bioconductor.org/packages/2.2/bioc/html/RBGL.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/RBGL_%{version}.tar.gz
+Requires: R >= 2.7.0, R-Bioconductor-graph >= 1.18.1
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.7.0, gcc
+
+%description
+The RBGL package is primarily an interface from R to the
+Boost Graph Library (BGL). It includes some graph algorithms built on top
+of those from BGL and some algorithms independent of BGL.
+
+%prep
+%setup -c
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+#$Log: R-Bioconductor-RBGL.spec.in,v $
+#Revision 1.1  2008/06/13 01:58:24  bret_harry
+#new spec file
+#
