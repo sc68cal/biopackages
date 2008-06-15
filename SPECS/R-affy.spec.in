@@ -1,23 +1,23 @@
-#$Id: R-affy.spec.in,v 1.9 2007/12/10 21:04:01 bpbuild Exp $
+#$Id: R-affy.spec.in,v 1.10 2008/06/15 09:23:33 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.16.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.18.2
 Release: %{revision}.%{distro}
 Name: R-affy
 Summary: The package contains functions for exploratory oligonucleotide array analysis.
-License: GPL
-URL: http://www.bioconductor.org
-Source0: affy_%{version}.tar.gz
-Requires: R >= 2.6.0, R-Biobase >= 1.12.0, R-affyio, R-preprocessCore
+License: LGPL (>=2)
+URL: http://bioconductor.org/packages/2.2/bioc/html/affy.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/affy_%{version}.tar.gz
+Requires: R >= 2.7.0, R-Biobase >= 2.0.1, R-affyio >= 1.8.0, R-preprocessCore >= 1.2.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.6.0, R-Biobase >= 1.13.41, R-affyio >= 1.4.0, gcc, biopackages, R-preprocessCore
+BuildRequires: %{requires}, gcc
 
 %description
 The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
 
 %prep
-%setup -n affy
+%setup -c
 
 %build
 export CFLAGS="%{optflags} -fPIC"
