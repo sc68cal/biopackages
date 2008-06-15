@@ -1,4 +1,4 @@
-#$Id: R-Bioconductor-Category.spec.in,v 1.1 2008/06/13 02:19:45 bret_harry Exp $
+#$Id: R-Bioconductor-Category.spec.in,v 1.2 2008/06/15 08:37:15 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -10,7 +10,7 @@ Group: Applications/Engineering
 License: Artistic-2.0
 URL: http://bioconductor.org/packages/2.2/bioc/html/Category.html
 Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/Category_%{version}.tar.gz
-Requires: R >= 2.7.0, R-Biobase >= 2.0.1, R-Bioconductor-graph >= 1.18.1, R-annotate >= 1.18.0, R-genefilter >= 1.20.0, R-AnnotationDbi >= 1.2.1
+Requires: R >= 2.7.0, R-Biobase >= 2.0.1, R-Bioconductor-graph >= 1.18.1, R-annotate >= 1.18.0, R-genefilter >= 1.20.0, R-AnnotationDbi >= 1.2.1, R-Bioconductor-RBGL >= 1.16.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{requires}, gcc
 
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 #$Log: R-Bioconductor-Category.spec.in,v $
+#Revision 1.2  2008/06/15 08:37:15  bret_harry
+#fixed deps
+#
 #Revision 1.1  2008/06/13 02:19:45  bret_harry
 #new spec file
 #
