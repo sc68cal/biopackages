@@ -1,19 +1,18 @@
-#$Id: R-RCurl.spec.in,v 1.6 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-RCurl.spec.in,v 1.7 2008/06/15 09:08:20 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 0.6.3
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.9.3
 Release: %{revision}.%{distro}
 Name: R-RCurl
 Summary: The RCurl package is an R-interface to the libcurl library that provides HTTP facilities.
 Group: Applications/Engineering
-License: GPL
-URL: http://www.rosuda.org/R/GDD/
-Source0: RCurl_0.6-3.tar.gz
-Patch0: RCurl.patch
-Requires: R >= 2.0.0, curl
+License: BSD
+URL: http://cran.r-project.org/web/packages/RCurl/index.html
+Source0: http://cran.r-project.org/src/contrib/RCurl_0.9-3.tar.gz
+Requires: R >= 2.7.0, curl-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, curl-devel, gcc, biopackages
+BuildRequires: %{requires}, gcc
 
 %description
 The RCurl package is an R-interface to the libcurl library that provides HTTP facilities. This allows us to download files from Web servers, post forms, use HTTPS (the secure HTTP), use persistent connections, upload files, use binary content, handle redirects, password authentication, etc.
@@ -31,18 +30,14 @@ R functions can be specified to collect text from both the response and its head
 This package will be used to implement the low-level communication in the SSOAP package and other high-level packages that utilize HTTP to exchange requests and data. 
 
 %prep
-%setup -n RCurl
-%patch0 -p1
-pushd ..
-tar -cvzf RCurl/RCurl_%{version}.tar.gz RCurl
-popd
+%setup -c
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library RCurl_%{version}.tar.gz
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
@@ -56,6 +51,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RCurl.spec.in,v $
+Revision 1.7  2008/06/15 09:08:20  bret_harry
+version bumped
+
 Revision 1.6  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
