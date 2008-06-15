@@ -1,4 +1,4 @@
-#$Id: R-AnnotationDbi.spec.in,v 1.4 2008/06/12 19:38:34 bret_harry Exp $
+#$Id: R-AnnotationDbi.spec.in,v 1.5 2008/06/15 21:56:34 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -10,9 +10,9 @@ Group: Applications/Engineering
 License: Artistic-2.0
 URL: http://bioconductor.org/packages/2.2/bioc/html/AnnotationDbi.html
 Source0: AnnotationDbi_%{version}.tar.gz
-Requires: R >= 2.7.0, R-Biobase >= 2.0.1, DBI >= 0.2.4, R-RSQLite >= 0.6.9
+Requires: R >= 2.7.0, R-Biobase >= 2.0.1, R-DBI >= 0.2.4, R-RSQLite >= 0.6.9
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.7.0, R-Biobase >= 2.0.1, R-DBI >= 0.2.4, R-RSQLite >= 0.6.9, gcc 
+BuildRequires: %{requires}, gcc 
 
 %description
 Provides user interface and database connection code for annotation data packages using SQLite data storage.
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-AnnotationDbi.spec.in,v $
+Revision 1.5  2008/06/15 21:56:34  bret_harry
+fixed deps
+
 Revision 1.4  2008/06/12 19:38:34  bret_harry
 bumped version
 
