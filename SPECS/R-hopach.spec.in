@@ -1,17 +1,17 @@
-#$Id: R-hopach.spec.in,v 1.2 2007/12/10 20:41:47 bpbuild Exp $
+#$Id: R-hopach.spec.in,v 1.3 2008/06/15 09:30:33 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Jordan Mendler <jmendler@ucla.edu>
-Version: 1.12.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.14.0
 Release: %{revision}.%{distro}
 Name: R-hopach
 Summary: The HOPACH clustering algorithm builds a hierarchical tree of clusters by recursively partitioning a data set, while ordering and possibly collapsing clusters at each level. 
-License: GPL
-URL: http://www.bioconductor.org
-Source0: hopach_%{version}.tar.gz
-Requires: R >= 2.6.0, R-Biobase
+License: GPL version 2 or newer
+URL: http://bioconductor.org/packages/2.2/bioc/html/hopach.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/hopach_%{version}.tar.gz
+Requires: R >= 2.7.0, R-Biobase >= 2.0.1
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.6.0, R-Biobase 
+BuildRequires: %{requires}, R-Biobase 
 
 %description
 The HOPACH clustering algorithm builds a hierarchical tree of clusters by recursively partitioning a data set, while ordering and possibly collapsing clusters at each level. The algorithm uses the Mean/Median Split Silhouette (MSS) criteria to identify the level of the tree with maximally homogeneous clusters. It also runs the tree down to produce a final ordered list of the elements. The non-parametric bootstrap allows one to estimate the probability that each element belongs to each cluster (fuzzy clustering).
@@ -37,10 +37,7 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
-$Log: R-hopach.spec.in,v $
-Revision 1.2  2007/12/10 20:41:47  bpbuild
-fixed
-
-Revision 1.1  2007/12/07 20:19:19  bpbuild
-updated version
-
+#$Log: R-hopach.spec.in,v $
+#Revision 1.3  2008/06/15 09:30:33  bret_harry
+#fixed deps
+#
