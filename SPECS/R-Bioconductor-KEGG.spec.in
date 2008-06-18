@@ -1,0 +1,45 @@
+#$Id: R-Bioconductor-KEGG.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 
+Release: %{revision}.%{distro}
+Name: 
+Summary: 
+License: 
+URL: 
+Source0: 
+Requires: R >= 2.7.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: R >= 2.7.0, gcc
+
+%description
+
+
+%prep
+%setup -c
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
+$Log: R-Bioconductor-KEGG.spec.in,v $
+Revision 1.1  2008/06/18 05:14:24  bret_harry
+new spec
+
