@@ -1,20 +1,20 @@
-#$Id: R-Bioconductor-KEGG.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+#$Id: R-Bioconductor-KEGG.spec.in,v 1.2 2008/06/18 21:54:03 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 
+Version: 2.2.0
 Release: %{revision}.%{distro}
-Name: 
-Summary: 
-License: 
-URL: 
-Source0: 
+Name: R-Bioconductor-KEGG
+Summary: A data package containing annotation data for KEGG
+License: Free for academic use. Non-academic users are requested to obtain a license agreement with KEGG
+URL: http://bioconductor.org/packages/2.2/data/annotation/html/KEGG.html
+Source0: http://bioconductor.org/packages/2.2/data/annotation/src/contrib/KEGG_2.2.0.tar.gz
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.7.0, gcc
 
 %description
-
+Annotation data file for KEGG assembled using data from KEGG
 
 %prep
 %setup -c
@@ -40,6 +40,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 $Log: R-Bioconductor-KEGG.spec.in,v $
+Revision 1.2  2008/06/18 21:54:03  bret_harry
+fixed tags
+
 Revision 1.1  2008/06/18 05:14:24  bret_harry
 new spec
 
