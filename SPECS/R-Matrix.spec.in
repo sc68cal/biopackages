@@ -1,20 +1,20 @@
-#$Id: R-Matrix.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+#$Id: R-Matrix.spec.in,v 1.2 2008/06/18 07:36:28 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 
+Version: 0.999375.9
 Release: %{revision}.%{distro}
-Name: 
-Summary: 
-License: 
-URL: 
-Source0: 
+Name: R-Matrix
+Summary: A Matrix package for R
+License: GPL (>=2)
+URL: http://cran.r-project.org/web/packages/Matrix/index.html
+Source0: http://cran.r-project.org/src/contrib/Matrix_0.999375-9.tar.gz
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.7.0, gcc
 
 %description
-
+Classes and methods for dense and sparse matrices and operations on them using Lapack, CSparse and CHOLMOD 
 
 %prep
 %setup -c
@@ -40,6 +40,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 $Log: R-Matrix.spec.in,v $
+Revision 1.2  2008/06/18 07:36:28  bret_harry
+fixed tags.
+
 Revision 1.1  2008/06/18 05:14:24  bret_harry
 new spec
 
