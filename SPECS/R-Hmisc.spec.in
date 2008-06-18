@@ -1,32 +1,34 @@
-#$Id: R-Hmisc.spec.in,v 1.6 2007/07/23 05:27:50 bpbuild Exp $
+#$Id: R-Hmisc.spec.in,v 1.7 2008/06/18 05:33:12 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 3.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 3.4.3
 Release: %{revision}.%{distro}
 Name: R-Hmisc
 Summary: R Harrell Miscellaneous library
 Group: Applications/Engineering
-Copyright: GPL
-URL: http://www.r-project.org
-Requires: R >= 2.0.0
+Copyright: GPL version 2 or newer
+URL: http://cran.r-project.org/web/packages/Hmisc/index.html
+Source0: Hmisc_3.4-3.tar.gz
+Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch: noarch
-BuildRequires: R >= 2.0.0, gcc, biopackages
-%{ifdistro_release fedora 2}BuildRequires: gcc-g77
-%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-g77
+BuildRequires: %{requires}, gcc
+#%{ifdistro_release fedora 2}BuildRequires: gcc-g77
+#%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
+#%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 %description
-R Harrell Miscellaneous library
+The Hmisc library contains many functions useful for data analysis, high-level graphics, utility operations, functions for computing sample size and power, importing datasets, imputing missing values, advanced table making, variable clustering, character string manipulation, conversion of S objects to LaTeX code, and recoding variables. Please submit bug reports to 'http://biostat.mc.vanderbilt.edu/trac/Hmisc'.
 
 %prep
-%setup -T -c
+%setup -c
 
 %build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-echo "install.packages('Hmisc','$RPM_BUILD_ROOT%{_libdir}/R/library');" | R --no-save --no-restore
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
@@ -40,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Hmisc.spec.in,v $
+Revision 1.7  2008/06/18 05:33:12  bret_harry
+fixed tags
+
 Revision 1.6  2007/07/23 05:27:50  bpbuild
 fixed gcc-g77/gcc-gfortran deps
 
