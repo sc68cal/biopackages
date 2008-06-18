@@ -1,20 +1,20 @@
-#$Id: R-impute.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+#$Id: R-impute.spec.in,v 1.2 2008/06/18 05:49:33 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 
+Version: 1.0.5
 Release: %{revision}.%{distro}
-Name: 
-Summary: 
-License: 
-URL: 
-Source0: 
+Name: R-impute
+Summary: Imputation for microarray data
+License: GPL2.0
+URL: http://cran.r-project.org/web/packages/impute/index.html
+Source0: http://cran.r-project.org/src/contrib/impute_1.0-5.tar.gz
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.7.0, gcc
+BuildRequires: %{requires}, gcc
 
 %description
-
+Imputation for microarray data (currently KNN only) 
 
 %prep
 %setup -c
@@ -40,6 +40,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 $Log: R-impute.spec.in,v $
+Revision 1.2  2008/06/18 05:49:33  bret_harry
+fixed tags
+
 Revision 1.1  2008/06/18 05:14:24  bret_harry
 new spec
 

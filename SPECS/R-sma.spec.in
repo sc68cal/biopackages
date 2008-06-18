@@ -1,28 +1,24 @@
-#$Id: R-sma.spec.in,v 1.7 2007/07/23 20:15:15 bpbuild Exp $
+#$Id: R-sma.spec.in,v 1.8 2008/06/18 05:46:51 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
 Version: 0.5.15
 Release: %{revision}.%{distro}
 Name: R-sma
 Summary: R Statistical Microarray Analysis library
 Group: Applications/Engineering
-Copyright: GPL
+Copyright: GPL version 2 or newer
 URL: http://www.r-project.org
 Source0: sma_0.5.15.tar.gz
-Requires: R >= 2.0.0
+Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch: noarch
-BuildRequires: R >= 2.0.0, gcc, biopackages
-%{ifdistro_release fedora 2}BuildRequires: gcc-g77
-%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-%{ifdistro_release centos 4}BuildRequires: gcc-g77
+BuildRequires: %{requires}, gcc
 
 %description
 R Statistical Microarray Analysis library
 
 %prep
-%setup -T -c
+%setup -c
 
 %build
 export CFLAGS="%{optflags} -fPIC"
@@ -43,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-sma.spec.in,v $
+Revision 1.8  2008/06/18 05:46:51  bret_harry
+fixed tags
+
 Revision 1.7  2007/07/23 20:15:15  bpbuild
 trying alternate installation methord
 

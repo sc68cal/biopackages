@@ -1,20 +1,20 @@
-#$Id: R-dynamicTreeCut.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+#$Id: R-dynamicTreeCut.spec.in,v 1.2 2008/06/18 05:53:46 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 
+Version: 1.11.3
 Release: %{revision}.%{distro}
-Name: 
-Summary: 
-License: 
-URL: 
-Source0: 
+Name: R-dynamicTreeCut
+Summary: Methods for detection of clusters in hierarchical clustering dendrograms
+License: GPL version 2 or newer
+URL: http://cran.r-project.org/web/packages/dynamicTreeCut/index.html
+Source0: http://cran.r-project.org/src/contrib/dynamicTreeCut_1.11-3.tar.gz
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.7.0, gcc
+BuildRequires: %{requires}, gcc
 
 %description
-
+Contains methods for detection of clusters in hierarchical clustering dendrograms. 
 
 %prep
 %setup -c
@@ -40,6 +40,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 $Log: R-dynamicTreeCut.spec.in,v $
+Revision 1.2  2008/06/18 05:53:46  bret_harry
+fixed tags
+
 Revision 1.1  2008/06/18 05:14:24  bret_harry
 new spec
 

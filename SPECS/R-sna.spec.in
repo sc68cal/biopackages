@@ -1,20 +1,20 @@
-#$Id: R-sna.spec.in,v 1.1 2008/06/18 05:14:24 bret_harry Exp $
+#$Id: R-sna.spec.in,v 1.2 2008/06/18 05:42:53 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 
+Version: 1.5
 Release: %{revision}.%{distro}
-Name: 
-Summary: 
-License: 
-URL: 
-Source0: 
+Name: R-sna
+Summary: Tools for Social Network Analysis
+License: GPL Version 2 or newer
+URL: http://erzuli.ss.uci.edu/R.stuff
+Source0: http://cran.r-project.org/src/contrib/sna_1.5.tar.gz
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.7.0, gcc
 
 %description
-
+A range of tools for social network analysis, including node and graph-level indices, structural distance and covariance methods, structural equivalence detection, p* modeling, random graph generation, and 2D/3D network visualization. 
 
 %prep
 %setup -c
@@ -40,6 +40,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 $Log: R-sna.spec.in,v $
+Revision 1.2  2008/06/18 05:42:53  bret_harry
+fixed tags
+
 Revision 1.1  2008/06/18 05:14:24  bret_harry
 new spec
 
