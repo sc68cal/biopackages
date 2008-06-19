@@ -1,5 +1,8 @@
-#$Id: Makefile,v 1.122 2008/06/15 20:59:26 bret_harry Exp $
+#$Id: Makefile,v 1.123 2008/06/19 22:04:21 bret_harry Exp $
 include ./Makefile.conf
+
+# Recursive make variable to extract the full path from a .built file
+rpm=$(shell cat $< | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
 
 ####################################
 #stuff for initial environment setup.
@@ -35,13 +38,26 @@ clean ::
 	rm -rf SPECS/*.built
 	rm -rf SPECS/*.cbuilt
 	rm -rf SPECS/*.rbuilt
+	rm -rf SPECS/*.installed	
 	rm -rf tmp/*
 	rm -rf BUILD/*
 	rm -rf prep
 
+%.installed : %.built
+	rpm -Uvh $(rpm)
+	date > $@
+
 %.built : %.spec prep
 	echo "start: `date`" > $@
 	(rpmbuild -ba $< 2>&1 >> $@ && echo "end: `date`" >> $@ ) || rm -rf $@ 
+
+####################################
+#extension rules
+# rbuilt is a target for the local machine that calls the recursive build program (resolve_deps)
+# FIXME: probably don't need verbose here
+%.rbuilt : %.spec
+	echo 'spec=$(subst .spec,,$<); spec=$${spec#SPECS/}; perl $(RECURSIVE_BUILD) --verbose --no-build $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/no_build.txt --rpm-base $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/clean_rpm_list.txt --map $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/package_name_mapping.txt  --no-yum $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/yum_no_install.txt --dep-tree $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/DEP_TREES/$$spec.deptree --no-deps $(CVSPATH)/SETTINGS/$(DISTRO)$(DISTRO_VER).$(DISTRO_ARCH)/no_deps.txt --spec $$spec' | /bin/bash
+	touch $@
 
 %.clean :
 	find . -name "$(@:.clean=)*" -exec $(RM_RF) {} \;
