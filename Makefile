@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.123 2008/06/19 22:04:21 bret_harry Exp $
+#$Id: Makefile,v 1.124 2008/06/25 18:08:15 bret_harry Exp $
 include ./Makefile.conf
 
 # Recursive make variable to extract the full path from a .built file
@@ -9,6 +9,7 @@ rpm=$(shell cat $< | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
 all :: prep
 
 prep : Makefile.conf
+	touch ~/.rpmmacros
 	mv ~/.rpmmacros ~/.rpmmacros.bckup
 	echo "# Biopackage specific macros"       >> ~/.rpmmacros
 	echo "%_topdir $(CVSPATH)"                >> ~/.rpmmacros
