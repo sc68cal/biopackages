@@ -1,4 +1,4 @@
-#$Id: perl-bioperl.spec.in,v 1.9 2007/04/14 00:52:42 boconnor Exp $
+#$Id: perl-bioperl.spec.in,v 1.10 2008/06/26 11:16:06 bpbuild Exp $
 Summary: bioperl Perl module
 Name: perl-bioperl
 Version: 1.5
@@ -17,7 +17,7 @@ Requires: perl-Cache-Cache, perl-Data-Stag, perl-Error, perl-Graph
 %{ifdistro_release centos 4}Requires: perl-Class-AutoClass
 Requires: perl-IO-String, perl-SOAP-Lite, perl-SVG, perl-SVG-Graph, perl-Text-Shellwords, perl-Tree-DAG_Node
 Requires: perl-WWW-Mechanize, perl-XML-DOM-XPath, perl-XML-SAX-Writer, perl-XML-Writer
-Requires: perl-Ace, perl-Clone
+Requires: perl-AcePerl, perl-Clone
 Source0: bioperl-1.5.tar.gz
 Source1: bioperl-run-1.4.tar.gz
 #remove AcePerl references
