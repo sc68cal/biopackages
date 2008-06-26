@@ -1,10 +1,10 @@
-#$Id: perl-DBD-Pg.spec.in,v 1.9 2007/02/13 18:58:32 bpbuild Exp $
+#$Id: perl-DBD-Pg.spec.in,v 1.10 2008/06/26 00:25:08 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
 Summary: PostgreSQL database driver for the DBI module
 Name: perl-DBD-Pg
-Version: 1.49
+Version: 2.8.1
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
@@ -20,7 +20,7 @@ Source0: DBD-Pg-%{version}.tar.gz
 
 DBD::Pg  --  the DBI PostgreSQL interface for Perl
 
-# $Id: perl-DBD-Pg.spec.in,v 1.9 2007/02/13 18:58:32 bpbuild Exp $
+# $Id: perl-DBD-Pg.spec.in,v 1.10 2008/06/26 00:25:08 bpbuild Exp $
 
 DESCRIPTION:
 ------------
@@ -328,6 +328,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBD-Pg.spec.in,v $
+Revision 1.10  2008/06/26 00:25:08  bpbuild
+Updated version of perl-DBD-Pg because we built postgresql 8.x for biopackages but the stock perl-DBD-Pg provided by RPMForge is built for postgresql 7.x. --BDO
+
 Revision 1.9  2007/02/13 18:58:32  bpbuild
 add minimum version for perl dbi
 
