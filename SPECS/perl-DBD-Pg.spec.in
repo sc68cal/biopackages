@@ -1,4 +1,4 @@
-#$Id: perl-DBD-Pg.spec.in,v 1.10 2008/06/26 00:25:08 bpbuild Exp $
+#$Id: perl-DBD-Pg.spec.in,v 1.11 2008/06/26 08:24:17 bpbuild Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -12,7 +12,7 @@ Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/dist/DBD-Pg/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-DBI >= 1.45, postgresql-devel, gcc, glibc-devel, postgresql-libs
+BuildRequires: perl, perl-version, biopackages, perl-DBI >= 1.45, postgresql-devel, gcc, glibc-devel, postgresql-libs
 Requires: glibc, postgresql-libs
 Source0: DBD-Pg-%{version}.tar.gz
 
@@ -20,7 +20,7 @@ Source0: DBD-Pg-%{version}.tar.gz
 
 DBD::Pg  --  the DBI PostgreSQL interface for Perl
 
-# $Id: perl-DBD-Pg.spec.in,v 1.10 2008/06/26 00:25:08 bpbuild Exp $
+# $Id: perl-DBD-Pg.spec.in,v 1.11 2008/06/26 08:24:17 bpbuild Exp $
 
 DESCRIPTION:
 ------------
@@ -328,6 +328,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DBD-Pg.spec.in,v $
+Revision 1.11  2008/06/26 08:24:17  bpbuild
+Added build dep
+
 Revision 1.10  2008/06/26 00:25:08  bpbuild
 Updated version of perl-DBD-Pg because we built postgresql 8.x for biopackages but the stock perl-DBD-Pg provided by RPMForge is built for postgresql 7.x. --BDO
 
