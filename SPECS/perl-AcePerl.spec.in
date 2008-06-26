@@ -1,4 +1,4 @@
-#$Id: perl-AcePerl.spec.in,v 1.1 2008/06/26 12:10:27 bpbuild Exp $
+#$Id: perl-AcePerl.spec.in,v 1.2 2008/06/26 12:33:52 bpbuild Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
@@ -246,6 +246,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 find $RPM_BUILD_ROOT -type f \
 | sed "s@^$RPM_BUILD_ROOT@@g" \
+| grep -v 'man' \
 > %{name}-%{version}-%{release}-filelist
 
 eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
@@ -269,6 +270,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-AcePerl.spec.in,v $
+Revision 1.2  2008/06/26 12:33:52  bpbuild
+RPMForge needs to update their RPMs to not require perl-Ace. This is causing perl-Ace and perl-AcePerl (the new one) to be installed at the same time.  And this is causing major problems with Biopackages.  I'm removing the man pages in our perl-AcePerl to make it compat with the old perl-Ace so at least they can coexit.
+
 Revision 1.1  2008/06/26 12:10:27  bpbuild
 Updating the epoch to see if that works for forcing a download from biopackages rather than the broken rpm from rpmforge.
 
