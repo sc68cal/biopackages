@@ -1,4 +1,4 @@
-#$Id: chado-schema.spec.in,v 1.4 2008/06/27 22:39:13 bpbuild Exp $
+#$Id: chado-schema.spec.in,v 1.5 2008/06/27 23:48:09 bpbuild Exp $
 %define gmod_root /var/lib/gmod/src/chado
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project.
@@ -35,7 +35,11 @@ find $RPM_BUILD_ROOT%{gmod_root} -type f | sed "s@^$RPM_BUILD_ROOT@@g" >> %{name
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
+
 $Log: chado-schema.spec.in,v $
+Revision 1.5  2008/06/27 23:48:09  bpbuild
+Modified the schema a bit in gmod-schema-0.003.tar.gz to add in primary keys.  Added a couple godb tables to the skip table arg in the gmod-web spec file.  This is because SQLTranslator 0.09 is more strict.
+
 Revision 1.4  2008/06/27 22:39:13  bpbuild
 Set the schema version to 0.003.
 
