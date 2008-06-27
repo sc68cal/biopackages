@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.24 2008/06/27 22:25:25 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.25 2008/06/27 23:15:03 bpbuild Exp $
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -17,7 +17,7 @@ BuildRequires: perl, biopackages
 Requires: httpd, mod_perl >= 2.0.1
 Requires: postgresql-server
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
-Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
+Requires: perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Class-Data-Inheritable, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 # need to remove all this mod_perl 1 stuff from the codebase
 Provides: perl(Apache::Const), perl(Apache::RequestIO), perl(Apache::RequestRec), perl(Apache::RequestUtil)
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.25  2008/06/27 23:15:03  bpbuild
+RPMForge perl-SQL-Translator is missing the perl-Class-Data-Inheritable dep so I'm adding it to Turnkey to make sure our clients have it installed.
+
 Revision 1.24  2008/06/27 22:25:25  bpbuild
 building new 1.4 version of turnkey.
 
