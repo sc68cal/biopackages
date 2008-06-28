@@ -1,4 +1,5 @@
-#$Id: turnkey.spec.in,v 1.26 2008/06/28 01:56:54 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.27 2008/06/28 09:24:08 bpbuild Exp $
+
 
 Distribution: Custom
 Vendor: biopackages.net
@@ -89,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.27  2008/06/28 09:24:08  bpbuild
+Updated turnkey (reorg of scripts dir) and needed to update gmodweb too.
+
 Revision 1.26  2008/06/28 01:56:54  bpbuild
 Updated deps
 

@@ -1,6 +1,7 @@
-#$Id: gmod-web.spec.in,v 1.34 2008/06/28 02:02:31 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.35 2008/06/28 09:24:08 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
+
 
 Summary: A gmod-web demo application based on Turnkey. It requires the chado RPM to be installed.
 Name: gmod-web
@@ -222,6 +223,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.35  2008/06/28 09:24:08  bpbuild
+Updated turnkey (reorg of scripts dir) and needed to update gmodweb too.
+
 Revision 1.34  2008/06/28 02:02:31  bpbuild
 Updated skip tables, why was this needed?  SQLTranslator changed but the schema is the same.
 
