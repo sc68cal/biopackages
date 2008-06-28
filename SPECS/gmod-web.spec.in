@@ -1,4 +1,4 @@
-#$Id: gmod-web.spec.in,v 1.32 2008/06/27 23:46:01 bpbuild Exp $
+#$Id: gmod-web.spec.in,v 1.33 2008/06/28 01:55:37 bpbuild Exp $
 %define Sce_version S228C
 %define Hsa_version 17
 
@@ -28,7 +28,7 @@ GMOD Web demos for various databases.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Sce RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Ima-DBI, perl-DBIx-ContextualFetch, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Sce, gbrowse, textpresso, AmiGO, genome-Sce-nib, genome-Sce, blastGraphic-Sce, genome-Sce-blast, turnkey
 BuildRequires: turnkey, perl, biopackages, chado-schema
@@ -41,7 +41,7 @@ The Wiki web application demo for turnkey.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Hsa RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Ima-DBI, perl-DBIx-ContextualFetch, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Hsa, gbrowse, textpresso, AmiGO, genome-Hsa-nib, genome-Hsa, blastGraphic-Hsa, genome-Hsa-blast, turnkey 
 BuildRequires: turnkey, perl, biopackages, chado-schema
@@ -55,7 +55,7 @@ The Wiki web application demo for turnkey.
 Summary: A gmod-web demo application based on Turnkey. It requires the chado-Hsa RPM to be installed.
 Group: Development/Web
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
-Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
+Requires: perl-Apache-ParseFormData, perl-Apache-Session, perl-Class-Base, perl-Class-DBI, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg = 0.08, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Ima-DBI, perl-DBIx-ContextualFetch, perl-Log-Log4perl, perl-SQL-Translator, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
 Requires: httpd, mod_perl >= 2.0.1
 Requires: chado-Hsa, gbrowse, textpresso, AmiGO, turnkey
 #gmod-web-Hsa-normal-tissue-probeset-barcharts
@@ -222,6 +222,9 @@ rm -rf /var/www/Hsa-Normal-Tissue/%{Hsa_version}
 /var/www/Hsa-Normal-Tissue/%{Hsa_version}/*
 
 $Log: gmod-web.spec.in,v $
+Revision 1.33  2008/06/28 01:55:37  bpbuild
+Updated deps
+
 Revision 1.32  2008/06/27 23:46:01  bpbuild
 Modified the schema a bit in gmod-schema-0.003.tar.gz to add in primary keys.  Added a couple godb tables to the skip table arg.  This is because SQLTranslator 0.09 is more strict.
 
