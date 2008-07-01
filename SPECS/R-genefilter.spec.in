@@ -1,4 +1,4 @@
-#$Id: R-genefilter.spec.in,v 1.7 2008/06/13 00:19:56 bret_harry Exp $
+#$Id: R-genefilter.spec.in,v 1.8 2008/07/01 22:07:39 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -12,10 +12,9 @@ URL: http://bioconductor.org/packages/2.2/bioc/html/genefilter.html
 Source0: genefilter_%{version}.tar.gz
 Requires: R >= 2.6.0, R-Biobase >= 2.0.1
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.6.0, R-Biobase >= 2.0.1, gcc
+BuildRequires: R >= 2.6.0, R-Biobase >= 2.0.1, gcc, gcc-g77
 #%{ifdistro_release fedora 2}BuildRequires: gcc-g77
 #%{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
-#%{ifdistro_release centos 4}BuildRequires: gcc-g77
 
 %description
 genefilter: methods for filtering genes from microarray experiments
@@ -43,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-genefilter.spec.in,v $
+Revision 1.8  2008/07/01 22:07:39  bret_harry
+added gcc-g77 build requirement
+
 Revision 1.7  2008/06/13 00:19:56  bret_harry
 version bump
 
