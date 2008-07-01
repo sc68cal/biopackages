@@ -1,5 +1,11 @@
-#$Id: Makefile,v 1.124 2008/06/25 18:08:15 bret_harry Exp $
+#$Id: Makefile,v 1.125 2008/07/01 19:54:42 bret_harry Exp $
 include ./Makefile.conf
+
+# Some Variables that should be moved into Makefile.conf
+SORT=sort
+PR=pr
+AWK=awk
+
 
 # Recursive make variable to extract the full path from a .built file
 rpm=$(shell cat $< | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
@@ -87,3 +93,13 @@ clean ::
 
 %.spec : %.spec.in
 	cat $< | perl bin/in2spec.pl > $@
+
+# help - The default goal
+.PHONY: help
+help:
+	$(MAKE) --print-data-base --question |                  \
+	$(AWK) '/^[^.%][-A-Za-z0-9_]*:/                         \
+	{ print substr($$1, 1, length($$1)-1) }' |      \
+	$(SORT) |                                               \
+	$(PR) --omit-pagination --width=80 --columns=4
+
