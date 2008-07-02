@@ -1,7 +1,6 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.7 2007/09/25 21:02:41 bpbuild Exp $
+#$Id: in2spec.pl,v 1.8 2008/07/02 22:51:46 bret_harry Exp $
 use strict;
-use Date::Manip;
 use Text::Wrap;
 $Text::Wrap::columns = 72;
 
@@ -91,6 +90,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.8  2008/07/02 22:51:46  bret_harry
+removed Date::Manip dep
+
 Revision 1.7  2007/09/25 21:02:41  bpbuild
 greping for release was finding rpmforge, so instead grep for release and exclude rpmforge
 
