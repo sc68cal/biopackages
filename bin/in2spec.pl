@@ -1,7 +1,9 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.8 2008/07/02 22:51:46 bret_harry Exp $
+#$Id: in2spec.pl,v 1.9 2008/07/02 23:06:49 bret_harry Exp $
 use strict;
 use Text::Wrap;
+use Date::Manip;
+
 $Text::Wrap::columns = 72;
 
 # figure out what distro we have
@@ -90,6 +92,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.9  2008/07/02 23:06:49  bret_harry
+Thought I was clever -- I was wrong.
+
 Revision 1.8  2008/07/02 22:51:46  bret_harry
 removed Date::Manip dep
 
