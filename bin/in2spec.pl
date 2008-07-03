@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.9 2008/07/02 23:06:49 bret_harry Exp $
+#$Id: in2spec.pl,v 1.10 2008/07/03 19:08:42 bret_harry Exp $
 use strict;
 use Text::Wrap;
 use Date::Manip;
@@ -7,11 +7,16 @@ use Date::Manip;
 $Text::Wrap::columns = 72;
 
 # figure out what distro we have
-my @results = `rpm -qa | grep 'release' | grep -v rpmforge`;
+my @results = `rpm -qa | grep 'release' | grep -v rpmforge | grep -v notes`;
 chomp $results[0];
+
+my ($distro, $distro_release);
+
 $results[0] =~ /^([^-]+)-release-([^-]+)/;
-my $distro = $1;
-my $distro_release = $2;
+$distro = $1;
+$distro_release = $2;
+
+print STDERR "$0: distro: $distro release: $distro_release\n";
 
 my %day   = (
              1 => 'Mon',
@@ -92,6 +97,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.10  2008/07/03 19:08:42  bret_harry
+fixed distro detection for centos 5
+
 Revision 1.9  2008/07/02 23:06:49  bret_harry
 Thought I was clever -- I was wrong.
 
