@@ -1,4 +1,4 @@
-#$Id: R-Hmisc.spec.in,v 1.7 2008/06/18 05:33:12 bret_harry Exp $
+#$Id: R-Hmisc.spec.in,v 1.8 2008/07/03 19:26:56 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -7,7 +7,7 @@ Release: %{revision}.%{distro}
 Name: R-Hmisc
 Summary: R Harrell Miscellaneous library
 Group: Applications/Engineering
-Copyright: GPL version 2 or newer
+License: GPL version 2 or newer
 URL: http://cran.r-project.org/web/packages/Hmisc/index.html
 Source0: Hmisc_3.4-3.tar.gz
 Requires: R >= 2.7.0
@@ -42,6 +42,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-Hmisc.spec.in,v $
+Revision 1.8  2008/07/03 19:26:56  bret_harry
+Copyright -> License
+
 Revision 1.7  2008/06/18 05:33:12  bret_harry
 fixed tags
 
