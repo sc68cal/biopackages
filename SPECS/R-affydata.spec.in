@@ -1,7 +1,7 @@
-#$Id: R-affydata.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-affydata.spec.in,v 1.3 2008/07/09 20:20:50 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
 Version: 1.12.2
 Release: %{revision}.%{distro}
 Name: R-affydata
@@ -11,7 +11,7 @@ URL: http://www.bioconductor.org
 Source0: affydata_1.10.0.tar.gz
 Requires: R >= 2.4.0, R-affy
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-affy, gcc, biopackages
+BuildRequires: R >= 2.4.0, R-affy, gcc
 
 %description
 Example datasets of a slightly large size. They represent 'real world examples', unlike the artificial examples included in the package affy.
