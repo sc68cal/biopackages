@@ -1,4 +1,4 @@
-#$Id: R-RColorBrewer.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-RColorBrewer.spec.in,v 1.3 2008/07/09 20:54:19 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -12,7 +12,7 @@ URL: http://www.rosuda.org/R/RColorBrewer/
 Source0: RColorBrewer_0.2-3.tar.gz
 Requires: R >= 2.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: R >= 2.0.0
 
 %description
 The packages provides palettes for drawing nice maps shaded according to a variable.
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-RColorBrewer.spec.in,v $
+Revision 1.3  2008/07/09 20:54:19  bret_harry
+removed dep
+
 Revision 1.2  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
