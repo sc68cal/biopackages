@@ -1,22 +1,23 @@
-#$Id: R-R.oo.spec.in,v 1.5 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-R.oo.spec.in,v 1.6 2008/07/09 21:42:39 bret_harry Exp $
 %define R_name R.oo
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.2.5
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.4.5
 Release: %{revision}.%{distro}
 Name: R-%{R_name}
 Summary: %{R_name}: R object-oriented programming with or without references
 Group: Applications/Engineering
-License: GPL
+License: LGPL >= 2.1
 Source0: %{R_name}_%{version}.tar.gz
-Requires: R >= 2.0.0
+URL: http://cran.r-project.org/web/packages/R.oo/index.html
+Requires: R >= 2.2.0, R.methodsS3
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, biopackages
+BuildRequires: R >= 2.0.0
 
 %description
-Methods and classes for object-oriented programming in R with or without references. Large effort has been made on making definition of methods as simple as possible with a minimum of maintainance for package developers. For example, generic functions are created automatically, if missing, and name conflict are automatically solved, if possible. The method setMethodS3() is a good start for those who in the future want to migrate to S4. The package has been developed since 2001 and is now considered very stable.
+Methods and classes for object-oriented programming in R with or without references. Large effort has been made on making definition of methods as simple as possible with a minimum of maintainance for package developers. The package has been developed since 2001 and is now considered very stable. This is a cross-platform package implemented in pure R that defines standard S3 classes without any tricks. 
 
 %prep
 %setup -n %{R_name}
@@ -39,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.oo.spec.in,v $
+Revision 1.6  2008/07/09 21:42:39  bret_harry
+added dep
+
 Revision 1.5  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
