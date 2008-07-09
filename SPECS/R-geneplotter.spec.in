@@ -1,18 +1,18 @@
-#$Id: R-geneplotter.spec.in,v 1.3 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-geneplotter.spec.in,v 1.4 2008/07/09 21:05:06 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.13.7
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.18.0
 Release: %{revision}.%{distro}
 Name: R-geneplotter
-Summary: Grapics related functions for Bioconductor
+Summary: Some basic functions for plotting genetic data
 Group: Applications/Engineering
-License: GPL
-URL: http://www.r-project.org
+License: Artistic-2.0
+URL: http://bioconductor.org/packages/2.2/bioc/html/geneplotter.html
 Source0: geneplotter_%{version}.tar.gz
 Requires: R >= 2.0.0, R-Biobase, R-annotate, R-RColorBrewer
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-Biobase, R-annotate, R-RColorBrewer, gcc, biopackages
+BuildRequires: R >= 2.0.0, R-Biobase, R-annotate, R-RColorBrewer, gcc
 
 %description
 Some basic functions for plotting genetic data
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-geneplotter.spec.in,v $
+Revision 1.4  2008/07/09 21:05:06  bret_harry
+bumped ver
+
 Revision 1.3  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
