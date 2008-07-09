@@ -1,18 +1,18 @@
-#$Id: R-simpleaffy.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-simpleaffy.spec.in,v 1.3 2008/07/09 20:52:09 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 2.9.3
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 2.16.0
 Release: %{revision}.%{distro}
 Name: R-simpleaffy
 Summary: Very simple high level analysis of Affymetrix data
 Group: Applications/Engineering
-License: GPL
-URL: http://www.r-project.org
+License: GPL version 2 or later
+URL: http://bioconductor.org/packages/2.2/bioc/html/simpleaffy.html
 Source0: simpleaffy_%{version}.tar.gz
 Requires: R >= 2.0.0, R-Biobase, R-genefilter, R-affy
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, R-Biobase, R-genefilter, R-affy, gcc, biopackages
+BuildRequires: R >= 2.0.0, R-Biobase, R-genefilter, R-affy, gcc
 
 %description
 Provides high level functions for reading Affy .CEL files, phenotypic data, and then computing simple things with it, such as t-tests, fold changes and the like. Makes heavy use of the affy library. Also has some basic scatter plot functions and mechanisms for generating high resolution journal figures...
@@ -40,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-simpleaffy.spec.in,v $
+Revision 1.3  2008/07/09 20:52:09  bret_harry
+bumped version
+
 Revision 1.2  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
