@@ -1,20 +1,20 @@
-#$Id: R-R.rsp.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-R.rsp.spec.in,v 1.3 2008/07/09 23:56:40 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 0.3.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.3.4
 Release: %{revision}.%{distro}
 Name: R-R.rsp
-Summary: R.rsp: R Server Pages and Light-weight HTTP daemon (server).
-License: GPL
-URL: http://www.braju.com/R/
-Source0: R.rsp_0.3.0.tar.gz
+Summary: R Server Pages
+License: LGPL >= 2.1
+URL: http://cran.r-project.org/web/packages/R.rsp/index.html
+Source0: http://cran.r-project.org/src/contrib/R.rsp_%{version}.tar.gz
 Requires: R >= 2.4.0, R-R.oo, R-R.utils
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, biopackages
+BuildRequires: %{requires}
 
 %description
-R Server Pages and Light-weight HTTP daemon (server).
+An R Server Page (RSP) is a document that contains both text in a format of choice (HTML, TeX, ...) as well as R source code within special tags. An RSP file can be translated into a so called R servlet, which is an R script that outputs the final document when sourced. This way documents in any format can be generated dynamically using R, e.g. automatic reports of statistical analysis. Utilizing an internal cross-platform web server, this package provides dynamic help pages in HTML. If other packages provide RSP help pages, these are automatically linked to in the RSP main menu.
 
 %prep
 %setup -n R.rsp
