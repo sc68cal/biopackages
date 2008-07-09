@@ -1,4 +1,4 @@
-#$Id: R-affyPLM.spec.in,v 1.9 2007/12/10 21:04:33 bpbuild Exp $
+#$Id: R-affyPLM.spec.in,v 1.10 2008/07/09 20:39:59 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -11,7 +11,7 @@ URL: http://www.bioconductor.org
 Source0: affyPLM_%{version}.tar.gz
 Requires: R >= 2.6.0, R-Biobase, R-affy, R-affyio, R-affydata, R-gcrma, R-preprocessCore
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.6.0, R-Biobase, R-affy, R-affyio, R-affydata, R-gcrma, biopackages, R-preprocessCore
+BuildRequires: R >= 2.6.0, R-Biobase, R-affy, R-affyio, R-affydata, R-gcrma, R-preprocessCore
 
 %description
 Methods for fitting probe-level models.
