@@ -1,8 +1,8 @@
-#$Id: R-R.utils.spec.in,v 1.6 2008/07/09 21:51:48 bret_harry Exp $
+#$Id: R-R.utils.spec.in,v 1.7 2008/07/10 04:28:49 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
-Version: 1.0.1
+Version: 1.0.2
 Release: %{revision}.%{distro}
 Name: R-R.utils
 Summary: Various programming utilities
@@ -39,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.utils.spec.in,v $
+Revision 1.7  2008/07/10 04:28:49  bret_harry
+bumped version
+
 Revision 1.6  2008/07/09 21:51:48  bret_harry
 bumped version
 
