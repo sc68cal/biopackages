@@ -1,10 +1,10 @@
-#$Id: perl-celsius.spec.in,v 1.7 2007/08/14 20:41:35 bpbuild Exp $
+#$Id: perl-celsius.spec.in,v 1.8 2008/07/10 05:32:42 bret_harry Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, perl webserver component
 Name: perl-celsius
-Version: 0.04
+Version: 0.05
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: Celsius-%{version}.tar.gz
+Source0: Celsius-0.03.tar.gz
 License: GPL
 Group: Databases/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROO
 %preun
 
 $Log: perl-celsius.spec.in,v $
+Revision 1.8  2008/07/10 05:32:42  bret_harry
+damage control
+
 Revision 1.7  2007/08/14 20:41:35  bpbuild
 requires perl-XML-Parser
 
