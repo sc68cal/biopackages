@@ -1,18 +1,18 @@
-#$Id: R-plier.spec.in,v 1.7 2007/07/23 05:27:50 bpbuild Exp $
+#$Id: R-plier.spec.in,v 1.8 2008/07/10 01:15:13 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.0.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.10.0
 Release: %{revision}.%{distro}
 Name: R-plier
-Summary: The PLIER (Probe Logarithmic Error Intensity Estimate) method produces an improved signal by accounting for experimentally observed patterns in probe behavior and handling error at the appropriately at low and high signal values.
+Summary: Implements the Affymetrix PLIER algorithm
 Group: Applications/Engineering
-License: GPL
-URL: http://www.r-project.org
-Source0: plier_1.0.0.tar.gz
-Requires: R >= 2.0.0, R-affy
+License: GPL version 2 or later
+URL: http://bioconductor.org/packages/2.2/bioc/html/plier.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/plier_%{version}.tar.gz
+Requires: R >= 2.7.0, R-affy
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.0.0, gcc, biopackages
+BuildRequires: %{requires}, gcc
 Obsoletes: R-Bioconductor-plier
 %{ifdistro_release fedora 2}BuildRequires: gcc-g77
 %{ifdistro_release fedora 5}BuildRequires: gcc-gfortran
@@ -24,14 +24,14 @@ The PLIER (Probe Logarithmic Error Intensity Estimate) method produces an improv
 
 %prep
 %setup -n plier
-cp %{SOURCE0} .
+#cp %{SOURCE0} .
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library plier_1.0.0.tar.gz
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
@@ -45,6 +45,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-plier.spec.in,v $
+Revision 1.8  2008/07/10 01:15:13  bret_harry
+bumped version
+
 Revision 1.7  2007/07/23 05:27:50  bpbuild
 fixed gcc-g77/gcc-gfortran deps
 
