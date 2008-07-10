@@ -1,4 +1,4 @@
-#$Id: R-affyio.spec.in,v 1.8 2008/06/13 03:10:05 bret_harry Exp $
+#$Id: R-affyio.spec.in,v 1.9 2008/07/10 22:50:07 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -9,7 +9,7 @@ Summary: Routines for parsing Affymetrix data files based upon file format infor
 License: LGPL version 2 or newer
 URL: http://bioconductor.org/packages/2.2/bioc/html/affyio.html
 Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/affyio_%{version}.tar.gz
-Requires: R >= 2.7.0
+Requires: R >= 2.7.0, zlib-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{requires}, gcc 
 
@@ -39,6 +39,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
 #$Log: R-affyio.spec.in,v $
+#Revision 1.9  2008/07/10 22:50:07  bret_harry
+#fixed deps
+#
 #Revision 1.8  2008/06/13 03:10:05  bret_harry
 #version bumped
 #
