@@ -1,4 +1,4 @@
-#$Id: R-genefilter.spec.in,v 1.9 2008/07/03 19:09:39 bret_harry Exp $
+#$Id: R-genefilter.spec.in,v 1.10 2008/07/10 23:11:15 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -10,7 +10,7 @@ Group: Applications/Engineering
 License: Artistic-2.0
 URL: http://bioconductor.org/packages/2.2/bioc/html/genefilter.html
 Source0: genefilter_%{version}.tar.gz
-Requires: R >= 2.6.0, R-Biobase >= 2.0.1
+Requires: R >= 2.6.0, R-Biobase >= 2.0.1, R-AnnotationDbi
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %{ifdistro_release centos 4}BuildRequires: R >= 2.6.0, R-Biobase >= 2.0.1, gcc, gcc-g77
 %{ifdistro_release centos 5}BuildRequires: R >= 2.6.0, R-Biobase >= 2.0.1, gcc, gcc-gfortran
@@ -43,6 +43,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-genefilter.spec.in,v $
+Revision 1.10  2008/07/10 23:11:15  bret_harry
+fixed deps
+
 Revision 1.9  2008/07/03 19:09:39  bret_harry
 gcc-g77 -> gcc-gfortran for centos 5
 
