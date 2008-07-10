@@ -1,0 +1,41 @@
+#$Id: R-aroma.core.spec.in,v 1.1 2008/07/10 04:21:22 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.9.3
+Release: %{revision}.%{distro}
+Name: R-aroma.core
+Summary: Support package for aroma.affymetrix et al.
+License: Private for now (LGPL to come)
+URL: http://www.braju.com/R/
+Source0: http://www.braju.com/R/repos/aroma.core_%{version}.tar.gz
+Requires: R >= 2.6.0, R-R.methodsS3 >= 1.0.0, R-R.oo >= 1.4.3, R-R.utils >= 1.0.2, R-R.cache >= 0.1.6, R-R.rsp >= 0.3.3, R-matrixStats >= 0.1.2, R-digest >= 0.3.1, R-aroma.light >= 1.8.1, R-sfit >= 0.1.5, R-affxparser >= 1.10.1
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{requires}, gcc
+
+%description
+Description: This package is a private support package for aroma.affymetrix et al.  The methods and classes of this package are independent of platform.  It's API is in alpha and beta stage.
+
+%prep
+%setup -n aroma.affymetrix
+#find . -type f -exec perl -pi -e 's#1\.2\.4#1.1.6#' {} \;
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library ../aroma.affymetrix
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
