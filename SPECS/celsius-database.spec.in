@@ -1,4 +1,4 @@
-#$Id: celsius-database.spec.in,v 1.6 2008/07/10 17:51:07 bret_harry Exp $
+#$Id: celsius-database.spec.in,v 1.7 2008/07/10 20:19:33 bret_harry Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, database component
 Name: celsius-database
 Version: 1.0
@@ -18,10 +18,12 @@ BuildRequires: postgresql-server, postgresql-contrib, R-plr, postgresql >= 8.0
 Celsius Affymetrix microarray data warehousing system, database component.
 
 %prep
+rm -rf celsius-database
+mkdir -p celsius-database
+mkdir -p ${RPM_BUILD_ROOT}
 
 %build
-
-%install
+cd celsius-database
 
 tmp_celsius=celsius_`date | md5sum | awk '{print $1}' | head -c 4`
 
@@ -36,11 +38,14 @@ sudo su postgres -c "zcat %{SOURCE0} | psql $tmp_celsius 2>&1" 2>&1 > /dev/null;
 sudo su postgres -c "pg_dump $tmp_celsius" | gzip > %{name}-%{version}.sql.gz
 sudo su postgres -c "dropdb  $tmp_celsius"
 
-[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+#[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
-find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+#find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
 
-%files -f %{name}-%{version}-%{release}-filelist
+%install
+cd celsius-database
+
+%files
 %defattr(-,root,root)
 %doc *.sql.gz
 
@@ -63,6 +68,9 @@ sudo su postgres -c 'dropdb celsius-%{version}';
 true;
 
 $Log: celsius-database.spec.in,v $
+Revision 1.7  2008/07/10 20:19:33  bret_harry
+various fixes
+
 Revision 1.6  2008/07/10 17:51:07  bret_harry
 fixed deps
 
