@@ -1,4 +1,4 @@
-#$Id: celsius-database.spec.in,v 1.4 2007/03/23 00:16:03 bpbuild Exp $
+#$Id: celsius-database.spec.in,v 1.5 2008/07/10 17:31:04 bret_harry Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, database component
 Name: celsius-database
 Version: 1.0
@@ -7,12 +7,12 @@ Release: %{revision}.%{distro}
 Source0: %{name}-%{version}.sql.gz
 License: GPL
 Group: Databases/Bioinformatics
-Packager: Allen Day <allenday@ucla.edu>
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
 URL: http://www.sf.net/projects/celsius
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Requires: postgresql-server, postgresql-contrib, postgresql-R, postgresql >= 8.0
-BuildRequires: postgresql-server, postgresql-contrib, postgresql-R, postgresql >= 8.0, biopackages
+BuildRequires: postgresql-server, postgresql-contrib, postgresql-R, postgresql >= 8.0
 
 %description
 Celsius Affymetrix microarray data warehousing system, database component.
@@ -63,6 +63,9 @@ sudo su postgres -c 'dropdb celsius-%{version}';
 true;
 
 $Log: celsius-database.spec.in,v $
+Revision 1.5  2008/07/10 17:31:04  bret_harry
+removed dep
+
 Revision 1.4  2007/03/23 00:16:03  bpbuild
 preserve ownership
 
