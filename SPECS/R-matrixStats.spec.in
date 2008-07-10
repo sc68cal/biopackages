@@ -1,4 +1,4 @@
-#$Id: R-matrixStats.spec.in,v 1.1 2008/07/10 04:37:38 bret_harry Exp $
+#$Id: R-matrixStats.spec.in,v 1.2 2008/07/10 04:41:50 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -9,7 +9,7 @@ Summary: Methods that apply to rows and columns of a matrix.
 License: Artistic-2.0
 URL: http://www.braju.com/R/
 Source0: http://www.braju.com/R/repos/matrixStats_%{version}.tar.gz
-Requires: R >= 2.6.0
+Requires: R >= 2.6.0, R-R.native, R-aroma.apd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{requires}, gcc
 
