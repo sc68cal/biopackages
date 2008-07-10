@@ -1,4 +1,4 @@
-#$Id: R-plr.spec.in,v 1.1 2008/07/10 17:49:52 bret_harry Exp $
+#$Id: R-plr.spec.in,v 1.2 2008/07/10 17:52:23 bret_harry Exp $
 Summary: R Procedural Language for PostgreSQL 
 Name: R-plr
 Version: 0.6.2.9
@@ -6,7 +6,7 @@ Release: %{revision}.%{distro}
 License: GPL version 2 or newer.
 Group: Applications/Databases
 Url: http://www.joeconway.com/plr
-Source0: plr-0.6.2-alpha.tar.gz
+Source0: http://www.joeconway.com/plr/plr-%{version}.tar.gz
 Buildrequires: R, R-devel, postgresql >= 8.0, postgresql-devel, make, gcc 
 Requires: R, postgresql >= 8.0
 Buildroot: %{_tmppath}/%{name}-%{version}-root
@@ -51,6 +51,9 @@ ldconfig;
 #/etc/ld.so.conf.d/*
 
 $Log: R-plr.spec.in,v $
+Revision 1.2  2008/07/10 17:52:23  bret_harry
+fixed source0
+
 Revision 1.1  2008/07/10 17:49:52  bret_harry
 new spec, replaces postgresql-R.spec.in
 
