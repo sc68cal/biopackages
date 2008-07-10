@@ -1,4 +1,4 @@
-#$Id: R-aroma.core.spec.in,v 1.1 2008/07/10 04:21:22 bret_harry Exp $
+#$Id: R-aroma.core.spec.in,v 1.2 2008/07/10 05:04:08 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -17,7 +17,7 @@ BuildRequires: %{requires}, gcc
 Description: This package is a private support package for aroma.affymetrix et al.  The methods and classes of this package are independent of platform.  It's API is in alpha and beta stage.
 
 %prep
-%setup -n aroma.affymetrix
+%setup -n aroma.core
 #find . -type f -exec perl -pi -e 's#1\.2\.4#1.1.6#' {} \;
 
 %build
@@ -25,7 +25,7 @@ export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library ../aroma.affymetrix
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 

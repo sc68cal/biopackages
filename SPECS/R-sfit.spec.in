@@ -1,4 +1,4 @@
-#$Id: R-sfit.spec.in,v 1.2 2008/07/10 04:51:10 bret_harry Exp $
+#$Id: R-sfit.spec.in,v 1.3 2008/07/10 05:00:03 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -25,7 +25,7 @@ export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
 rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library ../aroma.affymetrix
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
