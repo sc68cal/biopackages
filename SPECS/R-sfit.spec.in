@@ -1,4 +1,4 @@
-#$Id: R-sfit.spec.in,v 1.1 2008/07/10 04:47:47 bret_harry Exp $
+#$Id: R-sfit.spec.in,v 1.2 2008/07/10 04:51:10 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -17,7 +17,7 @@ BuildRequires: %{requires}, gcc
 This package provides a method for robustly fitting a K-dimensional simplex in M dimensions
 
 %prep
-%setup -n matrixStats
+%setup -n sfit
 #find . -type f -exec perl -pi -e 's#1\.2\.4#1.1.6#' {} \;
 
 %build
