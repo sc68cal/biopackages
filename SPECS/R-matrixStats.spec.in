@@ -1,0 +1,41 @@
+#$Id: R-matrixStats.spec.in,v 1.1 2008/07/10 04:37:38 bret_harry Exp $
+Vendor: biopackages.net
+Group: Applications/Scientific
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.1.2
+Release: %{revision}.%{distro}
+Name: R-matrixStats
+Summary: Methods that apply to rows and columns of a matrix.
+License: Artistic-2.0
+URL: http://www.braju.com/R/
+Source0: http://www.braju.com/R/repos/matrixStats_%{version}.tar.gz
+Requires: R >= 2.6.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{requires}, gcc
+
+%description
+This packages provides methods operating on rows and columns of matrices.  The methods are optimized for speed and memory.
+
+%prep
+%setup -n matrixStats
+#find . -type f -exec perl -pi -e 's#1\.2\.4#1.1.6#' {} \;
+
+%build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
+rm -rf ${RPM_BUILD_ROOT}
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
+R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library ../aroma.affymetrix
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%changelog
