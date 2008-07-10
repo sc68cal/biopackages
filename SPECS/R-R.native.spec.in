@@ -1,30 +1,30 @@
-#$Id: R-R.native.spec.in,v 1.2 2008/07/10 00:28:02 bret_harry Exp $
+#$Id: R-R.native.spec.in,v 1.3 2008/07/10 23:25:06 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 0.1.2
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 0.1.4
 Release: %{revision}.%{distro}
 Name: R-R.native
-Summary: R.native
-License: GPL
+Summary: Utility methods for compiling and loading native code on the fly
+License: LGPL version 2.1 or newer (the releases)
 URL: http://www.braju.com/R/
-Source0: R.native_0.1.2.tar.gz
-Requires: R >= 2.4.0, R-R.oo, R-R.utils
+Source0: http://www.braju.com/R/repos/R.native_%{version}.tar.gz
+Requires: R >= 2.0.0, R-R.oo, R-R.utils
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, gcc
+BuildRequires: %{requires}, gcc
 
 %description
-R.native
+This packages provides a utility class NativeCode that provides static methods to compile native code into a dynamic library, and methods to load, reload and unload such.
 
 %prep
 %setup -n R.native
+rm -rf ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/R/library
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXFLAGS="%{optflags} -fPIC"
-rm -rf ${RPM_BUILD_ROOT}
-R CMD INSTALL --library=$RPM_BUILD_ROOT%{_libdir}/R/library %{SOURCE0}
+R CMD INSTALL --library=${RPM_BUILD_ROOT}%{_libdir}/R/library %{SOURCE0}
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/R/library/R.css ;
 
