@@ -1,4 +1,4 @@
-#$Id: R-R.utils.spec.in,v 1.7 2008/07/10 04:28:49 bret_harry Exp $
+#$Id: R-R.utils.spec.in,v 1.8 2008/07/10 19:42:48 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -10,7 +10,6 @@ Group: Applications/Engineering
 License: LGPL >= 2.1
 URL: http://cran.r-project.org/web/packages/R.utils/index.html
 Source0: R.utils_%{version}.tar.gz
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.4.0, R-R.oo
 Requires: R >= 2.4.0, R-R.oo
@@ -39,6 +38,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.utils.spec.in,v $
+Revision 1.8  2008/07/10 19:42:48  bret_harry
+fixed arch
+
 Revision 1.7  2008/07/10 04:28:49  bret_harry
 bumped version
 

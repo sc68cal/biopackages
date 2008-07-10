@@ -1,4 +1,4 @@
-#$Id: R-R.oo.spec.in,v 1.7 2008/07/09 21:44:23 bret_harry Exp $
+#$Id: R-R.oo.spec.in,v 1.8 2008/07/10 19:42:12 bret_harry Exp $
 %define R_name R.oo
 Vendor: biopackages.net
 Group: Applications/Scientific
@@ -12,7 +12,6 @@ License: LGPL >= 2.1
 Source0: %{R_name}_%{version}.tar.gz
 URL: http://cran.r-project.org/web/packages/R.oo/index.html
 Requires: R >= 2.2.0, R-R.methodsS3
-BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: R >= 2.0.0
 
@@ -40,6 +39,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | grep -v highway | sed "s@^%{bui
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-R.oo.spec.in,v $
+Revision 1.8  2008/07/10 19:42:12  bret_harry
+fixed arch
+
 Revision 1.7  2008/07/09 21:44:23  bret_harry
 fixed dep
 

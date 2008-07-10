@@ -1,4 +1,4 @@
-#$Id: perl-celsius.spec.in,v 1.10 2008/07/10 17:16:37 bret_harry Exp $
+#$Id: perl-celsius.spec.in,v 1.11 2008/07/10 19:46:11 bret_harry Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, perl webserver component
 Name: perl-celsius
 Version: 0.05
@@ -10,7 +10,6 @@ Group: Databases/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.sf.net/projects/celsius
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch: noarch
 Requires: Rex, celsius-database, mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Catalyst-View-TT, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error, perl-celsius-config, perl-XML-Parser perl-Ima-DBI
 BuildRequires: celsius-database, mod_perl, perl-DBIx-ContextualFetch, perl-Catalyst, perl-Catalyst-Engine-Apache, perl-Catalyst-Plugin-Session-State-Cookie, perl-Catalyst-Plugin-Authentication-Store-DBIC, perl-Catalyst-Plugin-Session-Store-File, perl-Catalyst-Plugin-Cache-FileCache, perl-Catalyst-View-TT, perl-Class-DBI, perl-Class-DBI-Pg, perl-XML-DOM-XPath, perl-DBD-Pg, perl-libwww-perl, perl-Template-Toolkit, perl-URI, perl-HTML-Parser, perl-Error, perl-XML-Parser perl-Ima-DBI
 
@@ -47,6 +46,9 @@ find $RPM_BUILD_ROOT -type f | grep -vE 'etc|Config.pm' | sed "s@^$RPM_BUILD_ROO
 %preun
 
 $Log: perl-celsius.spec.in,v $
+Revision 1.11  2008/07/10 19:46:11  bret_harry
+fixed arch
+
 Revision 1.10  2008/07/10 17:16:37  bret_harry
 added dep
 
