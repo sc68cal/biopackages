@@ -1,4 +1,4 @@
-#$Id: R-R.native.spec.in,v 1.1 2007/03/18 04:26:58 allenday Exp $
+#$Id: R-R.native.spec.in,v 1.2 2008/07/10 00:28:02 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -11,7 +11,7 @@ URL: http://www.braju.com/R/
 Source0: R.native_0.1.2.tar.gz
 Requires: R >= 2.4.0, R-R.oo, R-R.utils
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, gcc, biopackages
+BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, gcc
 
 %description
 R.native
