@@ -1,27 +1,25 @@
-#$Id: R-vsn.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
-%define	base	vsn
+#$Id: R-vsn.spec.in,v 1.3 2008/07/10 01:22:55 bret_harry Exp $
 Epoch: 1
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.8.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 3.6.0
 Release: %{revision}.%{distro}
-Name: R-%{base}
-Summary: The package implements a robust variant of the maximum-likelihood estimator for the stochastic model of microarray data described in the references.
+Name: R-vsn
+Summary: Variance stabilization and calibration for microarray data
 Group: Applications/Engineering
-License: GPL
-URL: http://www.r-project.org
-Source0: %{base}_%{version}.tar.gz
-Requires: R >= 2.2.0, R-Biobase >= 1.4.14
+License: Artistic-2.0
+URL: http://bioconductor.org/packages/2.2/bioc/html/vsn.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/vsn_%{version}.tar.gz
+Requires: R >= 2.7.0, R-Biobase, R-affy, R-limma
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.2.0, biopackages
-Obsoletes: R-Bioconductor-vsn
+BuildRequires: %{requires}, gcc
 
 %description
 The package implements a robust variant of the maximum-likelihood estimator for the stochastic model of microarray data described in the references. The model incorporates data calibration (aka normalization), a model for the dependence of the variance on the mean intensity, and a variance stabilizing data transformation. Differences between transformed intensities are analogous to "normalized log-ratios". However, in contrast to the latter, their variance is independent of the mean, and they are usually more sensitive and specific in detecting differential transcription.
 
 %prep
-%setup -n %{base}
+%setup -n vsn
 
 %build
 export CFLAGS="%{optflags} -fPIC"
@@ -42,6 +40,9 @@ find %{buildroot}%{_prefix} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{na
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: R-vsn.spec.in,v $
+Revision 1.3  2008/07/10 01:22:55  bret_harry
+bumped version
+
 Revision 1.2  2007/07/11 19:54:58  bpbuild
 fixed mkdir/rm -rf issue
 
