@@ -1,20 +1,20 @@
-#$Id: R-R.cache.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-R.cache.spec.in,v 1.3 2008/07/10 00:25:10 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 0.1.4
+Packager: Bret Harry
+Version: 0.1.7
 Release: %{revision}.%{distro}
 Name: R-R.cache
-Summary: R.cache: Fast and light-weight caching of objects.
-License: GPL
-URL: http://www.braju.com/R/
-Source0: R.cache_0.1.4.tar.gz
-Requires: R >= 2.4.0, R-R.oo, R-R.utils
+Summary: Fast and light-weight caching of objects
+License: LGPL >= 2.1
+URL: http://cran.r-project.org/web/packages/R.cache/index.html
+Source0: http://cran.r-project.org/src/contrib/R.cache_%{version}.tar.gz
+Requires: R >= 2.3.0, R-R.oo, R-R.utils >= 1.0.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, biopackages
+BuildRequires: %{requires}, gcc
 
 %description
-Fast and light-weight caching of objects. Methods for caching arbitrary R objects on persistent media. Objects can be loaded and saved stratified on a set of hashing objects.
+Methods for memoization, that is, caching arbitrary R objects in persistent memory. Objects can be loaded and saved stratified on a set of hashing objects. 
 
 %prep
 %setup -n R.cache
