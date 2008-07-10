@@ -1,0 +1,56 @@
+#$Id: R-plr.spec.in,v 1.1 2008/07/10 17:49:52 bret_harry Exp $
+Summary: R Procedural Language for PostgreSQL 
+Name: R-plr
+Version: 0.6.2.9
+Release: %{revision}.%{distro}
+License: GPL version 2 or newer.
+Group: Applications/Databases
+Url: http://www.joeconway.com/plr
+Source0: plr-0.6.2-alpha.tar.gz
+Buildrequires: R, R-devel, postgresql >= 8.0, postgresql-devel, make, gcc 
+Requires: R, postgresql >= 8.0
+Buildroot: %{_tmppath}/%{name}-%{version}-root
+
+%description
+PL/R is a loadable procedural language that enables you to write PostgreSQL functions and triggers in the R programming language. PL/R offers most (if not all) of the capabilities a function writer has in the R language.
+
+Commands are available to access the database via the PostgreSQL Server Programming Interface (SPI) and to raise messages via elog() . There is no way to access internals of the database backend. However the user is able to gain OS-level access under the permissions of the PostgreSQL user ID, as with a C function. Thus, any unprivileged database user should not be permitted to use this language. It must be installed as an untrusted procedural language so that only database superusers can create functions in it. The writer of a PL/R function must take care that the function cannot be used to do anything unwanted, since it will be able to do anything that could be done by a user logged in as the database administrator.
+
+An implementation restriction is that PL/R procedures cannot be used to create input/output functions for new data types. 
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+%setup -n plr
+
+%build
+USE_PGXS=1 make
+
+#export R_HOME=%{_libdir}/R
+#R CMD make -f ./Makefile.pgxs
+
+%install
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/pgsql
+
+/bin/sh %{_libdir}/pgsql/pgxs/config/install-sh -c -m 644 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
+/bin/sh %{_libdir}/pgsql/pgxs/config/install-sh -c -m 644 ./README.plr $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
+/bin/sh %{_libdir}/pgsql/pgxs/config/install-sh -c -m 755  libplr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+ldconfig;
+ldconfig;
+
+%files
+%doc doc expected sql
+%defattr(-,root,root)
+%{_libdir}/pgsql/*
+%{_datadir}/pgsql/contrib/*
+#/etc/ld.so.conf.d/*
+
+$Log: R-plr.spec.in,v $
+Revision 1.1  2008/07/10 17:49:52  bret_harry
+new spec, replaces postgresql-R.spec.in
+
