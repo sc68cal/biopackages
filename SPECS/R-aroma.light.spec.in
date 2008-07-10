@@ -1,20 +1,20 @@
-#$Id: R-aroma.light.spec.in,v 1.2 2007/07/11 19:54:58 bpbuild Exp $
+#$Id: R-aroma.light.spec.in,v 1.3 2008/07/10 00:44:23 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 1.2.0
+Packager: Bret Harry <janusz@gasper.zealcorp.com>
+Version: 1.8.1
 Release: %{revision}.%{distro}
 Name: R-aroma.light
-Summary: aroma.light
-License: GPL
-URL: http://www.bioconductor.org
-Source0: aroma.light_1.2.0.tar.gz
-Requires: R >= 2.4.0, R-R.oo, R-R.utils, R-R.cache, R-R.rsp, R-affxparser >= 1.7.3, R-affy, R-affyPLM >= 1.11.6
+Summary: Light-weight methods for normalization and visualization of microarray data using only basic R data types
+License: LGPL
+URL: http://bioconductor.org/packages/2.2/bioc/html/aroma.light.html
+Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/aroma.light_%{version}.tar.gz
+Requires: R >= 2.7.0, R-R.methodsS3
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: R >= 2.4.0, R-R.oo, R-R.utils, R-R.cache, R-R.rsp, R-affxparser >= 1.7.3, R-affy, R-affyPLM >= 1.11.6, gcc, biopackages
+BuildRequires: %{requires}, gcc
 
 %description
-aroma.light
+Methods for microarray analysis that take basic data types such as matrices and lists of vectors. These methods can be used standalone, be utilized in other packages, or be wrapped up in higher-level classes.
 
 %prep
 %setup -n aroma.light
