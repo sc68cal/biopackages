@@ -1,4 +1,4 @@
-#$Id: celsius-database.spec.in,v 1.7 2008/07/10 20:19:33 bret_harry Exp $
+#$Id: celsius-database.spec.in,v 1.8 2008/07/11 03:41:27 bret_harry Exp $
 Summary: Celsius Affymetrix microarray data warehousing system, database component
 Name: celsius-database
 Version: 1.0
@@ -43,11 +43,10 @@ sudo su postgres -c "dropdb  $tmp_celsius"
 #find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
 
 %install
-cd celsius-database
 
 %files
 %defattr(-,root,root)
-%doc *.sql.gz
+%doc celsius-database/celsius-database-1.0.sql.gz
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
@@ -68,6 +67,9 @@ sudo su postgres -c 'dropdb celsius-%{version}';
 true;
 
 $Log: celsius-database.spec.in,v $
+Revision 1.8  2008/07/11 03:41:27  bret_harry
+fixed %files
+
 Revision 1.7  2008/07/10 20:19:33  bret_harry
 various fixes
 
