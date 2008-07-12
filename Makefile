@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.128 2008/07/12 11:04:25 bret_harry Exp $
+#$Id: Makefile,v 1.129 2008/07/12 11:17:10 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -89,9 +89,13 @@ clean ::
 	rm -rf BUILD/*
 	rm -rf prep
 
-%.installed : %.built
+%: %.built
 	rpm -Uvh $(rpm)
-	date > $@
+	date > SPECS/$@
+
+#%.installed : %.built
+#	rpm -Uvh $(rpm)
+#	date > $@
 
 %.built : %.spec prep
 	echo "start: `date`" > $@
