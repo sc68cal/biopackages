@@ -1,18 +1,55 @@
-#$Id: Makefile,v 1.125 2008/07/01 19:54:42 bret_harry Exp $
+#$Id: Makefile,v 1.126 2008/07/12 10:20:18 bret_harry Exp $
 include ./Makefile.conf
+
+.PHONY: rpm-cache help
 
 # Some Variables that should be moved into Makefile.conf
 SORT=sort
 PR=pr
 AWK=awk
 
+CACHE_ROOT=$(CVSPATH)/WEBROOT/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
 
 # Recursive make variable to extract the full path from a .built file
 rpm=$(shell cat $< | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
+get_rpm_arch=$(shell rpm -qp --queryformat '%{ARCH}' $1)
+
+define sign-rpms
+ @echo Signing RPMs in $1
+ cd $1                 ;\
+ ls -1                 |\
+ grep -v biopackages   |\
+ xargs -I{}             \
+ find {} -name '*.rpm' |\
+ xargs rpm --resign
+endef
 
 ####################################
 #stuff for initial environment setup.
 all :: prep
+
+rpm-cache :
+	$(call sign-rpms, $(YUM_CACHE))
+	mkdir -p $(CACHE_ROOT)
+	ls -1 $(YUM_CACHE)|\
+	grep -v biopackages|\
+	xargs -I{} find $(YUM_CACHE)/{} -name '*.rpm'|\
+	xargs -I{}\
+	rsync -aP\
+		--ignore-existing\
+		{} \
+		$(CACHE_ROOT)
+	createrepo -u \
+	http://yum.biopackages.net/biopackages/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH) \
+	$(CACHE_ROOT)
+
+# 	xargs -n 1 -I{}\
+# 	case $$(rpm -qp --queryformat '%{ARCH}' {}) in\
+# 		i386) echo "i386";;\
+# 		noarch) echo "noarch";;\
+# 		*) echo "unknown";;\
+# 	esac
+
 
 prep : Makefile.conf
 	touch ~/.rpmmacros
@@ -95,7 +132,6 @@ clean ::
 	cat $< | perl bin/in2spec.pl > $@
 
 # help - The default goal
-.PHONY: help
 help:
 	$(MAKE) --print-data-base --question |                  \
 	$(AWK) '/^[^.%][-A-Za-z0-9_]*:/                         \
