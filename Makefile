@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.126 2008/07/12 10:20:18 bret_harry Exp $
+#$Id: Makefile,v 1.127 2008/07/12 10:41:29 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -31,13 +31,13 @@ all :: prep
 rpm-cache :
 	$(call sign-rpms, $(YUM_CACHE))
 	mkdir -p $(CACHE_ROOT)
-	ls -1 $(YUM_CACHE)|\
-	grep -v biopackages|\
-	xargs -I{} find $(YUM_CACHE)/{} -name '*.rpm'|\
-	xargs -I{}\
-	rsync -aP\
-		--ignore-existing\
-		{} \
+	ls -1 $(YUM_CACHE)                             |\
+	grep -v biopackages                            |\
+	xargs -I{} find $(YUM_CACHE)/{} -name '*.rpm'  |\
+	xargs -I{}                                      \
+	rsync -aP                                       \
+		--ignore-existing                       \
+		{}                                      \
 		$(CACHE_ROOT)
 	createrepo -u \
 	http://yum.biopackages.net/biopackages/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH) \
