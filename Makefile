@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.130 2008/07/13 00:14:11 bret_harry Exp $
+#$Id: Makefile,v 1.131 2008/07/13 01:23:57 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -34,7 +34,7 @@ endef
 
 ####################################
 #stuff for initial environment setup.
-all :: prep
+all :: prep R-Biobase R-DBI R-RSQLite R-xtable R-AnnotationDbi R-annotate R-genefilter R-Bioconductor-graph R-Bioconductor-RBGL R-Bioconductor-Category R-Bioconductor-GO.db R-Bioconductor-GOstats R-randomForest R-RCurl R-affyio R-preprocessCore R-affy R-limma R-hopach R-celsius R-heatmap.plus R-Hmisc R-sna R-sma R-impute R-dynamicTreeCut R-moduleColor R-Matrix R-Bioconductor-GO R-Bioconductor-KEGG R-Bioconductor-hgu133plus2 R-Bioconductor-Rgraphviz R-affydata R-matchprobes R-gcrma R-affyPLM R-simpleaffy R-RColorBrewer R-geneplotter R-affyQCReport R-R.methodsS3 R-R.oo R-R.utils R-R.cache R-R.rsp R-R.native R-affxparser R-aroma.light R-R.huge R-aroma.apd R-digest R-matrixStats R-sfit R-aroma.core R-aroma.affymetrix R-plier R-vsn R-plr affyapt celtools
 
 rpm-cache : ~/.gnupg/ $(CACHE_WEBROOT)
 	$(call sign-rpms, $(YUM_CACHE))
@@ -108,7 +108,7 @@ clean ::
 	else \
 		echo "Bulding $(shell echo $@ | cut -d '.' -f 1)" \
 		echo "start build: `date`" > INSTALLED/$@; \
-		(rpmbuild -ba $< 2>&1 >> $@) || rm -rf $@; \
+		(rpmbuild -ba $< 2>&1 >> $@) || rm -rf $@i; \
 	fi
 	echo "end: `date`" >> INSTALLED/$@
 
@@ -157,7 +157,7 @@ clean ::
 	touch $@;
 
 %.spec : %.spec.in
-	cat $< | perl bin/in2spec.pl > $@
+	cat $< | perl bin/in2spec.pl > SPECS/$@
 
 # help - The default goal
 help:
