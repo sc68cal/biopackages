@@ -1,20 +1,26 @@
-#$Id: Makefile,v 1.129 2008/07/12 11:17:10 bret_harry Exp $
+#$Id: Makefile,v 1.130 2008/07/13 00:14:11 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
 
-VPATH = SPECS
+VPATH = SPECS INSTALLED
 
 # Some Variables that should be moved into Makefile.conf
 SORT=sort
 PR=pr
 AWK=awk
+CACHE_WEBROOT=$(CVSPATH)/WEBROOT
+CACHE_ROOT=$(CACHE_WEBROOT)/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
 
-CACHE_ROOT=$(CVSPATH)/WEBROOT/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
 
 # Recursive make variable to extract the full path from a .built file
 rpm=$(shell cat $< | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
 get_rpm_arch=$(shell rpm -qp --queryformat '%{ARCH}' $1)
+#get_rpm_vers=$$(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in | grep -E 'Version ?:' | cut -d ' ' -f 2`
+get_rpm_vers=$(shell cat SPECS/$(shell echo $@ | \
+ cut -d '.' -f 1).spec.in | \
+grep -E 'Version ?:' | \
+cut -d ' ' -f 2)
 
 define sign-rpms
  @echo Signing RPMs in $1
@@ -30,7 +36,7 @@ endef
 #stuff for initial environment setup.
 all :: prep
 
-rpm-cache :
+rpm-cache : ~/.gnupg/ $(CACHE_WEBROOT)
 	$(call sign-rpms, $(YUM_CACHE))
 	mkdir -p $(CACHE_ROOT)
 	ls -1 $(YUM_CACHE)                             |\
@@ -45,14 +51,6 @@ rpm-cache :
 	http://yum.biopackages.net/biopackages/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH) \
 	$(CACHE_ROOT)
 
-# 	xargs -n 1 -I{}\
-# 	case $$(rpm -qp --queryformat '%{ARCH}' {}) in\
-# 		i386) echo "i386";;\
-# 		noarch) echo "noarch";;\
-# 		*) echo "unknown";;\
-# 	esac
-
-
 prep : Makefile.conf
 	touch ~/.rpmmacros
 	mv ~/.rpmmacros ~/.rpmmacros.bckup
@@ -63,8 +61,8 @@ prep : Makefile.conf
 	echo "%_gpg_name Biopackages"             >> ~/.rpmmacros
 	echo "%_gpgbin /usr/bin/gpg"              >> ~/.rpmmacros
 	echo "%distro bp.$(DISTRO)$(DISTRO_VER)"  >> ~/.rpmmacros
-
 	mkdir -p SOURCES
+	mkdir -p INSTALLED
 	mkdir -p BUILD
 	mkdir -p SRPMS
 	mkdir -p RPMS/`uname -i`	
@@ -85,21 +83,45 @@ clean ::
 	rm -rf SPECS/*.cbuilt
 	rm -rf SPECS/*.rbuilt
 	rm -rf SPECS/*.installed	
+	rm -rf INSTALLED/*
 	rm -rf tmp/*
 	rm -rf BUILD/*
 	rm -rf prep
 
-%: %.built
-	rpm -Uvh $(rpm)
-	date > SPECS/$@
+#%: %.built
+##	rpm -Uvh $(rpm)
+#	date > SPECS/$@
 
 #%.installed : %.built
 #	rpm -Uvh $(rpm)
 #	date > $@
 
-%.built : %.spec prep
-	echo "start: `date`" > $@
-	(rpmbuild -ba $< 2>&1 >> $@ && echo "end: `date`" >> $@ ) || rm -rf $@ 
+#	$(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
+#	$@-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
+
+%: %.spec prep
+	yum -y install \
+	$@-$(get_rpm_vers) |\
+	if rpm -q $@-$(get_rpm_vers); \
+	then \
+		echo $@ "is installed"; \
+	else \
+		echo "Bulding $(shell echo $@ | cut -d '.' -f 1)" \
+		echo "start build: `date`" > INSTALLED/$@; \
+		(rpmbuild -ba $< 2>&1 >> $@) || rm -rf $@; \
+	fi
+	echo "end: `date`" >> INSTALLED/$@
+
+#	if rpm -q $(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
+#        grep -E 'Version ?:' | cut -d ' ' -f 2` ;\
+#	then \
+#		echo "true" ;\
+#	else \
+#		echo "false" ;\
+#	fi
+
+#	yum -y install $@-`cat SPECS/$@.spec.in | grep -E 'Version ?:' | cut -d ' ' -f 2`
+#	rpm -q $@
 
 ####################################
 #extension rules
