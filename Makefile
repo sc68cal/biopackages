@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.133 2008/07/14 20:37:40 bret_harry Exp $
+#$Id: Makefile,v 1.134 2008/07/14 22:46:06 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -118,25 +118,30 @@ clean :
 	echo "$@: " touch INSTALLED/$@;
 
 %.installed : %.built
+	rpm -q $(subst .installed,,$@)-$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
+	egrep -ri 'version' - |            \
+	perl -e '$$_=<>;                   \
+		s/^\s*Version\s*:\s*//;    \
+		print $$_;') || \
 	yum -y install $(subst .installed,,$@)-$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
 	egrep -ri 'version' - |            \
 	perl -e '$$_=<>;                   \
 		s/^\s*Version\s*:\s*//;    \
 		print $$_;')
 
-	if [ -e INSTALLED/$< ] ; \
+	@if [ -e INSTALLED/$< ] ; \
 	then \
-		echo "MAKE: " "$(subst .installed,,$@) was built" ;\
+		echo "$@: $(subst .installed,,$@) was built" ;\
 	else \
-		echo "$(get_rpm_name) did not need to be built" ;\
+		echo "$@: $(get_rpm_name) did not need to be built" ;\
 	fi
 
 %.built : %.deps
 	echo SPECFILE $<
 	rpm -q $(rpm_name)-$(get_rpm_vers) || \
-	rpmbuild -ba SPECS/$(subst .in,,$(subst SPECS/,,$<)) && \
+	(rpmbuild -ba SPECS/$(subst .deps,.spec,$(subst SPECS/,,$<)) && \
 	(find RPMS -name "$(rpm_name)-$(get_rpm_vers)*.rpm" > INSTALLED/$@) && \
-	rpm -Uvh INSTALLED/$@
+	rpm -Uvh `cat INSTALLED/$@`)
 
 %.deps : %.spec
 	echo "$@: "
