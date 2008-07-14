@@ -1,4 +1,4 @@
-#$Id: R-affxparser.spec.in,v 1.5 2008/07/10 00:37:24 bret_harry Exp $
+#$Id: R-affxparser.spec.in,v 1.6 2008/07/14 22:22:31 bret_harry Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Bret Harry <janusz@gasper.zealcorp.com>
@@ -12,7 +12,7 @@ Source0: http://bioconductor.org/packages/2.2/bioc/src/contrib/affxparser_%{vers
 #Patch0: R-affxparser.patch 1.6.2
 Requires: R >= 2.7.0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{requires}, gcc
+BuildRequires: %{requires}, gcc, gcc-c++
 
 %description
 Package for parsing Affymetrix files (CDF, CEL, CHP, BPMAP, BAR). It provides methods for fast and memory efficient parsing of Affymetrix files using the Affymetrix' Fusion SDK. Both ASCII- and binary-based files are supported. Currently, there are methods for reading chip definition file (CDF) and a cell intensity file (CEL). These files can be read either in full or in part. For example, probe signals from a few probesets can be extracted very quickly from a set of CEL files into a convenient list structure.
