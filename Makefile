@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.132 2008/07/13 06:36:37 bret_harry Exp $
+#$Id: Makefile,v 1.133 2008/07/14 20:37:40 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -32,6 +32,25 @@ define sign-rpms
  xargs -I{}             \
  find {} -name '*.rpm' |\
  xargs rpm --resign
+endef
+
+define install-deps
+ @echo Installing build deps for: $1
+ for D in $(shell \
+  egrep -ri '^BuildRequires' SPECS/$(subst SPECS/,,$1)       |\
+  perl -e '$$_=<>;                     \
+           s/^BuildRequires ?: ?//;    \
+           s/ ?>= ?/-/g;                \
+           s/ ?= ?/-/g;                 \
+           s/ ?<= ?/-/g;                \
+           s/ ?< ?/-/g;                 \
+           s/ ?> ?/-/g;                 \
+           s/,//g;                      \
+           print $$_;'                 \
+ ); do                                 \
+ rpm -q --queryformat '%-30{NAME} %-10{VERSION} %{ARCH}\n' $$D || \
+ yum -y install $$D; \
+ done
 endef
 
 ####################################
@@ -94,91 +113,37 @@ clean :
 	rm -rf BUILD/*
 	rm -rf prep
 
-# % : %.built
-# 	rpm -q $@ || (find RPMS -name '$@*.rpm' | xargs rpm -Uvh) || touch INSTALLED/$@;
-
-# %.built : %.rpm
-# 	touch INSTALLED/$@;
-
-
-########### WORKS
-# % : %.installed
-# 	touch INSTALLED/$@;
-
-# %.installed : %.rpm
-# 	yum -y install $(get_rpm_name)-$(get_rpm_vers)
-
-# %.rpm : %.spec
-# 	echo SPECFILE $<
-# 	rpm -q $(get_rpm_name)-$(get_rpm_vers) || \
-# 		((cd SPECS ; rpmbuild -ba $< )&& \
-# 		(find RPMS -name "$(get_rpm_name)-$(get_rpm_vers)*.rpm" |\
-# 		 xargs rpm -Uvh ))
 
 % : %.installed
-	touch INSTALLED/$@;
+	echo "$@: " touch INSTALLED/$@;
 
 %.installed : %.built
-#	yum -y install $(get_rpm_name)-$(get_rpm_vers)
-	if [ -e INSTALLED/$< ] ;\
+	yum -y install $(subst .installed,,$@)-$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
+	egrep -ri 'version' - |            \
+	perl -e '$$_=<>;                   \
+		s/^\s*Version\s*:\s*//;    \
+		print $$_;')
+
+	if [ -e INSTALLED/$< ] ; \
 	then \
-		echo "$(get_rpm_name) was built" ;\
+		echo "MAKE: " "$(subst .installed,,$@) was built" ;\
 	else \
 		echo "$(get_rpm_name) did not need to be built" ;\
 	fi
 
-%.built : %.spec.in
+%.built : %.deps
 	echo SPECFILE $<
-#	yum -y install $(rpm_name)-$(get_rpm_vers)
 	rpm -q $(rpm_name)-$(get_rpm_vers) || \
-		((cat $< | perl ./bin/in2spec.pl > $(subst .in,,$<) ; \
-                  rpmbuild -ba SPECS/$(subst .in,,$(subst SPECS/,,$<)) ) && \
-		(find RPMS -name "$(rpm_name)-$(get_rpm_vers)*.rpm" > INSTALLED/$@))
-#		 xargs rpm -Uvh ))
+	rpmbuild -ba SPECS/$(subst .in,,$(subst SPECS/,,$<)) && \
+	(find RPMS -name "$(rpm_name)-$(get_rpm_vers)*.rpm" > INSTALLED/$@) && \
+	rpm -Uvh INSTALLED/$@
 
+%.deps : %.spec
+	echo "$@: "
+	$(call install-deps,$<)
 
-#	touch INSTALLED/$(get_rpm_name)-$(get_rpm_vers).installed
-#%: %.built
-##	rpm -Uvh $(rpm)
-#	date > SPECS/$@
-
-#%.installed : %.built
-#	rpm -Uvh $(rpm)
-#	date > $@
-
-#	$(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
-#	$@-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
-#		echo "Bulding $(shell echo $@ | cut -d '.' -f 1)"; \
-#		   echo "RPM: " && cat SPECS/$<.rpmbuild && (echo "end: `date`" >> INSTALLED/$@); \
-# %: %.spec prep
-# #	yum -y install \
-# #	$@-$(get_rpm_vers)
-# 	if rpm -q $@-$(get_rpm_vers); \
-# 	then \
-# 		echo $@ "is installed"; \
-# 	else \
-# 		echo "Building $@"; \
-# 		if rpmbuild -ba SPECS/$< 2>&1; \
-# 		then \
-# 		   echo "Built $(shell echo $@ | cut -d '.' -f 1)"; \
-# 		   echo "RPM: " && echo SPECS/$<.rpmbuild && (echo "end: `date`" >> INSTALLED/$@); \
-# 		else \
-# 		   rm -rf $@; \
-# 		   false; \
-# 		fi \
-# 	fi
-
-
-#	if rpm -q $(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in |\
-#        grep -E 'Version ?:' | cut -d ' ' -f 2` ;\
-#	then \
-#		echo "true" ;\
-#	else \
-#		echo "false" ;\
-#	fi
-
-#	yum -y install $@-`cat SPECS/$@.spec.in | grep -E 'Version ?:' | cut -d ' ' -f 2`
-#	rpm -q $@
+%.spec : %.spec.in
+	cat $< | perl ./bin/in2spec.pl > $(subst .in,,$<) ;
 
 ####################################
 #extension rules
