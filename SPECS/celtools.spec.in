@@ -1,4 +1,4 @@
-#$Id: celtools.spec.in,v 1.1 2006/09/14 19:56:05 allenday Exp $
+#$Id: celtools.spec.in,v 1.2 2008/07/14 22:38:58 bret_harry Exp $
 Name: celtools
 Epoch: 1
 Version: 1
@@ -11,8 +11,7 @@ Source1: celsniff.cpp
 Source2: cel2pqi.cpp
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: affyfile, affyfusion, xerces-c
-BuildRequires: affyfile, affyfusion, xerces-c
-BuildRequires: gcc, gcc-c++, make, biopackages
+BuildRequires: gcc, gcc-c++, make, biopackages, affyfile, affyfusion, xerces-c-devel
 
 %description
 Utilities for Affymetrix CEL files.
@@ -43,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/cel*
 
 $Log: celtools.spec.in,v $
+Revision 1.2  2008/07/14 22:38:58  bret_harry
+added gcc-c++ to buildreqs
+
 Revision 1.1  2006/09/14 19:56:05  allenday
 split cel utils out from affy sdk packages
 
