@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.134 2008/07/14 22:46:06 bret_harry Exp $
+#$Id: Makefile,v 1.135 2008/07/15 21:30:42 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -11,18 +11,22 @@ PR=pr
 AWK=awk
 CACHE_WEBROOT=$(CVSPATH)/WEBROOT
 CACHE_ROOT=$(CACHE_WEBROOT)/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
-
+RPM_Q=rpm -q --queryformat '%-30{NAME} %-10{VERSION} %{ARCH}\n'
 
 # Recursive make variable to extract the full path from a .built file
 rpm=$(shell cat SPECS/$<.rpmbuild | grep Wrote | grep -v SRPMS | cut -d ' ' -f 2)
 get_rpm_arch=$(shell rpm -qp --queryformat '%{ARCH}' $1)
-#get_rpm_vers=$$(shell echo $@ | cut -d '.' -f 1)-`cat SPECS/$(shell echo $@ | cut -d '.' -f 1).spec.in | grep -E 'Version ?:' | cut -d ' ' -f 2`
 get_rpm_vers=$(shell cat SPECS/$(subst .built,.spec.in,$@) | \
 grep -E 'Version ?:' | \
 cut -d ' ' -f 2)
 
 get_rpm_name=$(shell echo $@ | cut -d. -f1)
 rpm_name=$(subst .built,,$@)
+rpm_ver=$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
+	egrep -ri 'version' - |            \
+	perl -e '$$_=<>;                   \
+		s/^\s*Version\s*:\s*//;    \
+		print $$_;')
 
 define sign-rpms
  @echo Signing RPMs in $1
@@ -35,19 +39,20 @@ define sign-rpms
 endef
 
 define install-deps
- @echo Installing build deps for: $1
- for D in $(shell \
-  egrep -ri '^BuildRequires' SPECS/$(subst SPECS/,,$1)       |\
-  perl -e '$$_=<>;                     \
-           s/^BuildRequires ?: ?//;    \
+ @echo Installing deps for: $1
+ @for D in $(shell \
+  egrep -ri '^$2' SPECS/$(subst SPECS/,,$1)       |\
+  perl -e '$$_=<>;                      \
+           s/^$2 ?: ?//;                \
            s/ ?>= ?/-/g;                \
            s/ ?= ?/-/g;                 \
            s/ ?<= ?/-/g;                \
            s/ ?< ?/-/g;                 \
            s/ ?> ?/-/g;                 \
            s/,//g;                      \
-           print $$_;'                 \
- ); do                                 \
+           s/%{requires}//g;            \
+           print $$_;'                  \
+ ); do                                  \
  rpm -q --queryformat '%-30{NAME} %-10{VERSION} %{ARCH}\n' $$D || \
  yum -y install $$D; \
  done
@@ -58,7 +63,7 @@ endef
 #all :: prep 
 #	make R-Biobase
 #	make R-RSQLite
-all : R-Biobase R-DBI R-RSQLite R-xtable R-AnnotationDbi R-annotate R-genefilter R-Bioconductor-graph R-Bioconductor-RBGL R-Bioconductor-Category R-Bioconductor-GO.db R-Bioconductor-GOstats R-randomForest R-RCurl R-affyio R-preprocessCore R-affy R-limma R-hopach R-celsius R-heatmap.plus R-Hmisc R-sna R-sma R-impute R-dynamicTreeCut R-moduleColor R-Matrix R-Bioconductor-GO R-Bioconductor-KEGG R-Bioconductor-hgu133plus2 R-Bioconductor-Rgraphviz R-affydata R-matchprobes R-gcrma R-affyPLM R-simpleaffy R-RColorBrewer R-geneplotter R-affyQCReport R-R.methodsS3 R-R.oo R-R.utils R-R.cache R-R.rsp R-R.native R-affxparser R-aroma.light R-R.huge R-aroma.apd R-digest R-matrixStats R-sfit R-aroma.core R-aroma.affymetrix R-plier R-vsn R-plr affyapt celtools
+all : R-Biobase R-DBI R-RSQLite R-xtable R-AnnotationDbi R-annotate R-genefilter R-Bioconductor-graph R-Bioconductor-RBGL R-Bioconductor-Category R-Bioconductor-GO.db R-Bioconductor-GOstats R-randomForest R-RCurl R-affyio R-preprocessCore R-affy R-limma R-hopach R-celsius R-heatmap.plus R-Hmisc R-sna R-sma R-impute R-dynamicTreeCut R-moduleColor R-Matrix R-Bioconductor-GO R-Bioconductor-KEGG R-Bioconductor-hgu133plus2 R-Bioconductor-Rgraphviz R-affydata R-matchprobes R-gcrma R-affyPLM R-simpleaffy R-RColorBrewer R-geneplotter R-affyQCReport R-R.methodsS3 R-R.oo R-R.utils R-R.cache R-R.rsp R-R.native R-affxparser R-aroma.light R-R.huge R-aroma.apd R-digest R-matrixStats R-sfit R-aroma.core R-aroma.affymetrix R-plier R-vsn R-plr affyapt celtools perl-celsius-config celsius-etl celsius-database perl-celsius
 
 rpm-cache : ~/.gnupg/ $(CACHE_WEBROOT)
 	$(call sign-rpms, $(YUM_CACHE))
@@ -115,37 +120,30 @@ clean :
 
 
 % : %.installed
-	echo "$@: " touch INSTALLED/$@;
+	@$(RPM_Q) $@ > INSTALLED/$@ || rm -rf INSTALLED/$@;
 
 %.installed : %.built
-	rpm -q $(subst .installed,,$@)-$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
-	egrep -ri 'version' - |            \
-	perl -e '$$_=<>;                   \
-		s/^\s*Version\s*:\s*//;    \
-		print $$_;') || \
-	yum -y install $(subst .installed,,$@)-$(shell cat SPECS/$(subst .installed,.spec.in,$@) | \
-	egrep -ri 'version' - |            \
-	perl -e '$$_=<>;                   \
-		s/^\s*Version\s*:\s*//;    \
-		print $$_;')
+	@$(RPM_Q) $(subst .installed,,$@)-$(rpm_ver) || \
+	yum -y install $(subst .installed,,$@)-$(rpm_ver)
 
 	@if [ -e INSTALLED/$< ] ; \
 	then \
-		echo "$@: $(subst .installed,,$@) was built" ;\
+		true ;\
 	else \
 		echo "$@: $(get_rpm_name) did not need to be built" ;\
+		$(RPM_Q) $(subst .installed,,$@)-$(rpm_ver) || \
+		rpm -Uvh `cat INSTALLED/$(subst INSTALLED/,,$<)` ;\
 	fi
 
 %.built : %.deps
-	echo SPECFILE $<
-	rpm -q $(rpm_name)-$(get_rpm_vers) || \
+	@$(RPM_Q) $(rpm_name)-$(get_rpm_vers) || \
 	(rpmbuild -ba SPECS/$(subst .deps,.spec,$(subst SPECS/,,$<)) && \
 	(find RPMS -name "$(rpm_name)-$(get_rpm_vers)*.rpm" > INSTALLED/$@) && \
 	rpm -Uvh `cat INSTALLED/$@`)
 
 %.deps : %.spec
-	echo "$@: "
-	$(call install-deps,$<)
+	$(call install-deps,$<,BuildRequires)
+	$(call install-deps,$<,Requires)
 
 %.spec : %.spec.in
 	cat $< | perl ./bin/in2spec.pl > $(subst .in,,$<) ;
