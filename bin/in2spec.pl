@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.10 2008/07/03 19:08:42 bret_harry Exp $
+#$Id: in2spec.pl,v 1.11 2008/07/15 22:42:52 bret_harry Exp $
 use strict;
 use Text::Wrap;
 use Date::Manip;
@@ -58,11 +58,11 @@ my ( $version )  = $spec =~ /\nVersion:\s+(\S+)\n/s;
 $spec =~ s/%{revision}/$revision/gs;
 
 #check distro, if matches then include this line otherwise don't
-$spec =~ s/%{ifdistro $distro}(.*)/$1/g;
+$spec =~ s/%{ifdistro $distro} ?(.*)/$1/g;
 $spec =~ s/%{ifdistro \w+}(.*)//g;
 
 #check distro and release, if matches then include line otherwise don't
-$spec =~ s/%{ifdistro_release $distro $distro_release}(.*)/$1/g;
+$spec =~ s/%{ifdistro_release $distro $distro_release} ?(.*)/$1/g;
 $spec =~ s/%{ifdistro_release \w+ \d+}(.*)//g;
 
 $spec =~ s/$logtag(.+)$//s;
@@ -97,6 +97,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.11  2008/07/15 22:42:52  bret_harry
+allow a space in ifdistro regex
+
 Revision 1.10  2008/07/03 19:08:42  bret_harry
 fixed distro detection for centos 5
 
