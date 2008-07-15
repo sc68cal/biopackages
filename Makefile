@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.135 2008/07/15 21:30:42 bret_harry Exp $
+#$Id: Makefile,v 1.136 2008/07/15 21:53:54 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -182,7 +182,7 @@ clean :
 	touch $@;
 
 %.spec : %.spec.in
-	cat $< | perl bin/in2spec.pl > SPECS/$@
+	cat $< | perl bin/in2spec.pl > SPECS/$(subst SPECS/,,$@)
 
 # help - The default goal
 help:
