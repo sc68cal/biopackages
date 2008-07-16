@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.6 2008/07/16 00:15:43 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.7 2008/07/16 20:09:14 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -24,6 +24,9 @@ used to sign them.
 %{ifdistro centos} %{__cp} biopackages-centos.repo biopackages.repo
 %{ifdistro fedora} %{__cp} biopackages-fedora.repo biopackages.repo
 %{ifdistro darwin} %{__cp} biopackages-darwin.repo biopackages.repo
+%{ifdistro_release centos 4} %{__cp} CentOS-4-i386-Base.repo CentOS-Base.repo
+%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-1386 mirrors-rpmforge
+%{ifdistro_release centos 4} %{__cp} rpmforge-4-i386.repo rpmforge.repo
 
 [ ! -e biopackages.repo ] && echo "Unkown distro" && exit 1;
 
@@ -31,16 +34,49 @@ used to sign them.
 %{__install} -D -p -m 0644 biopackages.repo \
 	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages.repo
 
+%{__install} -D -p -m 0644 CentOS-Base.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-Base.repo
+
+%{__install} -D -p -m 0644 CentOS-CRAN.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-CRAN.repo
+
+%{__install} -D -p -m 0644 rpmforge.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/rpmforge.repo
+
+%{__install} -D -p -m 0644 mirrors-rpmforge \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/mirrors-rpmforge
+
+
 %{__install} -D -p -m 0644 BIOPACKAGES-RPM-GPG-KEY \
 	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
+%{__install} -D -p -m 0644 RPM-GPG-KEY-rpmforge-dag \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+
+%{__install} -D -p -m 0644 RPM-GPG-KEY-rpmforge-dries \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+
+%{__install} -D -p -m 0644 RPM-GPG-KEY-rpmforge-matthias \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
 
 %clean
 [ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && %{__rm} -rf %{buildroot};
 
 %post
 # Import Biopackages.net GPG key
+
 rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
     rpm --import %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
+rpm -q gpg-pubkey-6b8d79e6-3f49313d >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+
+rpm -q gpg-pubkey-1aa78495-3eb24301 >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+
+rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
+
 
 # FC2 doesn't support external repo files!
 %{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages.repo >> /etc/yum.conf
@@ -61,6 +97,9 @@ rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.7  2008/07/16 20:09:14  bret_harry
+added repos
+
 Revision 1.6  2008/07/16 00:15:43  bret_harry
 added yum priorities
 
