@@ -1,64 +1,52 @@
-#$Id: biopackages-client-config.spec.in,v 1.5 2007/08/13 18:24:58 bpbuild Exp $
-
+#$Id: biopackages-client-config.spec.in,v 1.6 2008/07/16 00:15:43 bret_harry Exp $
+%define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
-Name: biopackages-client-config
+Name: %{base}
 Version: 1.0
 Release: %{revision}.%{distro}
 License: GPL
 Group: System Environment/Base
-Source0: GPL
-Source1: BIOPACKAGES-RPM-GPG-KEY
-# going to need to do ifdistro_release when adding in rpmforge because
-# the URLs differ from release to release of the same distro (I think)
-%{ifdistro fedora}Source2: biopackages-fedora.repo
-%{ifdistro centos}Source2: biopackages-centos.repo
-%{ifdistro darwin}Source2: biopackages-darwin.repo
+Source0: %{base}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: rpmforge-release
-BuildArch: noarch
+Requires: rpmforge-release, yum
+%{ifdistro_release centos 4} Requires: yum-plugin-priorities
+%{ifdistro_release centos 5} Requires: yum-priorities
 
 %description
 Biopackages client config file. This package contains yum configuration to
 use the biopackages.net provided rpm packages, as well as the public gpg key
 used to sign them.
 
-
 %prep
-
+%setup
 
 %build
+%{ifdistro centos} %{__cp} biopackages-centos.repo biopackages.repo
+%{ifdistro fedora} %{__cp} biopackages-fedora.repo biopackages.repo
+%{ifdistro darwin} %{__cp} biopackages-darwin.repo biopackages.repo
 
+[ ! -e biopackages.repo ] && echo "Unkown distro" && exit 1;
 
 %install
-%{__rm} -rf %{buildroot}
-# Install license to be included in the docs and gpg key as pubkey
-%{__cp} -a %{SOURCE0} %{SOURCE1} .
-# Install gpg public key
-%{__install} -D -p -m 0644 %{SOURCE1} \
-    %{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
-# Install yum repo file
-%{__install} -D -p -m 0644 %{SOURCE2} \
-    %{buildroot}%{_sysconfdir}/yum.repos.d/biopackages.repo
+%{__install} -D -p -m 0644 biopackages.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages.repo
 
+%{__install} -D -p -m 0644 BIOPACKAGES-RPM-GPG-KEY \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
 
 %clean
-%{__rm} -rf %{buildroot}
-
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && %{__rm} -rf %{buildroot};
 
 %post
-# Import Freshrpms.net gpg key if needed
+# Import Biopackages.net GPG key
 rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
     rpm --import %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
 # FC2 doesn't support external repo files!
 %{ifdistro_release fedora 2}cat /etc/yum.repos.d/biopackages.repo >> /etc/yum.conf
-# We don't want a possible error to leave the previous package installed
-exit 0
-
-
 
 %files
 %defattr(-, root, root, 0755)
-%doc GPL
 %pubkey BIOPACKAGES-RPM-GPG-KEY
 %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
 %config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages.repo
@@ -73,6 +61,9 @@ exit 0
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.6  2008/07/16 00:15:43  bret_harry
+added yum priorities
+
 Revision 1.5  2007/08/13 18:24:58  bpbuild
 should still be noarch
 
