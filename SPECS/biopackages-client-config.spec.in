@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.11 2008/07/17 22:08:45 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.12 2008/07/17 22:36:58 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -92,6 +92,8 @@ rpm -q gpg-pubkey-1aa78495-3eb24301 >/dev/null 2>&1 || \
 rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
     rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
 
+adduser -u 776 bpbuild
+
 %files devel
 %defattr(-, root, root, 0755)
 %config %{_sysconfdir}/yum.repos.d/biopackages-centos-cache.repo
@@ -111,6 +113,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.12  2008/07/17 22:36:58  bret_harry
+added adduser -u 776 bpbuild
+
 Revision 1.11  2008/07/17 22:08:45  bret_harry
 moved importing keys to %post devel
 
