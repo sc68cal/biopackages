@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.9 2008/07/17 19:38:41 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.10 2008/07/17 21:55:23 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -8,7 +8,7 @@ License: GPL
 Group: System Environment/Base
 Source0: %{base}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: rpmforge-release, yum
+Requires: yum
 %{ifdistro_release centos 4} Requires: yum-plugin-priorities
 %{ifdistro_release centos 5} Requires: yum-priorities
 
@@ -111,6 +111,9 @@ Setup these repositories for building packages biopackages-cache CRAN rpm-forge 
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.10  2008/07/17 21:55:23  bret_harry
+removed rpm-forge dep
+
 Revision 1.9  2008/07/17 19:38:41  bret_harry
 avoid conflicts with centos-release
 
