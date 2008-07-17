@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.8 2008/07/17 01:32:51 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.9 2008/07/17 19:38:41 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -24,7 +24,6 @@ used to sign them.
 %{ifdistro centos} %{__cp} biopackages-centos.repo biopackages.repo
 %{ifdistro fedora} %{__cp} biopackages-fedora.repo biopackages.repo
 %{ifdistro darwin} %{__cp} biopackages-darwin.repo biopackages.repo
-%{ifdistro_release centos 4} %{__cp} CentOS-4-i386-Base.repo CentOS-Base.repo
 %{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
 %{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
 %{ifdistro_release centos 4} %{__cp} rpmforge-4-i386.repo rpmforge.repo
@@ -35,8 +34,8 @@ used to sign them.
 %{__install} -D -p -m 0644 biopackages.repo \
 	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages.repo
 
-%{__install} -D -p -m 0644 CentOS-Base.repo \
-	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-Base.repo
+%{__install} -D -p -m 0644 biopackages-centos-cache.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-centos-cache.repo
 
 %{__install} -D -p -m 0644 CentOS-CRAN.repo \
 	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-CRAN.repo
@@ -95,7 +94,7 @@ Group: Development/Tools
 Setup these repositories for building packages biopackages-cache CRAN rpm-forge centosplus
 %files devel
 %defattr(-, root, root, 0755)
-%config %{_sysconfdir}/yum.repos.d/CentOS-Base.repo
+%config %{_sysconfdir}/yum.repos.d/biopackages-centos-cache.repo
 %config %{_sysconfdir}/yum.repos.d/CentOS-CRAN.repo
 %config %{_sysconfdir}/yum.repos.d/rpmforge.repo
 %config %{_sysconfdir}/yum.repos.d/mirrors-rpmforge
@@ -112,6 +111,9 @@ Setup these repositories for building packages biopackages-cache CRAN rpm-forge 
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.9  2008/07/17 19:38:41  bret_harry
+avoid conflicts with centos-release
+
 Revision 1.8  2008/07/17 01:32:51  bret_harry
 added -devel subpackage
 
