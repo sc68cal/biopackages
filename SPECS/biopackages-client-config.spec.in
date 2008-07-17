@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.7 2008/07/16 20:09:14 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.8 2008/07/17 01:32:51 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -25,7 +25,8 @@ used to sign them.
 %{ifdistro fedora} %{__cp} biopackages-fedora.repo biopackages.repo
 %{ifdistro darwin} %{__cp} biopackages-darwin.repo biopackages.repo
 %{ifdistro_release centos 4} %{__cp} CentOS-4-i386-Base.repo CentOS-Base.repo
-%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-1386 mirrors-rpmforge
+%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
+%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
 %{ifdistro_release centos 4} %{__cp} rpmforge-4-i386.repo rpmforge.repo
 
 [ ! -e biopackages.repo ] && echo "Unkown distro" && exit 1;
@@ -83,10 +84,24 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
 
 %files
 %defattr(-, root, root, 0755)
-%pubkey BIOPACKAGES-RPM-GPG-KEY
-%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
-%config(noreplace) %{_sysconfdir}/yum.repos.d/biopackages.repo
 
+%config %{_sysconfdir}/yum.repos.d/biopackages.repo
+%config %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
+%package devel
+Summary: Setup additional repositories.
+Group: Development/Tools
+%description devel
+Setup these repositories for building packages biopackages-cache CRAN rpm-forge centosplus
+%files devel
+%defattr(-, root, root, 0755)
+%config %{_sysconfdir}/yum.repos.d/CentOS-Base.repo
+%config %{_sysconfdir}/yum.repos.d/CentOS-CRAN.repo
+%config %{_sysconfdir}/yum.repos.d/rpmforge.repo
+%config %{_sysconfdir}/yum.repos.d/mirrors-rpmforge
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
 
 # old changelog
 # * Tue Jun 28 2005 Matthias Saou <http://freshrpms.net/> 1.1-1
@@ -97,6 +112,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.8  2008/07/17 01:32:51  bret_harry
+added -devel subpackage
+
 Revision 1.7  2008/07/16 20:09:14  bret_harry
 added repos
 
