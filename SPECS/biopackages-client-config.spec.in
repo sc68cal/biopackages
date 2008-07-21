@@ -1,4 +1,4 @@
-#$Id: biopackages-client-config.spec.in,v 1.12 2008/07/17 22:36:58 bret_harry Exp $
+#$Id: biopackages-client-config.spec.in,v 1.13 2008/07/21 17:09:03 bret_harry Exp $
 %define base biopackages-client-config
 Summary: A package for clients using Biopackages. 
 Name: %{base}
@@ -24,9 +24,9 @@ used to sign them.
 %{ifdistro centos} %{__cp} biopackages-centos.repo biopackages.repo
 %{ifdistro fedora} %{__cp} biopackages-fedora.repo biopackages.repo
 %{ifdistro darwin} %{__cp} biopackages-darwin.repo biopackages.repo
-%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
-%{ifdistro_release centos 4} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
-%{ifdistro_release centos 4} %{__cp} rpmforge-4-i386.repo rpmforge.repo
+%{ifdistro centos} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
+%{ifdistro centos} %{__cp} mirrors-rpmforge-4-i386 mirrors-rpmforge
+%{ifdistro centos} %{__cp} rpmforge-4-i386.repo rpmforge.repo
 
 [ ! -e biopackages.repo ] && echo "Unkown distro" && exit 1;
 
@@ -113,6 +113,9 @@ adduser -u 776 bpbuild
 # - No /etc/freshrpms-release (for now at least), as it's basically useless :-)
 
 $Log: biopackages-client-config.spec.in,v $
+Revision 1.13  2008/07/21 17:09:03  bret_harry
+fixed this to build on centos 5, even though biopackages-* should be used instead
+
 Revision 1.12  2008/07/17 22:36:58  bret_harry
 added adduser -u 776 bpbuild
 
