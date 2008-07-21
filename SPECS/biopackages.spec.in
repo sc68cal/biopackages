@@ -1,121 +1,203 @@
-#$Id: biopackages.spec.in,v 1.17 2008/04/26 00:45:15 boconnor Exp $
-Summary: Files and utilities needed for building RPMs from the biopackages.net vendor, as well as apt and yum
+#$Id: biopackages.spec.in,v 1.18 2008/07/21 04:13:44 bret_harry Exp $
+Summary: Configuration files for installing RPMs from biopackages.net
 Name: biopackages
-Version: 1.0.1
+Version: 1.0.2
 Release: %{revision}
 Epoch: 1
 License: GPL
 Group: Applications/Bioinformatics
 URL: http://www.biopackages.net
-Source0: %{name}.tar.gz
+Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires: perl-DateManip
-Requires: bash, usr-local-bin-perl, perl-DateManip, rpm-build
-
-
-#%package server
-#Summary: Files for running a biopackages apt and yum server
-#Group: Applications/Bioinformatics
-#Requires: httpd
-##BuildRequires: apt
+Requires: rpm, yum
+#BuildRequires: perl-DateManip
+#Requires: bash, usr-local-bin-perl, perl-DateManip, rpm-build
 
 %description
-Files and utilities needed for building RPMs from the bioRPM vendor, as well as yum
+Configuration files for installing RPMs from biopackages.net
 
+The following sub-packages are available
+ * biopackages-internal
+ * biopackages-testing
+ * biopackages-cache
+ * biopackages-devel
 
-#%description server
-#Provides skeleton directories for APT and Yum repositories for your RPMs
+Supported Distributions
+ * centos 4
+ * centos 5
 
 %prep
-rm -rf %{buildroot}
-%setup -n %{name}
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && %{__rm} -rf %{buildroot}
+%setup
 
 %build
-rm -rf %{buildroot}
+### Centos
+%define centos_yum_dir install/etc/yum.repos.d
+%define centos_keys_dir install/etc/pki/rpm-gpg
+
+%{ifdistro centos} %{__mkdir_p} %{centos_yum_dir}
+%{ifdistro centos} %{__mkdir_p} %{centos_keys_dir}
+
+%{ifdistro centos} %{__cp} keys/etc/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY %{centos_keys_dir}
+%{ifdistro centos} %{__cp} keys/etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag %{centos_keys_dir}
+%{ifdistro centos} %{__cp} keys/etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries %{centos_keys_dir}
+%{ifdistro centos} %{__cp} keys/etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias %{centos_keys_dir}
+
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/biopackages-stable.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/biopackages-internal.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/biopackages-testing.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/biopackages-cache.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/biopackages-CRAN.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/rpmforge.repo %{centos_yum_dir}
+%{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/mirrors-rpmforge %{centos_yum_dir}
+
+
+%{ifdistro_release centos 4} %{__cp} centos/4/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
+%{ifdistro_release centos 5} %{__cp} centos/5/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
+
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_bindir}
-install -m 755 bp-distro %{buildroot}%{_bindir}
-#install -m 755 bp-update %{buildroot}%{_bindir}
-#install -m 755 bp-inject-binary %{buildroot}%{_bindir}
-#install -m 755 bp-inject-source %{buildroot}%{_bindir}
+%{__install} -D -p -m 0644 %{centos_yum_dir}/biopackages-stable.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-stable.repo
 
-#mkdir -p %{buildroot}/var/www/html/apt/{rh8,rh9,fc1,fc2,fc3,fc4}/{noarch,i386,x86_64}/{base,RPMS.stable,RPMS.testing,SRPMS.stable,SRPMS.testing} ;
+%{__install} -D -p -m 0644 %{centos_yum_dir}/biopackages-internal.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-internal.repo
 
-##initialize redhat repositories
-#for release in 8 9 ; do
-#  for arch in noarch i386 ; do
-#    for tag in base stable testing ; do
-#      mkdir -p %{buildroot}/var/www/html/apt/rh$release/$arch/$tag
-#    done ;
-#  done ;
-#done ;
-#
-##initialize fedora repositories
-#for release in 1 2 3 4 ; do
-#  for arch in noarch i386 ; do
-#    for tag in base stable testing ; do
-#      mkdir -p %{buildroot}/var/www/html/apt/fc$release/$arch/$tag
-#    done ;
-#  done ;
-#done ;
-#
-#find %{buildroot}/var/www -type d | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-server
+%{__install} -D -p -m 0644 %{centos_yum_dir}/biopackages-testing.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-testing.repo
 
-#%post server
+%{__install} -D -p -m 0644 %{centos_yum_dir}/biopackages-cache.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-cache.repo
 
-##initialize redhat repositories
-#for release in 8 9 ; do
-#  for arch in noarch i386 ; do
-#    genbasedir --flat --bloat --bz2only --partial --progress \
-#      /var/www/html/apt/rh$release/$arch stable testing 2&>1 > /dev/null
-#  done ;
-#done ;
-#
-##initialize fedora repositories
-#for release in 1 2 3 4 ; do
-#  for arch in noarch i386 ; do
-#    genbasedir --flat --bloat --bz2only --partial --progress \
-#      /var/www/html/apt/fc$release/$arch stable testing 2&>1 > /dev/null
-#  done ;
-#done ;
+%{__install} -D -p -m 0644 %{centos_yum_dir}/biopackages-CRAN.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/biopackages-CRAN.repo
+
+%{__install} -D -p -m 0644 %{centos_yum_dir}/rpmforge.repo \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/rpmforge.repo
+
+%{__install} -D -p -m 0644 %{centos_yum_dir}/mirrors-rpmforge \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/mirrors-rpmforge
+
+%{__install} -D -p -m 0644 %{centos_yum_dir}/CentOS-Base.repo.patch \
+	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
+
+%{__install} -D -p -m 0644 %{centos_keys_dir}/BIOPACKAGES-RPM-GPG-KEY \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
+%{__install} -D -p -m 0644 %{centos_keys_dir}/RPM-GPG-KEY-rpmforge-dag \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+
+%{__install} -D -p -m 0644 %{centos_keys_dir}/RPM-GPG-KEY-rpmforge-dries \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+
+%{__install} -D -p -m 0644 %{centos_keys_dir}/RPM-GPG-KEY-rpmforge-matthias \
+	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
 
 %post
+rpm -q gpg-pubkey-acf0aeb7-46265962 >/dev/null 2>&1 || \
+	rpm --import %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
+
 # turns out %{_libdir} points to /usr/lib64 on CentOS for noarch packages
 # but the macros file is in /usr/lib
-if [ -e /usr/lib/rpm/macros ]; then
-  cp -prv /usr/lib/rpm/macros /usr/lib/rpm/macros.bak
-  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> /usr/lib/rpm/macros
-else
-  cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
-  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> %{_libdir}/rpm/macros
-fi
-
-#cp -prv /etc/apt/sources.list /etc/apt.sources.list.bak
-#MACHTYPE=`echo $MACHTYPE | perl -ne '/^([^-]+)/;print $1'`
-#TAG=`bp-distro -t`
-#echo "# biopackages for $TAG / $MACHTYPE"                         >> /etc/apt/sources.list
-#echo "rpm     http://www.biopackages.net apt/$TAG/$MACHTYPE stable"   >> /etc/apt/sources.list
-#echo "rpm     http://www.biopackages.net apt/$TAG/$MACHTYPE testing"  >> /etc/apt/sources.list
-#echo "#rpm-src http://www.biopackages.net apt/$TAG/$MACHTYPE stable"  >> /etc/apt/sources.list
-#echo "#rpm-src http://www.biopackages.net apt/$TAG/$MACHTYPE testing" >> /etc/apt/sources.list
+#if [ -e /usr/lib/rpm/macros ]; then
+#  cp -prv /usr/lib/rpm/macros /usr/lib/rpm/macros.bak
+#  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> /usr/lib/rpm/macros
+#else
+#  cp -prv %{_libdir}/rpm/macros %{_libdir}/rpm/macros.bak
+#  echo "%%distro %%(eval %{_bindir}/bp-distro)" >> %{_libdir}/rpm/macros
+#fi
 
 %clean
-rm -rf %{buildroot}
+[ "%{buildroot}" != "/" ] && [ -d %{buildroot} ] && %{__rm} -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{_bindir}/bp-distro
-#%{_bindir}/bp-inject-binary
-#%{_bindir}/bp-inject-source
+#%{_bindir}/bp-distro
+%config %{_sysconfdir}/yum.repos.d/biopackages-stable.repo
+%config %{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
 
-#%files server -f %{name}-%{version}-%{release}-server
-#%defattr(-,root,root,-)
-#/usr/bin/bp-update
+%package internal
+Summary: Configure biopackages-internal repository
+Group: Applications/Bioinformatics
+Requires: biopackages
+
+%description internal
+Add yum configuration for biopackages-internal, this repository is for packages that are not made available to the general public -- usually because of licensing reasons.
+
+%files internal
+%defattr(-,root,root,-)
+%config %{_sysconfdir}/yum.repos.d/biopackages-internal.repo
+
+%package testing
+Summary: Configure biopackages-testing repository
+Group: Applications/Bioinformatics
+Requires: biopackages
+
+%description testing
+Add yum configuration for biopackages-testing, this repository is primarily for a biopackages maintainer to test newly built packages -- care must be taken to not include packages that can't be distributed to the general public.
+
+%files testing
+%defattr(-,root,root,-)
+%config %{_sysconfdir}/yum.repos.d/biopackages-testing.repo
+
+%package cache
+Summary: Configure biopackages-cache repository -- use at your own risk!
+Group: Applications/Bioinformatics
+Requires: biopackages
+%{ifdistro centos} Requires: centos-release
+%{ifdistro_release centos 4} Requires: yum-plugin-priorities
+%{ifdistro_release centos 5} Requires: yum-priorities
+
+%description cache
+Add yum configuration for biopackages-cache, this setups up a local cache of RPMs from other repositories. This saves considerable bandwidth and development time.  
+
+%files cache
+%defattr(-,root,root,-)
+%config %{_sysconfdir}/yum.repos.d/biopackages-cache.repo
+%config %{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
+
+%post cache
+# Set priorites for yum, and 
+%{ifdistro centos} TMPFILE=`mktemp %{_sysconfdir}/yum.repos.d/CentOS-Base.repo.rpmsave.XXXXXX` || exit 1
+%{ifdistro centos} cat %{_sysconfdir}/yum.repos.d/CentOS-Base.repo >> $TMPFILE
+%{ifdistro centos} cd %{_sysconfdir}/yum.repos.d/ && patch -p0 < CentOS-Base.repo.patch
+
+%package devel
+Summary: Configure devel environment for creating new biopackages -- use at your own risk!
+Group: Applications/Bioinformatics
+Requires: biopackages, biopackages-testing, biopackages-cache, rpm-build, cvs, createrepo
+Conflicts: rpmforge-release
+
+%description devel
+Add configuration files for biopackages development, do not install this package unless you are absolutely sure you know what you are doing. eg. read through the biopackages.spec.in file first.
+
+%files devel
+%defattr(-,root,root,-)
+%config %{_sysconfdir}/yum.repos.d/biopackages-cache.repo
+%config %{_sysconfdir}/yum.repos.d/biopackages-CRAN.repo
+%config %{_sysconfdir}/yum.repos.d/rpmforge.repo
+%config %{_sysconfdir}/yum.repos.d/mirrors-rpmforge
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+%config %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
+
+%post devel
+rpm -q gpg-pubkey-6b8d79e6-3f49313d >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag
+
+rpm -q gpg-pubkey-1aa78495-3eb24301 >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dries
+
+rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
+    rpm --import %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-matthias
+
+adduser -u 776 bpbuild
 
 $Log: biopackages.spec.in,v $
+Revision 1.18  2008/07/21 04:13:44  bret_harry
+reworked to use subpackages
+
 Revision 1.17  2008/04/26 00:45:15  boconnor
 Updates to biopackages.spec.in to trigger a new version since I updated the bp-distro code in the source to fix a bash syntax error that was preventing this from returning the correct distro/version string.
 
