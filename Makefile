@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.137 2008/07/16 00:35:25 bret_harry Exp $
+#$Id: Makefile,v 1.138 2008/07/21 04:11:45 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -74,6 +74,26 @@ rpm-cache : ~/.gnupg/ $(CACHE_WEBROOT)
 	createrepo -u \
 	http://yum.biopackages.net/biopackages/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH) \
 	$(CACHE_ROOT)
+
+### This is more expensive than it probably needs to be 4*4*2 = 32
+YR_REPO := stable testing internal cache
+YR_VER := 4 5
+YR_ARCH := i386 x64_86 noarch SRPMS
+YR_COMB := $$R/centos/$$V/$$A
+yum-repo : WEBROOT 
+	for R in $(YR_REPO); do \
+	  for V in $(YR_VER); do \
+	    for A in $(YR_ARCH); do \
+	      if [ -d WEBROOT/$(YR_COMB) ]; \
+	      then \
+	          createrepo -u http://yum.biopackages.net/biopackages/$(YR_COMB) \
+	          WEBROOT/$(YR_COMB); \
+	      else \
+                echo Directory WEBROOT/$(YR_COMB) does not exist!; \
+	      fi \
+	    done \
+          done \
+        done
 
 prep : Makefile.conf
 	touch ~/.rpmmacros
