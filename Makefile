@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.138 2008/07/21 04:11:45 bret_harry Exp $
+#$Id: Makefile,v 1.139 2008/07/21 04:53:20 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -79,7 +79,7 @@ rpm-cache : ~/.gnupg/ $(CACHE_WEBROOT)
 YR_REPO := stable testing internal cache
 YR_VER := 4 5
 YR_ARCH := i386 x64_86 noarch SRPMS
-YR_COMB := $$R/centos/$$V/$$A
+YR_COMB := $$R/$(DISTRO)/$$V/$$A
 yum-repo : WEBROOT 
 	for R in $(YR_REPO); do \
 	  for V in $(YR_VER); do \
@@ -94,6 +94,24 @@ yum-repo : WEBROOT
 	    done \
           done \
         done
+
+### Push RPMs to the repository
+yum-repo-testing : WEBROOT
+	find SRPMS RPMS -name '*.rpm' | xargs rpm --resign
+	rsync -aP SRPMS/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/SRPMS
+	rsync -aP RPMS/noarch/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/noarch
+	rsync -aP RPMS/$(DISTRO_ARCH)/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
+
+	for A in $(DISTRO_ARCH) noarch SRPMS; do \
+	  createrepo -u http://yum.biopackages.net/biopackages/testing/$(DISTRO)/$(DISTRO_VER)/$$A \
+	    WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/$$A; \
+	done
+
+prep-host : 
+	echo "PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$$ '" >> ~/.bashrc
+	echo "export PS1" >> ~/.bashrc
+	echo "export CVS_RSH=ssh" >> ~/.bashrc
+	rsync -a neuron.genome.ucla.edu:/root/.gnupg /root/
 
 prep : Makefile.conf
 	touch ~/.rpmmacros
