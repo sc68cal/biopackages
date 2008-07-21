@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.18 2008/07/21 04:13:44 bret_harry Exp $
+#$Id: biopackages.spec.in,v 1.19 2008/07/21 16:37:38 bret_harry Exp $
 Summary: Configuration files for installing RPMs from biopackages.net
 Name: biopackages
 Version: 1.0.2
@@ -166,7 +166,7 @@ Add yum configuration for biopackages-cache, this setups up a local cache of RPM
 %package devel
 Summary: Configure devel environment for creating new biopackages -- use at your own risk!
 Group: Applications/Bioinformatics
-Requires: biopackages, biopackages-testing, biopackages-cache, rpm-build, cvs, createrepo
+Requires: biopackages, biopackages-testing, biopackages-cache, rpm-build, cvs, createrepo, perl-Date-Manip
 Conflicts: rpmforge-release
 
 %description devel
@@ -195,6 +195,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
 adduser -u 776 bpbuild
 
 $Log: biopackages.spec.in,v $
+Revision 1.19  2008/07/21 16:37:38  bret_harry
+added perl-Date-Manip to -devel
+
 Revision 1.18  2008/07/21 04:13:44  bret_harry
 reworked to use subpackages
 
