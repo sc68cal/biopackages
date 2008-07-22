@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.140 2008/07/22 07:15:08 bret_harry Exp $
+#$Id: Makefile,v 1.141 2008/07/22 20:49:54 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -96,15 +96,15 @@ yum-repo : $(WEBROOT)
         done
 
 ### Push RPMs to the repository
-yum-repo-testing : WEBROOT
+yum-repo-testing : $(WEBROOT)
 	find SRPMS RPMS -name '*.rpm' | xargs rpm --resign
-	rsync -aP SRPMS/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/SRPMS
-	rsync -aP RPMS/noarch/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/noarch
-	rsync -aP RPMS/$(DISTRO_ARCH)/ WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
+	rsync -aP SRPMS/ $(WEBROOT)/testing/$(DISTRO)/$(DISTRO_VER)/SRPMS
+	rsync -aP RPMS/noarch/ $(WEBROOT)/testing/$(DISTRO)/$(DISTRO_VER)/noarch
+	rsync -aP RPMS/$(DISTRO_ARCH)/ $(WEBROOT)/testing/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
 
 	for A in $(DISTRO_ARCH) noarch SRPMS; do \
 	  createrepo -u http://yum.biopackages.net/biopackages/testing/$(DISTRO)/$(DISTRO_VER)/$$A \
-	    WEBROOT/testing/$(DISTRO)/$(DISTRO_VER)/$$A; \
+	    $(WEBROOT)/testing/$(DISTRO)/$(DISTRO_VER)/$$A; \
 	done
 
 prep-host : 
@@ -127,6 +127,7 @@ prep : Makefile.conf
 	mkdir -p BUILD
 	mkdir -p SRPMS
 	mkdir -p RPMS/`uname -i`	
+	mkdir -p RPMS/noarch
 	mkdir -p $(WEBROOT)
 	ln -s $(SOURCES)/ SOURCES
 	date >> prep
