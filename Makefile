@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.139 2008/07/21 04:53:20 bret_harry Exp $
+#$Id: Makefile,v 1.140 2008/07/22 07:15:08 bret_harry Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -9,7 +9,7 @@ VPATH = SPECS INSTALLED
 SORT=sort
 PR=pr
 AWK=awk
-CACHE_WEBROOT=$(CVSPATH)/WEBROOT
+CACHE_WEBROOT=$(WEBROOT)
 CACHE_ROOT=$(CACHE_WEBROOT)/cache/$(DISTRO)/$(DISTRO_VER)/$(DISTRO_ARCH)
 RPM_Q=rpm -q --queryformat '%-30{NAME} %-10{VERSION} %{ARCH}\n'
 
@@ -80,14 +80,14 @@ YR_REPO := stable testing internal cache
 YR_VER := 4 5
 YR_ARCH := i386 x64_86 noarch SRPMS
 YR_COMB := $$R/$(DISTRO)/$$V/$$A
-yum-repo : WEBROOT 
+yum-repo : $(WEBROOT)
 	for R in $(YR_REPO); do \
 	  for V in $(YR_VER); do \
 	    for A in $(YR_ARCH); do \
-	      if [ -d WEBROOT/$(YR_COMB) ]; \
+	      if [ -d $(WEBROOT)/$(YR_COMB) ]; \
 	      then \
 	          createrepo -u http://yum.biopackages.net/biopackages/$(YR_COMB) \
-	          WEBROOT/$(YR_COMB); \
+	          $(WEBROOT)/$(YR_COMB); \
 	      else \
                 echo Directory WEBROOT/$(YR_COMB) does not exist!; \
 	      fi \
@@ -123,11 +123,12 @@ prep : Makefile.conf
 	echo "%_gpg_name Biopackages"             >> ~/.rpmmacros
 	echo "%_gpgbin /usr/bin/gpg"              >> ~/.rpmmacros
 	echo "%distro bp.$(DISTRO)$(DISTRO_VER)"  >> ~/.rpmmacros
-	mkdir -p SOURCES
 	mkdir -p INSTALLED
 	mkdir -p BUILD
 	mkdir -p SRPMS
 	mkdir -p RPMS/`uname -i`	
+	mkdir -p $(WEBROOT)
+	ln -s $(SOURCES)/ SOURCES
 	date >> prep
 
 # creates an HTML output report summarizing the build status of each package based on logs
