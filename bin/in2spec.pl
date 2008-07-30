@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-#$Id: in2spec.pl,v 1.11 2008/07/15 22:42:52 bret_harry Exp $
+#$Id: in2spec.pl,v 1.12 2008/07/30 18:15:48 bret_harry Exp $
 use strict;
 use Text::Wrap;
 use Date::Manip;
@@ -46,7 +46,7 @@ my %month = (
 my $i_tab = '- ';
 my $s_tab = '  ';
 
-my $rcstag = '#\$'.'Id:';
+my $rcstag = '#\$'.'[Ii]d:';
 my $logtag = '\$'.'Log: .+? \$';
 my $revision = undef;
 
@@ -56,6 +56,8 @@ my ( $revision ) = $spec =~ /^$rcstag.+?,v (\S+)/s;
 my ( $version )  = $spec =~ /\nVersion:\s+(\S+)\n/s;
 
 $spec =~ s/%{revision}/$revision/gs;
+
+print STDERR "$0: revision: $revision\n";
 
 #check distro, if matches then include this line otherwise don't
 $spec =~ s/%{ifdistro $distro} ?(.*)/$1/g;
@@ -97,6 +99,9 @@ __DATA__
 - New specfile
 
 $Log: in2spec.pl,v $
+Revision 1.12  2008/07/30 18:15:48  bret_harry
+changed revision regex to handle Id and id
+
 Revision 1.11  2008/07/15 22:42:52  bret_harry
 allow a space in ifdistro regex
 
