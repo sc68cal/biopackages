@@ -1,26 +1,23 @@
-#$Id: sge.spec.in,v 1.18 2008/06/03 22:31:44 bpbuild Exp $
-
-%define sgedir /usr/share/sge
-%define qmasterspool /var/lib/sge_qmaster
-%define execdspool /var/lib/sge_execd
-
+#$id: sge.spec.in,v 1.18 2008/06/03 22:31:44 bpbuild Exp $
+%define sgeprefix opt/gridengine
+#%define qmasterspool /var/lib/sge_qmaster
+#%define execdspool /var/lib/sge_execd
 Summary: Sun Grid Engine
 Name: sge
-Version: 6.1u2
+Version: V61u2
+Serial: 612
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: SISSL
-Packager: Jordan Mendler <jmendler@ucla.edu>
+Packager: Bret Harry <janusz@gasper.zealcorp.com
 URL: http://gridengine.sunsource.net/
-Source0: http://gridengine.sunsource.net/files/documents/7/149/sge-V61u2_TAG-src.tar.gz
+Source0: http://gridengine.sunsource.net/files/documents/7/169/ge-V61u4_TAG-src.tar.gz
 Source1: sge-inst.conf
-Source2: sge-README.rpm
-Source3: sge-sge.sh
-Source4: sge-sge.csh
-Provides: gridengine
-Requires: openmotif, /bin/ksh, db4
-BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc, db4, db4-devel
-BuildRequires: /usr/bin/perl, openssl-devel, pam-devel
+Provides: sge
+#Requires: openmotif, /bin/ksh, db4
+#BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc, db4, db4-devel
+#BuildRequires: /usr/bin/perl, openssl-devel, pam-devel
+BuildRequires: openssl-devel, db4-devel, pam-devel, openmotif-devel, gcc
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 %description
@@ -34,213 +31,237 @@ delivers compute power as a network service.
 
 
 %prep
-# create a top level directory
 %setup -q -n gridengine
-# set up the target installation directory
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{sgedir}
+# # set up the target installation directory
+# rm -rf $RPM_BUILD_ROOT
+# mkdir -p $RPM_BUILD_ROOT%{sgedir}
 
+### ugly... but it is the way the aimk script needs it
+cat << EOF >> source/aimk.private
+   #
+   # Set default aimk switches
+   #
+   set argv = ( -no-jni -no-java \$* )
+   # OPENSSL_HOME the directory where the include and lib directory of openssl
+   # is installed 
+   set OPENSSL_SOVERSION = `rpm -q --queryformat="%{Version}" openssl`
+   set OPENSSL_HOME = /usr
 
-%build
-find -name "CVS" | xargs rm -Rf
-cd source
-# creates the sge-depend tool
-./aimk -only-depend -no-java -no-jni -no-secure
-scripts/zerodepend
-# creates the dependencies
-./aimk -no-java -no-jni -no-secure depend 
-# creates the core programs, qmon, qmake and qrsh/qtcsh
-./aimk -no-java -no-jni -no-secure
-# processing of the man files
-./aimk -no-java -no-jni -no-secure -man
-
-
-%install 
-cp %{SOURCE1} .
-/usr/bin/perl -pi -e "s!RPM_BUILD_ROOT!$RPM_BUILD_ROOT!" sge-inst.conf
-cd source
-ARCH=`dist/util/arch`
-export SGE_ROOT=$RPM_BUILD_ROOT%{sgedir}
-export SGE_CELL=default
-# creates the linux distribution of gridengine
-echo "Y" | scripts/distinst -local -allall -nobdb -noopenssl -noexit $ARCH
-cd $SGE_ROOT
-./inst_sge -m -x -auto %{_builddir}/gridengine/sge-inst.conf || true
-
-
-#Fix results of rpmbuilding in config files
-SED_RULE="s!%{buildroot}!!g"
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgemaster
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgeexecd
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/bootstrap
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/configuration
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/settings.sh
-/usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/settings.csh
-/usr/bin/perl -pi -e "s!%{sgedir}/bin!/usr/bin!" $SGE_ROOT/default/common/bootstrap
-/usr/bin/perl -pi -e "s!admin_user.*!admin_user\t\tsgeadmin!" $SGE_ROOT/default/common/bootstrap
-grep -v $LOGNAME $RPM_BUILD_ROOT%{qmasterspool}/managers > $RPM_BUILD_ROOT%{qmasterspool}/managers.new
-mv $RPM_BUILD_ROOT%{qmasterspool}/managers.new $RPM_BUILD_ROOT%{qmasterspool}/managers
-echo sgeadmin >> $RPM_BUILD_ROOT%{qmasterspool}/managers
-grep -v $LOGNAME $RPM_BUILD_ROOT%{qmasterspool}/operators > $RPM_BUILD_ROOT%{qmasterspool}/operators.new
-mv $RPM_BUILD_ROOT%{qmasterspool}/operators.new $RPM_BUILD_ROOT%{qmasterspool}/operators
-echo sgeadmin >> $RPM_BUILD_ROOT%{qmasterspool}/operators
-
-# Move binaries
-install -d $RPM_BUILD_ROOT/usr/bin
-mv $SGE_ROOT/bin/$ARCH/* $RPM_BUILD_ROOT/usr/bin
-rmdir $SGE_ROOT/bin/$ARCH
-ln -s /usr/bin $SGE_ROOT/bin/$ARCH
-
-# Move libraries
-install -d $RPM_BUILD_ROOT%{_libdir}
-mv $SGE_ROOT/lib/$ARCH/* $RPM_BUILD_ROOT%{_libdir}
-rmdir $SGE_ROOT/lib/$ARCH
-ln -s %{_libdir} $SGE_ROOT/lib/$ARCH
-
-#Create directories for init.d scripts and sge profiles
-install -d $RPM_BUILD_ROOT/etc/profile.d
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-install -d $RPM_BUILD_ROOT%{execdspool}
-
-#Install init.d scripts
-mv $SGE_ROOT/default/common/sgemaster $RPM_BUILD_ROOT/etc/rc.d/init.d/sgemaster
-ln -s /etc/rc.d/init.d/sgemaster $SGE_ROOT/default/common/sgemaster
-mv $SGE_ROOT/default/common/sgeexecd $RPM_BUILD_ROOT/etc/rc.d/init.d/sgeexecd
-ln -s /etc/rc.d/init.d/sgeexecd $SGE_ROOT/default/common/sgeexecd
-chmod 755 $RPM_BUILD_ROOT/etc/rc.d/init.d/sgemaster $RPM_BUILD_ROOT/etc/rc.d/init.d/sgeexecd
-
-#Install sge profiles
-install -m 0755 %{SOURCE3} $RPM_BUILD_ROOT/etc/profile.d/sge.sh
-ln -s /etc/profile.d/sge.sh $SGE_ROOT/default/common/sge.sh
-install -m 0755 %{SOURCE4} $RPM_BUILD_ROOT/etc/profile.d/sge.csh
-ln -s /etc/profile.d/sge.csh $SGE_ROOT/default/common/sge.csh
-
-# create the man and documentation directories
-mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{1,3,5,8}
-
-# moving the man files into the correct man dirs
-install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
-install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3
-install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man5/* $RPM_BUILD_ROOT%{_mandir}/man5
-install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man8/* $RPM_BUILD_ROOT%{_mandir}/man8
-rm -rf $RPM_BUILD_ROOT%{sgedir}/man
-
-mv $RPM_BUILD_ROOT%{_mandir}/man5/complex.5 $RPM_BUILD_ROOT%{_mandir}/man5/sge_complex.5 
-
-
-#Some config
-cp $SGE_ROOT/util/install_modules/inst_schedd_normal.conf $SGE_ROOT/default/common/sched_configuration
-
-grep -v qlogin $SGE_ROOT/default/common/configuration > $SGE_ROOT/default/common/configuration2
-grep -v rlogin $SGE_ROOT/default/common/configuration2 > $SGE_ROOT/default/common/configuration
-rm $SGE_ROOT/default/common/configuration2
-cat << EOF >> $SGE_ROOT/default/common/configuration
-qlogin_command               %{sgedir}/util/qlogin_wrapper
-qlogin_daemon                /usr/sbin/sshd -i
-rlogin_command               /usr/bin/ssh
-rlogin_daemon                /usr/sbin/sshd -i
-rsh_command                  /usr/bin/ssh
-rsh_daemon                   /usr/sbin/sshd -i
+   # BERKELEYDB_HOME the directory where the include and lib directory of
+   # Berkeley DB is installed
+   set BERKELEYDB_HOME = /usr
 EOF
 
-#Include original SGE Readme
-cp %{SOURCE2} $RPM_BUILD_ROOT%{sgedir}/doc/README.sge-rpm
+%build
+cd source
+./aimk -only-depend
+./scripts/zerodepend 
+./aimk depend
+./aimk
+./aimk -man
 
-# Make RPM aware of each type of file
-[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+%install 
+rm -rf ${RPM_BUILD_ROOT}
+export SGE_ROOT=${RPM_BUILD_ROOT}/%{sgeprefix}
+mkdir -p ${SGE_ROOT}
+cd source
+yes | ./scripts/distinst -local -noexit -allall `dist/util/arch`
 
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) @g" | grep /var/lib/sge > %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) %dir @g" | grep /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) @g" | grep /usr/share/sge/default >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) %dir @g" | grep /usr/share/sge/default >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / | grep -v /usr/share/sge/default | grep -v /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
-find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep sge |grep / | grep -v /usr/share/sge/default | grep -v /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+cd ${RPM_BUILD_ROOT}
+find ./ | cut -b2- > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+
+# cd ${SGE_ROOT}
+# find ./ -type f | xargs -I{} install -D {} ${RPM_BUILD_ROOT}/%{sgeprefix}/{}
+# cp %{SOURCE1} .
+# /usr/bin/perl -pi -e "s!RPM_BUILD_ROOT!$RPM_BUILD_ROOT!" sge-inst.conf
+# cd source
+# ARCH=`dist/util/arch`
+# export SGE_ROOT=$RPM_BUILD_ROOT%{sgedir}
+# export SGE_CELL=default
+# # creates the linux distribution of gridengine
+# echo "Y" | scripts/distinst -local -allall -nobdb -noopenssl -noexit $ARCH
+# cd $SGE_ROOT
+# ./inst_sge -m -x -auto %{_builddir}/gridengine/sge-inst.conf || true
+
+
+# #Fix results of rpmbuilding in config files
+# SED_RULE="s!%{buildroot}!!g"
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgemaster
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/sgeexecd
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/bootstrap
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/configuration
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/settings.sh
+# /usr/bin/perl -pi -e $SED_RULE $SGE_ROOT/default/common/settings.csh
+# /usr/bin/perl -pi -e "s!%{sgedir}/bin!/usr/bin!" $SGE_ROOT/default/common/bootstrap
+# /usr/bin/perl -pi -e "s!admin_user.*!admin_user\t\tsgeadmin!" $SGE_ROOT/default/common/bootstrap
+# grep -v $LOGNAME $RPM_BUILD_ROOT%{qmasterspool}/managers > $RPM_BUILD_ROOT%{qmasterspool}/managers.new
+# mv $RPM_BUILD_ROOT%{qmasterspool}/managers.new $RPM_BUILD_ROOT%{qmasterspool}/managers
+# echo sgeadmin >> $RPM_BUILD_ROOT%{qmasterspool}/managers
+# grep -v $LOGNAME $RPM_BUILD_ROOT%{qmasterspool}/operators > $RPM_BUILD_ROOT%{qmasterspool}/operators.new
+# mv $RPM_BUILD_ROOT%{qmasterspool}/operators.new $RPM_BUILD_ROOT%{qmasterspool}/operators
+# echo sgeadmin >> $RPM_BUILD_ROOT%{qmasterspool}/operators
+
+# # Move binaries
+# install -d $RPM_BUILD_ROOT/usr/bin
+# mv $SGE_ROOT/bin/$ARCH/* $RPM_BUILD_ROOT/usr/bin
+# rmdir $SGE_ROOT/bin/$ARCH
+# ln -s /usr/bin $SGE_ROOT/bin/$ARCH
+
+# # Move libraries
+# install -d $RPM_BUILD_ROOT%{_libdir}
+# mv $SGE_ROOT/lib/$ARCH/* $RPM_BUILD_ROOT%{_libdir}
+# rmdir $SGE_ROOT/lib/$ARCH
+# ln -s %{_libdir} $SGE_ROOT/lib/$ARCH
+
+# #Create directories for init.d scripts and sge profiles
+# install -d $RPM_BUILD_ROOT/etc/profile.d
+# install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+# install -d $RPM_BUILD_ROOT%{execdspool}
+
+# #Install init.d scripts
+# mv $SGE_ROOT/default/common/sgemaster $RPM_BUILD_ROOT/etc/rc.d/init.d/sgemaster
+# ln -s /etc/rc.d/init.d/sgemaster $SGE_ROOT/default/common/sgemaster
+# mv $SGE_ROOT/default/common/sgeexecd $RPM_BUILD_ROOT/etc/rc.d/init.d/sgeexecd
+# ln -s /etc/rc.d/init.d/sgeexecd $SGE_ROOT/default/common/sgeexecd
+# chmod 755 $RPM_BUILD_ROOT/etc/rc.d/init.d/sgemaster $RPM_BUILD_ROOT/etc/rc.d/init.d/sgeexecd
+
+# #Install sge profiles
+# install -m 0755 %{SOURCE3} $RPM_BUILD_ROOT/etc/profile.d/sge.sh
+# ln -s /etc/profile.d/sge.sh $SGE_ROOT/default/common/sge.sh
+# install -m 0755 %{SOURCE4} $RPM_BUILD_ROOT/etc/profile.d/sge.csh
+# ln -s /etc/profile.d/sge.csh $SGE_ROOT/default/common/sge.csh
+
+# # create the man and documentation directories
+# mkdir -p $RPM_BUILD_ROOT%{_mandir}/man{1,3,5,8}
+
+# # moving the man files into the correct man dirs
+# install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man1/* $RPM_BUILD_ROOT%{_mandir}/man1
+# install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man3/* $RPM_BUILD_ROOT%{_mandir}/man3
+# install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man5/* $RPM_BUILD_ROOT%{_mandir}/man5
+# install -m 644 $RPM_BUILD_ROOT%{sgedir}/man/man8/* $RPM_BUILD_ROOT%{_mandir}/man8
+# rm -rf $RPM_BUILD_ROOT%{sgedir}/man
+
+# mv $RPM_BUILD_ROOT%{_mandir}/man5/complex.5 $RPM_BUILD_ROOT%{_mandir}/man5/sge_complex.5 
+
+
+# #Some config
+# cp $SGE_ROOT/util/install_modules/inst_schedd_normal.conf $SGE_ROOT/default/common/sched_configuration
+
+# grep -v qlogin $SGE_ROOT/default/common/configuration > $SGE_ROOT/default/common/configuration2
+# grep -v rlogin $SGE_ROOT/default/common/configuration2 > $SGE_ROOT/default/common/configuration
+# rm $SGE_ROOT/default/common/configuration2
+# cat << EOF >> $SGE_ROOT/default/common/configuration
+# qlogin_command               %{sgedir}/util/qlogin_wrapper
+# qlogin_daemon                /usr/sbin/sshd -i
+# rlogin_command               /usr/bin/ssh
+# rlogin_daemon                /usr/sbin/sshd -i
+# rsh_command                  /usr/bin/ssh
+# rsh_daemon                   /usr/sbin/sshd -i
+# EOF
+
+# #Include original SGE Readme
+# cp %{SOURCE2} $RPM_BUILD_ROOT%{sgedir}/doc/README.sge-rpm
+
+# # Make RPM aware of each type of file
+# [ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+# find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) @g" | grep /var/lib/sge > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+# find %{buildroot} -type d | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) %dir @g" | grep /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+# find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) @g" | grep /usr/share/sge/default >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+# find %{buildroot} -type d | sed "s@^%{buildroot}@%attr(-, sgeadmin, sgeadmin) %dir @g" | grep /usr/share/sge/default >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+# find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep / | grep -v /usr/share/sge/default | grep -v /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+# find %{buildroot} -type d | sed "s@^%{buildroot}@%dir @g" | grep sge |grep / | grep -v /usr/share/sge/default | grep -v /var/lib/sge >> %{_tmppath}/%{name}-%{version}-%{release}-filelist
+
+#%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
+
 %files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 %defattr(-, root, root)
 
-
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf ${RPM_BUILD_ROOT}
 
 %pre
-if grep sgeadmin /etc/passwd
-then
-        echo "SGE user already exists..."
-else
-        echo "Adding SGE user and group..."
-	exec /usr/sbin/groupadd -g 888 -o sgeadmin
-        exec /usr/sbin/useradd -u 888 -g 888 -r -c "Sun Grid Engine User" sgeadmin
-fi
+# if grep sgeadmin /etc/passwd
+# then
+#         echo "SGE user already exists..."
+# else
+#         echo "Adding SGE user and group..."
+# 	exec /usr/sbin/groupadd -g 888 -o sgeadmin
+#         exec /usr/sbin/useradd -u 888 -g 888 -r -c "Sun Grid Engine User" sgeadmin
+# fi
 
 %post
-exec /sbin/chkconfig --add sgeexecd
-exec /sbin/chkconfig --add sgemaster
-if [ "$1" = "1" ]; then
-	HN=`hostname -s`
-	echo $HN > %{sgedir}/default/common/primary_qmaster
-	echo $HN > %{sgedir}/default/common/act_qmaster
-	cat << EOF >> %{qmasterspool}/admin_hosts/$HN
-# Version: 6.0
-#
-# DO NOT MODIFY THIS FILE MANUALLY!
-#
-hostname                   $HN
-EOF
-	cp %{qmasterspool}/admin_hosts/$HN %{qmasterspool}/submit_hosts/$HN
-fi
+# exec /sbin/chkconfig --add sgeexecd
+# exec /sbin/chkconfig --add sgemaster
+# if [ "$1" = "1" ]; then
+# 	HN=`hostname -s`
+# 	echo $HN > %{sgedir}/default/common/primary_qmaster
+# 	echo $HN > %{sgedir}/default/common/act_qmaster
+# 	cat << EOF >> %{qmasterspool}/admin_hosts/$HN
+# # Version: 6.0
+# #
+# # DO NOT MODIFY THIS FILE MANUALLY!
+# #
+# hostname                   $HN
+# EOF
+# 	cp %{qmasterspool}/admin_hosts/$HN %{qmasterspool}/submit_hosts/$HN
+# fi
 
-if grep "^sge_qmaster" /etc/services >/dev/null
-then
-	true
-else
-	echo "sge_qmaster          536/tcp     # Sun Grid Engine Qmaster" >>/etc/services
-	echo "sge_qmaster          536/udp     # Sun Grid Engine Qmaster" >>/etc/services
-	echo "sge_execd            537/tcp     # Sun Grid Engine Execd" >>/etc/services
-	echo "sge_execd            537/udp     # Sun Grid Engine Execd" >>/etc/services
-fi
-/sbin/ldconfig
+# if grep "^sge_qmaster" /etc/services >/dev/null
+# then
+# 	true
+# else
+# 	echo "sge_qmaster          536/tcp     # Sun Grid Engine Qmaster" >>/etc/services
+# 	echo "sge_qmaster          536/udp     # Sun Grid Engine Qmaster" >>/etc/services
+# 	echo "sge_execd            537/tcp     # Sun Grid Engine Execd" >>/etc/services
+# 	echo "sge_execd            537/udp     # Sun Grid Engine Execd" >>/etc/services
+# fi
+# /sbin/ldconfig
 
 
 
 %preun
-# stop the gridengine script
-exec /sbin/chkconfig --del sgeexecd
-exec /sbin/chkconfig --del sgemaster
-if [ "$1" = "0" ]; then
-	/etc/rc.d/init.d/sgemaster stop >& /dev/null  || true
-	/etc/rc.d/init.d/sgeexecd stop >& /dev/null  || true
-	if [ -L /usr/share/sge/default/common ]; then
-		rm /usr/share/sge/default/common
-	fi
-	if [ -L /var/lib/sge_qmaster ]; then
-		rm /var/lib/sge_qmster
-	fi
-	rm -f %{sgedir}/default/common/primary_qmaster
-	rm -f %{sgedir}/default/common/act_qmaster
-	rm -f %{qmasterspool}/admin_hosts/`hostname -s`
-	rm -f %{qmasterspool}/submit_hosts/`hostname -s`
-fi
+# # stop the gridengine script
+# exec /sbin/chkconfig --del sgeexecd
+# exec /sbin/chkconfig --del sgemaster
+# if [ "$1" = "0" ]; then
+# 	/etc/rc.d/init.d/sgemaster stop >& /dev/null  || true
+# 	/etc/rc.d/init.d/sgeexecd stop >& /dev/null  || true
+# 	if [ -L /usr/share/sge/default/common ]; then
+# 		rm /usr/share/sge/default/common
+# 	fi
+# 	if [ -L /var/lib/sge_qmaster ]; then
+# 		rm /var/lib/sge_qmster
+# 	fi
+# 	rm -f %{sgedir}/default/common/primary_qmaster
+# 	rm -f %{sgedir}/default/common/act_qmaster
+# 	rm -f %{qmasterspool}/admin_hosts/`hostname -s`
+# 	rm -f %{qmasterspool}/submit_hosts/`hostname -s`
+# fi
 
 %postun
-if grep sgeadmin /etc/passwd
-then
-        echo "Removing SGE user and group..."
-        exec /usr/sbin/userdel sgeadmin
-fi
-if grep sgeadmin /etc/group
-then
-        echo "SGE group still exists, it is now being removed..."
-        exec /usr/sbin/groupdel sgeadmin
-fi
+# if grep sgeadmin /etc/passwd
+# then
+#         echo "Removing SGE user and group..."
+#         exec /usr/sbin/userdel sgeadmin
+# fi
+# if grep sgeadmin /etc/group
+# then
+#         echo "SGE group still exists, it is now being removed..."
+#         exec /usr/sbin/groupdel sgeadmin
+# fi
 
-if [ "$1" = "0" ]; then
-	grep -v "^sge_" /etc/services >/tmp/services
-	mv -f /tmp/services /etc/services
-fi
-/sbin/ldconfig
+# if [ "$1" = "0" ]; then
+# 	grep -v "^sge_" /etc/services >/tmp/services
+# 	mv -f /tmp/services /etc/services
+# fi
+# /sbin/ldconfig
 
 
 $Log: sge.spec.in,v $
+Revision 1.19  2008/07/30 18:20:51  bret_harry
+intermediate revision, so that I can wipe the buildhost
+
 Revision 1.18  2008/06/03 22:31:44  bpbuild
 -new file
 
