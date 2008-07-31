@@ -72,7 +72,7 @@ cd source
 yes | ./scripts/distinst -local -noexit -allall `dist/util/arch`
 
 cd ${RPM_BUILD_ROOT}
-find ./ | cut -b2- > ${RPM_BUILD_ROOT}/%{name}-%{version}-%{release}-filelist
+find ./ | cut -b2- > %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
 # cd ${SGE_ROOT}
 # find ./ -type f | xargs -I{} install -D {} ${RPM_BUILD_ROOT}/%{sgeprefix}/{}
@@ -178,7 +178,7 @@ find ./ | cut -b2- > ${RPM_BUILD_ROOT}/%{name}-%{version}-%{release}-filelist
 
 #%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
-%files -f ${RPM_BUILD_ROOT}/%{name}-%{version}-%{release}-filelist
+%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 %defattr(-, root, root)
 
 %clean
@@ -263,6 +263,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.22  2008/07/31 21:08:50  bret_harry
+fixed files list
+
 Revision 1.21  2008/07/31 20:39:33  bret_harry
 added patch
 
