@@ -13,6 +13,7 @@ Packager: Bret Harry <janusz@gasper.zealcorp.com
 URL: http://gridengine.sunsource.net/
 Source0: http://gridengine.sunsource.net/files/documents/7/169/ge-V61u4_TAG-src.tar.gz
 Source1: sge-inst.conf
+Patch0: sge-rpm.patch
 Provides: sge
 #Requires: openmotif, /bin/ksh, db4
 #BuildRequires: openmotif-devel, libgcj-devel, xorg-x11-devel, gcc, db4, db4-devel
@@ -262,6 +263,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.21  2008/07/31 20:39:33  bret_harry
+added patch
+
 Revision 1.20  2008/07/31 20:27:06  bret_harry
 intermediate step
 
