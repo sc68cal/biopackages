@@ -1,4 +1,4 @@
-#$id: sge.spec.in,v 1.18 2008/06/03 22:31:44 bpbuild Exp $
+#$Id: sge.spec.in,v 1.23 2008/07/31 21:14:46 bret_harry Exp $
 %define sgeprefix opt/gridengine
 #%define qmasterspool /var/lib/sge_qmaster
 #%define execdspool /var/lib/sge_execd
@@ -263,6 +263,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.23  2008/07/31 21:14:46  bret_harry
+$id -> $Id
+
 Revision 1.22  2008/07/31 21:08:50  bret_harry
 fixed files list
 
