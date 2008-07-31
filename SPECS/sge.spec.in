@@ -32,25 +32,28 @@ delivers compute power as a network service.
 
 %prep
 %setup -q -n gridengine
-# # set up the target installation directory
-# rm -rf $RPM_BUILD_ROOT
-# mkdir -p $RPM_BUILD_ROOT%{sgedir}
+%patch -p 1 -P 0
 
-### ugly... but it is the way the aimk script needs it
-cat << EOF >> source/aimk.private
-   #
-   # Set default aimk switches
-   #
-   set argv = ( -no-jni -no-java \$* )
-   # OPENSSL_HOME the directory where the include and lib directory of openssl
-   # is installed 
-   set OPENSSL_SOVERSION = `rpm -q --queryformat="%{Version}" openssl`
-   set OPENSSL_HOME = /usr
+# %setup -q -n gridengine
+# # # set up the target installation directory
+# # rm -rf $RPM_BUILD_ROOT
+# # mkdir -p $RPM_BUILD_ROOT%{sgedir}
 
-   # BERKELEYDB_HOME the directory where the include and lib directory of
-   # Berkeley DB is installed
-   set BERKELEYDB_HOME = /usr
-EOF
+# ### ugly... but it is the way the aimk script needs it
+# cat << EOF >> source/aimk.private
+#    #
+#    # Set default aimk switches
+#    #
+#    set argv = ( -no-jni -no-java \$* )
+#    # OPENSSL_HOME the directory where the include and lib directory of openssl
+#    # is installed 
+#    set OPENSSL_SOVERSION = `rpm -q --queryformat="%{Version}" openssl`
+#    set OPENSSL_HOME = /usr
+
+#    # BERKELEYDB_HOME the directory where the include and lib directory of
+#    # Berkeley DB is installed
+#    set BERKELEYDB_HOME = /usr
+# EOF
 
 %build
 cd source
@@ -68,7 +71,7 @@ cd source
 yes | ./scripts/distinst -local -noexit -allall `dist/util/arch`
 
 cd ${RPM_BUILD_ROOT}
-find ./ | cut -b2- > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+find ./ | cut -b2- > ${RPM_BUILD_ROOT}/%{name}-%{version}-%{release}-filelist
 
 # cd ${SGE_ROOT}
 # find ./ -type f | xargs -I{} install -D {} ${RPM_BUILD_ROOT}/%{sgeprefix}/{}
@@ -174,7 +177,7 @@ find ./ | cut -b2- > %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
 #%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
 
-%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
+%files -f ${RPM_BUILD_ROOT}/%{name}-%{version}-%{release}-filelist
 %defattr(-, root, root)
 
 %clean
@@ -259,6 +262,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.20  2008/07/31 20:27:06  bret_harry
+intermediate step
+
 Revision 1.19  2008/07/30 18:20:51  bret_harry
 intermediate revision, so that I can wipe the buildhost
 
