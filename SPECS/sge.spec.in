@@ -1,17 +1,17 @@
-#$Id: sge.spec.in,v 1.23 2008/07/31 21:14:46 bret_harry Exp $
+#$Id: sge.spec.in,v 1.24 2008/08/01 03:20:30 bret_harry Exp $
 %define sgeprefix opt/gridengine
 #%define qmasterspool /var/lib/sge_qmaster
 #%define execdspool /var/lib/sge_execd
 Summary: Sun Grid Engine
 Name: sge
-Version: V61u2
-Serial: 612
+Version: V60u8
+Serial: 608
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: SISSL
 Packager: Bret Harry <janusz@gasper.zealcorp.com
 URL: http://gridengine.sunsource.net/
-Source0: http://gridengine.sunsource.net/files/documents/7/169/ge-V61u4_TAG-src.tar.gz
+Source0: http://gridengine.sunsource.net/files/documents/7/78/sge-V60u8_TAG-src.tar.gz
 Source1: sge-inst.conf
 Patch0: sge-rpm.patch
 Provides: sge
@@ -32,7 +32,22 @@ delivers compute power as a network service.
 
 
 %prep
-%setup -q -n gridengine
+set -x
+umask 022
+cd %{_topdir}/BUILD
+rm -rf gridengine-%{version}
+/bin/gzip -dc %{SOURCE0} | tar -xf -
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+  exit $STATUS
+fi
+mv gridengine gridengine-%{version}
+cd gridengine-%{version}
+[ `/usr/bin/id -u` = '0' ] && /bin/chown -Rhf root .
+[ `/usr/bin/id -u` = '0' ] && /bin/chgrp -Rhf root .
+/bin/chmod -Rf a+rX,u+w,g-w,o-w .
+
+#%setup -q -n gridengine-%{version}
 %patch -p 1 -P 0
 
 # %setup -q -n gridengine
@@ -57,7 +72,7 @@ delivers compute power as a network service.
 # EOF
 
 %build
-cd source
+cd gridengine-%{version}/source
 ./aimk -only-depend
 ./scripts/zerodepend 
 ./aimk depend
@@ -68,7 +83,8 @@ cd source
 rm -rf ${RPM_BUILD_ROOT}
 export SGE_ROOT=${RPM_BUILD_ROOT}/%{sgeprefix}
 mkdir -p ${SGE_ROOT}
-cd source
+
+cd gridengine-%{version}/source
 yes | ./scripts/distinst -local -noexit -allall `dist/util/arch`
 
 cd ${RPM_BUILD_ROOT}
@@ -263,6 +279,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.24  2008/08/01 03:20:30  bret_harry
+need to build an older version of SGE for compatibility with the cluster...
+
 Revision 1.23  2008/07/31 21:14:46  bret_harry
 $id -> $Id
 
