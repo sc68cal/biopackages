@@ -1,17 +1,17 @@
-#$Id: sge.spec.in,v 1.24 2008/08/01 03:20:30 bret_harry Exp $
+#$Id: sge.spec.in,v 1.25 2008/08/01 03:49:21 bret_harry Exp $
 %define sgeprefix opt/gridengine
 #%define qmasterspool /var/lib/sge_qmaster
 #%define execdspool /var/lib/sge_execd
 Summary: Sun Grid Engine
 Name: sge
-Version: V60u8
-Serial: 608
+Version: V61u4
+Serial: 614
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: SISSL
 Packager: Bret Harry <janusz@gasper.zealcorp.com
 URL: http://gridengine.sunsource.net/
-Source0: http://gridengine.sunsource.net/files/documents/7/78/sge-V60u8_TAG-src.tar.gz
+Source0: http://gridengine.sunsource.net/files/documents/7/169/ge-V61u4_TAG-src.tar.gz
 Source1: sge-inst.conf
 Patch0: sge-rpm.patch
 Provides: sge
@@ -279,6 +279,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 $Log: sge.spec.in,v $
+Revision 1.25  2008/08/01 03:49:21  bret_harry
+updated to latest stable
+
 Revision 1.24  2008/08/01 03:20:30  bret_harry
 need to build an older version of SGE for compatibility with the cluster...
 
