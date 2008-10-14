@@ -1,4 +1,4 @@
-#$Id
+#$Id: solexa-pipeline-beta.spec.in,v 1.2 2008/10/14 18:23:37 bpbuild Exp $
 Summary: Solexa Pipeline (Beta Version)
 Name: solexa-pipeline-beta
 Version: 1.1rc1p4
@@ -58,6 +58,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline-beta.spec.in,v $
+Revision 1.2  2008/10/14 18:23:37  bpbuild
+fixed header
+
 Revision 1.1  2008/10/14 18:18:19  bpbuild
 new versions of pipeline
 
