@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline.spec.in,v 1.12 2008/10/14 18:18:19 bpbuild Exp $
+#$Id: solexa-pipeline.spec.in,v 1.13 2008/10/14 18:34:02 bpbuild Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 1.0
@@ -10,9 +10,9 @@ Group: Bioinformatics
 Packager: Brian O'Connor <boconnor@ucla.edu>
 URL: http://www.solexa.com/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3
+Requires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel
 BuildRequires: biopackages, gcc-c++, fftw3, fftw3-devel, libtiff, libtiff-devel, bzip2-devel
-BuildRequires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3
+BuildRequires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel
 
 %description
 This module contains the source code for the Solexa data analysis
@@ -58,6 +58,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.13  2008/10/14 18:34:02  bpbuild
+requires zlib-devel
+
 Revision 1.12  2008/10/14 18:18:19  bpbuild
 new versions of pipeline
 
