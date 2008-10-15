@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline-beta.spec.in,v 1.7 2008/10/15 00:17:15 bpbuild Exp $
+#$Id: solexa-pipeline-beta.spec.in,v 1.8 2008/10/15 01:16:32 bpbuild Exp $
 Summary: Solexa Pipeline (Beta Version)
 Name: solexa-pipeline-beta
 Version: 1.1rc1p4
@@ -44,7 +44,7 @@ cp -R lib/perl/* ${RPM_BUILD_ROOT}/usr/lib/perl5/site_perl/5.8.5
 cp -R lib/python/* ${RPM_BUILD_ROOT}/usr/lib/python2.3
 
 #Generate file list
-find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed "s#\s#\\\ #g" > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)#\"\1\"#" > %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,solexa,solexa)
@@ -57,6 +57,9 @@ find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed "s#\s#\\\ 
 %preun 
 
 $Log: solexa-pipeline-beta.spec.in,v $
+Revision 1.8  2008/10/15 01:16:32  bpbuild
+fixed whitespace issue in listing of files
+
 Revision 1.7  2008/10/15 00:17:15  bpbuild
 *** empty log message ***
 
