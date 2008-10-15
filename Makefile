@@ -1,4 +1,4 @@
-#$Id: Makefile,v 1.142 2008/10/14 18:50:48 bpbuild Exp $
+#$Id: Makefile,v 1.143 2008/10/15 01:16:19 bpbuild Exp $
 include ./Makefile.conf
 
 .PHONY: rpm-cache help
@@ -174,7 +174,7 @@ clean :
 	@$(RPM_Q) $(rpm_name)-$(get_rpm_vers) || \
 	(rpmbuild -ba SPECS/$(subst .deps,.spec,$(subst SPECS/,,$<)) && \
 	(find RPMS -follow -name "$(rpm_name)-$(get_rpm_vers)*.rpm" > INSTALLED/$@) && \
-	rpm -Uvh `cat INSTALLED/$@`)
+	sudo rpm -Uvh `cat INSTALLED/$@`)
 
 %.deps : %.spec
 	$(call install-deps,$<,BuildRequires)
