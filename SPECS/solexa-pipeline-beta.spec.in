@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline-beta.spec.in,v 1.12 2008/10/20 20:40:04 bpbuild Exp $
+#$Id: solexa-pipeline-beta.spec.in,v 1.13 2008/10/20 20:41:43 bpbuild Exp $
 Summary: Solexa Pipeline Beta
 Name: solexa-pipeline-beta
 Version: 1.1rc1p4
@@ -44,7 +44,7 @@ cp -R docs  ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline-beta/
 cp -R lib   ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline-beta/
 
 #Cleanup source code
-find %{buildroot} | grep -P '\.cpp$|\.o$|\.h$|\.d$|\.c$' | xargs rm
+find %{buildroot}/usr/local/solexa-pipeline-beta | grep -P '\.cpp$|\.o$|\.h$|\.d$|\.c$' | xargs rm
 
 #Generate file list
 find %{buildroot}/usr/local/solexa-pipeline-beta -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)#\"\1\"#" > %{name}-%{version}-%{release}-filelist
@@ -65,6 +65,9 @@ done
 %preun 
 
 $Log: solexa-pipeline-beta.spec.in,v $
+Revision 1.13  2008/10/20 20:41:43  bpbuild
+fixing paths contained in certain files
+
 Revision 1.12  2008/10/20 20:40:04  bpbuild
 fixing paths contained in certain files
 
