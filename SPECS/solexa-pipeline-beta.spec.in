@@ -1,5 +1,5 @@
-#$Id: solexa-pipeline-beta.spec.in,v 1.8 2008/10/15 01:16:32 bpbuild Exp $
-Summary: Solexa Pipeline (Beta Version)
+#$Id: solexa-pipeline-beta.spec.in,v 1.9 2008/10/20 16:42:58 bpbuild Exp $
+Summary: Solexa Pipeline Beta
 Name: solexa-pipeline-beta
 Version: 1.1rc1p4
 Epoch: 0
@@ -31,20 +31,22 @@ documentation.html". A quick-start guide is given by "Pipeline usage".
 %prep
 #rm -rf ${RPM_BUILD_ROOT}
 %setup -q -n GAPipeline-%{version}
-mkdir -p ${RPM_BUILD_ROOT}/%{_bindir} ${RPM_BUILD_ROOT}/%{_defaultdocdir}/solexa-pipeline ${RPM_BUILD_ROOT}/usr/lib/perl5/site_perl/5.8.5 ${RPM_BUILD_ROOT}/usr/lib/python2.3
+mkdir -p ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline-beta
 
 %build
 make
 
 %install
 %makeinstall
-cp -R bin/* ${RPM_BUILD_ROOT}/%{_bindir}
-cp -R docs/* ${RPM_BUILD_ROOT}/%{_defaultdocdir}/solexa-pipeline
-cp -R lib/perl/* ${RPM_BUILD_ROOT}/usr/lib/perl5/site_perl/5.8.5
-cp -R lib/python/* ${RPM_BUILD_ROOT}/usr/lib/python2.3
+mv * ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline-beta
+
+#Cleanup source code
+find %{buildroot} | grep -P '\.cpp$|\.o$|\.h$|\.d$|\.c$' | xargs rm
+
 
 #Generate file list
-find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)#\"\1\"#" > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,solexa,solexa)
@@ -57,27 +59,49 @@ find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)
 %preun 
 
 $Log: solexa-pipeline-beta.spec.in,v $
-Revision 1.8  2008/10/15 01:16:32  bpbuild
-fixed whitespace issue in listing of files
+Revision 1.9  2008/10/20 16:42:58  bpbuild
+redid file layout
 
-Revision 1.7  2008/10/15 00:17:15  bpbuild
-*** empty log message ***
-
-Revision 1.6  2008/10/14 22:00:56  bpbuild
-removed cruft
-
-Revision 1.5  2008/10/14 19:49:34  bpbuild
-moving files to proper location
-
-Revision 1.4  2008/10/14 18:59:31  bpbuild
+Revision 1.14  2008/10/14 18:59:31  bpbuild
 1.1 requires ncurses-devel
 
-Revision 1.3  2008/10/14 18:34:02  bpbuild
+Revision 1.13  2008/10/14 18:34:02  bpbuild
 requires zlib-devel
 
-Revision 1.2  2008/10/14 18:23:37  bpbuild
-fixed header
-
-Revision 1.1  2008/10/14 18:18:19  bpbuild
+Revision 1.12  2008/10/14 18:18:19  bpbuild
 new versions of pipeline
+
+Revision 1.11  2008/06/25 00:48:57  bpbuild
+Updated the build requirements for solexa-pipeline
+
+Revision 1.10  2008/03/18 22:28:42  bpbuild
+3.0
+
+Revision 1.9  2007/12/11 02:22:56  bpbuild
+checkin
+
+Revision 1.8  2007/12/11 01:13:48  bpbuild
+updated version and clean out source code when packaging RPM
+
+Revision 1.7  2007/12/11 00:55:01  bpbuild
+checkin
+
+Revision 1.6  2007/05/12 00:01:48  boconnor
+Updated solexa pipeline
+
+Revision 1.5  2007/05/11 23:58:58  boconnor
+Updated solexa pipeline
+
+Revision 1.4  2007/05/11 22:24:18  boconnor
+Incremented version number
+
+Revision 1.3  2007/05/02 22:31:59  boconnor
+Deps for solexa-pipleine
+
+Revision 1.2  2007/05/02 08:27:07  boconnor
+This is closer to a working spec file for the solexa pipeline, need to add in docs but they have spaces in their names.
+
+Revision 1.1  2007/05/02 05:49:19  boconnor
+New spec file for the solexa pipeline.
+
 
