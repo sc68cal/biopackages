@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline-beta.spec.in,v 1.9 2008/10/20 16:42:58 bpbuild Exp $
+#$Id: solexa-pipeline-beta.spec.in,v 1.10 2008/10/20 17:11:00 bpbuild Exp $
 Summary: Solexa Pipeline Beta
 Name: solexa-pipeline-beta
 Version: 1.1rc1p4
@@ -43,10 +43,8 @@ mv * ${RPM_BUILD_ROOT}/usr/local/solexa-pipeline-beta
 #Cleanup source code
 find %{buildroot} | grep -P '\.cpp$|\.o$|\.h$|\.d$|\.c$' | xargs rm
 
-
 #Generate file list
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > %{name}-%{version}-%{release}-filelist
-find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%{version}-%{release}-filelist
+find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)#\"\1\"#" > %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,solexa,solexa)
@@ -59,6 +57,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" > /tmp/%{name}-%
 %preun 
 
 $Log: solexa-pipeline-beta.spec.in,v $
+Revision 1.10  2008/10/20 17:11:00  bpbuild
+espace files with quotes in case of spaces
+
 Revision 1.9  2008/10/20 16:42:58  bpbuild
 redid file layout
 
