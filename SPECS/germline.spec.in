@@ -1,0 +1,54 @@
+#$Id: germline.spec.in,v 1.1 2008/10/30 22:38:31 bret_harry Exp $
+Name: germline 
+Summary: Genetic Error-tolerant Regional Matching with LINear-time Extension
+Version: 1.2.1
+#Serial: 
+Release: %{revision}.%{distro}
+Group: Applications/System
+License: GPL
+Packager: Bret Harry <webmaster@genome.ucla.edu>
+URL: http://www1.cs.columbia.edu/~gusev/germline/
+Source0: http://www1.cs.columbia.edu/~gusev/germline/germline-1-2-1.tar.gz
+BuildRequires: gcc-c++
+BuildRoot: %{_tmppath}/%{name}-%{version}-build
+
+%description
+GERMLINE is a program for discovering long shared segments of Identity by Descent (IBD) between pairs of individuals in a large population. It takes as input genotype or haplotype marker data for individuals (as well as an optional known pedigree) and generates a list of all pairwise segmental sharing
+
+%prep
+#%setup -n %{name}-%{version}
+%setup -q -n germline-1-2-1
+
+%build
+#cd %{name}-%{version}
+make
+
+%install 
+#rm -rf ${RPM_BUILD_ROOT}
+pwd
+install -d ${RPM_BUILD_ROOT}%{_bindir}/
+install -m 555 germline ${RPM_BUILD_ROOT}%{_bindir}/
+
+(
+  cd ${RPM_BUILD_ROOT} 
+  find ./ -name germline | cut -b2- > %{_tmppath}/%{name}-%{version}-%{release}-filelist
+)
+
+%files -f %{_tmppath}/%{name}-%{version}-%{release}-filelist
+%defattr(-, root, root)
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%pre
+
+%post
+
+%preun
+
+%postun
+
+$Log: germline.spec.in,v $
+Revision 1.1  2008/10/30 22:38:31  bret_harry
+initial checkin
+
