@@ -1,10 +1,10 @@
-#$Id: perl-go-perl.spec.in,v 1.6 2009/01/21 21:00:32 daveclements Exp $
+#$Id: perl-go-perl.spec.in,v 1.7 2009/01/21 23:31:32 daveclements Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: GO Perl
 Name: perl-go-perl
 Version: 0.09
-Release: 4.%{distro} 
+Release: %{revision}.%{distro} 
 Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
@@ -17,16 +17,8 @@ Requires: perl-Graph, perl-XML-Writer, perl-bioperl
 
 Source0: go-perl-0.09.tar.gz
 
-#remove RDF dependency
-#Patch0: go-perl-0.02-rdf.patch
-#modules in GO namespace referenced but not in dist
-#Patch1: go-perl-0.02-missing_modules.patch
-#new handler for biopackages use only
-#Patch2: go-perl-0.02-biopackages-handler.patch
-#merge go-apply-xslt from xml codebase
-#Patch3: go-perl-0.02-xslt.patch
-#defs parser should output name
-#Patch4: go-perl-0.02-go_def.patch
+# Replace GO::Dotty::Dotty with GO::IO::Dotty, which actually exists.
+Patch0: go-perl-0.09-dotty.patch
 
 %description
 go-perl modules
@@ -45,11 +37,7 @@ see INSTALL for installation instructions
 
 %prep
 %setup -q -n go-perl-0.09
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p2
+%patch0 -p1
 
 %build
 
@@ -117,6 +105,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.xsl
 
 $Log: perl-go-perl.spec.in,v $
+Revision 1.7  2009/01/21 23:31:32  daveclements
+Fixed release to use macro, dropped commented out 0.02 patches, and added 0.09 patch
+to fix a problem with Dotty.
+
 Revision 1.6  2009/01/21 21:00:32  daveclements
 Upgraded from 0.02 to 0.09.
 
