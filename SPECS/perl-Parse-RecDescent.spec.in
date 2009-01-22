@@ -1,9 +1,9 @@
-#$Id: perl-Parse-RecDescent.spec.in,v 1.3 2009/01/22 01:13:57 daveclements Exp $
+#$Id: perl-Parse-RecDescent.spec.in,v 1.4 2009/01/22 01:18:46 daveclements Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Parse-RecDescent
-Version: 1.96
+Version: 1.96.0
 Release: %{revision}.%{distro} 
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Parse-RecDescent.spec.in,v $
+Revision 1.4  2009/01/22 01:18:46  daveclements
+Added missing .0 extension to 1.96.
+
 Revision 1.3  2009/01/22 01:13:57  daveclements
 Upgraded from 1.94 to 1.96, the latest available from CPAN.
 
