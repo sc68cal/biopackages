@@ -1,9 +1,9 @@
-#$Id: perl-DBIx-DBStag.spec.in,v 1.5 2007/01/03 21:15:16 bpbuild Exp $
+#$Id: perl-DBIx-DBStag.spec.in,v 1.6 2009/01/22 00:43:58 daveclements Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-DBIx-DBStag
-Version: 0.07
+Version: 0.10
 Release: %{revision}.%{distro}
 Epoch: 1
 Packager: allenday@sumo.genetics.ucla.edu
@@ -16,7 +16,7 @@ BuildRequires: perl, biopackages, postgresql-server, postgresql
 BuildRequires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent
 Requires: perl-DBD-Pg, perl-DBIx-DBSchema, perl-Parse-RecDescent, perl-Data-Stag
 
-Source0: DBIx-DBStag-0.07.tar.gz
+Source0: DBIx-DBStag-%{version}.tar.gz
 
 %description
 DBIx::DBStag
