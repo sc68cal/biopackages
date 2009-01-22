@@ -1,53 +1,43 @@
-#$Id: postgresql-R.spec.in,v 1.7 2007/08/13 21:48:56 bpbuild Exp $
+#$Id: postgresql-R.spec.in,v 1.8 2009/01/22 20:30:37 bret_harry Exp $
 Summary: PostgreSQL client programs and libraries.
 Name: postgresql-R
-Version: 0.6.2alpha
+Version: 0.6.2.9
 Release: %{revision}.%{distro}
-License: BSD
+License: GPL version 2
 Group: Applications/Databases
 Url: http://www.joeconway.com/plr
-Source0: plr-0.6.2-alpha.tar.gz
-Buildrequires: postgresql >= 8.0, R = 2.2.0, make, gcc
-Requires: postgresql >= 8.0, R = 2.2.0
+Source0: plr-0.6.2.9.tar.gz
+Buildrequires: postgresql >= 8.0, postgresql-devel >= 8.0, pkgconfig, R >= 2.2.0, R-devel, make, gcc
+Requires: postgresql >= 8.0, R >= 2.2.0
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 %description
-PostgreSQL is an advanced Object-Relational database management
-system.  The postgresql-R package contains the PL/R procedural language for the
-backend.
+ PL/R is a loadable procedural language that enables you to write PostgreSQL functions and triggers in the R programming language. PL/R offers most (if not all) of the capabilities a function writer has in the R language.
 
-PL/R is a loadable procedural language that enables you to write PostgreSQL functions
-and triggers in the R programming language. PL/R offers most (if not all) of the
-capabilities a function writer has in the R language.
+Commands are available to access the database via the PostgreSQL Server Programming Interface (SPI) and to raise messages via elog() . There is no way to access internals of the database backend. However the user is able to gain OS-level access under the permissions of the PostgreSQL user ID, as with a C function. Thus, any unprivileged database user should not be permitted to use this language. It must be installed as an untrusted procedural language so that only database superusers can create functions in it. The writer of a PL/R function must take care that the function cannot be used to do anything unwanted, since it will be able to do anything that could be done by a user logged in as the database administrator.
 
-Commands are available to access the database via the PostgreSQL Server Programming
-Interface (SPI) and to raise messages via elog() . There is no way to access internals
-of the database backend. However the user is able to gain OS-level access under the
-permissions of the PostgreSQL user ID, as with a C function. Thus, any unprivileged
-database user should not be permitted to use this language. It must be installed as an
-untrusted procedural language so that only database superusers can create functions in
-it. The writer of a PL/R function must take care that the function cannot be used to
-do anything unwanted, since it will be able to do anything that could be done by a
-user logged in as the database administrator.
-
-An implementation restriction is that PL/R procedures cannot be used to create
-input/output functions for new data types.
+An implementation restriction is that PL/R procedures cannot be used to create input/output functions for new data types. 
 
 %prep
 rm -rf $RPM_BUILD_ROOT
 %setup -n plr
 
 %build
-export R_HOME=%{_libdir}/R
-R CMD make -f ./Makefile.pgxs
+#export R_HOME=%{_libdir}/R
+#R CMD make -f ./Makefile.pgxs
+USE_PGXS=1 make
+
 
 %install
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/pgsql
-install -m 444 libplr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0.0
-ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0
-ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
-install -m 444 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
+#rm -rf $RPM_BUILD_ROOT
+
+make USE_PGXS=1 DESTDIR=$RPM_BUILD_ROOT install
+# mkdir -p $RPM_BUILD_ROOT%{_libdir}/pgsql
+# install -m 444 libplr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0.0
+# ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0
+# ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so
+# mkdir -p $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
+# install -m 444 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
 #mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 #echo %{_libdir}/R > $RPM_BUILD_ROOT/etc/ld.so.conf.d/R-%{_arch}.conf
 
@@ -55,17 +45,20 @@ install -m 444 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
 rm -rf $RPM_BUILD_ROOT
 
 %post
-ldconfig;
-ldconfig;
+/sbin/ldconfig
 
 %files
-%doc doc expected sql
 %defattr(-,root,root)
+#%doc doc expected sql
+%doc %{_docdir}/pgsql/contrib/README.plr
 %{_libdir}/pgsql/*
 %{_datadir}/pgsql/contrib/*
 #/etc/ld.so.conf.d/*
 
 $Log: postgresql-R.spec.in,v $
+Revision 1.8  2009/01/22 20:30:37  bret_harry
+bumped version
+
 Revision 1.7  2007/08/13 21:48:56  bpbuild
 reverting
 
