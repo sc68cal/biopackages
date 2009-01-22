@@ -1,9 +1,9 @@
-#$Id: perl-Parse-RecDescent.spec.in,v 1.2 2006/07/18 05:18:21 boconnor Exp $
+#$Id: perl-Parse-RecDescent.spec.in,v 1.3 2009/01/22 01:13:57 daveclements Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unknown
 Name: perl-Parse-RecDescent
-Version: 1.94
+Version: 1.96
 Release: %{revision}.%{distro} 
 Packager: boconnor@ucla.edu
 License: GPL or Artistic
@@ -16,10 +16,7 @@ BuildRequires: perl, biopackages
 Source: Parse-RecDescent-%{version}.tar.gz
 
 %description
-==============================================================================
-                 Release of version 1.94 of Parse::RecDescent
-==============================================================================
-
+Parse::RecDescent version 1.96.0
 
 NAME
 
@@ -53,8 +50,6 @@ DESCRIPTION
 	* User-definable reduce-reduce conflict resolution via
 	  "scoring" of matching productions.
 
-    See the file "RecDescent.pod" for excruciating detail on all of this.
-
 
 LIMITATIONS
 
@@ -65,8 +60,8 @@ LIMITATIONS
 
 PREREQUISITES
 
-    Parse::RecDescent requires Text::Balanced, which is included in the
-    distribution.
+    Parse::RecDescent requires the Text::Balanced module, which is available
+    from the CPAN.
 
 
 INSTALLATION
@@ -89,13 +84,36 @@ AUTHOR
     Damian Conway (damian@csse.monash.edu.au)
 
 
-COPYRIGHT
+INSTALLATION
 
-     Copyright (c) 1997-2000, Damian Conway. All Rights Reserved.
-     This module is free software. It may be used, redistributed
-     and/or modified under the terms of the Perl Artistic License
-          (see http://www.perl.com/perl/misc/Artistic.html)
+To install this module, run the following commands:
 
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+
+Alternatively, to install with Module::Build, you can use the following commands:
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+
+
+
+DEPENDENCIES
+
+None.
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 1997-2007, Damian Conway
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 ==============================================================================
 
@@ -160,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Parse-RecDescent.spec.in,v $
+Revision 1.3  2009/01/22 01:13:57  daveclements
+Upgraded from 1.94 to 1.96, the latest available from CPAN.
+
 Revision 1.2  2006/07/18 05:18:21  boconnor
 Added some new spec files. Also added some Darwin-specific conditionals to postgresql-Affxseq.
 
