@@ -1,7 +1,7 @@
-#$Id: celsius-database-pva.spec.in,v 1.1 2009/01/23 03:34:32 bret_harry Exp $
+#$Id: celsius-database-pva.spec.in,v 1.2 2009/01/23 04:17:41 bret_harry Exp $
 Name: celsius-database-pva
 Summary: PostgreSQL plugin for calculating a Papa Veprin Algorithm interpolation value (PVA)
-Version: 0.01
+Version: 0.02
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: GNU Library or Lesser General Public License (LGPL)
@@ -32,6 +32,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %files 
 %defattr(-, root, root)
 %{_libdir}/pgsql/pvamodel.so
+%{_datadir}/pgsql/contrib/pvamodel.sql
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -40,6 +41,9 @@ rm -rf ${RPM_BUILD_ROOT}
 /sbin/ldconfig
 
 $Log: celsius-database-pva.spec.in,v $
+Revision 1.2  2009/01/23 04:17:41  bret_harry
+bumped version
+
 Revision 1.1  2009/01/23 03:34:32  bret_harry
 new spec
 
