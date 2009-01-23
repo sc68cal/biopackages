@@ -1,4 +1,4 @@
-#$Id: postgresql-R.spec.in,v 1.8 2009/01/22 20:30:37 bret_harry Exp $
+#$Id: postgresql-R.spec.in,v 1.9 2009/01/23 03:37:29 bret_harry Exp $
 Summary: PostgreSQL client programs and libraries.
 Name: postgresql-R
 Version: 0.6.2.9
@@ -8,7 +8,7 @@ Group: Applications/Databases
 Url: http://www.joeconway.com/plr
 Source0: plr-0.6.2.9.tar.gz
 Buildrequires: postgresql >= 8.0, postgresql-devel >= 8.0, pkgconfig, R >= 2.2.0, R-devel, make, gcc
-Requires: postgresql >= 8.0, R >= 2.2.0
+Requires: postgresql-server >= 8.0, R >= 2.2.0
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 
 %description
@@ -23,23 +23,11 @@ rm -rf $RPM_BUILD_ROOT
 %setup -n plr
 
 %build
-#export R_HOME=%{_libdir}/R
-#R CMD make -f ./Makefile.pgxs
 USE_PGXS=1 make
 
 
 %install
-#rm -rf $RPM_BUILD_ROOT
-
 make USE_PGXS=1 DESTDIR=$RPM_BUILD_ROOT install
-# mkdir -p $RPM_BUILD_ROOT%{_libdir}/pgsql
-# install -m 444 libplr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0.0
-# ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so.0
-# ln -s %{_libdir}/pgsql/plr.so.0.0 $RPM_BUILD_ROOT%{_libdir}/pgsql/plr.so
-# mkdir -p $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
-# install -m 444 plr.sql $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
-#mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
-#echo %{_libdir}/R > $RPM_BUILD_ROOT/etc/ld.so.conf.d/R-%{_arch}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -49,13 +37,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-#%doc doc expected sql
 %doc %{_docdir}/pgsql/contrib/README.plr
 %{_libdir}/pgsql/*
 %{_datadir}/pgsql/contrib/*
-#/etc/ld.so.conf.d/*
 
 $Log: postgresql-R.spec.in,v $
+Revision 1.9  2009/01/23 03:37:29  bret_harry
+removed commented lines
+
 Revision 1.8  2009/01/22 20:30:37  bret_harry
 bumped version
 
