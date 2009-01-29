@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline.spec.in,v 1.16 2009/01/29 21:44:34 bpbuild Exp $
+#$Id: solexa-pipeline.spec.in,v 1.17 2009/01/29 22:00:46 bpbuild Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 1.3.2
@@ -10,9 +10,9 @@ Group: Bioinformatics
 Packager: Jordan Mendler <jmendler@ucla.edu>
 URL: http://www.solexa.com/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel, ncurses-devel
+Requires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel, ncurses-devel, perl-XML-SAX
 BuildRequires: biopackages, gcc-c++, fftw3, fftw3-devel, libtiff, libtiff-devel, bzip2-devel
-BuildRequires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel, ncurses-devel
+BuildRequires: perl, perl-XML-Simple, python, make, gnuplot, ImageMagick, ghostscript, libtiff, fftw3, zlib-devel, ncurses-devel, perl-XML-SAX
 
 %description
 This module contains the source code for the Solexa data analysis
@@ -57,6 +57,9 @@ find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.17  2009/01/29 22:00:46  bpbuild
+requires perl-XML-SAX or perl-XML-Parser
+
 Revision 1.16  2009/01/29 21:44:34  bpbuild
 1.3.2
 
