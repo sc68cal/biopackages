@@ -1,4 +1,4 @@
-#$Id: solexa-pipeline.spec.in,v 1.17 2009/01/29 22:00:46 bpbuild Exp $
+#$Id: solexa-pipeline.spec.in,v 1.18 2009/02/04 19:05:08 jmendler Exp $
 Summary: Solexa Pipeline
 Name: solexa-pipeline
 Version: 1.3.2
@@ -29,19 +29,32 @@ documentation.html".  The installation is described in "Pipeline
 documentation.html". A quick-start guide is given by "Pipeline usage".
 
 %prep
-#rm -rf ${RPM_BUILD_ROOT}
+rm -rf ${RPM_BUILD_ROOT}
 %setup -q -n GAPipeline-%{version}
-mkdir -p ${RPM_BUILD_ROOT}/%{_bindir} ${RPM_BUILD_ROOT}/%{_defaultdocdir}/solexa-pipeline ${RPM_BUILD_ROOT}/usr/lib/perl5/site_perl/5.8.5 ${RPM_BUILD_ROOT}/usr/lib/python2.3
+mkdir -p ${RPM_BUILD_ROOT}/%{_bindir} \
+         ${RPM_BUILD_ROOT}/%{_defaultdocdir} \
+         ${RPM_BUILD_ROOT}/%{_defaultdocdir}/solexa-pipeline \
+         ${RPM_BUILD_ROOT}/%{perl_sitelib} \
+         ${RPM_BUILD_ROOT}/usr/lib/python2.3
 
 %build
 make
 
 %install
 %makeinstall
+
+# Fix paths in files
+find lib bin share -type f | xargs /usr/bin/perl -pi -e "s#%{_builddir}/GAPipeline-%{version}/bin#%{_bindir}#g"
+find lib bin share -type f | xargs /usr/bin/perl -pi -e "s#%{_builddir}/GAPipeline-%{version}/share#%{_datadir}#g"
+find lib bin share -type f | xargs /usr/bin/perl -pi -e "s#%{_builddir}/GAPipeline-%{version}/lib/perl#%{perl_sitelib}#g"
+find lib bin share -type f | xargs /usr/bin/perl -pi -e "s#%{_builddir}/GAPipeline-%{version}/lib/python#%{_libdir}/python2.3#g"
+
+# Copy files to right location
 cp -R bin/* ${RPM_BUILD_ROOT}/%{_bindir}
 cp -R docs/* ${RPM_BUILD_ROOT}/%{_defaultdocdir}/solexa-pipeline
-cp -R lib/perl/* ${RPM_BUILD_ROOT}/usr/lib/perl5/site_perl/5.8.5
-cp -R lib/python/* ${RPM_BUILD_ROOT}/usr/lib/python2.3
+cp -R share/* ${RPM_BUILD_ROOT}/%{_datadir}
+cp -R lib/perl/* ${RPM_BUILD_ROOT}/%{perl_sitelib}
+cp -R lib/python/* ${RPM_BUILD_ROOT}/%{_libdir}/python2.3
 
 #Generate file list
 find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)#\"\1\"#" > %{name}-%{version}-%{release}-filelist
@@ -57,6 +70,9 @@ find %{buildroot} -type f -o -type l | sed "s#^%{buildroot}##g" | sed -r "s#(.*)
 %preun 
 
 $Log: solexa-pipeline.spec.in,v $
+Revision 1.18  2009/02/04 19:05:08  jmendler
+fixing hard coded paths from build
+
 Revision 1.17  2009/01/29 22:00:46  bpbuild
 requires perl-XML-SAX or perl-XML-Parser
 
