@@ -1,5 +1,5 @@
+#$Id: solid2srf.spec.in,v 1.2 2009/02/20 00:57:54 bret_harry Exp $
 %define path %{name}_v%{version}
-#$Id: solid2srf.spec.in,v 1.1 2009/02/20 00:49:39 bret_harry Exp $
 Name: solid2srf
 Summary: The SOLiD™ System SRF Conversion Too
 Version: 0.6.6
@@ -49,6 +49,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %postun
 
 $Log: solid2srf.spec.in,v $
+Revision 1.2  2009/02/20 00:57:54  bret_harry
+$Id: must be the first line
+
 Revision 1.1  2009/02/20 00:49:39  bret_harry
 initial checkin
 
