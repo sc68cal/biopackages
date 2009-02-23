@@ -1,4 +1,4 @@
-#$Id: srf.spec.in,v 1.1 2009/02/23 18:40:06 bret_harry Exp $
+#$Id: srf.spec.in,v 1.2 2009/02/23 20:29:39 bret_harry Exp $
 %define path %{name}-v%{version}
 Name: srf
 Summary: SRF (Sequence Read Format) is used to store DNA sequence data. 
@@ -10,8 +10,8 @@ License: Apache License V2.0
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/srf/
 Source0: http://internap.dl.sourceforge.net/sourceforge/srf/srf-v0.1.tar.gz
-#Requires:  
-#BuildRequires: 
+Requires: staden-io_lib
+BuildRequires: curl-devel
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
@@ -49,6 +49,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %postun
 
 $Log: srf.spec.in,v $
+Revision 1.2  2009/02/23 20:29:39  bret_harry
+working copy
+
 Revision 1.1  2009/02/23 18:40:06  bret_harry
 new spec
 
