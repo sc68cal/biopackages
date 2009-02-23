@@ -1,4 +1,4 @@
-#$Id: staden-io_lib.spec.in,v 1.1 2009/02/23 19:37:46 bret_harry Exp $
+#$Id: staden-io_lib.spec.in,v 1.2 2009/02/23 20:02:38 bret_harry Exp $
 %define path %{name}-%{version}
 Name: staden-io_lib
 Summary: General purpose library to handle gene sequencing machine trace files
@@ -36,6 +36,7 @@ find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
 
 %files -f %{_tmppath}/%{path}-%{release}-filelist
 %defattr(-, root, root)
+%docdir /usr/local/man/
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -49,6 +50,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %postun
 
 $Log: staden-io_lib.spec.in,v $
+Revision 1.2  2009/02/23 20:02:38  bret_harry
+working copy
+
 Revision 1.1  2009/02/23 19:37:46  bret_harry
 new spec
 
