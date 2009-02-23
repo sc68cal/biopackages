@@ -1,0 +1,54 @@
+#$Id: staden-io_lib.spec.in,v 1.1 2009/02/23 19:37:46 bret_harry Exp $
+%define path %{name}-%{version}
+Name: staden-io_lib
+Summary: General purpose library to handle gene sequencing machine trace files
+Version: 1.11.6.1
+#Serial:
+Release: %{revision}.%{distro}
+Group: System Environment/Libraries
+License: BSD License
+Packager: Bret Harry <webmaster@genome.ucla.edu>
+URL: http://sourceforge.net/projects/staden/
+Source0: http://voxel.dl.sourceforge.net/sourceforge/staden/io_lib-1.11.6.1.tar.gz
+#Requires:
+#BuildRequires:
+BuildRoot: %{_tmppath}/%{path}-build
+
+%description
+A fully developed set of DNA sequence assembly (Gap4), editing and analysis tools (Spin) for Unix, Linux, MacOSX and MS Windows. 
+
+%prep
+%setup -n io_lib-1.11.6
+
+%build
+./configure
+make
+
+%install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+
+### Addditional files that should be installed.
+### Go Here
+
+cd %{buildroot}
+find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
+
+%files -f %{_tmppath}/%{path}-%{release}-filelist
+%defattr(-, root, root)
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
+
+%pre
+
+%post
+
+%preun
+
+%postun
+
+$Log: staden-io_lib.spec.in,v $
+Revision 1.1  2009/02/23 19:37:46  bret_harry
+new spec
+
