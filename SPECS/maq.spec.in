@@ -1,10 +1,10 @@
-#$Id: maq.spec.in,v 1.2 2007/10/30 22:50:59 bpbuild Exp $
+#$Id: maq.spec.in,v 1.3 2009/03/16 19:04:12 bret_harry Exp $
 Summary: Maq stands for Mapping and Assembly with Quality It builds assembly by mapping short reads to reference sequences.
 Name: maq
-Version: 0.6.1
+Version: 0.7.1
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: maq-0.6.1.tar.bz2
+Source0: maq-0.7.1.tar.bz2
 License: GPL
 Group: Applications/Bioinformatics
 Packager: Jordan Mendler <jmendler@ucla.edu>
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 $Log: maq.spec.in,v $
+Revision 1.3  2009/03/16 19:04:12  bret_harry
+bumped version
+
 Revision 1.2  2007/10/30 22:50:59  bpbuild
 new spec
 
