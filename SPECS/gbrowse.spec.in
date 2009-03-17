@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.3 2007/01/05 11:24:17 bpbuild Exp $
+#$Id: gbrowse.spec.in,v 1.4 2009/03/17 08:30:54 allenday Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.62
@@ -8,9 +8,23 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://www.gmod.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
+BuildRequires: gd >= 2.0.28
+BuildRequires: perl-Bio-Das
+BuildRequires: perl-Bio-PrimerDesigner
+BuildRequires: perl-ExtUtils-CBuilder
+BuildRequires: perl-GD
 BuildRequires: perl-bioperl
-Requires: perl-bioperl, perl-bioperl-db, perl-Bio-Das, perl-GD, perl-Bio-PrimerDesigner
+BuildRequires: perl-bioperl-db
+
 Requires: gd >= 2.0.28
+Requires: perl-Bio-Das
+Requires: perl-Bio-PrimerDesigner
+Requires: perl-ExtUtils-CBuilder
+Requires: perl-GD
+Requires: perl-bioperl
+Requires: perl-bioperl-db
+
 Source0: Generic-Genome-Browser-%{version}.tar.gz
 Source1: Generic-Genome-Browser-%{version}-Makefile.PL
 Patch0: Generic-Genome-Browser-%{version}-Ace.patch
@@ -86,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.4  2009/03/17 08:30:54  allenday
+bringing up to head
+
 Revision 1.3  2007/01/05 11:24:17  bpbuild
 SELinux
 
