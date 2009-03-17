@@ -1,0 +1,65 @@
+#$Id: io_lib.spec.in,v 1.1 2009/03/17 08:56:45 allenday Exp $
+Summary: io_lib is a library for reading and writing trace files
+Name: io_lib
+Version: 1.11.6
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.1.tar.gz
+License: BSD
+Group: Applications/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://staden.sourceforge.net
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: biopackages, gcc, autoconf
+
+%description
+                        IO_LIB VERSION 1.11.6
+                        =====================
+
+Io_lib is a library of file reading and writing code to provide a general
+purpose trace file (and Experiment File) reading interface. The programmer
+simply calls the (eg) read_reading to create a "Read" C structure with the
+data loaded into memory. It has been compiled and tested on a variety
+of unix systems, MacOS X and MS Windows.
+
+The directories below here contain the io_lib code. These support the
+following file formats:
+
+        SCF trace files
+        ABI trace files
+        ALF trace files
+        CTF trace files
+        ZTR trace files
+        SFF trace archives
+        SRF trace archives
+        Experiment files
+        Plain text files
+
+These link together to form a single "libread" library supporting all
+the file formats via a single read_reading (or fread_reading or
+mfread_reading) function call and analogous write_reading functions
+too. See the file include/Read.h for the generic 'Read' structure.
+
+%prep
+#%setup -q 
+%setup -c %{name}-%{version}
+
+mkdir -p $RPM_BUILD_ROOT%{_libdir}
+
+%build
+%configure
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR="$RPM_BUILD_ROOT"
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+$Log: io_lib.spec.in,v $
+Revision 1.1  2009/03/17 08:56:45  allenday
+import
+
