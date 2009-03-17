@@ -1,4 +1,4 @@
-#$Id: perl-Bio-SCF.spec.in,v 1.2 2009/03/17 08:42:51 allenday Exp $
+#$Id: perl-Bio-SCF.spec.in,v 1.3 2009/03/17 09:16:20 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl extension for reading and writing SCF sequence files
@@ -10,8 +10,10 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Bio-SCF
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
+BuildRequires: perl
+BuildRequires: biopackages
 Requires: perl
+Requires: io_lib
 Source0: Bio-SCF-%{version}.tar.gz
 
 %description
@@ -63,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-SCF.spec.in,v $
+Revision 1.3  2009/03/17 09:16:20  allenday
+buids
+
 Revision 1.2  2009/03/17 08:42:51  allenday
 import
 
