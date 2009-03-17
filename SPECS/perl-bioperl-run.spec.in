@@ -1,125 +1,91 @@
-#$Id: perl-bioperl-run.spec.in,v 1.7 2007/04/21 22:59:37 bpbuild Exp $
-Distribution: Custom
-Vendor: biopackages.net
-Summary: Bioperl wrapper toolkit
-Name: perl-bioperl-run
-Version: 1.4
-Release: %{revision}.%{distro}
-Epoch: 1
-Packager: allenday@ucla.edu
-License: GPL or Artistic
-Group: Development/Libraries
-URL: http://search.cpan.org/dist/bioperl-run/
-BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-DBI, perl-XML-Twig
-Requires: perl-bioperl
-Source0: bioperl-run-1.4.tar.gz
-BuildArch: noarch
+#$Id: perl-bioperl-run.spec.in,v 1.8 2009/03/17 07:30:16 allenday Exp $
+Name:           perl-bioperl-run
+Version:        1.6.0
+Release:        %{revision}.%{distro}
+Summary:        Modules to provide a Perl interface to various bioinformatics applications
+
+Group:          Development/Libraries
+License:        GPL+ or Artistic
+URL:            http://bioperl.org
+Source0:        http://bioperl.org/DIST/bioperl-run-%{version}.tar.gz
+Patch0:         %{name}-%{version}_Build.PL.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildArch:      noarch
+#BuildRequires:  perl-Algorithm-Diff >= 1
+BuildRequires:  perl-IPC-Run
+BuildRequires:  perl-XML-Parser
+BuildRequires:  perl-HTML-Parser
+BuildRequires:  perl-Module-Build
+#Requires:  perl-Algorithm-Diff >= 1
+Requires:  perl-IPC-Run
+Requires:  perl-XML-Parser
+Requires:  perl-HTML-Parser
+Requires:  perl-Module-Build
+Requires:  perl-bioperl
+#BuildRequires:  perl-Bio-Root-Version >= 1.5.2
+#Requires:  perl-Bio-Root-Version >= 1.5.2
 
 %description
-$Id: perl-bioperl-run.spec.in,v 1.7 2007/04/21 22:59:37 bpbuild Exp $
-
-
-o Version
-
- This is Bioperl-run release version 1.4, 22 Dec 2004
-
-o Description 
- 
- bioperl-run contain modules that provides a PERL interface to various
- bioinformatics applications. This allows various applications to be
- used with common bioperl objects.
-
- See the Changes file for more information about what is contained in
- here.
-
-
-o Installation
-
- You need to have the core bioperl installation before using
- bioperl-run. Select a bioperl distribution with the same release
- version.
-
- The installation of this package is identical to the core bioperl
- install.
-
- Essentially
-
-   % perl Makefile.PL
-   % make
-
-   % make test (some tests may not succeed if you do not have the
-                necessary programs or env variables defined)
-   % su
-   # make install
-
-
-o Environmental variables
-
- Some important environment variables you need to be aware of.
-
- Variable		Values     Comment
- --------------------------------------------------------------------
- PHYLIPVERSION		3.5, 3.6   If you want to run Phylip3.6 you 
- 				   Need to set this env variable to 3.6
-
- BLASTDIR		DIR PATH   Point to the directory where BLAST 
- 	                           is installed
-
- GENSCAN_DIR		DIR PATH   Point to the directory where 
-                                    HumanIso.smat file is installed
-
- EPONINEDIR          	DIR PATH   Point to the directory where 
-                                    eponine_scan.jar is installed
-
-
+Bioperl-run contain modules that provide a Perl interface to various
+bioinformatics applications. This allows various applications to be
+used with common Bioperl objects.
 
 %prep
-%setup -q -n bioperl-run-%{version}
+%setup -q -n BioPerl-run-%{version}
+%patch0 -p1
+
+# remove all execute bits from the doc stuff
+#find examples -type f -exec chmod -x {} 2>/dev/null ';'
+chmod -x INSTALL INSTALL.PROGRAMS
+
+# remove deprecated modules (reported upstream and will be removed in
+# _101 tarball)
+#rm Bio/Tools/Run/Phylo/Forester/SDI.pm Bio/Tools/Run/JavaRunner.pm Bio/Tools/Run/AbstractRunner.pm
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
-make OPTIMIZE="$RPM_OPT_FLAGS"
+%{__perl} Build.PL --installdirs vendor << EOF
+n
+a
+EOF
+
+./Build
 
 %install
 rm -rf $RPM_BUILD_ROOT
+perl Build pure_install --destdir=$RPM_BUILD_ROOT
 
-eval `perl '-V:installarchlib'`
-mkdir -p $RPM_BUILD_ROOT$installarchlib
-%makeinstall
-
-find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+# remove some spurious files
+find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+# remove errant execute bit from the .pm's
+find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
+# correct all binaries in /usr/bin to be 0755
+#find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
 
-[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
-
-find $RPM_BUILD_ROOT -type f \
-| sed "s@^$RPM_BUILD_ROOT@@g" \
-> %{name}-%{version}-%{release}-filelist
-
-eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
-for d in $installsitelib $installvendorlib $installprivlib; do
-  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
-  find $RPM_BUILD_ROOT$d/* -type d \
-  | grep -v "/$archname\(/auto\)\?$" \
-  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
-  >> %{name}-%{version}-%{release}-filelist
-done
-
-if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
-    echo "ERROR: EMPTY FILE LIST"
-    exit 1
-fi
+%check
+%{?_with_check:./Build test || :}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files -f %{name}-%{version}-%{release}-filelist
+%files
 %defattr(-,root,root,-)
+## don't distribute "doc" "scripts" subdirectories, they don't contain docs
+#%doc examples
+%doc AUTHORS Changes INSTALL INSTALL.PROGRAMS README
+%{perl_vendorlib}/*
+%{_mandir}/man3/*.3*    
+#%{_bindir}/*
+#%{_mandir}/man1/*.1*
 
 %changelog
-* Fri Feb 11 2005 allenday@ - 1.4-1.1
-- Specfile autogenerated.
+* Tue Mar  4 2008 Tom "spot" Callaway <tcallawa@redhat.com> 1.5.2_100-3
+- rebuild for new perl
+
+* Tue Apr 18 2007 Alex Lancaster <alexl@users.sourceforge.net> 1.5.2_100-2
+- Remove deprecated modules that depend on non-existent
+  Bio::Root::AccessorMaker
+
+* Tue Apr 17 2007 Alex Lancaster <alexl@users.sourceforge.net> 1.5.2_100-1
+- Initial Fedora package.
