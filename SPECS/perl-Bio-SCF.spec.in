@@ -1,4 +1,4 @@
-#$Id: perl-Bio-SCF.spec.in,v 1.1 2009/03/17 08:42:26 allenday Exp $
+#$Id: perl-Bio-SCF.spec.in,v 1.2 2009/03/17 08:42:51 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl extension for reading and writing SCF sequence files
@@ -19,7 +19,6 @@ Perl extension for reading and writing SCF sequence files
 
 %prep
 %setup -q -n Bio-SCF-%{version}
-%patch0 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -64,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-SCF.spec.in,v $
+Revision 1.2  2009/03/17 08:42:51  allenday
+import
+
 Revision 1.1  2009/03/17 08:42:26  allenday
 import
 
