@@ -1,4 +1,4 @@
-#$Id: biopackages.spec.in,v 1.20 2008/07/22 06:04:03 bret_harry Exp $
+#$Id: biopackages.spec.in,v 1.21 2009/03/17 02:06:18 allenday Exp $
 Summary: Configuration files for installing RPMs from biopackages.net
 Name: biopackages
 Version: 1.0.2
@@ -33,8 +33,8 @@ Supported Distributions
 
 %build
 ### Centos
-%define centos_yum_dir install/etc/yum.repos.d
-%define centos_keys_dir install/etc/pki/rpm-gpg
+%define centos_yum_dir etc/yum.repos.d
+%define centos_keys_dir etc/pki/rpm-gpg
 
 %{ifdistro centos} %{__mkdir_p} %{centos_yum_dir}
 %{ifdistro centos} %{__mkdir_p} %{centos_keys_dir}
@@ -53,8 +53,8 @@ Supported Distributions
 %{ifdistro centos} %{__cp} centos/common/etc/yum.repos.d/mirrors-rpmforge %{centos_yum_dir}
 
 
-%{ifdistro_release centos 4} %{__cp} centos/4/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
-%{ifdistro_release centos 5} %{__cp} centos/5/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
+#%{ifdistro_release centos 4} %{__cp} centos/4/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
+#%{ifdistro_release centos 5} %{__cp} centos/5/common/etc/yum.repos.d/CentOS-Base.repo.patch %{centos_yum_dir}
 
 
 %install
@@ -79,8 +79,8 @@ Supported Distributions
 %{__install} -D -p -m 0644 %{centos_yum_dir}/mirrors-rpmforge \
 	%{buildroot}%{_sysconfdir}/yum.repos.d/mirrors-rpmforge
 
-%{__install} -D -p -m 0644 %{centos_yum_dir}/CentOS-Base.repo.patch \
-	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
+#%{__install} -D -p -m 0644 %{centos_yum_dir}/CentOS-Base.repo.patch \
+#	%{buildroot}%{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
 
 %{__install} -D -p -m 0644 %{centos_keys_dir}/BIOPACKAGES-RPM-GPG-KEY \
 	%{buildroot}%{_sysconfdir}/pki/rpm-gpg/BIOPACKAGES-RPM-GPG-KEY
@@ -155,13 +155,13 @@ Add yum configuration for biopackages-cache, this setups up a local cache of RPM
 %files cache
 %defattr(-,root,root,-)
 %config %{_sysconfdir}/yum.repos.d/biopackages-cache.repo
-%config %{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
+#%config %{_sysconfdir}/yum.repos.d/CentOS-Base.repo.patch
 
 %post cache
 # Set priorites for yum, and 
 %{ifdistro centos} TMPFILE=`mktemp %{_sysconfdir}/yum.repos.d/CentOS-Base.repo.rpmsave.XXXXXX` || exit 1
 %{ifdistro centos} cat %{_sysconfdir}/yum.repos.d/CentOS-Base.repo >> $TMPFILE
-%{ifdistro centos} cd %{_sysconfdir}/yum.repos.d/ && patch -p0 < CentOS-Base.repo.patch
+#%{ifdistro centos} cd %{_sysconfdir}/yum.repos.d/ && patch -p0 < CentOS-Base.repo.patch
 
 %package devel
 Summary: Configure devel environment for creating new biopackages -- use at your own risk!
@@ -194,6 +194,9 @@ rpm -q gpg-pubkey-e42d547b-3960bdf1 >/dev/null 2>&1 || \
 adduser -u 776 bpbuild
 
 $Log: biopackages.spec.in,v $
+Revision 1.21  2009/03/17 02:06:18  allenday
+dropping the CentOS-Base.rep.patch requirements.  these are not in SOURCES.small or anywhere else I can find.  Update the package once these are checked in pls
+
 Revision 1.20  2008/07/22 06:04:03  bret_harry
 removed biopackages-cache.repo from -devel
 
