@@ -1,4 +1,4 @@
-#$Id: io_lib.spec.in,v 1.2 2009/03/17 09:08:07 allenday Exp $
+#$Id: io_lib.spec.in,v 1.3 2009/03/17 09:14:09 allenday Exp $
 Summary: io_lib is a library for reading and writing trace files
 Name: io_lib
 Version: 1.11.6
@@ -47,6 +47,8 @@ too. See the file include/Read.h for the generic 'Read' structure.
 mkdir -p $RPM_BUILD_ROOT%{_libdir}
 
 %build
+export CFLAGS="%{optflags} -fPIC"
+export CXXFLAGS="%{optflags} -fPIC"
 %configure
 
 %install
@@ -62,6 +64,9 @@ find %{buildroot} -type f -o -type l | sed "s@^%{buildroot}@@g" | grep -v '%{_ma
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 $Log: io_lib.spec.in,v $
+Revision 1.3  2009/03/17 09:14:09  allenday
+fpic
+
 Revision 1.2  2009/03/17 09:08:07  allenday
 import
 
