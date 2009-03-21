@@ -1,7 +1,7 @@
-#$Id: gbrowse.spec.in,v 1.5 2009/03/17 08:33:11 allenday Exp $
+#$Id: gbrowse.spec.in,v 1.6 2009/03/21 23:58:10 allenday Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
-Version: 1.62
+Version: 1.69
 Release: %{revision}.%{distro}
 Packager: allenday@ucla.edu
 License: GPL or Artistic
@@ -44,7 +44,7 @@ Patch1: Generic-Genome-Browser-%{version}-MOBY.patch
 Patch2: Generic-Genome-Browser-%{version}-Chado.patch
 
 %description
-Built from the 'release_1_62-bugfixes' CVS branch
+Built from the Generic-Genome-Browser-1.69.tar.gz release
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.6  2009/03/21 23:58:10  allenday
+update to 1.69 release
+
 Revision 1.5  2009/03/17 08:33:11  allenday
 bringing up to head
 
