@@ -1,4 +1,4 @@
-#$Id: perl-bioperl-db.spec.in,v 1.4 2009/03/22 01:55:51 allenday Exp $
+#$Id: perl-bioperl-db.spec.in,v 1.5 2009/03/22 01:57:09 allenday Exp $
 Summary: bioperl-db Perl module
 Name: perl-bioperl-db
 Version: 1.6.0
@@ -10,15 +10,15 @@ URL: http://search.cpan.org/dist/bioperl-db/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
 Source0: BioPerl-db-%{version}.tar.gz
-Patch0: bioperl-db-0.01-Oracle.patch
+#Patch0: bioperl-db-0.01-Oracle.patch
 BuildArch: noarch
 
 %description
 Release 1.6.0 from CPAN
 
 %prep
-%setup -q -n bioperl-db-%{version}
-%patch0 -p0
+%setup -q -n BioPerl-db-%{version}
+#%patch0 -p0
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-bioperl-db.spec.in,v $
+Revision 1.5  2009/03/22 01:57:09  allenday
+version increment
+
 Revision 1.4  2009/03/22 01:55:51  allenday
 version increment
 

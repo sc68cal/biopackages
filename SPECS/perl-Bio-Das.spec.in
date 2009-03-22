@@ -1,4 +1,4 @@
-#$Id: perl-Bio-Das.spec.in,v 1.6 2009/03/22 01:51:13 allenday Exp $
+#$Id: perl-Bio-Das.spec.in,v 1.7 2009/03/22 01:52:25 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Client-side library for Distributed Genome Annotation System
@@ -10,8 +10,13 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Bio-Das/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-Compress-Zlib
-Requires: perl-bioperl, perl-DBI, perl-libwww-perl
+BuildRequires: perl
+BuildRequires: biopackages
+BuildRequires: perl-Compress-Zlib
+BuildRequires: perl-bioperl >= 1.6.0
+Requires: perl-bioperl >= 1.6.0
+Requires: perl-DBI
+Requires: perl-libwww-perl
 %{ifdistro_release fedora 2}Requires: perl-Time-HiRes
 %{ifdistro_release centos 4}Requires: perl-Time-HiRes
 Source0: Bio-Das-%{version}.tar.gz
@@ -73,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-Das.spec.in,v $
+Revision 1.7  2009/03/22 01:52:25  allenday
+version increment
+
 Revision 1.6  2009/03/22 01:51:13  allenday
 version increment
 
