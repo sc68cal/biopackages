@@ -1,4 +1,4 @@
-#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.6 2009/03/22 01:20:44 allenday Exp $
+#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.7 2009/03/22 01:21:19 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Design PCR primers using primer3 and epcr
@@ -10,8 +10,12 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Bio-PrimerDesigner/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages
-Requires: primer3, perl-Class-Base, perl-libwww-perl
+BuildRequires: perl
+BuildRequires: biopackages
+BuildRequires: perl-Module-Build
+Requires: primer3
+Requires: perl-Class-Base
+Requires: perl-libwww-perl
 Source0: Bio-PrimerDesigner-%{version}.tar.gz
 BuildArch: noarch
 
@@ -186,6 +190,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-PrimerDesigner.spec.in,v $
+Revision 1.7  2009/03/22 01:21:19  allenday
+depcheck
+
 Revision 1.6  2009/03/22 01:20:44  allenday
 version increment
 
