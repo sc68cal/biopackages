@@ -1,9 +1,9 @@
-#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.3 2006/09/09 05:59:04 jmendler Exp $
+#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.4 2009/03/22 01:19:04 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Design PCR primers using primer3 and epcr
 Name: perl-Bio-PrimerDesigner
-Version: 0.01
+Version: 0.05
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
@@ -186,6 +186,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-PrimerDesigner.spec.in,v $
+Revision 1.4  2009/03/22 01:19:04  allenday
+version increment
+
 Revision 1.3  2006/09/09 05:59:04  jmendler
 noarch
 
