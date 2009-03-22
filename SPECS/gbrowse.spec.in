@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.6 2009/03/21 23:58:10 allenday Exp $
+#$Id: gbrowse.spec.in,v 1.7 2009/03/22 01:11:43 allenday Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.69
@@ -9,38 +9,40 @@ Group: Development/Libraries
 URL: http://www.gmod.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: gd >= 2.0.28
-BuildRequires: perl-Bio-Das
+BuildRequires: gd >= 2.0.33
+#BuildRequires: perl-Bio-Das
 BuildRequires: perl-Bio-Graphics
-BuildRequires: perl-Bio-PrimerDesigner
+#BuildRequires: perl-Bio-PrimerDesigner
 BuildRequires: perl-CGI-Session
-BuildRequires: perl-DB_File-Lock
+#BuildRequires: perl-DB_File-Lock
 BuildRequires: perl-ExtUtils-CBuilder
 BuildRequires: perl-FCGI
 BuildRequires: perl-GD
 BuildRequires: perl-JSON
-BuildRequires: perl-Safe-World
-BuildRequires: perl-bioperl
-BuildRequires: perl-bioperl-db
+#BuildRequires: perl-Safe-World
+#BuildRequires: perl-bioperl
+#BuildRequires: perl-bioperl-db
 
-Requires: gd >= 2.0.28
-Requires: perl-Bio-Das
+Requires: gd >= 2.0.33
+#Requires: perl-Bio-Das
 Requires: perl-Bio-Graphics
-Requires: perl-Bio-PrimerDesigner
+#Requires: perl-Bio-PrimerDesigner
 Requires: perl-CGI-Session
-Requires: perl-DB_File-Lock
+#Requires: perl-DB_File-Lock
 Requires: perl-ExtUtils-CBuilder
 Requires: perl-FCGI
 Requires: perl-GD
 Requires: perl-JSON
-Requires: perl-Safe-World
-Requires: perl-bioperl
-Requires: perl-bioperl-db
+Requires: perl-Math-FFT
+Requires: perl-Math-Round
+#Requires: perl-Safe-World
+#Requires: perl-bioperl
+#Requires: perl-bioperl-db
 
 Source0: Generic-Genome-Browser-%{version}.tar.gz
-Source1: Generic-Genome-Browser-%{version}-Makefile.PL
+#Source1: Generic-Genome-Browser-%{version}-Makefile.PL
 Patch0: Generic-Genome-Browser-%{version}-Ace.patch
-Patch1: Generic-Genome-Browser-%{version}-MOBY.patch
+#Patch1: Generic-Genome-Browser-%{version}-MOBY.patch
 Patch2: Generic-Genome-Browser-%{version}-Chado.patch
 
 %description
@@ -49,9 +51,9 @@ Built from the Generic-Genome-Browser-1.69.tar.gz release
 %prep
 rm -rf $RPM_BUILD_ROOT
 %setup -q -n Generic-Genome-Browser-%{version}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL --SELINUX=1 \
@@ -112,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.7  2009/03/22 01:11:43  allenday
+depcheck
+
 Revision 1.6  2009/03/21 23:58:10  allenday
 update to 1.69 release
 
