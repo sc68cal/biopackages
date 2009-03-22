@@ -1,4 +1,4 @@
-#$Id: perl-CORBA-ORBit.spec.in,v 1.5 2009/03/22 02:37:54 allenday Exp $
+#$Id: perl-CORBA-ORBit.spec.in,v 1.6 2009/03/22 02:49:00 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -24,6 +24,8 @@ n/a
 %setup -q -n CORBA-ORBit-%{version}
 perl -pi -e 's/orbit-config/orbit2-config/g' Makefile.PL
 perl -pi -e 's#<orb/#<orbit/#g' *.[hc]
+perl -pi -e 's#<orb/#<orbit/#g' *.xs
+perl -pi -e 's|#include <orbit/interface_repository.h>|#include <orbit/orb-core/corba-defs.h>\n#include <orbit/poa/poa.h>\n|g' *.[hc]
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -69,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-CORBA-ORBit.spec.in,v $
+Revision 1.6  2009/03/22 02:49:00  allenday
+not building.  i am stopping here.  some C lib problems between ORBit and ORBit2.  Perl XS is not compiling.  Looks to be .h files have been restructured in /usr/include
+
 Revision 1.5  2009/03/22 02:37:54  allenday
 depcheck
 
