@@ -1,4 +1,4 @@
-#$Id: perl-Bio-Graphics.spec.in,v 1.1 2009/03/22 00:14:53 allenday Exp $
+#$Id: perl-Bio-Graphics.spec.in,v 1.2 2009/03/22 00:19:54 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Generate GD images of Bio::Seq objects
@@ -14,6 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl
 BuildRequires: biopackages
 BuildRequires: perl-Compress-Zlib
+BuildRequires: perl-Module-Build
 
 Requires: perl-bioperl >= 1.6.0
 Requires: perl-DBI
@@ -71,7 +72,8 @@ rm -rf $RPM_BUILD_ROOT
 
 eval `perl '-V:installarchlib'`
 mkdir -p $RPM_BUILD_ROOT$installarchlib
-%makeinstall
+./Build install
+#%makeinstall
 
 find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
   -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
@@ -105,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-Graphics.spec.in,v $
+Revision 1.2  2009/03/22 00:19:54  allenday
+depcheck
+
 Revision 1.1  2009/03/22 00:14:53  allenday
 import
 
