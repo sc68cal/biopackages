@@ -1,4 +1,4 @@
-#$Id: primer3.spec.in,v 1.8 2009/03/22 01:30:48 allenday Exp $
+#$Id: primer3.spec.in,v 1.9 2009/03/22 01:31:08 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -40,6 +40,7 @@ We also request that use of this software be cited in publications as
    http://fokker.wi.mit.edu/primer3/
    
 %prep
+rm -rf %{name}-%{version}
 mkdir %{name}-%{version}
 cd %{name}-%{version}
 tar -xvzf %{SOURCE0}
@@ -87,6 +88,9 @@ rm -rf %{buildroot}
 # ----------------------------------------------------------------------------
 
 $Log: primer3.spec.in,v $
+Revision 1.9  2009/03/22 01:31:08  allenday
+version increment
+
 Revision 1.8  2009/03/22 01:30:48  allenday
 version increment
 
