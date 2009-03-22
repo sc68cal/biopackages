@@ -1,4 +1,4 @@
-#$Id: primer3.spec.in,v 1.9 2009/03/22 01:31:08 allenday Exp $
+#$Id: primer3.spec.in,v 1.10 2009/03/22 01:31:48 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -82,12 +82,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_bindir}/*
 %{_datadir}/%{name}-%{version}
-%doc Copyright README example
+%doc COPYING.txt README.txt example
 %doc src/release_notes
 
 # ----------------------------------------------------------------------------
 
 $Log: primer3.spec.in,v $
+Revision 1.10  2009/03/22 01:31:48  allenday
+version increment
+
 Revision 1.9  2009/03/22 01:31:08  allenday
 version increment
 
