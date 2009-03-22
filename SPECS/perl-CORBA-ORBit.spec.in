@@ -1,4 +1,4 @@
-#$Id: perl-CORBA-ORBit.spec.in,v 1.1 2009/03/22 02:30:16 allenday Exp $
+#$Id: perl-CORBA-ORBit.spec.in,v 1.2 2009/03/22 02:31:21 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
@@ -13,6 +13,8 @@ Epoch: 0
 URL: http://search.cpan.org/dist/CORBA-ORBit
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages, gcc
+BuildRequires: ORBit2-devel
+Requires: ORBit2
 Source0: CORBA-ORBit-%{version}.tar.gz
 
 %description
@@ -65,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-CORBA-ORBit.spec.in,v $
+Revision 1.2  2009/03/22 02:31:21  allenday
+depcheck
+
 Revision 1.1  2009/03/22 02:30:16  allenday
 import
 
