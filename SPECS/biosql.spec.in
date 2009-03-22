@@ -1,0 +1,34 @@
+#$Id: biosql.spec.in,v 1.1 2009/03/22 02:04:38 allenday Exp $
+Summary: bioperl-db Perl module
+Name: biosql
+Version: 1.0.1
+Release: %{revision}.%{distro}
+Packager: allenday@ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://biosql.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl, biopackages
+Source0: biosql-%{version}.tar.gz
+BuildArch: noarch
+
+%description
+Release 1.0.1 from biosql.org
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+
+%install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%doc Changes  INSTALL  LICENSE  README  Release.txt  doc  scripts  sql
+
+$Log: biosql.spec.in,v $
+Revision 1.1  2009/03/22 02:04:38  allenday
+import
+
