@@ -1,4 +1,4 @@
-#$Id: primer3.spec.in,v 1.5 2009/03/22 01:25:17 allenday Exp $
+#$Id: primer3.spec.in,v 1.4 2009/03/22 01:24:54 allenday Exp $
 Vendor: biopackages.net
 Group: Applications/Scientific
 Packager: Allen Day <allenday@ucla.edu>
@@ -9,7 +9,7 @@ Summary:  Primer3 picks primers for PCR reactions
 License:  Copyright Whitehead Institute for Biomedical Research
 URL:      http://fokker.wi.mit.edu/primer3/
 #Source:   http://fokker.wi.mit.edu/primer3/primer3_%{version}.tar.gz
-Source:   %{name}-%{version}.tar.gz
+Source:   %{name}_%{version}.tar.gz
 Patch:    primer3.patch
 BuildRequires: gcc
 BuildRoot: %{_tmppath}/%{name}-root
@@ -86,9 +86,6 @@ rm -rf %{buildroot}
 # ----------------------------------------------------------------------------
 
 $Log: primer3.spec.in,v $
-Revision 1.5  2009/03/22 01:25:17  allenday
-version increment
-
 Revision 1.4  2009/03/22 01:24:54  allenday
 version increment
 
