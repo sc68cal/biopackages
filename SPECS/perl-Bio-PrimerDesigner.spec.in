@@ -1,4 +1,4 @@
-#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.8 2009/03/22 01:33:30 allenday Exp $
+#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.9 2009/03/22 01:34:48 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Design PCR primers using primer3 and epcr
@@ -148,7 +148,7 @@ SEE ALSO
 %setup -q -n Bio-PrimerDesigner-%{version}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl ./Build.PL --prefix $RPM_BUILD_ROOT%{_prefix}  < /dev/null
+CFLAGS="$RPM_OPT_FLAGS" perl ./Build.PL --prefix=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 ./Build
 #make OPTIMIZE="$RPM_OPT_FLAGS"
 
@@ -191,6 +191,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-PrimerDesigner.spec.in,v $
+Revision 1.9  2009/03/22 01:34:48  allenday
+version increment
+
 Revision 1.8  2009/03/22 01:33:30  allenday
 version increment
 
