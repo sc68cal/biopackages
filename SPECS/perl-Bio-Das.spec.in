@@ -1,9 +1,9 @@
-#$Id: perl-Bio-Das.spec.in,v 1.5 2007/04/21 23:06:18 bpbuild Exp $
+#$Id: perl-Bio-Das.spec.in,v 1.6 2009/03/22 01:51:13 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Client-side library for Distributed Genome Annotation System
 Name: perl-Bio-Das
-Version: 1.00
+Version: 1.10
 Release: %{revision}.%{distro}
 Packager: allenday@jugular.ctrl.ucla.edu
 License: GPL or Artistic
@@ -15,7 +15,6 @@ Requires: perl-bioperl, perl-DBI, perl-libwww-perl
 %{ifdistro_release fedora 2}Requires: perl-Time-HiRes
 %{ifdistro_release centos 4}Requires: perl-Time-HiRes
 Source0: Bio-Das-%{version}.tar.gz
-Patch0: Bio-Das-%{version}-Proserver.patch
 BuildArch: noarch
 
 %description
@@ -30,7 +29,6 @@ The requested URL /authors/id/L/LD/LDS/Bio-Das-1.00.readme was not found on this
 
 %prep
 %setup -q -n Bio-Das-%{version}
-%patch0 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -75,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-Das.spec.in,v $
+Revision 1.6  2009/03/22 01:51:13  allenday
+version increment
+
 Revision 1.5  2007/04/21 23:06:18  bpbuild
 added build req
 
