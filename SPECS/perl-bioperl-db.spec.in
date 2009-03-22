@@ -1,4 +1,4 @@
-#$Id: perl-bioperl-db.spec.in,v 1.5 2009/03/22 01:57:09 allenday Exp $
+#$Id: perl-bioperl-db.spec.in,v 1.6 2009/03/22 02:54:55 allenday Exp $
 Summary: bioperl-db Perl module
 Name: perl-bioperl-db
 Version: 1.6.0
@@ -8,8 +8,19 @@ License: GPL or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/bioperl-db/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
 BuildRequires: perl, biopackages
+BuildRequires: biosql >= 1.0.1
+
+#Dropping these for now until the RPMs can be built.  They're not critical anyway
+#Requires: perl-CORBA-ORBit
+#Requires: perl-DBD-Oracle
+
+Requires: biosql >= 1.0.1
+
 Source0: BioPerl-db-%{version}.tar.gz
+Patch0: %{name}-%{version}-DBD-Oracle.patch
+Patch1: %{name}-%{version}-CORBA-ORBit.patch
 #Patch0: bioperl-db-0.01-Oracle.patch
 BuildArch: noarch
 
@@ -18,10 +29,12 @@ Release 1.6.0 from CPAN
 
 %prep
 %setup -q -n BioPerl-db-%{version}
-#%patch0 -p0
+%patch0 -p1
+%patch1 -p1
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+echo "y" | CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}
+#/dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
@@ -63,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-bioperl-db.spec.in,v $
+Revision 1.6  2009/03/22 02:54:55  allenday
+depcheck patches
+
 Revision 1.5  2009/03/22 01:57:09  allenday
 version increment
 
