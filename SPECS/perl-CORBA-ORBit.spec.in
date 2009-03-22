@@ -1,26 +1,25 @@
-#$Id: perl-DBD-Oracle.spec.in,v 1.2 2009/03/22 02:26:35 allenday Exp $
+#$Id: perl-CORBA-ORBit.spec.in,v 1.1 2009/03/22 02:30:16 allenday Exp $
 %define _unpackaged_files_terminate_build 0
 Distribution: Custom
 Vendor: biopackages.net
-Summary: Oracle database driver for the DBI module
-Name: perl-DBD-Oracle
-Version: 1.22
+Summary: n/a
+Name: perl-CORBA-ORBit
+Version: 0.4.7
 Release: %{revision}.%{distro}
-Packager: allenday@jugular.ctrl.ucla.edu
+Packager: allenday@ucla.edu
 License: GPL or Artistic
 Group: Development/Libraries
 Epoch: 0
-URL: http://search.cpan.org/dist/DBD-Pg/
+URL: http://search.cpan.org/dist/CORBA-ORBit
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, biopackages, perl-DBI, gcc
-Requires: perl-DBI
-Source0: DBD-Oracle-%{version}.tar.gz
+BuildRequires: perl, biopackages, gcc
+Source0: CORBA-ORBit-%{version}.tar.gz
 
 %description
-Oracle database driver for the DBI module
+n/a
 
 %prep
-%setup -q -n DBD-Oracle-%{version}
+%setup -q -n CORBA-ORBit-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -65,10 +64,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root,-)
 
-$Log: perl-DBD-Oracle.spec.in,v $
-Revision 1.2  2009/03/22 02:26:35  allenday
-import
-
-Revision 1.1  2009/03/22 02:24:59  allenday
+$Log: perl-CORBA-ORBit.spec.in,v $
+Revision 1.1  2009/03/22 02:30:16  allenday
 import
 
