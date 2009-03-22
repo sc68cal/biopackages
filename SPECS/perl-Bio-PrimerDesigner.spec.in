@@ -1,4 +1,4 @@
-#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.9 2009/03/22 01:34:48 allenday Exp $
+#$Id: perl-Bio-PrimerDesigner.spec.in,v 1.10 2009/03/22 01:45:03 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Design PCR primers using primer3 and epcr
@@ -12,9 +12,12 @@ URL: http://search.cpan.org/dist/Bio-PrimerDesigner/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl
 BuildRequires: biopackages
+BuildRequires: perl-Class-Base
 BuildRequires: perl-Module-Build
+BuildRequires: perl-Readonly
 Requires: primer3
 Requires: perl-Class-Base
+Requires: perl-Readonly
 Requires: perl-libwww-perl
 Source0: Bio-PrimerDesigner-%{version}.tar.gz
 BuildArch: noarch
@@ -148,9 +151,13 @@ SEE ALSO
 %setup -q -n Bio-PrimerDesigner-%{version}
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" perl ./Build.PL --prefix=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+export CFLAGS="$RPM_OPT_FLAGS"
+perl ./Build.PL
+#talk about fucked up...
+# --prefix $RPM_BUILD_ROOT%{_prefix}  < /dev/null
+perl -pi -e 's#'\''prefix'\'' => undef#'\''prefix'\'' => '\'''$RPM_BUILD_ROOT%{_prefix}''\''#' _build/build_params
+
 ./Build
-#make OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -191,6 +198,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-PrimerDesigner.spec.in,v $
+Revision 1.10  2009/03/22 01:45:03  allenday
+version increment
+
 Revision 1.9  2009/03/22 01:34:48  allenday
 version increment
 
