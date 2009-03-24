@@ -1,4 +1,4 @@
-#$Id: samtools.spec.in,v 1.1 2009/03/24 04:55:27 bret_harry Exp $
+#$Id: samtools.spec.in,v 1.2 2009/03/24 06:16:33 bret_harry Exp $
 %define path %{name}-%{version}
 Name: samtools
 Summary: SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. 
@@ -10,8 +10,8 @@ License: MIT License
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/samtools/
 Source0: http://voxel.dl.sourceforge.net/sourceforge/samtools/samtools-0.1.2.tar.bz2
-#Requires:
-#BuildRequires:
+Requires: zlib >= 1.2.2.1
+BuildRequires: zlib-devel >= 1.2.2.1
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
@@ -49,6 +49,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %postun
 
 $Log: samtools.spec.in,v $
+Revision 1.2  2009/03/24 06:16:33  bret_harry
+bumped version
+
 Revision 1.1  2009/03/24 04:55:27  bret_harry
 new spec
 
