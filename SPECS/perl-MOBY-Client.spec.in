@@ -1,4 +1,4 @@
-#$Id: perl-MOBY-Client.spec.in,v 1.1 2009/03/24 23:47:43 allenday Exp $
+#$Id: perl-MOBY-Client.spec.in,v 1.2 2009/03/24 23:48:21 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Something to do with BioMoby
@@ -13,13 +13,13 @@ URL: http://search.cpan.org/dist/MOBY-Client
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, biopackages
-Source0: %{name}-%{version}.tar.gz
+Source0: MOBY-Client-%{version}.tar.gz
 
 %description
 Something to do with BioMoby
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n MOBY-Client-%{version}
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-MOBY-Client.spec.in,v $
+Revision 1.2  2009/03/24 23:48:21  allenday
+import
+
 Revision 1.1  2009/03/24 23:47:43  allenday
 import
 
