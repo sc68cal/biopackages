@@ -1,4 +1,4 @@
-#$Id: perl-lsid-perl.spec.in,v 1.1 2009/03/25 00:37:33 allenday Exp $
+#$Id: perl-lsid-perl.spec.in,v 1.2 2009/03/25 00:41:27 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Perl module for building clients and servers which resolve and perform metadata queries on LSIDs.
@@ -18,13 +18,19 @@ BuildRequires: perl-SOAP-Lite
 BuildRequires: perl-Compress-Zlib
 BuildRequires: perl-URI
 BuildRequires: perl-libwww-perl
-BuildRequires: perl-Net-FTP
 BuildRequires: perl-Net-DNS
 BuildRequires: perl-XML-XPath
 BuildRequires: perl-RDF-Core
-BuildRequires: perl-Time-HiRes
-BuildRequires: perl-MIME-Tools
 BuildRequires: perl-Error
+
+Requires: perl-SOAP-Lite
+Requires: perl-Compress-Zlib
+Requires: perl-URI
+Requires: perl-libwww-perl
+Requires: perl-Net-DNS
+Requires: perl-XML-XPath
+Requires: perl-RDF-Core
+Requires: perl-Error
 
 Source0: lsid-perl-%{version}.tar.gz
 
@@ -77,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-lsid-perl.spec.in,v $
+Revision 1.2  2009/03/25 00:41:27  allenday
+import
+
 Revision 1.1  2009/03/25 00:37:33  allenday
 import
 
