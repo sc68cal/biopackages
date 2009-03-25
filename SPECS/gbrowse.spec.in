@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.8 2009/03/25 00:54:45 allenday Exp $
+#$Id: gbrowse.spec.in,v 1.9 2009/03/25 20:26:40 allenday Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.69
@@ -56,7 +56,8 @@ CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL --SELINUX=1 \
   LIB=$RPM_BUILD_ROOT%{perl_sitelib} \
   INSTALLSITEMAN3DIR=$RPM_BUILD_ROOT%{_datadir} \
   INSTALLSITEMAN1DIR=$RPM_BUILD_ROOT%{_datadir} \
-  INSTALLBIN=$RPM_BUILD_ROOT%{_prefix}/%{_bindir} \
+  INSTALLBIN=$RPM_BUILD_ROOT%{_bindir} \
+  BIN=$RPM_BUILD_ROOT%{_bindir} \
   CONF=$RPM_BUILD_ROOT/etc/bioinformatics \
   HTDOCS=$RPM_BUILD_ROOT/var/www/html \
   CGIBIN=$RPM_BUILD_ROOT/var/www/cgi-bin/gbrowse < /dev/null
@@ -101,6 +102,8 @@ fi
 %post
 mkdir /var/www/html/gbrowse/tmp
 chmod a+rwx /var/www/html/gbrowse/tmp
+chown -R apache.apache /var/www/html/gbrowse
+chown -R apache.apache /var/www/cgi-bin/gbrowse
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -109,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.9  2009/03/25 20:26:40  allenday
+permissions
+
 Revision 1.8  2009/03/25 00:54:45  allenday
 path tweak
 
