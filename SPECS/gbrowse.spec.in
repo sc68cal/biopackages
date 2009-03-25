@@ -1,4 +1,4 @@
-#$Id: gbrowse.spec.in,v 1.7 2009/03/22 01:11:43 allenday Exp $
+#$Id: gbrowse.spec.in,v 1.8 2009/03/25 00:54:45 allenday Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
 Version: 1.69
@@ -10,23 +10,18 @@ URL: http://www.gmod.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: gd >= 2.0.33
-#BuildRequires: perl-Bio-Das
 BuildRequires: perl-Bio-Graphics
-#BuildRequires: perl-Bio-PrimerDesigner
 BuildRequires: perl-CGI-Session
-#BuildRequires: perl-DB_File-Lock
 BuildRequires: perl-ExtUtils-CBuilder
 BuildRequires: perl-FCGI
 BuildRequires: perl-GD
 BuildRequires: perl-JSON
-#BuildRequires: perl-Safe-World
-#BuildRequires: perl-bioperl
-#BuildRequires: perl-bioperl-db
+BuildRequires: perl-bioperl >= 1.6.0
 
 Requires: gd >= 2.0.33
-#Requires: perl-Bio-Das
+Requires: perl-Bio-Das
 Requires: perl-Bio-Graphics
-#Requires: perl-Bio-PrimerDesigner
+Requires: perl-Bio-PrimerDesigner
 Requires: perl-CGI-Session
 #Requires: perl-DB_File-Lock
 Requires: perl-ExtUtils-CBuilder
@@ -36,8 +31,8 @@ Requires: perl-JSON
 Requires: perl-Math-FFT
 Requires: perl-Math-Round
 #Requires: perl-Safe-World
-#Requires: perl-bioperl
-#Requires: perl-bioperl-db
+Requires: perl-bioperl >= 1.6.0
+Requires: perl-bioperl-db
 
 Source0: Generic-Genome-Browser-%{version}.tar.gz
 #Source1: Generic-Genome-Browser-%{version}-Makefile.PL
@@ -61,7 +56,7 @@ CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL --SELINUX=1 \
   LIB=$RPM_BUILD_ROOT%{perl_sitelib} \
   INSTALLSITEMAN3DIR=$RPM_BUILD_ROOT%{_datadir} \
   INSTALLSITEMAN1DIR=$RPM_BUILD_ROOT%{_datadir} \
-  INSTALLBIN=$RPM_BUILD_ROOT%{_bindir} \
+  INSTALLBIN=$RPM_BUILD_ROOT%{_prefix}/%{_bindir} \
   CONF=$RPM_BUILD_ROOT/etc/bioinformatics \
   HTDOCS=$RPM_BUILD_ROOT/var/www/html \
   CGIBIN=$RPM_BUILD_ROOT/var/www/cgi-bin/gbrowse < /dev/null
@@ -114,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.8  2009/03/25 00:54:45  allenday
+path tweak
+
 Revision 1.7  2009/03/22 01:11:43  allenday
 depcheck
 
