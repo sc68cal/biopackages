@@ -1,4 +1,4 @@
-#$Id: ucsc.spec.in,v 1.3 2007/01/07 08:36:36 bpbuild Exp $
+#$Id: ucsc.spec.in,v 1.4 2009/03/25 22:14:01 allenday Exp $
 Summary: Jim Kent's suite of biological analysis and web display programs
 Name: ucsc
 Version: 456
@@ -57,7 +57,7 @@ Patch5: jksrc-456.sundry-fixes.patch
 Patch6: jksrc-456.makefile.patch
 
 # Patching out -Werrors that are preventing clean build
-Patch7: jksrc456.patch
+#Patch7: jksrc456.patch
 
 %description
 CONTENTS AND COPYRIGHT
@@ -142,7 +142,7 @@ system service.
 %patch4 -p2
 %patch5 -p1
 %patch6 -p0
-%patch7 -p1
+#%patch7 -p1
 
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin
@@ -188,6 +188,9 @@ chkconfig --add gfServer
 chkconfig --del gfServer
 
 $Log: ucsc.spec.in,v $
+Revision 1.4  2009/03/25 22:14:01  allenday
+patch
+
 Revision 1.3  2007/01/07 08:36:36  bpbuild
 udpates
 
