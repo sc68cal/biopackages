@@ -14,15 +14,6 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: perl, biopackages
-BuildRequires: perl-RDF-Core
-BuildRequires: perl-Test-Pod
-BuildRequires: perl-XML-SemanticCompare
-BuildRequires: perl-WSRF-Lite
-
-Requires: perl-RDF-Core
-Requires: perl-Test-Pod
-Requires: perl-XML-SemanticCompare
-Requires: perl-WSRF-Lite
 
 Source0: DateTime-Format-Epoch-%{version}.tar.gz
 
@@ -75,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-DateTime-Format-Epoch.spec.in,v $
+Revision 1.2  2009/03/25 00:10:35  allenday
+import
+
 Revision 1.1  2009/03/25 00:09:12  allenday
 import
 
