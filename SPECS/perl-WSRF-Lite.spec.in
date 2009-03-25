@@ -1,4 +1,4 @@
-#$Id: perl-WSRF-Lite.spec.in,v 1.1 2009/03/24 23:57:26 allenday Exp $
+#$Id: perl-WSRF-Lite.spec.in,v 1.2 2009/03/25 00:01:52 allenday Exp $
 Distribution: Custom
 Vendor: Custom
 Summary: Implementation of the Web Service Resource Framework
@@ -14,7 +14,41 @@ BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: perl, biopackages
+BuildRequires: perl-Params-Validate
+BuildRequires: perl-DateTime-Locale
+BuildRequires: perl-DateTime-TimeZone
+BuildRequires: perl-IO-Socket-SSL
+BuildRequires: perl-List-MoreUtils
+BuildRequires: perl-SOAP-Lite
+BuildRequires: perl-XML-DOM
+BuildRequires: perl-DateTime-Format-Epoch
+BuildRequires: perl-DateTime-Format-W3CDTF
+BuildRequires: perl-HTTP-Daemon
+BuildRequires: perl-HTTP-Daemon-SSL
+BuildRequires: perl-MIME-Base64
+BuildRequires: perl-Digest-SHA1
+BuildRequires: perl-Crypt-OpenSSL-RSA
+BuildRequires: perl-Sys-Hostname-Long
+BuildRequires: perl-XML-LibXML
+BuildRequires: perl-Crypt-OpenSSL-X509
 
+Requires: perl-Params-Validate
+Requires: perl-DateTime-Locale
+Requires: perl-DateTime-TimeZone
+Requires: perl-IO-Socket-SSL
+Requires: perl-List-MoreUtils
+Requires: perl-SOAP-Lite
+Requires: perl-XML-DOM
+Requires: perl-DateTime-Format-Epoch
+Requires: perl-DateTime-Format-W3CDTF
+Requires: perl-HTTP-Daemon
+Requires: perl-HTTP-Daemon-SSL
+Requires: perl-MIME-Base64
+Requires: perl-Digest-SHA1
+Requires: perl-Crypt-OpenSSL-RSA
+Requires: perl-Sys-Hostname-Long
+Requires: perl-XML-LibXML
+Requires: perl-Crypt-OpenSSL-X509
 
 Source0: WSRF-Lite-%{version}.tar.gz
 
@@ -67,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-WSRF-Lite.spec.in,v $
+Revision 1.2  2009/03/25 00:01:52  allenday
+depcheck
+
 Revision 1.1  2009/03/24 23:57:26  allenday
 import
 
