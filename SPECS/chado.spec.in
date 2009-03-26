@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.15 2009/03/26 01:09:13 allenday Exp $
+#$Id: chado.spec.in,v 1.16 2009/03/26 18:02:52 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -115,69 +115,13 @@ sudo su postgres -c "cat %{_datadir}/doc/postgresql-AffxSeq-1.00/affx-seq-lib-de
 cat %{SOURCE1} | awk -F '	' '{print 3,"\t",$2,"\t",$3," ",$4}' | perl -ne 's!^3 !3!;print' > ATCC.munged
 sudo su postgres -c "cat ATCC.munged | psql -U postgres $tmp_chado -c 'COPY dbxref (db_id,accession,description) FROM stdin' 2>&1 >/dev/null";
 
-#None
-#Taxonomy InterPro MGED
-
-#obo
-obo[0]=EMAP.obo
-obo[1]=PSI-MOD.obo
-obo[2]=WBbt.obo
-obo[3]=adult_mouse_anatomy.obo
-obo[4]=amphibian_anatomy.obo
-obo[5]=caro.obo
-obo[6]=cell.obo
-obo[7]=chebi.obo
-obo[8]=dictyostelium_anatomy.obo
-obo[9]=envo.obo
-obo[10]=evidence_code.obo
-obo[11]=fly_anatomy.obo
-obo[12]=fly_development.obo
-obo[13]=fly_taxonomy.obo
-obo[14]=fma2_obo.obo
-obo[15]=fungal_anatomy.obo
-obo[16]=gene_ontology_edit.obo
-obo[17]=human-dev-anat-abstract.obo
-obo[18]=human-dev-anat-staged.obo
-obo[19]=human_disease.obo
-obo[20]=infectious_disease.obo
-obo[21]=mammalian_phenotype.obo
-obo[22]=medaka_ontology.obo
-obo[23]=mosquito_anatomy.obo
-obo[24]=mosquito_insecticide_resistance.obo
-obo[25]=mouse_pathology.obo
-obo[26]=plant_trait.obo
-obo[27]=po_anatomy.obo
-obo[28]=po_temporal.obo
-obo[29]=pro.obo
-obo[30]=psi-mi.obo
-obo[31]=psi-ms.obo
-obo[32]=quality.obo
-obo[33]=ro.obo
-obo[34]=so.obo
-obo[35]=spatial.obo
-obo[36]=spider_comparative_biology.obo
-obo[37]=teleost_anatomy.obo
-obo[38]=teleost_taxonomy.obo
-obo[39]=tick_anatomy.obo
-obo[40]=transmission_process.obo
-obo[41]=unit.obo
-obo[42]=worm_development.obo
-obo[43]=worm_phenotype.obo
-obo[44]=xenopus_anatomy.obo
-obo[45]=yeast_phenotype.obo
-obo[46]=zebrafish_anatomy.obo
-
-#owl
-owl[0]=NMR.owl
-owl[1]=OBI.owl
-owl[2]=SAO.owl
-owl[3]=sopharm.owl
-
-for i in ${obo[*]} ; do
+for i in %{_datadir}/obo*/chadoxml/*.chadoxml ; do
   echo "  * Loading OBO ontology: $i" ;
-  /usr/bin/go2fmt.pl -p obo_text -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/${i/.obo/.xml} ;
-  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/${i/.obo/.xml}" ;
+  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' $i" ;
 done ;
+
+#for i in ${obo[*]} ; do
+#done ;
 
 #for i in ${rel[*]} ; do
 #  echo "  * Loading DAG-Edit relationships: $i" ;
