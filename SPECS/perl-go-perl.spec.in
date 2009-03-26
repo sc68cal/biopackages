@@ -1,4 +1,4 @@
-#$Id: perl-go-perl.spec.in,v 1.7 2009/01/21 23:31:32 daveclements Exp $
+#$Id: perl-go-perl.spec.in,v 1.8 2009/03/26 00:22:26 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: GO Perl
@@ -15,10 +15,10 @@ BuildRequires: wget
 BuildArch: noarch
 Requires: perl-Graph, perl-XML-Writer, perl-bioperl
 
-Source0: go-perl-0.09.tar.gz
+Source0: go-perl-%{version}.tar.gz
 
 # Replace GO::Dotty::Dotty with GO::IO::Dotty, which actually exists.
-Patch0: go-perl-0.09-dotty.patch
+Patch0: go-perl-%{version}-dotty.patch
 
 %description
 go-perl modules
@@ -36,7 +36,7 @@ See also
 see INSTALL for installation instructions
 
 %prep
-%setup -q -n go-perl-0.09
+%setup -q -n go-perl-%{version}
 %patch0 -p1
 
 %build
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.xsl
 
 $Log: perl-go-perl.spec.in,v $
+Revision 1.8  2009/03/26 00:22:26  allenday
+cleanup
+
 Revision 1.7  2009/01/21 23:31:32  daveclements
 Fixed release to use macro, dropped commented out 0.02 patches, and added 0.09 patch
 to fix a problem with Dotty.
