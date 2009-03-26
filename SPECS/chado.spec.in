@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.13 2009/03/26 00:56:50 allenday Exp $
+#$Id: chado.spec.in,v 1.14 2009/03/26 01:08:09 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -115,92 +115,85 @@ sudo su postgres -c "cat %{_datadir}/doc/postgresql-AffxSeq-1.00/affx-seq-lib-de
 cat %{SOURCE1} | awk -F '	' '{print 3,"\t",$2,"\t",$3," ",$4}' | perl -ne 's!^3 !3!;print' > ATCC.munged
 sudo su postgres -c "cat ATCC.munged | psql -U postgres $tmp_chado -c 'COPY dbxref (db_id,accession,description) FROM stdin' 2>&1 >/dev/null";
 
-
 #None
 #Taxonomy InterPro MGED
 
 #obo
-obo[0]=Relationship
-obo[1]=Cell
-obo[2]=AttributeValue
-obo[3]=Development_Dme
-obo[4]=Environment
-obo[5]=EvidenceCode
-obo[6]=eVOC
-obo[7]=FIX
-obo[8]=GrossAnatomy_Dme
-obo[9]=ProteinDomain
-obo[10]=Reaction
-obo[11]=Sequence
-#obo[12]=SequenceFeature
-obo[13]=Gene
-###                               obo[14]=Chemical
+obo[0]=EMAP.obo
+obo[1]=PSI-MOD.obo
+obo[2]=WBbt.obo
+obo[3]=adult_mouse_anatomy.obo
+obo[4]=amphibian_anatomy.obo
+obo[5]=caro.obo
+obo[6]=cell.obo
+obo[7]=chebi.obo
+obo[8]=dictyostelium_anatomy.obo
+obo[9]=envo.obo
+obo[10]=evidence_code.obo
+obo[11]=fly_anatomy.obo
+obo[12]=fly_development.obo
+obo[13]=fly_taxonomy.obo
+obo[14]=fma2_obo.obo
+obo[15]=fungal_anatomy.obo
+obo[16]=gene_ontology_edit.obo
+obo[17]=human-dev-anat-abstract.obo
+obo[18]=human-dev-anat-staged.obo
+obo[19]=human_disease.obo
+obo[20]=infectious_disease.obo
+obo[21]=mammalian_phenotype.obo
+obo[22]=medaka_ontology.obo
+obo[23]=mosquito_anatomy.obo
+obo[24]=mosquito_insecticide_resistance.obo
+obo[25]=mouse_pathology.obo
+obo[26]=plant_trait.obo
+obo[27]=po_anatomy.obo
+obo[28]=po_temporal.obo
+obo[29]=pro.obo
+obo[30]=psi-mi.obo
+obo[31]=psi-ms.obo
+obo[32]=quality.obo
+obo[33]=ro.obo
+obo[34]=so.obo
+obo[35]spatial.obo
+obo[36]=spider_comparative_biology.obo
+obo[37]=teleost_anatomy.obo
+obo[38]=teleost_taxonomy.obo
+obo[39]=tick_anatomy.obo
+obo[40]=transmission_process.obo
+obo[41]=unit.obo
+obo[42]=worm_development.obo
+obo[43]=worm_phenotype.obo
+obo[44]=xenopus_anatomy.obo
+obo[45]=yeast_phenotype.obo
+obo[46]=zebrafish_anatomy.obo
 
-#go_def
-##def[1]=Development_Ath/TAIR_ontology.defs
-##def[2]=Development_Cel/worm_development.definitions
-###		def[3]=Development_Osa/temporal_gramene.definition
-##def[4]=Development_Pfa/PLO_defs.txt
-##def[5]=GrossAnatomy_Ath/arabidopsis_anatomy.definitions
-###		def[6]=GrossAnatomy_Ddi/anatomy.definitions
-###		def[7]=GrossAnatomy_Ola/medaka_anatomy.definitions
-##def[8]=GrossAnatomy_Osa/anatomy_gramene.definition
-###		def[9]=GrossAnatomy_Plant/anatomy.definition
-##def[10]=GrossAnatomy_Sce/fungal_anatomy.definitions
-###		def[11]=GrossAnatomy_Zma/Zea_mays_anatomy_ontology_definitions.txt
-##def[12]=Phenotype_Mammal/context.definition
-def[13]=Phenotype_Mmu/MP.defs
-##def[14]=ProteinInteraction/psi-mi.def
-###		def[16]=Trait_Osa/trait.definition
-###		def[17]=BrendaTissue/BrendaTissueDefinitions
-
-#go_ont
-###		rel[1]=Development_Ath/temporal.tair
-##rel[2]=Development_Cel/worm_development.ontology
-###		rel[3]=Development_Hsa/human-dev-anat-abstract.ontology
-###		rel[4]=Development_Hsa/human-dev-anat-staged.ontology
-rel[5]=Development_Mmu/EMAP.ontology
-###		rel[6]=Development_Osa/temporal_gramene.ontology
-##rel[7]=Development_Pfa/PLO_ontology.txt
-###		rel[8]=Disease_Hsa/DO_08_18_03.txt
-##rel[9]=GrossAnatomy_Ath/arabidopsis_anatomy.ontology
-##rel[10]=GrossAnatomy_Ddi/anatomy.ontology
-##rel[11]=GrossAnatomy_Dre/zebrafish_anatomy.ontology
-rel[12]=GrossAnatomy_Mmu/MA.ontology
-###		rel[13]=GrossAnatomy_Ola/medaka_anatomy.ontology
-###rel[14]=GrossAnatomy_Osa/anatomy_gramene.ontology
-##rel[15]=GrossAnatomy_Plant/anatomy.ontology
-##rel[16]=GrossAnatomy_Sce/fungal_anatomy.ontology
-###		rel[17]=GrossAnatomy_Zma/Zea_mays_anatomy_ontology.txt
-##rel[18]=Image/image.ontology
-rel[19]=Pathology_Mmu/mpath_obo.ontology
-##rel[20]=Phenotype_Mammal/context.ontology
-rel[21]=Phenotype_Mmu/MPheno.ontology
-##rel[22]=ProteinInteraction/psi-mi.dag
-##rel[24]=Trait_Osa/trait.ontology
-##rel[25]=BrendaTissue/BrendaTissue
+#owl
+owl[0]=NMR.owl
+owl[1]=OBI.owl
+owl[2]=SAO.owl
+owl[3]=sopharm.owl
 
 for i in ${obo[*]} ; do
   echo "  * Loading OBO ontology: $i" ;
-  /usr/bin/go2fmt.pl -p obo_text -w xml -e /dev/null /usr/share/obo/$i/* | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/$i.xml ;
-  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/$i.xml" ;
+  /usr/bin/go2fmt.pl -p obo_text -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/${i/.obo/.xml} ;
+  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/${i/.obo/.xml}" ;
 done ;
 
-for i in ${rel[*]} ; do
-  echo "  * Loading DAG-Edit relationships: $i" ;
-  /usr/bin/go2fmt.pl -p go_ont -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/rel.xml ;
-  if [[ `wc -c /var/tmp/rel.xml | awk '{print $1}'` != 0 ]] ; then
-    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/rel.xml" ;
-  fi ;
-done ;
+#for i in ${rel[*]} ; do
+#  echo "  * Loading DAG-Edit relationships: $i" ;
+#  /usr/bin/go2fmt.pl -p go_ont -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/rel.xml ;
+#  if [[ `wc -c /var/tmp/rel.xml | awk '{print $1}'` != 0 ]] ; then
+#    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/rel.xml" ;
+#  fi ;
+#done ;
 
-for i in ${def[*]} ; do
-  echo "  * Loading DAG-Edit definitions: $i" ;
-  /usr/bin/go2fmt.pl -p go_def -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/def.xml ;
-  if [[ `wc -c /var/tmp/def.xml | awk '{print $1}'` != 0 ]] ; then
-    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/def.xml" ;
-  fi ;
-done ;
+#for i in ${def[*]} ; do
+#  echo "  * Loading DAG-Edit definitions: $i" ;
+#  /usr/bin/go2fmt.pl -p go_def -w xml -e /dev/null /usr/share/obo/$i | go-apply-xslt oboxml_to_chadoxml - > %{_tmppath}/def.xml ;
+#  if [[ `wc -c /var/tmp/def.xml | awk '{print $1}'` != 0 ]] ; then
+#    sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_tmppath}/def.xml" ;
+#  fi ;
+#done ;
 
 #materialize the godb GO bridge views
 sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.go_acc SELECT * FROM godb.v_go_acc'";
