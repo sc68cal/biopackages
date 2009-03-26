@@ -1,4 +1,4 @@
-#$Id: obo-core.spec.in,v 1.9 2009/03/26 02:01:12 allenday Exp $
+#$Id: obo-core.spec.in,v 1.10 2009/03/26 02:03:26 allenday Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
 Version: 1.0.1
@@ -111,9 +111,9 @@ http://obo.cvs.sourceforge.net/*checkout*/obo/obo/ontology/anatomy/gross_anatomy
 %setup -q 
 
 rm -rf ${RPM_BUILD_ROOT};
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo/obo
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo/oboxml
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo/chadoxml
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/obo
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/oboxml
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/chadoxml
 
 #%patch0 -p1
 #%patch1 -p1
@@ -126,14 +126,16 @@ for i in * ; do
 #  mkdir $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
 #  chmod a+rX,u+w,g-w,o-w $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
 #  for j in $i/* ; do
-    install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/obo/obo/$i ;
-    /usr/bin/go2fmt.pl -w xml -e /dev/null $i > $RPM_BUILD_ROOT%{_datadir}/obo/oboxml/${i/.obo/.oboxml} ;
-    /usr/bin/go-apply-xslt oboxml_to_chadoxml $RPM_BUILD_ROOT%{_datadir}/obo/oboxml/${i/.obo/.oboxml} > $RPM_BUILD_ROOT%{_datadir}/chadoxml/${i/.obo/.chadoxml} ;
+    install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/obo/$i ;
+    /usr/bin/go2fmt.pl -w xml -e /dev/null $i > $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/oboxml/${i/.obo/.oboxml} ;
+    /usr/bin/go-apply-xslt oboxml_to_chadoxml $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/oboxml/${i/.obo/.oboxml} > $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/chadoxml/${i/.obo/.chadoxml} ;
 #  done ;
 done ;
 
 %files
-%{_datadir}/obo/*
+%{_datadir}/%{name}-%{version}/obo/*
+%{_datadir}/%{name}-%{version}/oboxml/*
+%{_datadir}/%{name}-%{version}/chadoxml/*
 %defattr(-,root,root)
 
 %clean
@@ -144,6 +146,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.10  2009/03/26 02:03:26  allenday
+generate alternate formats
+
 Revision 1.9  2009/03/26 02:01:12  allenday
 generate alternate formats
 
