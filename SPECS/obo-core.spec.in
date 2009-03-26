@@ -1,4 +1,4 @@
-#$Id: obo-core.spec.in,v 1.7 2009/03/26 00:12:35 allenday Exp $
+#$Id: obo-core.spec.in,v 1.8 2009/03/26 00:13:50 allenday Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
 Version: 1.0.1
@@ -121,11 +121,11 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo
 %install
 
 for i in * ; do 
-  mkdir $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
-  chmod a+rX,u+w,g-w,o-w $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
-  for j in $i/* ; do
-    install -m 444 $j $RPM_BUILD_ROOT%{_datadir}/obo/$i/ ;
-  done ;
+#  mkdir $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
+#  chmod a+rX,u+w,g-w,o-w $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
+#  for j in $i/* ; do
+    install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
+#  done ;
 done ;
 
 %files
@@ -140,6 +140,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.8  2009/03/26 00:13:50  allenday
+patches
+
 Revision 1.7  2009/03/26 00:12:35  allenday
 patches
 
