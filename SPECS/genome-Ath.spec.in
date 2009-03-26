@@ -1,0 +1,81 @@
+#$Id: genome-Ath.spec.in,v 1.1 2009/03/26 07:49:35 allenday Exp $
+Summary: Arabidopsis genome sequence in FASTA format from the UCSC genome browser
+Name: genome-Ath
+Version: TAIR8
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: genome-Ath-%{version}.tar.gz
+License: Custom
+Group: Bioinformatics/Sequence
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://arabidopsis.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+BuildRequires: ucsc >= 456-1, biopackages, ncbi
+BuildArch: noarch
+
+%description
+%package nib
+Summary: Arabidopsis genome sequence in NIB format from the UCSC genome browser
+Group: Bioinformatics/Sequence
+
+%description nib
+Arabidopsis genome sequence converted to NIB format for use with BLAT, for instance.
+
+%package blast
+Summary: Arabidopsis genome sequence in BLAST format from the UCSC genome browser
+Group: Bioinformatics/Sequence
+                                                                                                    
+%description blast
+Arabidopsis genome sequence converted to BLAST format.
+                                                                                                    
+%prep
+%setup -c genome-Ath-TAIR8
+#%setup -q 
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/fa
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/nib
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/blast
+
+%build
+#make .nib files
+for i in *.fas ; do mv $i ${i/.fas/.fa} ; done
+for i in *.fa ; do %{_bindir}/faToNib $i ${i/.fa/.nib} ; done
+
+#make blast files
+cat *.fa > chrall.fa ; formatdb -t %{name}-%{version} -n $RPM_BUILD_ROOT%{_datadir}/blast/%{name}-%{version} -i chrall.fa -p F
+chmod 444 $RPM_BUILD_ROOT%{_datadir}/blast/*
+chmod 755 $RPM_BUILD_ROOT%{_datadir}/blast
+rm chrall.fa
+
+%install
+
+for i in *.fa ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/fa ; done
+for i in *.nib ; do install -m 444 $i $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/nib ; done
+
+find $RPM_BUILD_ROOT -type f -name '*.fa'  | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+find $RPM_BUILD_ROOT -type f -name '*.nib' | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-nib-filelist
+find $RPM_BUILD_ROOT -type f -name '*.nib' | sed "s@^$RPM_BUILD_ROOT@@g" > $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/nib.txt
+find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-blast-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%files nib -f %{name}-%{version}-%{release}-nib-filelist
+%defattr(-,root,root)
+%{_datadir}/genome/Ath/%{version}/nib.txt
+
+%files blast -f %{name}-%{version}-%{release}-blast-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: genome-Ath.spec.in,v $
+Revision 1.1  2009/03/26 07:49:35  allenday
+import
+
