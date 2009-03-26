@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.14 2009/03/26 01:08:09 allenday Exp $
+#$Id: chado.spec.in,v 1.15 2009/03/26 01:09:13 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -154,7 +154,7 @@ obo[31]=psi-ms.obo
 obo[32]=quality.obo
 obo[33]=ro.obo
 obo[34]=so.obo
-obo[35]spatial.obo
+obo[35]=spatial.obo
 obo[36]=spider_comparative_biology.obo
 obo[37]=teleost_anatomy.obo
 obo[38]=teleost_taxonomy.obo
