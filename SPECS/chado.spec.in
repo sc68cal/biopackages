@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.10 2009/03/26 00:50:31 allenday Exp $
+#$Id: chado.spec.in,v 1.11 2009/03/26 00:51:16 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -62,7 +62,7 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 %prep
 %setup -n gmod-%{version}
 %patch0 -p0
-perl -pi -e "s#etc#$RPM_BUILT_ROOT/etc#" install_util/log4perl.conf.PLS
+perl -pi -e "s#etc#%{buildroot}/etc#" install_util/log4perl.conf.PLS
 mkdir -p %{buildroot}%{gmod_root}
 
 %build
