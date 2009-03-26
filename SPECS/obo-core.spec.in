@@ -1,12 +1,12 @@
-#$Id: obo-core.spec.in,v 1.6 2009/03/26 00:08:27 allenday Exp $
+#$Id: obo-core.spec.in,v 1.7 2009/03/26 00:12:35 allenday Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
 Version: 1.0.1
 Epoch: 0
 Release: 8.%{distro}
 Source0: %{name}-%{version}.tar.gz
-Patch0: %{name}-%{version}-EMAP.patch
-Patch1: %{name}-%{version}-MA.patch
+#Patch0: %{name}-%{version}-EMAP.patch
+#Patch1: %{name}-%{version}-MA.patch
 
 License: Custom
 Group: Bioinformatics/Ontologies
@@ -113,8 +113,8 @@ http://obo.cvs.sourceforge.net/*checkout*/obo/obo/ontology/anatomy/gross_anatomy
 rm -rf ${RPM_BUILD_ROOT};
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/obo
 
-%patch0 -p3
-%patch1 -p3
+#%patch0 -p1
+#%patch1 -p1
 
 %build
 
@@ -140,6 +140,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.7  2009/03/26 00:12:35  allenday
+patches
+
 Revision 1.6  2009/03/26 00:08:27  allenday
 version increment
 
