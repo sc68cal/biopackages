@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.6 2007/04/23 06:30:14 bpbuild Exp $
+#$Id: chado.spec.in,v 1.8 2009/03/26 00:35:27 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -12,14 +12,16 @@ Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.gmod.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Requires: postgresql-AffxSeq = 1.00-1.4
+Requires: postgresql-AffxSeq = 1.00-3.20050411
 Requires: postgresql-devel, postgresql-libs, postgresql-server, postgresql >= 7.3
 Requires: perl-DBD-Pg, perl-DBI, perl-Class-DBI, perl-Class-DBI-Pager, perl-bioperl, perl-XML-Simple
 Requires: perl-Term-ProgressBar, perl-Template-Toolkit, perl-Log-Log4perl, perl-Module-Build
 Requires: perl-Class-Accessor, perl-Class-Accessor-Chained
 Requires: chado-schema = 0.003
-BuildRequires: obo-core >= 1.0.0, obo-extra, perl-go-perl >= 0.02
-BuildRequires: postgresql-AffxSeq = 1.00-1.4
+BuildRequires: obo-core >= 1.0.1, perl-go-perl >= 0.09
+#Dropped 2009/03/25 -day
+#BuildRequires: obo-extra
+BuildRequires: postgresql-AffxSeq = 1.00-3.20050411
 BuildRequires: perl-Template-Toolkit, perl-Log-Log4perl, perl-Class-DBI, perl-Class-DBI-Pager, postgresql >= 7.3
 BuildRequires: perl-Class-DBI-Pg, perl-Term-ProgressBar, perl-DBIx-DBStag
 BuildRequires: chado-schema = 0.003
