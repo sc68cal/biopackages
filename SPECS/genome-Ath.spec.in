@@ -1,4 +1,4 @@
-#$Id: genome-Ath.spec.in,v 1.1 2009/03/26 07:49:35 allenday Exp $
+#$Id: genome-Ath.spec.in,v 1.2 2009/03/26 08:35:54 allenday Exp $
 Summary: Arabidopsis genome sequence in FASTA format from the UCSC genome browser
 Name: genome-Ath
 Version: TAIR8
@@ -30,7 +30,7 @@ Group: Bioinformatics/Sequence
 Arabidopsis genome sequence converted to BLAST format.
                                                                                                     
 %prep
-%setup -c genome-Ath-TAIR8
+%setup -q -n genome-Ath-TAIR8
 #%setup -q 
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/fa
@@ -76,6 +76,9 @@ find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g"
 %preun 
 
 $Log: genome-Ath.spec.in,v $
+Revision 1.2  2009/03/26 08:35:54  allenday
+import
+
 Revision 1.1  2009/03/26 07:49:35  allenday
 import
 
