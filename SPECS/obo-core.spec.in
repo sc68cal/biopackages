@@ -1,4 +1,4 @@
-#$Id: obo-core.spec.in,v 1.10 2009/03/26 02:03:26 allenday Exp $
+#$Id: obo-core.spec.in,v 1.11 2009/03/26 02:05:20 allenday Exp $
 Summary: Open BioMedical Ontologies, Core subset
 Name: obo-core
 Version: 1.0.1
@@ -122,7 +122,7 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}-%{version}/chadoxml
 
 %install
 
-for i in * ; do 
+for i in *.obo ; do 
 #  mkdir $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
 #  chmod a+rX,u+w,g-w,o-w $RPM_BUILD_ROOT%{_datadir}/obo/$i ;
 #  for j in $i/* ; do
@@ -146,6 +146,9 @@ done ;
 %preun 
 
 $Log: obo-core.spec.in,v $
+Revision 1.11  2009/03/26 02:05:20  allenday
+generate alternate formats
+
 Revision 1.10  2009/03/26 02:03:26  allenday
 generate alternate formats
 
