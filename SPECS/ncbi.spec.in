@@ -1,4 +1,4 @@
-#$Id: ncbi.spec.in,v 1.4 2009/03/26 08:02:03 allenday Exp $
+#$Id: ncbi.spec.in,v 1.5 2009/03/26 08:09:19 allenday Exp $
 # ----------------------------------------------------------------------------
 #
 #  NCBI 
@@ -15,10 +15,6 @@ License:   Public Domain
 URL:       http://www.ncbi.nlm.nih.gov/BLAST/
 Source0:   ncbi.tar.gz
 # ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools/ncbi.tar.gz
-Patch0:    ncbi.patch
-Patch1:    ncbi-gcc.patch
-Patch2:    ncbi-X11R6-lib64.patch
-Patch3:    ncbi_2.patch
 BuildRequires: biopackages
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -42,10 +38,6 @@ The NCBI Toolkit static libraries and header files
 
 %prep
 %setup -q -n ncbi
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p2
-#%patch3 -p1
 
 %build
 cd ..; ./ncbi/make/makedis.csh
@@ -114,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/*
 
 $Log: ncbi.spec.in,v $
+Revision 1.5  2009/03/26 08:09:19  allenday
+depcheck
+
 Revision 1.4  2009/03/26 08:02:03  allenday
 depcheck
 
