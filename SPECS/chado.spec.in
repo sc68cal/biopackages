@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.12 2009/03/26 00:55:41 allenday Exp $
+#$Id: chado.spec.in,v 1.13 2009/03/26 00:56:50 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -90,10 +90,10 @@ export GMOD_ROOT=%{buildroot}%{gmod_root}
 %makeinstall ;
 
 #these depend on Datastore::MD5, which i could not find
-find %{buildroot} -type f -name cx-enscore2chaos.pl -exec rm {} \;
-find %{buildroot} -type f -name cx-genbank2chaos.pl -exec rm {} \;
-find . -type f -name cx-enscore2chaos.pl -exec rm {} \;
-find . -type f -name cx-genbank2chaos.pl -exec rm {} \;
+find %{buildroot} -type f -name cx-enscore2chaos.pl -exec rm -f {} \;
+find %{buildroot} -type f -name cx-genbank2chaos.pl -exec rm -f {} \;
+find . -type f -name cx-enscore2chaos.pl -exec rm -f {} \;
+find . -type f -name cx-genbank2chaos.pl -exec rm -f {} \;
 
 tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
 
