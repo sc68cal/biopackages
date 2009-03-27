@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.23 2009/03/27 05:57:38 allenday Exp $
+#$Id: chado.spec.in,v 1.24 2009/03/27 06:08:38 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -65,10 +65,13 @@ Requires: perl-Tie-UrlEncoder
 
 #not sure why i have to hardcode this in...
 Provides: perl(Chado::AutoDBI)
+#XXX this one actually doesn't exist.  follow up later 20090326 ajd
+Provides: perl(Chado::LoadDBI)
 
 Source0: gmod-%{version}.tar.gz
 Source1: ATCC.txt
 Patch0: chado-1.0-gmod_root.patch
+Patch1: chado-1.0-Bio-GMOD.patch 
 
 %description
 Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -76,6 +79,7 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 %prep
 %setup -n gmod-%{version}
 %patch0 -p0
+%patch1 -p0
 #get rid of CXGN* perl modules, which depend on nascent biopackages "cview" package.
 #cview doesn't build cleanly, it's a clusterfuck.
 find . -iname 'CXGN*' | xargs rm -rf
