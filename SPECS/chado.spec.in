@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.24 2009/03/27 06:08:38 allenday Exp $
+#$Id: chado.spec.in,v 1.25 2009/03/27 06:10:12 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -65,8 +65,9 @@ Requires: perl-Tie-UrlEncoder
 
 #not sure why i have to hardcode this in...
 Provides: perl(Chado::AutoDBI)
-#XXX this one actually doesn't exist.  follow up later 20090326 ajd
+#XXX these ones actually doesn't exist.  follow up later 20090326 ajd
 Provides: perl(Chado::LoadDBI)
+Provides: perl(GMOd::Chado::LoadDBI)
 
 Source0: gmod-%{version}.tar.gz
 Source1: ATCC.txt
