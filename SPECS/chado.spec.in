@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.21 2009/03/27 05:46:30 allenday Exp $
+#$Id: chado.spec.in,v 1.22 2009/03/27 05:56:06 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -51,13 +51,14 @@ Requires: postgresql-server
 Requires: perl-Chado-LoadDBI
 Requires: perl-Class-DBI-ConceptSearch
 Requires: perl-GMOD-Chado-LoadDBI
-Requires: perl-Tie-UrlEncoder
 
 #ok
+Requires: perl-Bio-GMOD
 Requires: perl-File-NFSLock
 Requires: perl-HTML-Tree
 Requires: perl-SQL-Translator
 Requires: perl-Term-ReadKey
+Requires: perl-Tie-UrlEncoder
 
 
 
@@ -75,6 +76,10 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 %prep
 %setup -n gmod-%{version}
 %patch0 -p0
+#get rid of CXGN* perl modules, which depend on nascent biopackages "cview" package.
+#cview doesn't build cleanly, it's a clusterfuck.
+find . -name 'CXGN*' -exec rm -f {} \;
+
 perl -pi -e "s#etc#%{buildroot}/etc#" install_util/log4perl.conf.PLS
 mkdir -p %{buildroot}%{gmod_root}
 mkdir -p %{buildroot}/etc
@@ -101,10 +106,6 @@ echo "Y" | GMOD_ROOT=%{buildroot}%{gmod_root} perl Makefile.PL \
 export GMOD_ROOT=%{buildroot}%{gmod_root}
 #make install
 %makeinstall ;
-
-#get rid of CXGN* perl modules, which depend on nascent biopackages "cview" package.
-#cview doesn't build cleanly, it's a clusterfuck.
-find %{buildroot} -name 'CXGN*' -exec rm -f {} \;
 
 #these depend on Datastore::MD5, which i could not find
 find %{buildroot} -type f -name cx-enscore2chaos.pl -exec rm -f {} \;
