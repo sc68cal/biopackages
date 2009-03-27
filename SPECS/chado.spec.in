@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.28 2009/03/27 06:14:47 allenday Exp $
+#$Id: chado.spec.in,v 1.29 2009/03/27 06:16:50 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -164,10 +164,10 @@ obo[30]='xenopus_anatomy.chadoxml';
 obo[31]='yeast_phenotype.chadoxml';
 obo[32]='zebrafish_anatomy.chadoxml';
 
-#for i in ${obo[*]} ; do
-#  echo "* Loading ontology: '$i'";
-#  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_datadir}/obo*1.0.1/chadoxml/$i" ;
-#done ;
+for i in ${obo[*]} ; do
+  echo "* Loading ontology: '$i'";
+  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_datadir}/obo*1.0.1/chadoxml/$i" ;
+done ;
 
 #for i in ${rel[*]} ; do
 #  echo "  * Loading DAG-Edit relationships: $i" ;
