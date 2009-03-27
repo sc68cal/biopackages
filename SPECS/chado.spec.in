@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.17 2009/03/27 04:33:17 allenday Exp $
+#$Id: chado.spec.in,v 1.18 2009/03/27 04:45:43 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -107,7 +107,7 @@ sudo su postgres -c "cat /var/lib/gmod/src/chado/modules/default_schema.sql | ps
 #Loading generic data into database
 sudo su postgres -c "cat load/etc/initialize.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";#| grep -E '(ERROR|FATAL)'";
 #Load in godb bridge
-#su postgres -c "cat modules/cv/bridges/godb-bridge.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";
+sudo su postgres -c "cat modules/cv/bridges/godb-bridge.plpgsql | psql -U postgres $tmp_chado 2>&1 >/dev/null";
 #Bring in AffxSeq functions
 sudo su postgres -c "cat %{_datadir}/doc/postgresql-AffxSeq-1.00/affx-seq-lib-defs.sql | psql -U postgres $tmp_chado 2>&1 >/dev/null";#| grep -E '(ERROR|FATAL)'";
 
@@ -149,10 +149,10 @@ obo[30]='xenopus_anatomy.chadoxml';
 obo[31]='yeast_phenotype.chadoxml';
 obo[32]='zebrafish_anatomy.chadoxml';
 
-for i in ${obo[*]} ; do
-  echo "* Loading ontology: '$i'";
-  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_datadir}/obo*1.0.1/chadoxml/$i" ;
-done ;
+#for i in ${obo[*]} ; do
+#  echo "* Loading ontology: '$i'";
+#  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_datadir}/obo*1.0.1/chadoxml/$i" ;
+#done ;
 
 #for i in ${rel[*]} ; do
 #  echo "  * Loading DAG-Edit relationships: $i" ;
