@@ -1,0 +1,80 @@
+#$Id: perl-Bio-GMOD.spec.in,v 1.1 2009/03/27 06:00:49 allenday Exp $
+Distribution: Custom
+Vendor: biopackages.net
+Summary: Unified API for Model Organism Databases
+Name: perl-Bio-GMOD
+Version: 0.028
+Release: %{revision}.%{distro}
+Packager: allenday@nozzle.ctrl.ucla.edu
+License: GPL or Artistic
+Group: Development/Libraries
+URL: http://search.cpan.org/dist/Bio-GMOD
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: perl
+BuildRequires: biopackages
+
+BuildRequires: perl-libwww-perl
+BuildRequires: perl-MIME-Lite
+BuildRequires: perl-Net-SMTP
+BuildRequires: perl-WWW-Mechanize
+
+Requires: perl-libwww-perl
+Requires: perl-MIME-Lite
+Requires: perl-Net-SMTP
+Requires: perl-WWW-Mechanize
+
+BuildArch: noarch
+Source0: Bio-GMOD-%{version}.tar.gz
+
+%description
+Unified API for Model Organism Databases
+
+%prep
+%setup -q -n Bio-GMOD-%{version}
+
+%build
+CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
+make OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+eval `perl '-V:installarchlib'`
+mkdir -p $RPM_BUILD_ROOT$installarchlib
+%makeinstall
+
+find $RPM_BUILD_ROOT -type f -a \( -name perllocal.pod -o -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+
+[ -x %{_usr}/lib/rpm/brp-compress ] && %{_usr}/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f \
+| sed "s@^$RPM_BUILD_ROOT@@g" \
+> %{name}-%{version}-%{release}-filelist
+
+eval `perl -V:archname -V:installsitelib -V:installvendorlib -V:installprivlib`
+for d in $installsitelib $installvendorlib $installprivlib; do
+  [ -z "$d" -o "$d" = "UNKNOWN" -o ! -d "$RPM_BUILD_ROOT$d" ] && continue
+  find $RPM_BUILD_ROOT$d/* -type d \
+  | grep -v "/$archname\(/auto\)\?$" \
+  | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+  >> %{name}-%{version}-%{release}-filelist
+done
+
+if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
+    echo "ERROR: EMPTY FILE LIST"
+    exit 1
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root,-)
+
+$Log: perl-Bio-GMOD.spec.in,v $
+Revision 1.1  2009/03/27 06:00:49  allenday
+import
+
