@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.16 2009/03/26 18:02:52 allenday Exp $
+#$Id: chado.spec.in,v 1.17 2009/03/27 04:33:17 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -115,13 +115,44 @@ sudo su postgres -c "cat %{_datadir}/doc/postgresql-AffxSeq-1.00/affx-seq-lib-de
 cat %{SOURCE1} | awk -F '	' '{print 3,"\t",$2,"\t",$3," ",$4}' | perl -ne 's!^3 !3!;print' > ATCC.munged
 sudo su postgres -c "cat ATCC.munged | psql -U postgres $tmp_chado -c 'COPY dbxref (db_id,accession,description) FROM stdin' 2>&1 >/dev/null";
 
-for i in %{_datadir}/obo*/chadoxml/*.chadoxml ; do
-  echo "  * Loading OBO ontology: $i" ;
-  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' $i" ;
-done ;
+obo[0]='adult_mouse_anatomy.chadoxml';
+obo[1]='amphibian_anatomy.chadoxml';
+obo[2]='caro.chadoxml';
+obo[3]='cell.chadoxml';
+obo[4]='chebi.chadoxml';
+obo[5]='dictyostelium_anatomy.chadoxml';
+obo[6]='envo.chadoxml';
+obo[7]='evidence_code.chadoxml';
+obo[8]='fly_anatomy.chadoxml';
+obo[9]='fly_development.chadoxml';
+obo[10]='fma2_obo.chadoxml';
+obo[11]='fungal_anatomy.chadoxml';
+obo[12]='gene_ontology_edit.chadoxml';
+obo[13]='human_disease.chadoxml';
+obo[14]='infectious_disease.chadoxml';
+obo[15]='mammalian_phenotype.chadoxml';
+obo[16]='mosquito_insecticide_resistance.chadoxml';
+obo[17]='plant_trait.chadoxml';
+obo[18]='po_anatomy.chadoxml';
+obo[19]='po_temporal.chadoxml';
+obo[20]='pro.chadoxml';
+obo[21]='psi-mi.chadoxml';
+obo[22]='psi-ms.chadoxml';
+obo[23]='ro.chadoxml';
+obo[24]='so.chadoxml';
+obo[25]='teleost_anatomy.chadoxml';
+obo[26]='tick_anatomy.chadoxml';
+obo[27]='transmission_process.chadoxml';
+obo[28]='worm_development.chadoxml';
+obo[29]='worm_phenotype.chadoxml';
+obo[30]='xenopus_anatomy.chadoxml';
+obo[31]='yeast_phenotype.chadoxml';
+obo[32]='zebrafish_anatomy.chadoxml';
 
-#for i in ${obo[*]} ; do
-#done ;
+for i in ${obo[*]} ; do
+  echo "* Loading ontology: '$i'";
+  sudo su postgres -c "stag-storenode.pl -d 'dbi:Pg:dbname=$tmp_chado' %{_datadir}/obo*1.0.1/chadoxml/$i" ;
+done ;
 
 #for i in ${rel[*]} ; do
 #  echo "  * Loading DAG-Edit relationships: $i" ;
