@@ -1,4 +1,4 @@
-#$Id: perl-Bio-GMOD.spec.in,v 1.1 2009/03/27 06:00:49 allenday Exp $
+#$Id: perl-Bio-GMOD.spec.in,v 1.2 2009/03/27 06:02:07 allenday Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Unified API for Model Organism Databases
@@ -15,12 +15,10 @@ BuildRequires: biopackages
 
 BuildRequires: perl-libwww-perl
 BuildRequires: perl-MIME-Lite
-BuildRequires: perl-Net-SMTP
 BuildRequires: perl-WWW-Mechanize
 
 Requires: perl-libwww-perl
 Requires: perl-MIME-Lite
-Requires: perl-Net-SMTP
 Requires: perl-WWW-Mechanize
 
 BuildArch: noarch
@@ -75,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Bio-GMOD.spec.in,v $
+Revision 1.2  2009/03/27 06:02:07  allenday
+import
+
 Revision 1.1  2009/03/27 06:00:49  allenday
 import
 
