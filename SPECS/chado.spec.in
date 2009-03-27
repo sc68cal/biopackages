@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.22 2009/03/27 05:56:06 allenday Exp $
+#$Id: chado.spec.in,v 1.23 2009/03/27 05:57:38 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -78,7 +78,7 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 %patch0 -p0
 #get rid of CXGN* perl modules, which depend on nascent biopackages "cview" package.
 #cview doesn't build cleanly, it's a clusterfuck.
-find . -name 'CXGN*' -exec rm -f {} \;
+find . -iname 'CXGN*' | xargs rm -rf
 
 perl -pi -e "s#etc#%{buildroot}/etc#" install_util/log4perl.conf.PLS
 mkdir -p %{buildroot}%{gmod_root}
