@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.27 2009/03/27 06:13:31 allenday Exp $
+#$Id: chado.spec.in,v 1.28 2009/03/27 06:14:47 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -59,7 +59,7 @@ Requires: postgresql-server
 Provides: perl(Chado::AutoDBI)
 #XXX these ones actually doesn't exist.  follow up later 20090326 ajd
 Provides: perl(Chado::LoadDBI)
-Provides: perl(GMOd::Chado::LoadDBI)
+Provides: perl(GMOD::Chado::LoadDBI)
 
 Source0: gmod-%{version}.tar.gz
 Source1: ATCC.txt
