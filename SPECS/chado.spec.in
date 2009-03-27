@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.26 2009/03/27 06:11:11 allenday Exp $
+#$Id: chado.spec.in,v 1.27 2009/03/27 06:13:31 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -29,17 +29,24 @@ BuildRequires: postgresql >= 7.3
 BuildRequires: postgresql-AffxSeq = 1.00-3.20050411
 
 Requires: chado-schema = 1.0
+Requires: perl-Bio-GMOD
 Requires: perl-Class-Accessor
 Requires: perl-Class-Accessor-Chained
 Requires: perl-Class-DBI
+Requires: perl-Class-DBI-ConceptSearch
 Requires: perl-Class-DBI-Pager
 Requires: perl-Class-DBI-Pg
 Requires: perl-DBD-Pg
 Requires: perl-DBI
+Requires: perl-File-NFSLock
+Requires: perl-HTML-Tree
 Requires: perl-Log-Log4perl
 Requires: perl-Module-Build
+Requires: perl-SQL-Translator
 Requires: perl-Template-Toolkit
 Requires: perl-Term-ProgressBar
+Requires: perl-Term-ReadKey
+Requires: perl-Tie-UrlEncoder
 Requires: perl-XML-Simple
 Requires: perl-bioperl
 Requires: postgresql >= 7.3
@@ -47,21 +54,6 @@ Requires: postgresql-AffxSeq = 1.00-3.20050411
 Requires: postgresql-devel
 Requires: postgresql-libs
 Requires: postgresql-server
-
-Requires: perl-Chado-LoadDBI
-Requires: perl-Class-DBI-ConceptSearch
-Requires: perl-GMOD-Chado-LoadDBI
-
-#ok
-Requires: perl-Bio-GMOD
-Requires: perl-File-NFSLock
-Requires: perl-HTML-Tree
-Requires: perl-SQL-Translator
-Requires: perl-Term-ReadKey
-Requires: perl-Tie-UrlEncoder
-
-
-
 
 #not sure why i have to hardcode this in...
 Provides: perl(Chado::AutoDBI)
