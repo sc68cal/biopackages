@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.18 2009/03/27 04:45:43 allenday Exp $
+#$Id: chado.spec.in,v 1.19 2009/03/27 04:47:30 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -200,7 +200,7 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
-%doc Changes* INSTALL LICENSE README* TODO build.conf log4perl.conf *.sql.gz
+%doc Changes* INSTALL* LICENSE README* TODO build.conf *.sql.gz
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
