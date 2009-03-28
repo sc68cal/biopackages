@@ -1,4 +1,4 @@
-#$Id: chado.spec.in,v 1.30 2009/03/28 08:53:49 allenday Exp $
+#$Id: chado.spec.in,v 1.31 2009/03/28 09:25:10 allenday Exp $
 %define gmod_root /var/lib/gmod
 
 Summary: Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project
@@ -198,8 +198,8 @@ sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.go_acc SELECT * FROM 
 sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.dbxref SELECT * FROM godb.v_dbxref'";
 sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.db SELECT * FROM godb.v_db'";
 sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.term SELECT * FROM godb.v_term'";
-#XXX 20090327 -ajd
-sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.term2term SELECT * FROM godb.v_term2term'";
+#v_term2term is a view on the same table as term2term.  can't do this
+#sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.term2term SELECT * FROM godb.v_term2term'";
 sudo su postgres -c " psql $tmp_chado -c 'UPDATE godb.term SET is_root = 1 WHERE id IN (SELECT cvterm_id FROM public.cvterm WHERE cvterm_id NOT IN (SELECT DISTINCT subject_id FROM public.cvterm_relationship) AND is_obsolete = 0 AND is_relationshiptype = 0)'";
 
 
@@ -211,8 +211,8 @@ for i in `sudo su postgres -c "psql $tmp_chado -tAF '	' -c 'SELECT cv_id FROM cv
 done ;
 
 #finish materializing the godb GO bridge views, now that cvtermpath is populated
-#XXX 20090327 -ajd
-sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.graph_path SELECT * FROM godb.v_graph_path'";
+#v_graph_path is a view on the same table as graph_path.  can't do this
+#sudo su postgres -c " psql $tmp_chado -c 'INSERT INTO godb.graph_path SELECT * FROM godb.v_graph_path'";
 
 sudo su postgres -c "pg_dump -O $tmp_chado" | gzip > %{name}-%{version}.sql.gz
 sudo su postgres -c "dropdb   $tmp_chado"
