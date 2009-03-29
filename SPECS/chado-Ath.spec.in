@@ -1,0 +1,217 @@
+#$Id: chado-Ath.spec.in,v 1.1 2009/03/29 00:14:55 allenday Exp $
+%define gmod_root /var/lib/gmod
+%define org Ath
+%define orgCommonName Arabidopsis
+%define orgVersion TAIR8
+%define chadoVersion 1.0
+Summary: Chado, prepopulated with Arabidopsis Thaliana genome features
+Name: chado-%{org}
+Version: 1.0
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: %{name}-%{version}.tar.gz
+Source1: split.pl
+License: GPL
+Group: Databases/Bioinformatics
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://www.gmod.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+
+Requires: obo-core >= 1.0.1
+Requires: genome-%{org}-nib = %{orgVersion}
+Requires: perl-Class-Accessor
+Requires: perl-Class-Accessor-Chained
+Requires: perl-Class-DBI
+Requires: perl-Class-DBI-Pager
+Requires: perl-DBD-Pg
+Requires: perl-DBI
+Requires: perl-Log-Log4perl
+Requires: perl-Module-Build
+Requires: perl-Template-Toolkit
+Requires: perl-Term-ProgressBar
+Requires: perl-XML-Simple
+Requires: perl-bioperl >= 1.6.0
+Requires: perl-go-perl >= 0.02
+Requires: postgresql >= 8.1
+Requires: postgresql-AffxSeq
+Requires: postgresql-devel
+Requires: postgresql-libs
+Requires: postgresql-server
+
+BuildRequires: chado = %{chadoVersion}
+BuildRequires: genome-%{org}-annotation-gene = %{orgVersion}
+BuildRequires: perl-Class-DBI
+BuildRequires: perl-Class-DBI-Pager
+BuildRequires: perl-Class-DBI-Pg
+BuildRequires: perl-Log-Log4perl
+BuildRequires: perl-Template-Toolkit
+BuildRequires: perl-Term-ProgressBar
+BuildRequires: postgresql >= 8.1
+BuildRequires: postgresql-AffxSeq
+
+#not sure why i have to hardcode this in...
+Provides: perl(Chado::AutoDBI)
+
+%description
+Chado, a modular relational schema at the core of the Generic Model Organism Database (GMOD) project.  Prepopulated with Arabidopsis thaliana genome features
+
+%prep
+%setup -q
+chmod a+rwx ../%{name}-%{version};
+cp %{SOURCE1} .
+
+%build
+#HACK this needs to be done as part of the base chado package install
+if [ ! -e /var/lib/gmod/conf/default.conf ] ; then
+  ln -s /var/lib/gmod/conf/chado.conf /var/lib/gmod/conf/default.conf;
+fi ;
+
+%install
+
+tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
+
+/etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
+su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
+su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
+su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+
+#XXX should this be here for Ath?
+#HACK this should be in genome-Hsa-nib !!!
+#su postgres -c "cat Hg17.chromosome.gff | perl -ne 'chomp;@F=split/\s+/;print qq(INSERT INTO feature (organism_id,name,uniquename,seqlen,type_id) VALUES ((SELECT organism_id FROM organism WHERE common_name = ^%{orgCommonName}^),^\$F[1]^,^\$F[1]^,\$F[3],(SELECT cvterm_id FROM cvterm WHERE name = ^chromosome^ AND cv_id = (SELECT cv_id FROM cv WHERE name = ^so.ontology^)));\n) if \$F[1]' | perl -ne \"s/\^/'/g;print\" | psql $tmp_chado-%{org}-%{orgVersion}" 2>&1 > /dev/null;
+
+########################
+##load in UCSC knownGene
+######################## 
+echo `date`;
+su postgres -c "zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-knownGene.gff3.gz | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
+echo `date`;
+#zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-knownGene.gff3.gz | ./split.pl 50000 mRNA.
+#for j in mRNA.* ; do
+#  su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
+#  rm $j;
+#  echo `date`;
+#done ;
+
+##############################################################
+#load Affymetrix genotyping oligo (probe) alignments to genome
+##############################################################
+#HACK genome-Hsa-annotation-affymetrix needs to clean up Dbxref attributes
+#HACK 500k files need to be in genome-Hsa-annotation-affymetrix
+for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*Mapping*.gff.gz ./Affymetrix*Mapping*.gff.gz; do
+  su postgres -c "zcat $i | grep -vw chr | perl -ne 's/Mapping10K_Xba240/Mapping100K_Xba240/;print' | perl -ne 's/RefSNP%3A,//;s/,?TSC%3A\t?$//;s/RefSNP%3A\t?$//;print' |perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
+#  zcat $i | grep -vw chr | perl -ne 's/Mapping10K_Xba240/Mapping100K_Xba240/' | perl -ne 's/RefSNP%3A,//;s/,?TSC%3A\t?$//;s/RefSNP%3A\t?$//;print' | ./split.pl 100000 SNP.
+#  for j in SNP.* ; do
+#    su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
+#    rm $j ;
+    echo `date`;
+#  done ;
+done ;
+
+##########################################################
+#load Affymetrix PCR_product (target) alignments to genome
+##########################################################
+for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*target*.gff.gz ; do
+  #for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*HuGeneFL*target*.gff.gz ; do
+  zcat $i | ./split.pl 100000 PCR_product.
+  for j in PCR_product.* ; do
+    su postgres -c "cat $j | perl -ne 's/\tBLAT\t/\tAffymetrix\t/;print' | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
+    rm $j ;
+    echo `date`;
+  done ;
+done ;
+
+#######################
+#populate element table
+#######################
+#with Expression Chips
+su postgres -c "psql $tmp_chado-%{org}-%{orgVersion} -tAF '	' -c 'SELECT arraydesign_id,name FROM arraydesign'" > arraydesign.txt;
+for i in *.mas ; do
+  su postgres -c "DBNAME=$tmp_chado-%{org}-%{orgVersion} DBHOST=localhost ./prep_mas.sh ${i/.mas/}";
+done;
+#with Genotyping Chips
+for i in `su postgres -c 'psql $tmp_chado-%{org}-%{orgVersion} -tAF "	" -c "SELECT name FROM arraydesign WHERE name LIKE '\''%Mapping%'\''"'` ; do
+  su postgres -c "DBNAME=$tmp_chado-%{org}-%{orgVersion} DBHOST=localhost ./prep_snp.sh $i";
+done;
+
+####################
+#load in UCSC RefSNP
+####################
+##HACK genome-Hsa-annotation needs to use proper sofa types!
+##HACK snps with same RefSNP ID should be adjacent lines in file so we don't have to sort!
+#zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-snp.gff3.gz \
+#  | perl -ne 'chomp;@F=split/\t/;($id)=$F[8]=~/^ID=(.+?);/;if($F[2] eq "snp"){$F[2]="SNP"} if($F[2] eq "indel"){$F[2]="sequence_variant"} if($F[2] eq "simple_sequence_length_polymorphism"){$F[2]="sequence_variant"};print(join("\t",($id,@F)),"\n");' \
+#  | sort | perl -ne 'chomp;@F=split/\t/;shift @F;print(join("\t",@F),"\n");' | ./split.pl 50000 RefSNP.
+#for j in RefSNP.* ; do
+#  su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
+#  rm $j ;
+#  echo `date`;
+#done ;
+
+#####################################################
+##load Affymetrix oligo (probe) alignments to targets
+#####################################################
+#for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*probe*.gff.gz ; do
+#  ##Keep track of which targets aligned, and don't try to load oligos that have unaligned target regions
+#  zcat ${i/target/probe} | perl -MURI::Escape -ne 'chomp;@F=split/\t/;$F[8]=~s/^ID=//;$F[8]=~s/;$//;$F[8]=URI::Escape::uri_unescape($F[8]);print $F[8],"\n"' | sort | uniq > aligned.map
+#  zcat $i | ./split.pl 50000 microarray_oligo.
+#  for j in microarray_oligo.* ; do
+#    su postgres -c "cat $j | perl -ne '%ok=();open(P,'\''aligned.map'\'');while(\$line=<P>){chomp \$line;\$ok{\$line}=1;} next if /^#/;@F=split/\t/;next unless \$ok{'\''Affymetrix_'\''.\$F[0]};s/\tBLAT\tmicroarray_oligo/\tAffymetrix\toligo/;print qq(Affymetrix_\$_);' | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'"
+#    rm $j ;
+#    echo `date`;
+#  done ;
+#done ;
+
+
+#######################
+#DUMP AND DROP DATABASE
+#######################
+su postgres -c "pg_dump -O $tmp_chado-%{org}-%{orgVersion}" | gzip > %{name}-%{version}.sql.gz;
+su postgres -c "dropdb   $tmp_chado-%{org}-%{orgVersion}";
+
+[ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
+
+find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+%doc *.sql.gz *.pl
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post
+/etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
+su postgres -c 'dropdb chado-%{org}-%{orgVersion} || exit 1';
+
+#echo "[1/4] Creating PostgreSQL database 'chado-%{org}-%{orgVersion}' as user 'postgres'";
+su postgres -c 'createdb chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+#echo "[2/4] Adding plpgsql language to database 'chado-%{org}-%{orgVersion}'";
+su postgres -c 'createlang plpgsql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+
+#echo "[3/4] Creating tables, functions, views, triggers, rules, etc for database 'chado-%{org}-%{orgVersion}'";
+su postgres -c 'zcat %{_datadir}/doc/%{name}-%{version}/%{name}-%{version}.sql.gz | psql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null
+
+#echo "[4/4] Grant permissions for SELECT to public users
+for i in `su postgres -c "psql chado-%{org}-%{orgVersion} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
+  su postgres -c "psql chado-%{org}-%{orgVersion} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" > /dev/null;
+done
+
+true ;
+
+%preun
+/etc/init.d/postgresql start
+# on fresh Postgres installs this needs a few secs to startup
+sleep 15
+su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
+true;
+
+$Log: chado-Ath.spec.in,v $
+Revision 1.1  2009/03/29 00:14:55  allenday
+import
+
