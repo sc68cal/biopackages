@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.8 2009/03/30 12:32:44 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.9 2009/03/30 12:35:59 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -76,7 +76,8 @@ sleep 15
 sudo su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
 sudo su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
 sudo su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
-sudo su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+#XXX fix path to use variables
+sudo su postgres -c "cat /var/lib/gmod/initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
 
 #XXX should this be here for Ath?
 #HACK this should be in genome-Hsa-nib !!!
@@ -87,7 +88,7 @@ sudo su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2
 ######################## 
 echo `date`;
 #grep -E 'Chr[CM]' for speed
-cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep -vwE 'protein' | perl -ne 's/,?[\w.]+-Protein;//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname $tmp_chado --recreate_cache --noexon --dbuser postgres
+cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep -vwE 'protein' | perl -ne 's/,?[\w.]+-Protein;//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres
 echo `date`;
 
 #######################
@@ -136,6 +137,9 @@ sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.9  2009/03/30 12:35:59  allenday
+build as non-root!
+
 Revision 1.8  2009/03/30 12:32:44  allenday
 build as non-root!
 
