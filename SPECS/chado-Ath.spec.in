@@ -1,7 +1,7 @@
-#$Id: chado-Ath.spec.in,v 1.1 2009/03/29 00:14:55 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.2 2009/03/30 12:25:00 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
-%define orgCommonName Arabidopsis
+%define orgCommonName "mouse-ear cress"
 %define orgVersion TAIR8
 %define chadoVersion 1.0
 Summary: Chado, prepopulated with Arabidopsis Thaliana genome features
@@ -84,87 +84,12 @@ su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 
 #su postgres -c "cat Hg17.chromosome.gff | perl -ne 'chomp;@F=split/\s+/;print qq(INSERT INTO feature (organism_id,name,uniquename,seqlen,type_id) VALUES ((SELECT organism_id FROM organism WHERE common_name = ^%{orgCommonName}^),^\$F[1]^,^\$F[1]^,\$F[3],(SELECT cvterm_id FROM cvterm WHERE name = ^chromosome^ AND cv_id = (SELECT cv_id FROM cv WHERE name = ^so.ontology^)));\n) if \$F[1]' | perl -ne \"s/\^/'/g;print\" | psql $tmp_chado-%{org}-%{orgVersion}" 2>&1 > /dev/null;
 
 ########################
-##load in UCSC knownGene
+# load in TAIR8 GFF
 ######################## 
 echo `date`;
-su postgres -c "zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-knownGene.gff3.gz | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
+#grep -E 'Chr[CM]' for speed
+cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep -vwE 'protein' | perl -ne 's/,?[\w.]+-Protein;//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname $tmp_chado --recreate_cache --noexon --dbuser postgres
 echo `date`;
-#zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-knownGene.gff3.gz | ./split.pl 50000 mRNA.
-#for j in mRNA.* ; do
-#  su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
-#  rm $j;
-#  echo `date`;
-#done ;
-
-##############################################################
-#load Affymetrix genotyping oligo (probe) alignments to genome
-##############################################################
-#HACK genome-Hsa-annotation-affymetrix needs to clean up Dbxref attributes
-#HACK 500k files need to be in genome-Hsa-annotation-affymetrix
-for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*Mapping*.gff.gz ./Affymetrix*Mapping*.gff.gz; do
-  su postgres -c "zcat $i | grep -vw chr | perl -ne 's/Mapping10K_Xba240/Mapping100K_Xba240/;print' | perl -ne 's/RefSNP%3A,//;s/,?TSC%3A\t?$//;s/RefSNP%3A\t?$//;print' |perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
-#  zcat $i | grep -vw chr | perl -ne 's/Mapping10K_Xba240/Mapping100K_Xba240/' | perl -ne 's/RefSNP%3A,//;s/,?TSC%3A\t?$//;s/RefSNP%3A\t?$//;print' | ./split.pl 100000 SNP.
-#  for j in SNP.* ; do
-#    su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'";
-#    rm $j ;
-    echo `date`;
-#  done ;
-done ;
-
-##########################################################
-#load Affymetrix PCR_product (target) alignments to genome
-##########################################################
-for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*target*.gff.gz ; do
-  #for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*HuGeneFL*target*.gff.gz ; do
-  zcat $i | ./split.pl 100000 PCR_product.
-  for j in PCR_product.* ; do
-    su postgres -c "cat $j | perl -ne 's/\tBLAT\t/\tAffymetrix\t/;print' | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
-    rm $j ;
-    echo `date`;
-  done ;
-done ;
-
-#######################
-#populate element table
-#######################
-#with Expression Chips
-su postgres -c "psql $tmp_chado-%{org}-%{orgVersion} -tAF '	' -c 'SELECT arraydesign_id,name FROM arraydesign'" > arraydesign.txt;
-for i in *.mas ; do
-  su postgres -c "DBNAME=$tmp_chado-%{org}-%{orgVersion} DBHOST=localhost ./prep_mas.sh ${i/.mas/}";
-done;
-#with Genotyping Chips
-for i in `su postgres -c 'psql $tmp_chado-%{org}-%{orgVersion} -tAF "	" -c "SELECT name FROM arraydesign WHERE name LIKE '\''%Mapping%'\''"'` ; do
-  su postgres -c "DBNAME=$tmp_chado-%{org}-%{orgVersion} DBHOST=localhost ./prep_snp.sh $i";
-done;
-
-####################
-#load in UCSC RefSNP
-####################
-##HACK genome-Hsa-annotation needs to use proper sofa types!
-##HACK snps with same RefSNP ID should be adjacent lines in file so we don't have to sort!
-#zcat %{_datadir}/genome/Hsa/%{orgVersion}/gff/Hsa-%{orgVersion}-snp.gff3.gz \
-#  | perl -ne 'chomp;@F=split/\t/;($id)=$F[8]=~/^ID=(.+?);/;if($F[2] eq "snp"){$F[2]="SNP"} if($F[2] eq "indel"){$F[2]="sequence_variant"} if($F[2] eq "simple_sequence_length_polymorphism"){$F[2]="sequence_variant"};print(join("\t",($id,@F)),"\n");' \
-#  | sort | perl -ne 'chomp;@F=split/\t/;shift @F;print(join("\t",@F),"\n");' | ./split.pl 50000 RefSNP.
-#for j in RefSNP.* ; do
-#  su postgres -c "cat $j | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'" ;
-#  rm $j ;
-#  echo `date`;
-#done ;
-
-#####################################################
-##load Affymetrix oligo (probe) alignments to targets
-#####################################################
-#for i in %{_datadir}/genome/Hsa/%{orgVersion}/gff/Affymetrix*probe*.gff.gz ; do
-#  ##Keep track of which targets aligned, and don't try to load oligos that have unaligned target regions
-#  zcat ${i/target/probe} | perl -MURI::Escape -ne 'chomp;@F=split/\t/;$F[8]=~s/^ID=//;$F[8]=~s/;$//;$F[8]=URI::Escape::uri_unescape($F[8]);print $F[8],"\n"' | sort | uniq > aligned.map
-#  zcat $i | ./split.pl 50000 microarray_oligo.
-#  for j in microarray_oligo.* ; do
-#    su postgres -c "cat $j | perl -ne '%ok=();open(P,'\''aligned.map'\'');while(\$line=<P>){chomp \$line;\$ok{\$line}=1;} next if /^#/;@F=split/\t/;next unless \$ok{'\''Affymetrix_'\''.\$F[0]};s/\tBLAT\tmicroarray_oligo/\tAffymetrix\toligo/;print qq(Affymetrix_\$_);' | perl ./gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname '$tmp_chado-%{org}-%{orgVersion}'"
-#    rm $j ;
-#    echo `date`;
-#  done ;
-#done ;
-
 
 #######################
 #DUMP AND DROP DATABASE
@@ -212,6 +137,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.2  2009/03/30 12:25:00  allenday
+get this working asap!
+
 Revision 1.1  2009/03/29 00:14:55  allenday
 import
 
