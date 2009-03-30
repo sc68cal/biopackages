@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.2 2009/03/30 12:25:00 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.3 2009/03/30 12:27:10 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -9,8 +9,8 @@ Name: chado-%{org}
 Version: 1.0
 Epoch: 0
 Release: %{revision}.%{distro}
-Source0: %{name}-%{version}.tar.gz
-Source1: split.pl
+#Source0: %{name}-%{version}.tar.gz
+#Source1: split.pl
 License: GPL
 Group: Databases/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
@@ -39,7 +39,7 @@ Requires: postgresql-devel
 Requires: postgresql-libs
 Requires: postgresql-server
 
-BuildRequires: chado = %{chadoVersion}
+BuildRequires: chado = 1.0
 BuildRequires: genome-%{org}-annotation-gene = %{orgVersion}
 BuildRequires: perl-Class-DBI
 BuildRequires: perl-Class-DBI-Pager
@@ -137,6 +137,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.3  2009/03/30 12:27:10  allenday
+get this working asap!
+
 Revision 1.2  2009/03/30 12:25:00  allenday
 get this working asap!
 
