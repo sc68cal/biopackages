@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.3 2009/03/30 12:27:10 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.4 2009/03/30 12:27:56 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -11,6 +11,7 @@ Epoch: 0
 Release: %{revision}.%{distro}
 #Source0: %{name}-%{version}.tar.gz
 #Source1: split.pl
+Source0: dummy
 License: GPL
 Group: Databases/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
@@ -58,8 +59,8 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 
 %prep
 %setup -q
-chmod a+rwx ../%{name}-%{version};
-cp %{SOURCE1} .
+#chmod a+rwx ../%{name}-%{version};
+#cp %{SOURCE1} .
 
 %build
 #HACK this needs to be done as part of the base chado package install
@@ -137,6 +138,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.4  2009/03/30 12:27:56  allenday
+get this working asap!
+
 Revision 1.3  2009/03/30 12:27:10  allenday
 get this working asap!
 
