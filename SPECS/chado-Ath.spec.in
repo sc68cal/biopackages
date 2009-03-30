@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.13 2009/03/30 12:51:02 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.14 2009/03/30 13:22:03 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -103,7 +103,7 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
-%doc *.sql.gz *.pl
+%doc *.sql.gz
 
 %clean
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
@@ -137,6 +137,9 @@ sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.14  2009/03/30 13:22:03  allenday
+docs
+
 Revision 1.13  2009/03/30 12:51:02  allenday
 get this working asap!
 
