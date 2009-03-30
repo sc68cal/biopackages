@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.6 2009/03/30 12:30:35 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.7 2009/03/30 12:31:12 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -62,7 +62,7 @@ Chado, a modular relational schema at the core of the Generic Model Organism Dat
 
 %build
 #HACK this needs to be done as part of the base chado package install
-if [ ! -e /var/lib/gmod/conf/default.conf ] ; then
+if [ ! -e %{_prefix}/conf/default.conf ] ; then
   ln -s %{_prefix}/conf/chado.conf %{_prefix}/conf/default.conf;
 fi ;
 
@@ -136,6 +136,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.7  2009/03/30 12:31:12  allenday
+get this working asap!
+
 Revision 1.6  2009/03/30 12:30:35  allenday
 get this working asap!
 
