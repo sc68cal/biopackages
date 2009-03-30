@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.4 2009/03/30 12:27:56 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.5 2009/03/30 12:28:39 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -9,9 +9,7 @@ Name: chado-%{org}
 Version: 1.0
 Epoch: 0
 Release: %{revision}.%{distro}
-#Source0: %{name}-%{version}.tar.gz
-#Source1: split.pl
-Source0: dummy
+Source0: %{name}-%{version}.tar.gz
 License: GPL
 Group: Databases/Bioinformatics
 Packager: Allen Day <allenday@ucla.edu>
@@ -138,6 +136,9 @@ su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.5  2009/03/30 12:28:39  allenday
+get this working asap!
+
 Revision 1.4  2009/03/30 12:27:56  allenday
 get this working asap!
 
