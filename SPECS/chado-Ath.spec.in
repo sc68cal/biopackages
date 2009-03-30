@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.9 2009/03/30 12:35:59 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.10 2009/03/30 12:42:35 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -88,7 +88,7 @@ sudo su postgres -c "cat /var/lib/gmod/initialize.sql | psql $tmp_chado-%{org}-%
 ######################## 
 echo `date`;
 #grep -E 'Chr[CM]' for speed
-cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep -vwE 'protein' | perl -ne 's/,?[\w.]+-Protein;//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism '%{orgCommonName}' --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres
+cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep -vwE 'protein' | perl -ne 's/,?[\w.]+-Protein;//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism %{orgCommonName} --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres
 echo `date`;
 
 #######################
@@ -137,6 +137,9 @@ sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.10  2009/03/30 12:42:35  allenday
+get this working asap!
+
 Revision 1.9  2009/03/30 12:35:59  allenday
 build as non-root!
 
