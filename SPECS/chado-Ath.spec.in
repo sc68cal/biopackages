@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.7 2009/03/30 12:31:12 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.8 2009/03/30 12:32:44 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -70,17 +70,17 @@ fi ;
 
 tmp_chado=chado_`date | md5sum | awk '{print $1}' | head -c 4`
 
-/etc/init.d/postgresql start
+sudo /etc/init.d/postgresql start
 # on fresh Postgres installs this needs a few secs to startup
 sleep 15
-su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
-su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
-su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
-su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+sudo su postgres -c "createdb $tmp_chado-%{org}-%{orgVersion}";
+sudo su postgres -c "createlang plpgsql $tmp_chado-%{org}-%{orgVersion}";
+sudo su postgres -c "zcat %{_datadir}/doc/chado-%{chadoVersion}/chado-%{chadoVersion}.sql.gz | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
+sudo su postgres -c "cat initialize.sql | psql $tmp_chado-%{org}-%{orgVersion} 2>&1" 2>&1 > /dev/null;
 
 #XXX should this be here for Ath?
 #HACK this should be in genome-Hsa-nib !!!
-#su postgres -c "cat Hg17.chromosome.gff | perl -ne 'chomp;@F=split/\s+/;print qq(INSERT INTO feature (organism_id,name,uniquename,seqlen,type_id) VALUES ((SELECT organism_id FROM organism WHERE common_name = ^%{orgCommonName}^),^\$F[1]^,^\$F[1]^,\$F[3],(SELECT cvterm_id FROM cvterm WHERE name = ^chromosome^ AND cv_id = (SELECT cv_id FROM cv WHERE name = ^so.ontology^)));\n) if \$F[1]' | perl -ne \"s/\^/'/g;print\" | psql $tmp_chado-%{org}-%{orgVersion}" 2>&1 > /dev/null;
+#sudo su postgres -c "cat Hg17.chromosome.gff | perl -ne 'chomp;@F=split/\s+/;print qq(INSERT INTO feature (organism_id,name,uniquename,seqlen,type_id) VALUES ((SELECT organism_id FROM organism WHERE common_name = ^%{orgCommonName}^),^\$F[1]^,^\$F[1]^,\$F[3],(SELECT cvterm_id FROM cvterm WHERE name = ^chromosome^ AND cv_id = (SELECT cv_id FROM cv WHERE name = ^so.ontology^)));\n) if \$F[1]' | perl -ne \"s/\^/'/g;print\" | psql $tmp_chado-%{org}-%{orgVersion}" 2>&1 > /dev/null;
 
 ########################
 # load in TAIR8 GFF
@@ -93,8 +93,8 @@ echo `date`;
 #######################
 #DUMP AND DROP DATABASE
 #######################
-su postgres -c "pg_dump -O $tmp_chado-%{org}-%{orgVersion}" | gzip > %{name}-%{version}.sql.gz;
-su postgres -c "dropdb   $tmp_chado-%{org}-%{orgVersion}";
+sudo su postgres -c "pg_dump -O $tmp_chado-%{org}-%{orgVersion}" | gzip > %{name}-%{version}.sql.gz;
+sudo su postgres -c "dropdb   $tmp_chado-%{org}-%{orgVersion}";
 
 [ -x /usr/lib/rpm/brp-compress ] && /usr/lib/rpm/brp-compress
 
@@ -108,22 +108,22 @@ find $RPM_BUILD_ROOT -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{ver
 [ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
 
 %post
-/etc/init.d/postgresql start
+sudo /etc/init.d/postgresql start
 # on fresh Postgres installs this needs a few secs to startup
 sleep 15
-su postgres -c 'dropdb chado-%{org}-%{orgVersion} || exit 1';
+sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion} || exit 1';
 
 #echo "[1/4] Creating PostgreSQL database 'chado-%{org}-%{orgVersion}' as user 'postgres'";
-su postgres -c 'createdb chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+sudo su postgres -c 'createdb chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
 #echo "[2/4] Adding plpgsql language to database 'chado-%{org}-%{orgVersion}'";
-su postgres -c 'createlang plpgsql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
+sudo su postgres -c 'createlang plpgsql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null;
 
 #echo "[3/4] Creating tables, functions, views, triggers, rules, etc for database 'chado-%{org}-%{orgVersion}'";
-su postgres -c 'zcat %{_datadir}/doc/%{name}-%{version}/%{name}-%{version}.sql.gz | psql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null
+sudo su postgres -c 'zcat %{_datadir}/doc/%{name}-%{version}/%{name}-%{version}.sql.gz | psql chado-%{org}-%{orgVersion} 2>&1' 2>&1 > /dev/null
 
 #echo "[4/4] Grant permissions for SELECT to public users
-for i in `su postgres -c "psql chado-%{org}-%{orgVersion} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
-  su postgres -c "psql chado-%{org}-%{orgVersion} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" > /dev/null;
+for i in `sudo su postgres -c "psql chado-%{org}-%{orgVersion} -tAF '      ' -c '\dt'" | awk '{print $2}'` ; do
+  sudo su postgres -c "psql chado-%{org}-%{orgVersion} -c 'GRANT SELECT ON $i TO PUBLIC' 2>&1" > /dev/null;
 done
 
 true ;
@@ -132,10 +132,13 @@ true ;
 /etc/init.d/postgresql start
 # on fresh Postgres installs this needs a few secs to startup
 sleep 15
-su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
+sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.8  2009/03/30 12:32:44  allenday
+build as non-root!
+
 Revision 1.7  2009/03/30 12:31:12  allenday
 get this working asap!
 
