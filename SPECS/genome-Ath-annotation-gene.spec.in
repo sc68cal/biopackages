@@ -1,0 +1,46 @@
+#$Id: genome-Ath-annotation-gene.spec.in,v 1.1 2009/03/30 12:16:58 allenday Exp $
+Summary: Arabidopsis genome features in GFF format
+Name: genome-Ath-annotation-gene
+Version: TAIR8
+Epoch: 0
+Release: %{revision}.%{distro}
+Source0: genome-Ath-annotation-gene-%{version}.tar.gz
+License: Custom
+Group: Bioinformatics/Sequence
+Packager: Allen Day <allenday@ucla.edu>
+URL: http://arabidopsis.org
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+#Icon: 
+BuildRequires: biopackages
+BuildArch: noarch
+
+%description
+Arabidopsis genome features in GFF format
+
+%prep
+%setup -q -n genome-Ath-annotation-gene-TAIR8
+#%setup -q 
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%{version}/gff
+
+%build
+
+%install
+for i in *.gff; do install $i $RPM_BUILD_ROOT%{_datadir}/genome/Ath/%version/gff/; done
+
+find $RPM_BUILD_ROOT -type f -name '*.gff'  | sed "s@^$RPM_BUILD_ROOT@%dir @g" >> %{name}-%{version}-%{release}-filelist
+
+%files -f %{name}-%{version}-%{release}-filelist
+%defattr(-,root,root)
+
+%clean
+[ "${RPM_BUILD_ROOT}" != "/" ] && [ -d ${RPM_BUILD_ROOT} ] && rm -rf ${RPM_BUILD_ROOT};
+
+%post 
+
+%preun 
+
+$Log: genome-Ath-annotation-gene.spec.in,v $
+Revision 1.1  2009/03/30 12:16:58  allenday
+import
+
