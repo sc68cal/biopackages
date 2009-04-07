@@ -1,4 +1,4 @@
-#$Id: chado-Ath.spec.in,v 1.17 2009/03/31 02:23:18 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.18 2009/04/07 00:03:33 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
@@ -39,6 +39,7 @@ Requires: postgresql-libs
 Requires: postgresql-server
 
 BuildRequires: chado = 1.0
+BuildRequires: genome-%{org} = %{orgVersion}
 BuildRequires: genome-%{org}-annotation-gene = %{orgVersion}
 BuildRequires: perl-Class-DBI
 BuildRequires: perl-Class-DBI-Pager
@@ -92,8 +93,11 @@ echo `date`;
 for i in C M 1 2 3 4 5; do
   echo $i;
   #cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep "Chr$i" | perl -ne 's/\tprotein\t/\tpolypeptide\t/;s/,?[\w.]+-Protein;//;s/Derives_from.+?(;|$)//;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism %{orgCommonName} --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres;
-  cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep "Chr$i" | perl -ne 's/\tprotein\t/\tpolypeptide\t/;s/(transposable_element_gene.+?)Derives_from.+/$1/;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism %{orgCommonName} --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres;
-
+  cat %{_datadir}/genome/%{org}/%{orgVersion}/gff/TAIR8_GFF3_genes.gff | grep "Chr$i" > ./chr$i.gff;
+  echo "##FASTA" >> ./chr$i.gff;
+  cat %{_datadir}/genome/%{org}/%{orgVersion}/fa/chr$i.fa >> ./chr$i.gff;
+  cat ./chr$i.gff | perl -ne 's/\tprotein\t/\tpolypeptide\t/;s/(transposable_element_gene.+?)Derives_from.+/$1/;print' | /usr/bin/gmod_bulk_load_gff3.pl --organism %{orgCommonName} --dbname $tmp_chado-%{org}-%{orgVersion} --recreate_cache --noexon --dbuser postgres;
+  rm -f ./chr$i.gff;
 done;
 echo `date`;
 
@@ -143,6 +147,9 @@ sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.18  2009/04/07 00:03:33  allenday
+load fasta
+
 Revision 1.17  2009/03/31 02:23:18  allenday
 protein
 
