@@ -1,10 +1,10 @@
-#$Id: chado-Ath.spec.in,v 1.18 2009/04/07 00:03:33 allenday Exp $
+#$Id: chado-Ath.spec.in,v 1.19 2009/04/08 02:06:46 allenday Exp $
 %define gmod_root /var/lib/gmod
 %define org Ath
 %define orgCommonName "mouse-ear cress"
 %define orgVersion TAIR8
 %define chadoVersion 1.0
-Summary: Chado, prepopulated with Arabidopsis Thaliana genome features
+Summary: Chado, prepopulated with Arabidopsis Thaliana genome features 
 Name: chado-%{org}
 Version: 1.0
 Epoch: 0
@@ -147,6 +147,9 @@ sudo su postgres -c 'dropdb chado-%{org}-%{orgVersion}';
 true;
 
 $Log: chado-Ath.spec.in,v $
+Revision 1.19  2009/04/08 02:06:46  allenday
+bumping revision for fresh build of chado w/ plant ontologies
+
 Revision 1.18  2009/04/07 00:03:33  allenday
 load fasta
 
