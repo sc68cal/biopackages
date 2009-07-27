@@ -1,0 +1,51 @@
+#$Id: perl-Gtk.spec.in,v 1.1 2009/07/27 22:58:59 bret_harry Exp $
+%define path %{name}-%{version}
+Name: perl-Gtk
+Vendor: biopackages.net
+Summary: Perl module providing GTK bindings
+Version: 0.7009
+#Serial:
+Release: %{revision}.%{distro}
+Group: Applications/System
+License: Artistic/GPL
+Packager: Bret Harry <webmaster@genome.ucla.edu>
+URL: http://search.cpan.org/dist/Gtk/
+Source0: http://www.cpan.org/modules/by-module/Gtk/Gtk-Perl-%{version}.tar.gz
+Requires: perl
+BuildRequires: perl, gtk+-devel, imlib-devel, gnome-libs-devel, gdk-pixbuf-devel
+BuildRoot: %{_tmppath}/%{path}-build
+
+%description
+perl-Gtk is a Perl module providing GTK bindings.
+
+%prep
+%setup -n Gtk-Perl-%{version}
+
+%build
+CFLAGS="%{optflags}" %{__perl} Makefile.PL INSTALLDIRS="vendor" PREFIX="%{buildroot}%{_prefix}" --without-guessing
+%{__make} %{?_smp_mflags} OPTIMIZE="%{optflags}"
+
+%install
+%{__rm} -rf %{buildroot}
+%{__make} pure_install
+
+find %{buildroot} -name .packlist -exec %{__rm} {} \;
+
+# cd %{buildroot}
+# find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
+
+%files
+%defattr(-, root, root, 0755)
+%doc ChangeLog INSTALL MANIFEST NOTES README VERSIONS
+%doc %{_mandir}/man3/Gtk.3pm*
+%doc %{_mandir}/man3/*.3pm*
+%{perl_vendorarch}/Gtk.pm
+%{perl_vendorarch}/auto/Gtk/
+%{perl_vendorarch}/Gtk/
+%clean
+%{__rm} -rf %{buildroot}
+
+$Log: perl-Gtk.spec.in,v $
+Revision 1.1  2009/07/27 22:58:59  bret_harry
+new spec
+
