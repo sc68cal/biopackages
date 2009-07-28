@@ -1,0 +1,68 @@
+#$Id: perl-BioPerl-run.spec.in,v 1.1 2009/07/28 01:45:04 bret_harry Exp $
+Name:           perl-BioPerl-run
+Vendor: 	biopackages.net
+Version:        1.6.0
+Release:        %{revision}.%{distro}
+Summary:        Modules to provide a Perl interface to various bioinformatics applications
+Packager:	Bret Harry <janusz@gasper.zealcorp.com>
+Group:          Applications/Bioinformatics
+License:        GPL+ or Artistic
+URL:            http://www.bioperl.org/
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJFIELDS/BioPerl-run-%{version}.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
+### The BuildRequires appear to be optional, but it is handy to have the packages available in case somebody needs a certain feature in BioPerl
+BuildRequires: perl(IPC::Run) perl(XML::Parser) perl(HTML::Parser)
+#Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) 
+Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) perl-XML-LibXML => 1.69
+#Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) perl(GD::Text::Align) perl(Gtk)
+#Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%description
+Bioperl-run contain modules that provide a Perl interface to various
+bioinformatics applications. This allows various applications to be
+used with common Bioperl objects.
+
+%prep
+%setup -q -n BioPerl-run-%{version}
+
+%build
+%{__perl} Build.PL --installdirs vendor << EOF
+n
+a
+EOF
+
+./Build
+%install
+rm -rf $RPM_BUILD_ROOT
+perl Build pure_install --destdir=$RPM_BUILD_ROOT
+
+# remove some spurious files
+find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
+  -o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+# remove errant execute bit from the .pm's
+find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null ';'
+# correct all binaries in /usr/bin to be 0755
+#find $RPM_BUILD_ROOT/%{_bindir} -type f -name '*.pl' -exec chmod 0755 {} 2>/dev/null ';'
+
+%check
+%{?_with_check:./Build test || :}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root,-)
+## don't distribute "doc" "scripts" subdirectories, they don't contain docs
+#%doc examples
+%doc AUTHORS Changes INSTALL INSTALL.PROGRAMS README
+%{perl_vendorlib}/*
+%{_mandir}/man3/*.3*    
+#%{_bindir}/*
+#%{_mandir}/man1/*.1*
+
+$Log: perl-BioPerl-run.spec.in,v $
+Revision 1.1  2009/07/28 01:45:04  bret_harry
+new spec file to match case with the project name
+
+
