@@ -1,26 +1,31 @@
-#$Id: samtools.spec.in,v 1.2 2009/03/24 06:16:33 bret_harry Exp $
+#$Id: samtools.spec.in,v 1.3 2009/08/08 03:11:17 bret_harry Exp $
 %define path %{name}-%{version}
 Name: samtools
 Summary: SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. 
-Version: 0.1.2
+Version: 0.1.5c.rev442
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: MIT License
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/samtools/
-Source0: http://voxel.dl.sourceforge.net/sourceforge/samtools/samtools-0.1.2.tar.bz2
-Requires: zlib >= 1.2.2.1
-BuildRequires: zlib-devel >= 1.2.2.1
+Source0: http://voxel.dl.sourceforge.net/sourceforge/samtools/samtools-0.1.5c.tar.bz2
+Patch0: samtools-0.1.5c-to-rev442.patch
+Patch1: samtools-autotools.patch
+Patch2: samtools-consensus.expected.txt.patch
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
 SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. SAM tools provide efficient utilities on manipulating alignments in the SAM format.
 
 %prep
-%setup -n %{path}
+%setup -n samtools-0.1.5c
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1 
 
 %build
+autoreconf --install
 ./configure
 make
 
@@ -28,27 +33,22 @@ make
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
-### Addditional files that should be installed.
-### Go Here
-
-cd %{buildroot}
-find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
-
-%files -f %{_tmppath}/%{path}-%{release}-filelist
+%files
 %defattr(-, root, root)
+%doc /usr/local/share/doc/samtools/*
+%doc /usr/local/share/doc/samtools/*/*
+%dir /usr/local/lib/*
+%dir /usr/local/include/*
+%dir /usr/local/bin/*
+%doc /usr/local/man/*/*
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
-%pre
-
-%post
-
-%preun
-
-%postun
-
 $Log: samtools.spec.in,v $
+Revision 1.3  2009/08/08 03:11:17  bret_harry
+made patches to update the latest release to trunk & add in some autotools support as well
+
 Revision 1.2  2009/03/24 06:16:33  bret_harry
 bumped version
 
