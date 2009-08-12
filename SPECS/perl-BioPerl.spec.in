@@ -1,99 +1,26 @@
-#$Id: perl-bioperl.spec.in,v 1.12 2009/08/12 03:12:23 bret_harry Exp $
-Name:           perl-bioperl
+#$Id: perl-BioPerl.spec.in,v 1.1 2009/08/12 03:12:23 bret_harry Exp $
+Name:           perl-BioPerl
+Vendor: 	biopackages.net
 Version:        1.6.0
 Release:        %{revision}.%{distro}
 Summary:        Perl tools for computational molecular biology
-
-Group:          Development/Libraries
+Packager:	Bret Harry <janusz@gasper.zealcorp.com>
+Group:          Applications/Bioinformatics
 License:        GPL+ or Artistic
 URL:            http://www.bioperl.org/
 Source0:        http://bioperl.org/DIST/BioPerl-%{version}.tar.bz2
-Source1:        ftp://ftp.perl.org/pub/CPAN/authors/id/M/MI/MINGYILIU/Bio-ASN1-EntrezGene-1.091.tgz
-#Patch0:         %{name}-%{version}-paths.patch
+Patch0:         %{name}-%{version}-paths.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
-BuildRequires:  perl-AcePerl
-#BuildRequires:  perl-Algorithm-Munkres
-BuildRequires:  perl-Array-Compare
-BuildRequires:  perl-Cache-Cache
-BuildRequires:  perl-Class-AutoClass >= 1
-BuildRequires:  perl-Clone
-BuildRequires:  perl-Convert-Binary-C
-BuildRequires:  perl-Data-Stag
-BuildRequires:  perl-DBD-mysql
-BuildRequires:  perl-DBD-Pg
-BuildRequires:  perl-Error
-BuildRequires:  perl-GD >= 1.3
-BuildRequires:  perl-GD-SVG
-BuildRequires:  perl-Graph
-BuildRequires:  perl-GraphViz
-BuildRequires:  perl-HTML-Parser
-BuildRequires:  perl-IO-Stringy
-BuildRequires:  perl-IO-String
-BuildRequires:  perl-libwww-perl
-BuildRequires:  perl-Math-Random
-BuildRequires:  perl-Module-Build
-BuildRequires:  perl-PostScript
-BuildRequires:  perl-Set-Scalar
-BuildRequires:  perl-SOAP-Lite
-BuildRequires:  perl-Spreadsheet-ParseExcel
-BuildRequires:  perl-SVG >= 2.26
-BuildRequires:  perl-SVG-Graph >= 0.01
-BuildRequires:  perl-Test-Exception
-BuildRequires:  perl-Test-Warn
-BuildRequires:  perl-Text-Shellwords
-BuildRequires:  perl-URI
-BuildRequires:  perl-WWW-Mechanize
-BuildRequires:  perl-XML-DOM-XPath >= 0.13
-BuildRequires:  perl-XML-LibXML
-BuildRequires:  perl-XML-Parser
-BuildRequires:  perl-XML-SAX >= 0.14
-BuildRequires:  perl-XML-SAX-Writer
-BuildRequires:  perl-XML-Simple
-BuildRequires:  perl-XML-Twig
-BuildRequires:  perl-XML-Writer > 0.4
-
-Requires:  perl-AcePerl
-#Requires:  perl-Algorithm-Munkres
-Requires:  perl-Array-Compare
-Requires:  perl-Cache-Cache
-Requires:  perl-Class-AutoClass >= 1
-Requires:  perl-Clone
-Requires:  perl-Convert-Binary-C
-Requires:  perl-Data-Stag
-Requires:  perl-DBD-mysql
-Requires:  perl-DBD-Pg
-Requires:  perl-Error
-Requires:  perl-GD >= 1.3
-Requires:  perl-GD-SVG
-Requires:  perl-Graph
-Requires:  perl-GraphViz
-Requires:  perl-HTML-Parser
-Requires:  perl-IO-Stringy
-Requires:  perl-IO-String
-Requires:  perl-libwww-perl
-Requires:  perl-Math-Random
-Requires:  perl-Module-Build
-Requires:  perl-PostScript
-Requires:  perl-Set-Scalar
-Requires:  perl-SOAP-Lite
-Requires:  perl-Spreadsheet-ParseExcel
-Requires:  perl-SVG >= 2.26
-Requires:  perl-SVG-Graph >= 0.01
-Requires:  perl-Test-Exception
-Requires:  perl-Test-Warn
-Requires:  perl-Text-Shellwords
-Requires:  perl-URI
-Requires:  perl-WWW-Mechanize
-Requires:  perl-XML-DOM-XPath >= 0.13
-Requires:  perl-XML-LibXML
-Requires:  perl-XML-Parser
-Requires:  perl-XML-SAX >= 0.14
-Requires:  perl-XML-SAX-Writer
-Requires:  perl-XML-Simple
-Requires:  perl-XML-Twig
-Requires:  perl-XML-Writer > 0.4
+### The BuildRequires appear to be optional, but it is handy to have the packages available in case somebody needs a certain feature in BioPerl
+#BuildRequires(optional):perl(Bio::ASN1::EntrezGene)
+provides: perl(Bio::ASN1::EntrezGene)
+BuildRequires: perl(Test::More) perl(Module::Build) perl(CPAN) perl(Ace) perl(Algorithm::Munkres) perl(Array::Compare) perl(Clone) perl(Convert::Binary::C) perl(Graph) perl(GraphViz) perl(HTML::Entities) perl(HTML::HeadParser) perl(HTTP::Request::Common) perl(LWP::UserAgent) perl(Math::Random) perl(PostScript::TextBlock) perl(Set::Scalar) perl(SOAP::Lite) perl(Spreadsheet::ParseExcel) perl(Storable) perl(SVG::Graph) perl(Text::ParseWords) perl(URI::Escape) perl(XML::DOM::XPath) perl(XML::Parser) perl(XML::Parser::PerlSAX) perl(XML::SAX) perl(XML::SAX::Writer) perl(XML::Twig) perl(XML::Writer)
+#BuildRequires: perl(Test::More) perl(Module::Build) perl(CPAN) perl(Ace) perl(Algorithm::Munkres) perl(Array::Compare) perl(Bio::ASN1::EntrezGene) perl(Clone) perl(Convert::Binary::C) perl(Graph) perl(GraphViz) perl(HTML::Entities) perl(HTML::HeadParser) perl(HTTP::Request::Common) perl(LWP::UserAgent) perl(Math::Random) perl(PostScript::TextBlock) perl(Set::Scalar) perl(SOAP::Lite) perl(Spreadsheet::ParseExcel) perl(Storable) perl(SVG::Graph) perl(Text::ParseWords) perl(URI::Escape) perl(XML::DOM::XPath) perl(XML::Parser) perl(XML::Parser::PerlSAX) perl(XML::SAX) perl(XML::SAX::Writer) perl(XML::Twig) perl(XML::Writer)
+#Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) 
+Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) perl-XML-LibXML => 1.69
+Requires(optional):  perl(Bio::ASN1::EntrezGene)
+#Requires:  perl perl(IO::String) perl(DB_File) perl(Data::Stag) perl(GD::Text::Align) perl(Gtk)
 #Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -103,33 +30,13 @@ many modules depend on each other to achieve a task.
 
 %prep
 %setup -q -n BioPerl-%{version}
-#%patch0 -p1 
-#begin hack to fold Bio-ASN1-EntrezGene into the bioperl distribution.  eliminates cyclic dependency
-mkdir rpmtmp
-pushd rpmtmp
-tar -xvzf %{SOURCE1}
-popd
-mv rpmtmp/Bio-ASN1-EntrezGene-1.09/lib/Bio/ASN1 Bio/
-rm -rf rpmtmp
-#end hack
+%patch0 -p1 
 
-
-# Temporary hack for bootstrapping
-# Filter unwanted Requires:
-# cat << \EOF > %{_builddir}/bioperl-%{version}/%{name}-req
-# #!/bin/sh
-# %{__perl_requires} $* |\
-#   sed -e '/perl(Bio::Tools::Run::Alignment::Clustalw)/d; /perl(Bio::Tools::Run::GenericParameters)/d; /perl(Bio::Tools::Run::Phylo::Molphy::ProtML)/d; /perl(Bio::Tools::Run::Phylo::Phylip::Neighbor)/d; /perl(Bio::Tools::Run::Phylo::Phylip::ProtDist)/d; /perl(Bio::Tools::Run::Phylo::Phylip::ProtPars)/d; /perl(Bio::Tools::Run::RemoteBlast)/d'
-# EOF
-# 
-# %%define __perl_requires %{_builddir}/bioperl-%{version}/%{name}-req
-# chmod +x %{__perl_requires}
-
-# remove all execute bits from the doc stuff
-find examples -type f -exec chmod -x {} 2>/dev/null ';'
+find examples/ -type f | grep -v '.pl$' | xargs -n 1 echo chmod -x
 
 %build
-%{__perl} Build.PL --installdirs vendor << EOF
+%{__perl} Build.PL --installdirs vendor <<EOF
+n
 n
 a
 n
@@ -139,10 +46,14 @@ EOF
 
 # make sure the man page is UTF-8...
 cd blib/libdoc
-for i in Bio::Tools::GuessSeqFormat.3pm Bio::Tools::Geneid.3pm; do
-    iconv --from=ISO-8859-1 --to=UTF-8 $i > new
-    mv new $i
-done
+
+find -name '*.3pm' | xargs file -i | grep iso-8859-1 | perl -ne '$_ =~ /^([^\s]+):/; print $1,"\n";' | xargs -n 1 -I {} iconv --from=ISO-8859-1 --to=UTF-8 {} -o {}.new
+find -name '*.new' | perl -ne '$_ =~ /^(.+)\.new$/; print $1,"\n";' | xargs -n 1 -I{} echo mv {}.new {}
+
+### This perl script causes an unecessary dependency and clearly states that it can be
+### 'refactored' as appropriate.
+cd ../../
+find ./ -name 'hitdisplay.pl' -exec rm -f {} ';'
 
 
 %install

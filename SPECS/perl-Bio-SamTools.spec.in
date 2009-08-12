@@ -1,0 +1,69 @@
+#$Id: perl-Bio-SamTools.spec.in,v 1.1 2009/08/12 03:12:23 bret_harry Exp $
+%define path %{name}-%{version}
+Name: perl-Bio-SamTools
+Vendor: biopackages.net
+Summary: This is a Perl interface to the SAMtools sequence alignment interface.
+Version: 1.02
+#Serial:
+Release: %{revision}.%{distro}
+Group: Applications/System
+License: GPL (either version 1, or at your option, any later version) or the Artistic License 2.0.
+Packager: Bret Harry <webmaster@genome.ucla.edu>
+URL: http://search.cpan.org/dist/Bio-SamTools/
+Source0: http://search.cpan.org/CPAN/authors/id/L/LD/LDS/Bio-SamTools-1.02.tar.gz
+Patch0: perl-Bio-SamTools-fix-Build-PL.patch
+#Requires:
+BuildRequires: samtools
+BuildRoot: %{_tmppath}/%{path}-build
+
+%description
+This module provides a Perl interface to the libbam library for indexed and unindexed SAM/BAM sequence alignment databases. It provides support for retrieving information on individual alignments, read pairs, and alignment coverage information across large regions. It also provides callback functionality for calling SNPs and performing other base-by-base functions. Most operations are compatible with the BioPerl Bio::SeqFeatureI interface, allowing BAM files to be used as a backend to the GBrowse genome browser application (gmod.sourceforge.net).
+
+%prep
+%setup -n Bio-SamTools-1.02
+%patch0 -p 1
+
+%build
+export SAMTOOLS=/usr/local/lib/;
+%{__perl} ./Build.PL
+./Build
+./Build test
+
+%install
+rm -rf %{buildroot}
+./Build --destdir=%{buildroot} install
+#make install DESTDIR=%{buildroot}
+
+### Addditional files that should be installed.
+### Go Here
+
+#cd %{buildroot}
+#find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
+
+#%files -f %{_tmppath}/%{path}-%{release}-filelist
+%files
+%defattr(-, root, root)
+%dir %{perl_sitearch}/Bio/DB/*
+%dir %{perl_sitearch}/Bio/DB/*/*
+%dir %{perl_sitearch}/auto/Bio/DB/Sam/*
+#%dir %{perl_sitearch}/auto/Bio/SamTools/*
+%{perl_sitearch}/auto/Bio/SamTools/.packlist
+%doc %{_mandir}/man3/*
+
+%clean
+
+rm -rf ${RPM_BUILD_ROOT}
+
+%pre
+
+%post
+
+%preun
+
+%postun
+
+$Log: perl-Bio-SamTools.spec.in,v $
+Revision 1.1  2009/08/12 03:12:23  bret_harry
+getting Bio::DB::Sam to work
+
+
