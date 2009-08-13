@@ -1,4 +1,4 @@
-#$Id: samtools.spec.in,v 1.4 2009/08/11 22:12:40 bret_harry Exp $
+#$Id: samtools.spec.in,v 1.5 2009/08/13 22:50:58 bret_harry Exp $
 %define path %{name}-%{version}
 Name: samtools
 Summary: SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. 
@@ -15,6 +15,7 @@ Patch1: samtools-autotools.patch
 Patch2: samtools-consensus.expected.txt.patch
 Patch3: samtools-pkginclude.patch
 Patch4: samtools-mandir.patch
+Patch5: samtools-tview.patch
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
@@ -27,6 +28,7 @@ SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide
 %patch2 -p1 
 %patch3 -p1 
 %patch4 -p1 
+%patch5 -p1 
 
 %build
 autoreconf --install
@@ -49,6 +51,9 @@ make install DESTDIR=%{buildroot}
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: samtools.spec.in,v $
+Revision 1.5  2009/08/13 22:50:58  bret_harry
+tview
+
 Revision 1.4  2009/08/11 22:12:40  bret_harry
 cleaned up hardcoded files
 
