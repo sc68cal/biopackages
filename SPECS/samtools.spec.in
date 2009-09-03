@@ -1,34 +1,24 @@
-#$Id: samtools.spec.in,v 1.5 2009/08/13 22:50:58 bret_harry Exp $
+#$Id: samtools.spec.in,v 1.6 2009/09/03 23:18:41 bret_harry Exp $
 %define path %{name}-%{version}
 Name: samtools
 Summary: SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. 
-Version: 0.1.5c.rev442
+Version: 0.1.6
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: MIT License
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/samtools/
-Source0: http://voxel.dl.sourceforge.net/sourceforge/samtools/samtools-0.1.5c.tar.bz2
-Patch0: samtools-0.1.5c-to-rev444.patch
-Patch1: samtools-autotools.patch
-Patch2: samtools-consensus.expected.txt.patch
-Patch3: samtools-pkginclude.patch
-Patch4: samtools-mandir.patch
-Patch5: samtools-tview.patch
+Source0: http://voxel.dl.sourceforge.net/sourceforge/samtools/samtools-0.1.6.tar.bz2
+Patch0: samtools-0.1.6-autotools.patch
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
 SAM (Sequence Alignment/Map) is a flexible generic format for storing nucleotide sequence alignment. SAM tools provide efficient utilities on manipulating alignments in the SAM format.
 
 %prep
-%setup -n samtools-0.1.5c
+%setup -n samtools-%{version}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1 
-%patch3 -p1 
-%patch4 -p1 
-%patch5 -p1 
 
 %build
 autoreconf --install
@@ -51,6 +41,9 @@ make install DESTDIR=%{buildroot}
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: samtools.spec.in,v $
+Revision 1.6  2009/09/03 23:18:41  bret_harry
+bumped package version
+
 Revision 1.5  2009/08/13 22:50:58  bret_harry
 tview
 
