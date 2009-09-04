@@ -1,26 +1,26 @@
-#$Id: perl-Bio-SamTools.spec.in,v 1.1 2009/08/12 03:12:23 bret_harry Exp $
+#$Id: perl-Bio-SamTools.spec.in,v 1.2 2009/09/04 02:41:16 bret_harry Exp $
 %define path %{name}-%{version}
 Name: perl-Bio-SamTools
 Vendor: biopackages.net
 Summary: This is a Perl interface to the SAMtools sequence alignment interface.
-Version: 1.02
+Version: 1.04
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: GPL (either version 1, or at your option, any later version) or the Artistic License 2.0.
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://search.cpan.org/dist/Bio-SamTools/
-Source0: http://search.cpan.org/CPAN/authors/id/L/LD/LDS/Bio-SamTools-1.02.tar.gz
+Source0: http://search.cpan.org/CPAN/authors/id/L/LD/LDS/Bio-SamTools-1.04.tar.gz
 Patch0: perl-Bio-SamTools-fix-Build-PL.patch
 #Requires:
-BuildRequires: samtools
+BuildRequires: samtools >= 0.1.4, perl(Module::Build), perl(ExtUtils::CBuilder), perl(Bio::Root::IO)
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
 This module provides a Perl interface to the libbam library for indexed and unindexed SAM/BAM sequence alignment databases. It provides support for retrieving information on individual alignments, read pairs, and alignment coverage information across large regions. It also provides callback functionality for calling SNPs and performing other base-by-base functions. Most operations are compatible with the BioPerl Bio::SeqFeatureI interface, allowing BAM files to be used as a backend to the GBrowse genome browser application (gmod.sourceforge.net).
 
 %prep
-%setup -n Bio-SamTools-1.02
+%setup -n Bio-SamTools-1.04
 %patch0 -p 1
 
 %build
@@ -63,6 +63,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %postun
 
 $Log: perl-Bio-SamTools.spec.in,v $
+Revision 1.2  2009/09/04 02:41:16  bret_harry
+updated to latest version
+
 Revision 1.1  2009/08/12 03:12:23  bret_harry
 getting Bio::DB::Sam to work
 
