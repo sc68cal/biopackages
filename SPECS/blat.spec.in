@@ -1,10 +1,9 @@
-#$Id: blat.spec.in,v 1.1 2009/09/04 22:58:54 bret_harry Exp $
+#$Id: blat.spec.in,v 1.2 2009/09/04 23:27:29 bret_harry Exp $
 %define path %{name}-%{version}
 Name: blat
 Vendor: biopackages.net
 Summary: BLAT is a bioinformatics software a tool which performs rapid mRNA/DNA and cross-species protein alignments.
 Version: 34
-#Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: academic/non-profit use, do not redistribute. see README
@@ -12,7 +11,6 @@ Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://users.soe.ucsc.edu/~kent/src/
 Source0: http://users.soe.ucsc.edu/~kent/src/blatSrc34.zip
 Patch0: blatSrc34-makefile.patch
-#Requires:
 BuildRequires: gcc
 BuildRoot: %{_tmppath}/%{path}-build
 
@@ -25,7 +23,6 @@ is hereby granted for personal, academic, and non-profit use.
 A license is also granted for the contents of the top level 
 lib and inc directories for commercial users.  Commercial 
 users should contact jim_kent@pacbell.net for access to other modules.
-
 
 %prep
 %setup -c blatSrc%{version}
@@ -42,31 +39,40 @@ make MACHTYPE= BINDIR=.
 rm -rf %{buildroot}
 cd blatSrc
 install -D blat/blat %{buildroot}%{_bindir}/blat
-#make install DESTDIR=%{buildroot}
+install -D gfClient/gfClient %{buildroot}%{_bindir}/gfClient
+install -D gfServer/gfServer %{buildroot}%{_bindir}/gfServer
+install -D hg/pslPretty/pslPretty %{buildroot}%{_bindir}/pslPretty
+install -D hg/pslReps/pslReps %{buildroot}%{_bindir}/pslReps
+install -D hg/pslSort/pslSort %{buildroot}%{_bindir}/pslSort
+install -D utils/faToNib/faToNib %{buildroot}%{_bindir}/faToNib
+install -D utils/faToTwoBit/faToTwoBit %{buildroot}%{_bindir}/faToTwoBit
+install -D utils/nibFrag/nibFrag %{buildroot}%{_bindir}/nibFrag
+install -D utils/twoBitInfo/twoBitInfo %{buildroot}%{_bindir}/twoBitInfo
+install -D utils/twoBitToFa/twoBitToFa %{buildroot}%{_bindir}/twoBitToFa
+install -D webBlat/webBlat %{buildroot}%{_bindir}/webBlat
 
-### Addditional files that should be installed.
-### Go Here
-
-#cd %{buildroot}
-#find ./ -type f | cut -b2- > %{_tmppath}/%{path}-%{release}-filelist
-
-#%files -f %{_tmppath}/%{path}-%{release}-filelist
 %files 
 %defattr(-, root, root)
 %{_bindir}/blat
+%{_bindir}/gfClient
+%{_bindir}/gfServer
+%{_bindir}/pslPretty
+%{_bindir}/pslReps
+%{_bindir}/pslSort
+%{_bindir}/faToNib
+%{_bindir}/faToTwoBit
+%{_bindir}/nibFrag
+%{_bindir}/twoBitInfo
+%{_bindir}/twoBitToFa
+%{_bindir}/webBlat
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
-%pre
-
-%post
-
-%preun
-
-%postun
-
 $Log: blat.spec.in,v $
+Revision 1.2  2009/09/04 23:27:29  bret_harry
+grab all binaries
+
 Revision 1.1  2009/09/04 22:58:54  bret_harry
 blat & related util
 
