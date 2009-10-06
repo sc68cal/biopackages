@@ -1,16 +1,16 @@
-#$Id: bfast.spec.in,v 1.2 2009/09/05 01:04:51 bret_harry Exp $
+#$Id: bfast.spec.in,v 1.3 2009/10/06 19:51:20 bret_harry Exp $
 %define path %{name}-%{version}
 Name: bfast
 Summary: Blat-like Fast Accurate Search Tool
-Version: 0.5.5
+Version: 0.6.0b
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: GPLv2
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/bfast/
-Source0: http://downloads.sourceforge.net/project/bfast/bfast/0.5.5/bfast-0.5.5.tar.gz
-Patch0: bfast-0.5.5.autotools.patch
+Source0: http://downloads.sourceforge.net/project/bfast/bfast/0.6.0/bfast-0.6.0b.tar.gz
+#Patch0: bfast-0.5.5.autotools.patch
 BuildRoot: %{_tmppath}/%{path}-build
 
 %description
@@ -20,7 +20,7 @@ bfast. The longer answer is, well, longer.
 
 %prep
 %setup -n %{path}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 ./configure --prefix=%{_prefix} --bindir=%{_bindir}
@@ -42,6 +42,9 @@ make install DESTDIR=%{buildroot}
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: bfast.spec.in,v $
+Revision 1.3  2009/10/06 19:51:20  bret_harry
+bfast is GPL :)
+
 Revision 1.2  2009/09/05 01:04:51  bret_harry
 bfast is GPL :)
 
