@@ -1,8 +1,8 @@
-#$Id: bfast.spec.in,v 1.3 2009/10/06 19:51:20 bret_harry Exp $
+#$Id: bfast.spec.in,v 1.4 2009/10/14 20:25:49 bret_harry Exp $
 %define path %{name}-%{version}
 Name: bfast
 Summary: Blat-like Fast Accurate Search Tool
-Version: 0.6.0b
+Version: 0.6.0d
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
@@ -42,6 +42,9 @@ make install DESTDIR=%{buildroot}
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: bfast.spec.in,v $
+Revision 1.4  2009/10/14 20:25:49  bret_harry
+bumped version
+
 Revision 1.3  2009/10/06 19:51:20  bret_harry
 bfast is GPL :)
 
