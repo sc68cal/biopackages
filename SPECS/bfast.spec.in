@@ -1,15 +1,15 @@
-#$Id: bfast.spec.in,v 1.6 2009/11/13 23:41:15 bret_harry Exp $
+#$Id: bfast.spec.in,v 1.7 2009/11/15 23:44:15 bret_harry Exp $
 %define path %{name}-%{version}
 Name: bfast
 Summary: Blat-like Fast Accurate Search Tool
-Version: 0.6.1b
+Version: 0.6.1c
 #Serial:
 Release: %{revision}.%{distro}
 Group: Applications/System
 License: GPLv2
 Packager: Bret Harry <webmaster@genome.ucla.edu>
 URL: http://sourceforge.net/projects/bfast/
-Source0: http://softlayer.dl.sourceforge.net/project/bfast/bfast/0.6.1/bfast-0.6.1b.tar.gz
+Source0: http://softlayer.dl.sourceforge.net/project/bfast/bfast/0.6.1/bfast-0.6.1c.tar.gz
 #Source0: http://downloads.sourceforge.net/project/bfast/bfast/0.6.0/bfast-%{version}.tar.gz
 #Patch0: bfast-0.5.5.autotools.patch
 BuildRoot: %{_tmppath}/%{path}-build
@@ -43,6 +43,9 @@ make install DESTDIR=%{buildroot}
 rm -rf ${RPM_BUILD_ROOT}
 
 $Log: bfast.spec.in,v $
+Revision 1.7  2009/11/15 23:44:15  bret_harry
+bumped version
+
 Revision 1.6  2009/11/13 23:41:15  bret_harry
 bumped version.
 
