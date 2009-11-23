@@ -1,4 +1,4 @@
-#$Id: postgresql-AffxSeq.spec.in,v 1.7 2007/01/24 06:57:42 bpbuild Exp $
+#$Id: postgresql-AffxSeq.spec.in,v 1.8 2009/11/23 05:08:31 bret_harry Exp $
 Name: postgresql-AffxSeq
 Summary: postgresql-AffxSeq
 Version: 1.00
@@ -11,7 +11,7 @@ Source: postgresql-AffxSeq-1.00.tar.gz
 #Patch: postgresql-AffxSeq-1.00.patch
 BuildRoot: /var/tmp/%{name}-%{PACKAGE_VERSION}-root
 Provides:  postgresql-AffxSeq
-BuildRequires: postgresql-devel, ucsc, biopackages
+BuildRequires: postgresql-devel
 %define __spec_install_post %{_usr}/lib/rpm/brp-compress || :
 
 %description
@@ -104,6 +104,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/postgresql-AffxSeq/*
 
 $Log: postgresql-AffxSeq.spec.in,v $
+Revision 1.8  2009/11/23 05:08:31  bret_harry
+removed deps
+
 Revision 1.7  2007/01/24 06:57:42  bpbuild
 Version string
 
