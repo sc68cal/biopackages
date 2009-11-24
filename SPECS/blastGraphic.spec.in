@@ -1,4 +1,4 @@
-#$Id: blastGraphic.spec.in,v 1.5 2009/11/24 02:42:27 bret_harry Exp $
+#$Id: blastGraphic.spec.in,v 1.6 2009/11/24 02:44:11 bret_harry Exp $
 Summary: blastGraphic
 Name: blastGraphic
 Version: 0.01
@@ -21,7 +21,7 @@ BuildArch: noarch
 %package Hsa
 Summary: A blastGraphic configured to work with the Hsa database.
 Group: Development/Web
-BuildRequires: perl, biopackages
+BuildRequires: perl 
 Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
 Requires: genome-Hsa-blast
 Patch: blastGraphic-%{version}.patch
@@ -29,7 +29,7 @@ Patch: blastGraphic-%{version}.patch
 %package Sce
 Summary: A blastGraphic configured to work with the Sce database.
 Group: Development/Web
-BuildRequires: perl, biopackages
+BuildRequires: perl 
 Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
 Requires: genome-Sce-blast
 Patch: blastGraphic-%{version}.patch
@@ -205,6 +205,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS DISCLAIMER README VERSION sample_query_sequence
 
 $Log: blastGraphic.spec.in,v $
+Revision 1.6  2009/11/24 02:44:11  bret_harry
+removed deps
+
 Revision 1.5  2009/11/24 02:42:27  bret_harry
 removed deps
 
