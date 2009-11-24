@@ -1,4 +1,4 @@
-#$Id: perl-Lucene.spec.in,v 1.6 2007/09/03 08:00:17 bpbuild Exp $
+#$Id: perl-Lucene.spec.in,v 1.7 2009/11/24 02:06:41 bret_harry Exp $
 Distribution: Custom
 Vendor: biopackages.net
 Summary: Perl wrapper for c-lucene search engine
@@ -11,7 +11,7 @@ Group: Development/Libraries
 Epoch: 0
 URL: http://search.cpan.org/~tbusch/Lucene-0.17/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: perl, clucene, biopackages, clucene-core-devel, gcc, libstdc++-devel, glibc-devel, libgcc
+BuildRequires: perl, clucene, clucene-core-devel, gcc, libstdc++-devel, glibc-devel, libgcc
 Requires: perl, clucene, glibc, clucene-core, libgcc, libstdc++
 
 Source0: Lucene-%{version}.tar.gz
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: perl-Lucene.spec.in,v $
+Revision 1.7  2009/11/24 02:06:41  bret_harry
+bumped version
+
 Revision 1.6  2007/09/03 08:00:17  bpbuild
 updated to Lucene 0.17
 
