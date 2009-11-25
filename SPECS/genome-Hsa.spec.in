@@ -1,4 +1,4 @@
-#$Id: genome-Hsa.spec.in,v 1.1 2007/01/08 12:12:55 bpbuild Exp $
+#$Id: genome-Hsa.spec.in,v 1.2 2009/11/25 02:01:52 bret_harry Exp $
 Summary: Human genome sequence in FASTA format from the UCSC genome browser
 Name: genome-Hsa
 Version: 17
@@ -11,7 +11,7 @@ Packager: Allen Day <allenday@ucla.edu>
 URL: http://www.genome.ucsc.edu
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Icon: 
-BuildRequires: ucsc >= 456-1, biopackages, ncbi
+BuildRequires: ucsc >= 456-1, ncbi
 BuildArch: noarch
 
 %description
@@ -84,6 +84,9 @@ find $RPM_BUILD_ROOT%{_datadir}/blast -type f | sed "s@^$RPM_BUILD_ROOT@%dir @g"
 #- New specfile
 
 $Log: genome-Hsa.spec.in,v $
+Revision 1.2  2009/11/25 02:01:52  bret_harry
+removed dep
+
 Revision 1.1  2007/01/08 12:12:55  bpbuild
 Import of old genome Hsa
 
