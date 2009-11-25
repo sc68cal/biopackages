@@ -1,4 +1,4 @@
-#$Id: blastGraphic.spec.in,v 1.6 2009/11/24 02:44:11 bret_harry Exp $
+#$Id: blastGraphic.spec.in,v 1.7 2009/11/25 01:54:32 bret_harry Exp $
 Summary: blastGraphic
 Name: blastGraphic
 Version: 0.01
@@ -9,7 +9,7 @@ Group: Development/Libraries
 URL: http://www.gmod.org/blastGraphic.shtml
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl 
-Requires: perl, perl-bioperl, ncbi, perl-GD, httpd, perl-libwww-perl
+Requires: perl, ncbi, perl-GD, httpd, perl-libwww-perl
 # These were removed by someone --BO 1/7/07
 # genome-Cel-blast, genome-Dme-blast, genome-Dps-blast
 # genome-Hsa-blast, genome-Mmu-blast, genome-Rno-blast
@@ -205,6 +205,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc CREDITS DISCLAIMER README VERSION sample_query_sequence
 
 $Log: blastGraphic.spec.in,v $
+Revision 1.7  2009/11/25 01:54:32  bret_harry
+added build patch
+
 Revision 1.6  2009/11/24 02:44:11  bret_harry
 removed deps
 
