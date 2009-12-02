@@ -1,4 +1,4 @@
-#$Id: textpresso.spec.in,v 1.12 2009/11/25 03:12:59 bret_harry Exp $
+#$Id: textpresso.spec.in,v 1.13 2009/12/02 02:15:19 bret_harry Exp $
 Summary: A text mining system for scientific literature
 Name: textpresso
 Version: 1.0.0
@@ -22,17 +22,21 @@ BuildRequires: perl
 Patch0: textpresso-1.0.0-path.patch
 Patch1: textpresso-1.0.0-ace.patch
 Patch2: textpresso-1.0.0-pdf.patch
+Patch3: textpresso-1.0.0_XPDFViewer.patch
 
 %description
 In PDF format, damnit
 
 %prep
+pwd
 %setup -c %{name}-%{version}
 #remove reading from STDIN, we pass these variables in the environment during %build
 #remove aceperl dependency
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
+%patch3 -p1
+
 mkdir -p $RPM_BUILD_ROOT/var/www/cgi-bin/textpresso
 mkdir -p $RPM_BUILD_ROOT/var/www/html/textpresso
 mkdir -p $RPM_BUILD_ROOT/var/lib/textpresso
@@ -40,6 +44,10 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/usr/share/%{name}-%{version}-%{release}
 mkdir -p $RPM_BUILD_ROOT/etc/cron.hourly
 
+#cp %{SOURCE1} textpressopackage-1.0.0/
+#cp %{SOURCE2} textpressopackage-1.0.0/
+#cp %{SOURCE3} textpressopackage-1.0.0/cgi-scripts/
+#cp %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.hourly/
 cp %{SOURCE1} package/
 cp %{SOURCE2} package/
 cp %{SOURCE3} package/cgi-scripts/
@@ -124,6 +132,9 @@ find /var/www/html/textpresso    -type f -exec perl -p -i -e "s/____HOSTNAME____
 #- rc3: Added patch for textpresso_inject_pdf script that loads PDFs to
 #  database.  Also required chmod on database and web dirs
 $Log: textpresso.spec.in,v $
+Revision 1.13  2009/12/02 02:15:19  bret_harry
+got it to build
+
 Revision 1.12  2009/11/25 03:12:59  bret_harry
 removed dep
 
