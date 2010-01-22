@@ -1,9 +1,9 @@
-#$Id: EMBOSS.spec.in,v 1.2 2006/09/06 16:19:21 jmendler Exp $
+#$Id: EMBOSS.spec.in,v 1.2.6.1 2010/01/22 17:52:35 seanmcollins Exp $
 %define emhome %{_datadir}/EMBOSS
 Vendor: biopackages.net
 Group: Applications/Scientific
-Packager: Allen Day <allenday@ucla.edu>
-Version: 2.10.0
+Packager: Sean Collins <contact@seanmcollins.com>
+Version: 6.2.0
 Release: %{revision}.%{distro}
 Name:      EMBOSS
 Summary:   The European Molecular Biology Open Software Suite
@@ -71,8 +71,26 @@ cd ..
 
 %files -f %{_tmppath}/emboss.binfiles
 %defattr(-,root,root)
+%{_libdir}/*.so*
+%{_datadir}/EMBOSS/data/JASPAR_CNE/dummyfile
+%{_datadir}/EMBOSS/data/JASPAR_CORE/dummyfile
+%{_datadir}/EMBOSS/data/JASPAR_FAM/dummyfile
+%{_datadir}/EMBOSS/data/JASPAR_PHYLOFACTS/dummyfile
+%{_datadir}/EMBOSS/data/JASPAR_POLII/dummyfile
+%{_datadir}/EMBOSS/data/JASPAR_SPLICE/dummyfile
+%{_datadir}/EMBOSS/data/SSSUB
+
 %{_datadir}/EMBOSS/acd
-%{_datadir}/EMBOSS/data
+%{_datadir}/EMBOSS/data/CODONS
+%{_datadir}/EMBOSS/data/AAINDEX/dummyfile
+%{_datadir}/EMBOSS/data/PRINTS/dummyfile
+%{_datadir}/EMBOSS/data/PROSITE/dummyfile
+%{_datadir}/EMBOSS/data/REBASE/dummyfile
+%{_datadir}/EMBOSS/data/[Ee]*
+%{_datadir}/EMBOSS/data/Matrices.*
+%{_datadir}/EMBOSS/data/tp400_dna
+%{_datadir}/EMBOSS/data/tp400_prot
+%{_datadir}/EMBOSS/data/tp400_trans
 %{_datadir}/EMBOSS/doc
 %{_datadir}/EMBOSS/test
 %{_datadir}/EMBOSS/emboss.default.template
@@ -106,7 +124,10 @@ necessary for developing programs which will use the %{name} library.
 %{_libdir}/*.*a
 %{_libdir}/*.so
 %{_includedir}/*.h
-%{_includedir}/*.c
+%{_includedir}/pcre_printint.src
+%{_includedir}/eplplot/*.h
+
+
 
 %package libs
 Summary: shared libraries for %{name}.
@@ -123,6 +144,14 @@ necessary for %{name}.
 # ----------------------------------------------------------------------------
 
 $Log: EMBOSS.spec.in,v $
+Revision 1.2.6.1  2010/01/22 17:52:35  seanmcollins
+Branch for contributions by Sean M. Collins, who is sponsored by B-Tech Consulting.
+
+Spec file for EMBOSS 6.2.0
+
+Revision 1.3  2010/1/22 12:00:00  seanmcollins
+Updated to 6.2.0
+
 Revision 1.2  2006/09/06 16:19:21  jmendler
 fixed Release string
 
