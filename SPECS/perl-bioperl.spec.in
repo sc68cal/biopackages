@@ -1,4 +1,4 @@
-#$Id: perl-bioperl.spec.in,v 1.12 2009/08/12 03:12:23 bret_harry Exp $
+#$Id: perl-bioperl.spec.in,v 1.12.6.1 2010/01/27 18:00:04 seanmcollins Exp $
 Name:           perl-bioperl
 Version:        1.6.0
 Release:        %{revision}.%{distro}
@@ -29,7 +29,7 @@ BuildRequires:  perl-GD-SVG
 BuildRequires:  perl-Graph
 BuildRequires:  perl-GraphViz
 BuildRequires:  perl-HTML-Parser
-BuildRequires:  perl-IO-Stringy
+BuildRequires:  perl-IO-stringy
 BuildRequires:  perl-IO-String
 BuildRequires:  perl-libwww-perl
 BuildRequires:  perl-Math-Random
@@ -70,7 +70,7 @@ Requires:  perl-GD-SVG
 Requires:  perl-Graph
 Requires:  perl-GraphViz
 Requires:  perl-HTML-Parser
-Requires:  perl-IO-Stringy
+Requires:  perl-IO-stringy
 Requires:  perl-IO-String
 Requires:  perl-libwww-perl
 Requires:  perl-Math-Random
