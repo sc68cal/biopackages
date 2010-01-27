@@ -1,4 +1,4 @@
-#$Id: turnkey.spec.in,v 1.27 2008/06/28 09:24:08 bpbuild Exp $
+#$Id: turnkey.spec.in,v 1.27.6.1 2010/01/27 21:11:44 seanmcollins Exp $
 
 
 Distribution: Custom
@@ -18,7 +18,7 @@ BuildRequires: perl, biopackages
 Requires: httpd, mod_perl >= 2.0.1
 Requires: postgresql-server
 Requires: perl-Apache-ParseFormData, perl-Apache-Session
-Requires: perl-Class-Base, perl-Class-DBI, perl-Ima-DBI, perl-DBIx-ContextualFetch, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Class-Data-Inheritable, perl-Template-Toolkit, perl-XML-LibXML, perl-Lucene, perl-Apache2-SOAP, perl-Cache-Cache
+Requires: perl-Class-Base, perl-Class-DBI, perl-Ima-DBI, perl-DBIx-ContextualFetch, perl-Class-DBI-ConceptSearch, perl-Class-DBI-Pager, perl-Class-DBI-Pg, perl-Class-DBI-Plugin-Type, perl-DBD-Pg, perl-DBI, perl-Log-Log4perl, perl-SQL-Translator, perl-Class-Data-Inheritable, perl-Template-Toolkit, perl-XML-LibXML, perl-Plucene, perl-Apache2-SOAP, perl-Cache-Cache
 Provides: perl(Turnkey::Atom::AutoAtom), perl(Turnkey::Model::AutoDBI) 
 # need to remove all this mod_perl 1 stuff from the codebase
 Provides: perl(Apache::Const), perl(Apache::RequestIO), perl(Apache::RequestRec), perl(Apache::RequestUtil)
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README INSTALL LICENSE meta conf schema demo tt2 html turnkeylib plugin
 
 $Log: turnkey.spec.in,v $
+Revision 1.27.6.1  2010/01/27 21:11:44  seanmcollins
+Updated dep - perl-lucene appears to have been changed to perl-Plucene
+
 Revision 1.27  2008/06/28 09:24:08  bpbuild
 Updated turnkey (reorg of scripts dir) and needed to update gmodweb too.
 
