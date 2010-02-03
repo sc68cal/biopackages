@@ -1,4 +1,4 @@
-#`$Id: autogrid.spec.in,v 1.1.2.2 2010/02/03 17:11:39 seanmcollins Exp $'
+#`$Id: autogrid.spec.in,v 1.1.2.3 2010/02/03 17:16:29 seanmcollins Exp $'
 Summary: Autogrid
 Name: Autogrid
 Version: 4.2.3
@@ -31,7 +31,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/autogrid4
 
-`$Log: autogrid.spec.in,v $
-`Revision 1.1.2.2  2010/02/03 17:11:39  seanmcollins
-`Added log keywords
-``
+$Log: autogrid.spec.in,v $
+Revision 1.1.2.3  2010/02/03 17:16:29  seanmcollins
+*** empty log message ***
+
+Revision 1.1.2.2  2010/02/03 17:11:39  seanmcollins
+Added log keywords
