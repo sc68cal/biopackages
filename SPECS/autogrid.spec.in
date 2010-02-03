@@ -1,0 +1,32 @@
+#`$Id: autogrid.spec.in,v 1.1.2.1 2010/02/03 17:07:24 seanmcollins Exp $'
+Summary: Autogrid
+Name: Autogrid
+Version: 4.2.3
+Release: %{revision}.%{distro}
+Packager: sean@seanmcollins.com
+License: GPL v2
+Group: Applications/Scientific
+URL: http://autodock.scripps.edu/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Source0: http://autodock.scripps.edu/downloads/autodock-registration/tars/dist423/autodocksuite-4.2.3-src.tar.gz
+
+%description
+AutoDock is a suite of automated docking tools. It is designed to predict how small molecules, such as substrates or drug candidates, bind to a receptor of known 3D structure.
+
+
+%prep
+%setup -n src/autogrid
+
+%build
+%configure
+make
+
+%install
+%makeinstall
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_bindir}/autogrid4
