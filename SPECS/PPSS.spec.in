@@ -1,0 +1,39 @@
+#$Id: PPSS.spec.in,v 1.1.2.1 2010/02/15 19:55:48 seanmcollins Exp $
+Name: PPSS
+Version: 2.50
+Release: %{revision}.%{distro}
+Group: Applications/Parallel Processing
+Packager: Sean M. Collins <contact@seanmcollins.com>
+Summary: Parallel scheduler for simple clusters
+License: GPL
+URL: http://code.google.com/p/ppss/
+Source: http://ppss.googlecode.com/files/ppss-%{version}.tgz
+Requires: openssh-server openssh-clients screen bash
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+
+
+
+%description
+PPSS is a Bash shell script that executes commands, scripts or programs in parallel. It is designed to make full use of current multi-core CPUs. It will detect the number of available CPUs and start a separate job for each CPU core. It will also use hyper threading if specified. Please note that you can start any number of processes in parallel if you like. PPSS can also be installed on multiple host in a distributed like fashion, creating a simple cluster. 
+
+%prep
+%setup  -c
+
+%build
+
+
+%install
+install -m 755 -d %{buildroot}%{_bindir}
+install -m 755 ppss.sh %{buildroot}%{_bindir}
+
+%files
+%defattr(-,root,root)
+%{_bindir}/ppss.sh
+
+%clean 
+rm -r %{buildroot}
+
+#$Log: PPSS.spec.in,v $
+#Revision 1.1.2.1  2010/02/15 19:55:48  seanmcollins
+#Initial import
+#
