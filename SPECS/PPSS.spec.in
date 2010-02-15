@@ -1,4 +1,4 @@
-#$Id: PPSS.spec.in,v 1.1.2.1 2010/02/15 19:55:48 seanmcollins Exp $
+#$Id: PPSS.spec.in,v 1.1.2.2 2010/02/15 20:10:52 seanmcollins Exp $
 Name: PPSS
 Version: 2.50
 Release: %{revision}.%{distro}
@@ -10,6 +10,8 @@ URL: http://code.google.com/p/ppss/
 Source: http://ppss.googlecode.com/files/ppss-%{version}.tgz
 Requires: openssh-server openssh-clients screen bash
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildArch: noarch
+
 
 
 
@@ -33,7 +35,3 @@ install -m 755 ppss.sh %{buildroot}%{_bindir}
 %clean 
 rm -r %{buildroot}
 
-#$Log: PPSS.spec.in,v $
-#Revision 1.1.2.1  2010/02/15 19:55:48  seanmcollins
-#Initial import
-#
