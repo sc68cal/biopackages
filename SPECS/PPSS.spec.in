@@ -1,6 +1,6 @@
-#$Id: PPSS.spec.in,v 1.1.2.2 2010/02/15 20:10:52 seanmcollins Exp $
+#$Id: PPSS.spec.in,v 1.1.2.3 2010/03/10 19:11:49 seanmcollins Exp $
 Name: PPSS
-Version: 2.50
+Version: 2.60b2
 Release: %{revision}.%{distro}
 Group: Applications/Parallel Processing
 Packager: Sean M. Collins <contact@seanmcollins.com>
@@ -26,11 +26,11 @@ PPSS is a Bash shell script that executes commands, scripts or programs in paral
 
 %install
 install -m 755 -d %{buildroot}%{_bindir}
-install -m 755 ppss.sh %{buildroot}%{_bindir}
+install -m 755 ppss %{buildroot}%{_bindir}
 
 %files
 %defattr(-,root,root)
-%{_bindir}/ppss.sh
+%{_bindir}/ppss
 
 %clean 
 rm -r %{buildroot}
