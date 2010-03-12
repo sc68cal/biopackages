@@ -1,7 +1,7 @@
-#$Id: gbrowse.spec.in,v 1.9 2009/03/25 20:26:40 allenday Exp $
+#$Id: gbrowse.spec.in,v 1.9.6.1 2010/03/12 17:23:42 seanmcollins Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse
-Version: 1.69
+Version: 1.70
 Release: %{revision}.%{distro}
 Packager: allenday@ucla.edu
 License: GPL or Artistic
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 
 $Log: gbrowse.spec.in,v $
+Revision 1.9.6.1  2010/03/12 17:23:42  seanmcollins
+Bump to 1.70
+
 Revision 1.9  2009/03/25 20:26:40  allenday
 permissions
 
