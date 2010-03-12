@@ -1,4 +1,4 @@
-#$Id: gbrowse2.spec.in,v 1.1.2.3 2010/03/12 15:54:59 seanmcollins Exp $
+#$Id: gbrowse2.spec.in,v 1.1.2.4 2010/03/12 16:09:56 seanmcollins Exp $
 Summary: The Generic Genome Browser
 Name: gbrowse2
 Version: 2.01
@@ -59,8 +59,8 @@ CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL \
   INSTALLBIN=$RPM_BUILD_ROOT%{_bindir} \
   BIN=$RPM_BUILD_ROOT%{_bindir} \
   CONF=$RPM_BUILD_ROOT/etc/bioinformatics \
-  HTDOCS=$RPM_BUILD_ROOT/var/www/html \
-  CGIBIN=$RPM_BUILD_ROOT/var/www/cgi-bin/gbrowse < /dev/null
+  HTDOCS=$RPM_BUILD_ROOT/var/www/html/gbrowse2 \
+  CGIBIN=$RPM_BUILD_ROOT/var/www/cgi-bin/gbrowse2 < /dev/null
 make OPTIMIZE="$RPM_OPT_FLAGS"
 #CFLAGS="$RPM_OPT_FLAGS" perl Makefile.PL PREFIX=$RPM_BUILD_ROOT%{_prefix}  < /dev/null
 #make OPTIMIZE="$RPM_OPT_FLAGS"
@@ -101,16 +101,16 @@ if [ "$(cat %{name}-%{version}-%{release}-filelist)X" = "X" ] ; then
 fi
 
 %post
-mkdir /var/www/html/gbrowse/tmp
-chmod a+rwx /var/www/html/gbrowse/tmp
-chown -R apache.apache /var/www/html/gbrowse
-chown -R apache.apache /var/www/cgi-bin/gbrowse
+mkdir -p /var/www/html/gbrowse2/tmp
+chmod a+rwx /var/www/html/gbrowse2/tmp
+chown -R apache.apache /var/www/html/gbrowse2
+chown -R apache.apache /var/www/cgi-bin/gbrowse2
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}-%{version}-%{release}-filelist
-/var/www/html/i
+/var/www/html/gbrowse2/i
 %defattr(-,root,root,-)
 
